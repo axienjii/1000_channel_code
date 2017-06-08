@@ -5,7 +5,7 @@ function analyse_RF_barsweep
 stimDurms=1000;%in ms
 stimDur=stimDurms/1000;%in seconds
 NEV=openNEV;
-instanceName='instance8';
+instanceName='instance4';
 date='060617_B2';
 NS=openNSx;%200 s
 % NS=openNSx('t:1:6000000');%200 s
