@@ -4,11 +4,6 @@ function analyse_RF_barsweep
 %of sweeping white bar stimuli for RF mapping.
 stimDurms=1000;%in ms
 stimDur=stimDurms/1000;%in seconds
-<<<<<<< HEAD
-=======
-NEV=openNEV;
-instanceName='instance4';
->>>>>>> 2353c00b86861bae081ce246abb491915b38929a
 date='060617_B2';
 for instanceInd=3:7
     instanceName=['instance',num2str(instanceInd)];
