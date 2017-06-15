@@ -12,7 +12,7 @@ function [y,params] = gaussfit(x,r,Starting,hardbase)
 %If hardbase is inputted then no baseline shift is allowed and the baseline
 %is set to hardbase
 
-options=optimset('Display','off');
+options=optimset('Display','off','MaxFunEvals',10^6,'MaxIter',10^6,'TolX',1e-8);
  
 if nargin<4
     %Baseline fitted

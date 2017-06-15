@@ -1,0 +1,3 @@
+analyse_RF_barsweep			process raw data
+analyse_RF_barsweep_coordinates		calculate RF coordinates
+plot_all_RFs				draw plots for all channels

@@ -4,10 +4,10 @@ function analyse_RF_barsweep
 %of sweeping white bar stimuli for RF mapping.
 stimDurms=1000;%in ms
 stimDur=stimDurms/1000;%in seconds
-date='060617_B4';
-processRaw=1;
+date='060617_B2';
+processRaw=0;
 if processRaw==1
-    for instanceInd=1:8
+    for instanceInd=3:7
         instanceName=['instance',num2str(instanceInd)];
         instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);
@@ -142,49 +142,45 @@ end
 %to draw plots from previously processed data:
 loadData=1;
 if loadData==1
-    for instanceInd=2:7
-        instanceName=['instance',num2str(instanceInd)];
-        %     instanceName='instance1';
-        fileName=['D:\data\',date,'\MUA_',instanceName,'.mat'];
-        load(fileName)
-        sampFreq=30000;
-        stimDurms=1000;%in ms
-        stimDur=stimDurms/1000;%in seconds
-        preStimDur=300/1000;%length of pre-stimulus-onset period, in s
-        postStimDur=300/1000;%length of post-stimulus-offset period, in s
-        downsampleFreq=30;
-        stimCondCol='rgbk';
-        for stimCond=3:6
-            meanChannelMUA=[];
-            for channelInd=1:128
-                stimCondInd=find(trialStimConds==2^stimCond);
-                stimCondChannelDataMUA=channelDataMUA{channelInd}(stimCondInd,:);
-                meanChannelMUA(channelInd,:)=mean(stimCondChannelDataMUA,1);
-                %     plot(meanChannelMUA(channelInd,:))
-            end
-            fileName=fullfile('D:\data',date,['mean_MUA_',instanceName,'cond',num2str(stimCond-2)','.mat']);
-            save(fileName,'meanChannelMUA');
-            
-            for channelInd=1:128
-                figInd=ceil(channelInd/36);
-                figure(figInd);hold on
-                subplotInd=channelInd-((figInd-1)*36);
-                subplot(6,6,subplotInd);
-                plot(meanChannelMUA(channelInd,:),stimCondCol(stimCond-2))
-                ax=gca;
-                ax.XTick=[0 sampFreq*preStimDur/downsampleFreq sampFreq*(preStimDur+stimDur)/downsampleFreq];
-                ax.XTickLabel={num2str(preStimDur*1000),'0',num2str(stimDurms)};
-                %     set(gca,'ylim',[0 max(meanChannelMUA(channelInd,:))]);
-                title(num2str(channelInd));
-            end
+    instanceName='instance1';
+    fileName=['D:\data\',date,'\MUA_',instanceName,'.mat'];
+    load(fileName)
+    sampFreq=30000;
+    stimDurms=1000;%in ms
+    stimDur=stimDurms/1000;%in seconds
+    preStimDur=300/1000;%length of pre-stimulus-onset period, in s
+    postStimDur=300/1000;%length of post-stimulus-offset period, in s
+    downsampleFreq=30;
+    stimCondCol='rgbk';
+    for stimCond=3:6
+        meanChannelMUA=[];
+        for channelInd=1:128
+            stimCondInd=find(trialStimConds==2^stimCond);
+            stimCondChannelDataMUA=channelDataMUA{channelInd}(stimCondInd,:);
+            meanChannelMUA(channelInd,:)=mean(stimCondChannelDataMUA,1);
+            %     plot(meanChannelMUA(channelInd,:))
         end
-        for figInd=1:4
-            figure(figInd)
-            set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-            pathname=fullfile('D:\data',date,[instanceName,'_',num2str(figInd)]);
-            print(pathname,'-dtiff');
+        fileName=fullfile('D:\data',date,['mean_MUA_',instanceName,'cond',num2str(stimCond-2)','.mat']);
+        save(fileName,'meanChannelMUA');
+        
+        for channelInd=1:128
+            figInd=ceil(channelInd/36);
+            figure(figInd);hold on
+            subplotInd=channelInd-((figInd-1)*36);
+            subplot(6,6,subplotInd);
+            plot(meanChannelMUA(channelInd,:),stimCondCol(stimCond-2))
+            ax=gca;
+            ax.XTick=[0 sampFreq*preStimDur/downsampleFreq sampFreq*(preStimDur+stimDur)/downsampleFreq];
+            ax.XTickLabel={num2str(preStimDur*1000),'0',num2str(stimDurms)};
+            %     set(gca,'ylim',[0 max(meanChannelMUA(channelInd,:))]);
+            title(num2str(channelInd));
         end
-        close all
     end
+end
+for figInd=1:4
+    figure(figInd)
+    set(gcf,'PaperPositionMode','auto')
+    pathname=fullfile('D:\data',date,[instanceName,'_',num2str(figInd)]);
+    print(pathname,'-dtiff');
 end
 pause=1;
