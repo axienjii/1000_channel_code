@@ -8,5 +8,5 @@ y=y0+b*sin(t);
 if nargin<=4
     plot(x,y)
 else
-    plot(x,y,'Color',col)
+    plot(x,y,':','Color',col)
 end

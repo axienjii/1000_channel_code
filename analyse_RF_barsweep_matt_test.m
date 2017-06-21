@@ -3,7 +3,7 @@ function analyse_RF_barsweep
 nevfile = 'D:\data\060617_B2\instance8.nev'
 NEV=openNEV(nevfile);
 nsfile = 'D:\data\060617_B2\instance8.ns6'
-NS=openNSx(nsfile);%200 s
+NS=openNSx(nsfile);
 
 Fs=NS.MetaTags.SamplingFreq;
 %Get bits

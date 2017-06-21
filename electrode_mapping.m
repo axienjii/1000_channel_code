@@ -18,6 +18,9 @@ else
     end
 end
 channelNum=channelOrder(channelInd);
+if channelNum>64
+    channelNum=channelNum-64;
+end
 arrayNum=(instanceInd-1)*2+arrayOrder;%determine to which of the 16 arrays the channel belongs
 
 V4Arrays=[2 3];%arrays implanted in V4

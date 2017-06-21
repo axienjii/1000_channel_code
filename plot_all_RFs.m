@@ -39,7 +39,7 @@ for instanceInd=1:8
     load(fileName)
     channelRFs1000=[channelRFs1000;channelRFs];
 end
-SNRthreshold=2;
+SNRthreshold=3;
 meanChannelSNR=mean(channelRFs1000(:,8:11),2);
 goodInd=find(meanChannelSNR>=SNRthreshold);
 badInd=find(meanChannelSNR<SNRthreshold);
@@ -142,6 +142,15 @@ arrayNums=unique(arrayNums);
 %draw dotted lines indicating [0,0]
 plot([0 0],[-250 200],'k:')
 plot([-200 300],[0 0],'k:')
+plot([-200 300],[200 -300],'k:')
+ellipse(50,50,0,0,[0.1 0.1 0.1]);
+ellipse(100,100,0,0,[0.1 0.1 0.1]);
+ellipse(150,150,0,0,[0.1 0.1 0.1]);
+ellipse(200,200,0,0,[0.1 0.1 0.1]);
+text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
 xlim([leftEdge-50 rightEdge+50]);
 ylim([bottomEdge-50 topEdge+50]);
 axis square
@@ -157,9 +166,9 @@ for i=1:length(badInd)
 end
 
 %all good channels, colour-coded by eccentricity
-plotMtLAtP=1;%1: medial-lateral; 2: anterior-posterior
-plotV1=0;
-plotV4=1;
+plotMtLAtP=2;%1: medial-lateral; 2: anterior-posterior
+plotV1=1;
+plotV4=0;
 figure
 hold on
 scatter(0,0,'r','o','filled');%fix spot
@@ -201,9 +210,11 @@ for i=1:length(goodInd)
 %         plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',markerCol,'Marker','x');
 %         %     ellipse(channelRFs1000(goodInd(i),12),channelRFs1000(goodInd(i),13),channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2));
 %     end
-    if channelRow>32&&channelRow<=96||channelRow>128&&channelRow<=128+32||channelRow>128*2-32&&channelRow<=128*2&&plotV4==1%V4 RFs
+    if channelRow>32&&channelRow<=96||channelRow>128&&channelRow<=128+32||channelRow>128*2-32&&channelRow<=128*2%V4 RFs
         countV4=countV4+1;
-        plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o');
+        if plotV4==1
+            plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o');
+        end
     elseif plotV1==1
         plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','x');
         %     ellipse(channelRFs1000(goodInd(i),12),channelRFs1000(goodInd(i),13),channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2));
@@ -215,6 +226,15 @@ arrayNums=unique(arrayNums);
 %draw dotted lines indicating [0,0]
 plot([0 0],[-250 200],'k:')
 plot([-200 300],[0 0],'k:')
+plot([-200 300],[200 -300],'k:')
+ellipse(50,50,0,0,[0.1 0.1 0.1]);
+ellipse(100,100,0,0,[0.1 0.1 0.1]);
+ellipse(150,150,0,0,[0.1 0.1 0.1]);
+ellipse(200,200,0,0,[0.1 0.1 0.1]);
+text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
 xlim([leftEdge-50 rightEdge+50]);
 ylim([bottomEdge-50 topEdge+50]);
 axis square
