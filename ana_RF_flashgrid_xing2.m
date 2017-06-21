@@ -38,212 +38,217 @@ startTrialCode=5;%sent by tracker software early during the trial, not sure exac
 
 stimDur=LOG.BART*nsquares+LOG.INTBAR*(nsquares-1);
 
-instanceInd=1;
-instanceName=['instance',num2str(instanceInd)];
-instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
-NEV=openNEV(instanceNEVFileName,'overwrite');
-oldIndStimOns=find(NEV.Data.SerialDigitalIO.UnparsedData==2^startTrialCode);%starts at 2^0, till 2^7
-oldTimeStimOns=NEV.Data.SerialDigitalIO.TimeStamp(oldIndStimOns);%time stamps corresponding to stimulus onset
-correctTrialCodes=2.^[codeCorrB codeRew];%identify trials where fixation was maintained throughout
-indStimOns=[];
-timeStimOns=[];
-trialStimConds=[];
-for i=1:length(oldIndStimOns)
-    if oldIndStimOns(i)+10<length(NEV.Data.SerialDigitalIO.UnparsedData)
-        trialCodes(i,:)=NEV.Data.SerialDigitalIO.UnparsedData(oldIndStimOns(i):oldIndStimOns(i)+10);
-        if trialCodes(i,10:11)==correctTrialCodes%identify completed trials
-            if sum(trialCodes(i,[3 5 7 9])==2)==4
-                indStimOns=[indStimOns oldIndStimOns(i)];
-                timeStimOns=[timeStimOns oldTimeStimOns(i)];
-                trialStimConds(i,:)=NEV.Data.SerialDigitalIO.UnparsedData(oldIndStimOns(i)+[1 3 5 7]);%read out stimulus condition
-            end
-        end
-    end
-end
-preStimDur=300/1000;%length of pre-stimulus-onset period, in s
-postStimDur=300/1000;%length of post-stimulus-offset period, in s
-
-instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
-switch(instanceInd)
-    case(1)
-        goodChannels=[2 3 6:11 16 19:23 28 29 31:33 36 42:50 56 58 60:65 75:81 89 93:96 98:112 114:128];
-    case(2)
-        goodChannels=[1:5 18 20:23 34 35 37:42 56:57 59:60 69 72 74:78 90:98 107:110 113:116 125 128];
-    case(8)
-        goodChannels=[1 2];
-end
-
-sampFreq=30000;%hard coded
-
-readRawData=0;
-if readRawData==1
-    tic
-    sampInd=1;
-    numMin=1;%duration of each segment to be read in, in minutes
-    errorMessages=[];%keep a list of any errors
-    for channelCount=1:length(goodChannels)
-        try
-            channelInd=goodChannels(channelCount);
-            readChannel=['c:',num2str(channelInd),':',num2str(channelInd)];
-            for segmentInd=1:140
-                readTime=['t:',num2str(sampInd),':',num2str(sampInd+sampFreq*60*numMin-1)];
-                NS=openNSx(instanceNS6FileName,'read',readChannel,readTime,'sample');%read in only that channel and the samples for that trial
-                NSch(1:length(NS.Data(1,103:end)),segmentInd)=double(NS.Data(1,103:end));
-                sampInd=sampInd+sampFreq*60*numMin;
-            end
-        catch ME
-            fprintf('Error at segment %d\n',segmentInd);%print session number to screen
-            disp(ME);%print the error message to screen
-            for i=1:length(ME.stack);
-                errorMessages=[errorMessages;segmentInd {ME}];%append the error message to a list
-            end
-        end
-        toc
-        if ~isempty(errorMessages)
-            for i=1:size(errorMessages,1)
-                fprintf('\nError at segment %d\n',errorMessages{i,1});%print problematic segment number to screen
-                errorMessages{i,2}.message%display error message
-                errorMessages{i,2}.stack%print function and line number at which error occurred
-            end
-        end
-        fileName=fullfile('D:\data',date,['ch',num2str(channelInd),'_rawdata.mat']);
-        save(fileName,'NSch');
-        
-        S=NSch(:);%for MUA extraction, process data for that channel at one shot, across entire session
-        %extract MUA for each channel and trial:
-        tic
-        channelDataMUA=[];
-        %MAKE MUAe
-        %Bandpassed, rectified and low-passed data
-        %================================================
-        Fs=30000;%sampling frequency
-        %BANDPASS
-        Fbp=[500,9000];
-        N  = 2;    % filter order
-        Fn = Fs/2; % Nyquist frequency
-        [B, A] = butter(N, [min(Fbp)/Fn max(Fbp)/Fn]); % compute filter coefficients
-        dum1 = filtfilt(B, A, S); % apply filter to the data
-        %RECTIFY
-        dum2 = abs(dum1);
-        
-        %LOW-PASS
-        Fl=200;
-        N  = 2;    % filter order
-        Fn = Fs/2; % Nyquist frequency
-        [B, A] = butter(N,Fl/Fn,'low'); % compute filter coefficients
-        muafilt = filtfilt(B, A, dum2);
-        %Downsample
-        downsampleFreq=30;
-        muafilt = downsample(muafilt,downsampleFreq); % apply filter to the data and downsample
-        
-        %Kill the first sample to get rid of artifact
-        muafilt = muafilt(2:end);
-        
-        %50Hz removal
-        FsD = Fs/downsampleFreq;
-        Fn = FsD/2; % Downsampled Nyquist frequency
-        for v = [50 100 150];
-            Fbp = [v-2,v+2];
-            [Blp, Alp] = butter(N, [min(Fbp)/Fn max(Fbp)/Fn],'stop'); % compute filter coefficients
-            muafilt = filtfilt(Blp, Alp, muafilt);
-        end
-        MUA = muafilt;
-        
-        %Assign to vargpout
-        channelDataMUA=MUA;
-        %         channelDataMUA(trialInd,:)=MUA;
-        %     end
-        fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'.mat']);
-        save(fileName,'channelDataMUA','trialStimConds');
-        toc
-    end
-end
-
-for channelCount=1:length(goodChannels)
-    channelInd=goodChannels(channelCount);
-    fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'.mat']);
-    load(fileName);
-    trialStimCondsDecode=trialStimConds;%convert from binary code to identify original dasbit pin
-    trialStimCondsDecode(trialStimCondsDecode==1)=0;
-    trialStimCondsDecode(trialStimCondsDecode==4)=2;
-    trialStimCondsDecode(trialStimCondsDecode==8)=3;
-    trialStimCondsDecode(trialStimCondsDecode==64)=6;
-    trialStimCondsDecode(trialStimCondsDecode==128)=7;
-    
-    RFx=sort(unique(STMMAT(:,5)));
-    RFy=sort(unique(STMMAT(:,6)));
-    
-    TRLMATcounter=1;
-    trialStimCondsDecodeCounter=1;
-    goodTrialsInd=[];
-    indStimOnsMatch=[];
-    timeStimOnsMatch=[];
-    for rowInd=1:size(trialStimCondsDecode,1)
-        if sum(trialStimConds(rowInd,:))>0
-            if sum(TRLMAT(:,3,TRLMATcounter)==trialStimCondsDecode(rowInd,:)')==4%if matlab codes match NEV codes
-                goodTrialsInd=[goodTrialsInd rowInd];
-                indStimOnsMatch=[indStimOnsMatch indStimOns(trialStimCondsDecodeCounter)];
-                timeStimOnsMatch=[timeStimOnsMatch timeStimOns(trialStimCondsDecodeCounter)];
-                stimX(trialStimCondsDecodeCounter,:)=TRLMAT(:,1,TRLMATcounter);
-                stimY(trialStimCondsDecodeCounter,:)=TRLMAT(:,2,TRLMATcounter);
-                TRLMATcounter=rowInd+1;
-            else%if the trials do not align at first, search through subsequent trials in TRLMAT to find matching one. If none match, then that trial (although present in NEV data) will be excluded
-                matchFlag=0;
-                while matchFlag==0
-                    if sum(TRLMAT(:,3,TRLMATcounter+1)==trialStimCondsDecode(rowInd,:)')==4
-                        TRLMATcounter=TRLMATcounter+1;
-                        goodTrialsInd=[goodTrialsInd rowInd];
-                        indStimOnsMatch=[indStimOnsMatch indStimOns(trialStimCondsDecodeCounter)];
-                        timeStimOnsMatch=[timeStimOnsMatch timeStimOns(trialStimCondsDecodeCounter)];
-                        stimX(:,trialStimCondsDecodeCounter)=TRLMAT(:,1,TRLMATcounter);%store the X- and Y- positions for that stimulus presentation
-                        stimY(:,trialStimCondsDecodeCounter)=TRLMAT(:,2,TRLMATcounter);
-                        matchFlag=1;
-                    else
-                        TRLMATcounter=TRLMATcounter+1;
-                    end
+for instanceInd=1:2
+    instanceName=['instance',num2str(instanceInd)];
+    instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+    NEV=openNEV(instanceNEVFileName,'overwrite');
+    oldIndStimOns=find(NEV.Data.SerialDigitalIO.UnparsedData==2^startTrialCode);%starts at 2^0, till 2^7
+    oldTimeStimOns=NEV.Data.SerialDigitalIO.TimeStamp(oldIndStimOns);%time stamps corresponding to stimulus onset
+    correctTrialCodes=2.^[codeCorrB codeRew];%identify trials where fixation was maintained throughout
+    indStimOns=[];
+    timeStimOns=[];
+    trialStimConds=[];
+    for i=1:length(oldIndStimOns)
+        if oldIndStimOns(i)+10<length(NEV.Data.SerialDigitalIO.UnparsedData)
+            trialCodes(i,:)=NEV.Data.SerialDigitalIO.UnparsedData(oldIndStimOns(i):oldIndStimOns(i)+10);
+            if trialCodes(i,10:11)==correctTrialCodes%identify completed trials
+                if sum(trialCodes(i,[3 5 7 9])==2)==4
+                    indStimOns=[indStimOns oldIndStimOns(i)];
+                    timeStimOns=[timeStimOns oldTimeStimOns(i)];
+                    trialStimConds(i,:)=NEV.Data.SerialDigitalIO.UnparsedData(oldIndStimOns(i)+[1 3 5 7]);%read out stimulus condition
                 end
             end
-            trialStimCondsDecodeCounter=trialStimCondsDecodeCounter+1;
         end
     end
-    stimXY=(stimX-1)*17.+stimY;
+    preStimDur=300/1000;%length of pre-stimulus-onset period, in s
+    postStimDur=300/1000;%length of post-stimulus-offset period, in s
     
-    stimActBaselineSub=[];%spontaneous activity subtracted from stimulus responses
-    for goodTrialInd=1:length(timeStimOnsMatch)
-        timeStimOnDownsample=ceil(timeStimOnsMatch(goodTrialInd)/downsampleFreq);%make an adjustment to the sample number, due to downsampling of raw data when generating MUA
-        %DOWNSAMPLE(X,N) downsamples input signal X by keeping every N-th sample starting with the first.
-        spontanAct=channelDataMUA(timeStimOnDownsample-preStimDur*sampFreq/downsampleFreq:timeStimOnDownsample-1);
-        stimAct=[];
-        for stimInd=1:nsquares
-            stimAct(stimInd,:)=channelDataMUA(timeStimOnDownsample+(stimInd-1)*(BART+INTBAR)/1000*sampFreq/downsampleFreq:timeStimOnDownsample+(stimInd-1)*(BART+INTBAR)/1000*sampFreq/downsampleFreq+BART/1000*sampFreq/downsampleFreq-1);
-        end
-        stimAct=stimAct-mean(spontanAct);
-        stimActBaselineSub=[stimActBaselineSub;stimAct];%compile responses for each stimulus presentation, subtracting the spontaneous act for a given trial
+    instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+    switch(instanceInd)
+        case(1)
+            goodChannels=[2 3 6:11 16 19:23 28 29 31:33 36 42:50 56 58 60:65 75:81 89 93:96 98:112 114:128];
+            goodChannels=[7:11 16 19:23 28 29 31:33 36 42:50 56 58 60:65 75:81 89 93:96 98:112 114:128];
+        case(2)
+            goodChannels=[1:5 18 20:23 34 35 37:42 56:57 59:60 69 72 74:78 90:98 107:110 113:116 125 128];
+        case(8)
+            goodChannels=[1 2];
     end
     
-    condsMUAm=[];
-    for locInd=1:length(Grid_x)*length(Grid_y)%go through each stimulus location condition
-        locMatchInd=find(stimXY==locInd);
-        if ~isempty(locMatchInd)
-            MUAm=mean(stimActBaselineSub(locMatchInd,:),2);%calculate mean MUA across trials for that condition
-            condsMUAm(locInd)=mean(MUAm);%calculate mean across the stimulus presentation period
+    sampFreq=30000;%hard coded
+    downsampleFreq=30;
+    
+    readRawData=1;
+    if readRawData==1
+        tic
+        numMin=1;%duration of each segment to be read in, in minutes
+        errorMessages=[];%keep a list of any errors
+        for channelCount=1:length(goodChannels)
+            NSch=[];
+            try
+                channelInd=goodChannels(channelCount);
+                readChannel=['c:',num2str(channelInd),':',num2str(channelInd)];
+                sampInd=1;
+                fprintf('Reading in data from instance %d, channel %d',instanceInd,channelInd);%print session number to screen
+                for segmentInd=1:140
+                    readTime=['t:',num2str(sampInd),':',num2str(sampInd+sampFreq*60*numMin-1)];
+                    NS=openNSx(instanceNS6FileName,'read',readChannel,readTime,'sample');%read in only that channel and the samples for that trial
+                    NSch(1:length(NS.Data(1,103:end)),segmentInd)=double(NS.Data(1,103:end));
+                    sampInd=sampInd+sampFreq*60*numMin;
+                end
+            catch ME
+                fprintf('Error at segment %d\n',segmentInd);%print session number to screen
+                disp(ME);%print the error message to screen
+                for i=1:length(ME.stack);
+                    errorMessages=[errorMessages;segmentInd {ME}];%append the error message to a list
+                end
+            end
+            toc
+            if ~isempty(errorMessages)
+                for i=1:size(errorMessages,1)
+                    fprintf('\nError at segment %d\n',errorMessages{i,1});%print problematic segment number to screen
+                    errorMessages{i,2}.message%display error message
+                    errorMessages{i,2}.stack%print function and line number at which error occurred
+                end
+            end
+            fileName=fullfile('D:\data',date,[instanceName,'_ch',num2str(channelInd),'_rawdata.mat']);
+            save(fileName,'NSch');
+            
+            S=NSch(:);%for MUA extraction, process data for that channel at one shot, across entire session
+            %extract MUA for each channel and trial:
+            tic
+            channelDataMUA=[];
+            %MAKE MUAe
+            %Bandpassed, rectified and low-passed data
+            %================================================
+            Fs=30000;%sampling frequency
+            %BANDPASS
+            Fbp=[500,9000];
+            N  = 2;    % filter order
+            Fn = Fs/2; % Nyquist frequency
+            [B, A] = butter(N, [min(Fbp)/Fn max(Fbp)/Fn]); % compute filter coefficients
+            dum1 = filtfilt(B, A, S); % apply filter to the data
+            %RECTIFY
+            dum2 = abs(dum1);
+            
+            %LOW-PASS
+            Fl=200;
+            N  = 2;    % filter order
+            Fn = Fs/2; % Nyquist frequency
+            [B, A] = butter(N,Fl/Fn,'low'); % compute filter coefficients
+            muafilt = filtfilt(B, A, dum2);
+            %Downsample
+            muafilt = downsample(muafilt,downsampleFreq); % apply filter to the data and downsample
+            
+            %Kill the first sample to get rid of artifact
+            muafilt = muafilt(2:end);
+            
+            %50Hz removal
+            FsD = Fs/downsampleFreq;
+            Fn = FsD/2; % Downsampled Nyquist frequency
+            for v = [50 100 150];
+                Fbp = [v-2,v+2];
+                [Blp, Alp] = butter(N, [min(Fbp)/Fn max(Fbp)/Fn],'stop'); % compute filter coefficients
+                muafilt = filtfilt(Blp, Alp, muafilt);
+            end
+            MUA = muafilt;
+            
+            %Assign to vargpout
+            channelDataMUA=MUA;
+            %         channelDataMUA(trialInd,:)=MUA;
+            %     end
+            fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'.mat']);
+            save(fileName,'channelDataMUA','trialStimConds');
+            toc
         end
     end
-    gridMUA=reshape(condsMUAm,[length(Grid_x),length(Grid_y)]);
-    figure;hold on
-    imagesc(Grid_x,Grid_y,gridMUA)
-    scatter(0,0,'r','o','filled');%fix spot
-    set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-    axis equal
-    titleText=['MUAconds_instance ',instanceName,'_ch',num2str(channelInd)];
-    title(titleText);
-    pathname=fullfile('D:\data',date,titleText);
-    print(pathname,'-dtiff');
     
-    fileName=fullfile('D:\data',date,['MUAconds_',instanceName,'_ch',num2str(channelInd),'.mat']);
-    save(fileName,'condsMUAm','gridMUA','stimActBaselineSub','stimAct');
+    for channelCount=1:length(goodChannels)
+        channelInd=goodChannels(channelCount);
+        fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'.mat']);
+        load(fileName);
+        trialStimCondsDecode=trialStimConds;%convert from binary code to identify original dasbit pin
+        trialStimCondsDecode(trialStimCondsDecode==1)=0;
+        trialStimCondsDecode(trialStimCondsDecode==4)=2;
+        trialStimCondsDecode(trialStimCondsDecode==8)=3;
+        trialStimCondsDecode(trialStimCondsDecode==64)=6;
+        trialStimCondsDecode(trialStimCondsDecode==128)=7;
+        
+        RFx=sort(unique(STMMAT(:,5)));
+        RFy=sort(unique(STMMAT(:,6)));
+        
+        TRLMATcounter=1;
+        trialStimCondsDecodeCounter=1;
+        goodTrialsInd=[];
+        indStimOnsMatch=[];
+        timeStimOnsMatch=[];
+        for rowInd=1:size(trialStimCondsDecode,1)
+            if sum(trialStimConds(rowInd,:))>0
+                if sum(TRLMAT(:,3,TRLMATcounter)==trialStimCondsDecode(rowInd,:)')==4%if matlab codes match NEV codes
+                    goodTrialsInd=[goodTrialsInd rowInd];
+                    indStimOnsMatch=[indStimOnsMatch indStimOns(trialStimCondsDecodeCounter)];
+                    timeStimOnsMatch=[timeStimOnsMatch timeStimOns(trialStimCondsDecodeCounter)];
+                    stimX(:,trialStimCondsDecodeCounter)=TRLMAT(:,1,TRLMATcounter);
+                    stimY(:,trialStimCondsDecodeCounter)=TRLMAT(:,2,TRLMATcounter);
+                    TRLMATcounter=rowInd+1;
+                else%if the trials do not align at first, search through subsequent trials in TRLMAT to find matching one. If none match, then that trial (although present in NEV data) will be excluded
+                    matchFlag=0;
+                    while matchFlag==0
+                        if sum(TRLMAT(:,3,TRLMATcounter+1)==trialStimCondsDecode(rowInd,:)')==4
+                            TRLMATcounter=TRLMATcounter+1;
+                            goodTrialsInd=[goodTrialsInd rowInd];
+                            indStimOnsMatch=[indStimOnsMatch indStimOns(trialStimCondsDecodeCounter)];
+                            timeStimOnsMatch=[timeStimOnsMatch timeStimOns(trialStimCondsDecodeCounter)];
+                            stimX(:,trialStimCondsDecodeCounter)=TRLMAT(:,1,TRLMATcounter);%store the X- and Y- positions for that stimulus presentation
+                            stimY(:,trialStimCondsDecodeCounter)=TRLMAT(:,2,TRLMATcounter);
+                            matchFlag=1;
+                        else
+                            TRLMATcounter=TRLMATcounter+1;
+                        end
+                    end
+                end
+                trialStimCondsDecodeCounter=trialStimCondsDecodeCounter+1;
+            end
+        end
+        stimXY=(stimX-1)*17.+stimY;
+        
+        stimActBaselineSub=[];%spontaneous activity subtracted from stimulus responses
+        for goodTrialInd=1:length(timeStimOnsMatch)
+            timeStimOnDownsample=ceil(timeStimOnsMatch(goodTrialInd)/downsampleFreq);%make an adjustment to the sample number, due to downsampling of raw data when generating MUA
+            %DOWNSAMPLE(X,N) downsamples input signal X by keeping every N-th sample starting with the first.
+            spontanAct=channelDataMUA(timeStimOnDownsample-preStimDur*sampFreq/downsampleFreq:timeStimOnDownsample-1);
+            stimAct=[];
+            for stimInd=1:nsquares
+                stimAct(stimInd,:)=channelDataMUA(timeStimOnDownsample+(stimInd-1)*(BART+INTBAR)/1000*sampFreq/downsampleFreq:timeStimOnDownsample+(stimInd-1)*(BART+INTBAR)/1000*sampFreq/downsampleFreq+BART/1000*sampFreq/downsampleFreq-1);
+            end
+            stimAct=stimAct-mean(spontanAct);
+            stimActBaselineSub=[stimActBaselineSub;stimAct];%compile responses for each stimulus presentation, subtracting the spontaneous act for a given trial
+        end
+        
+        condsMUAm=[];
+        for locInd=1:length(Grid_x)*length(Grid_y)%go through each stimulus location condition
+            locMatchInd=find(stimXY==locInd);
+            if ~isempty(locMatchInd)
+                MUAm=mean(stimActBaselineSub(locMatchInd,:),2);%calculate mean MUA across trials for that condition
+                condsMUAm(locInd)=mean(MUAm);%calculate mean across the stimulus presentation period
+            end
+        end
+        gridMUA=reshape(condsMUAm,[length(Grid_x),length(Grid_y)]);
+        figure;hold on
+        imagesc(Grid_x,Grid_y,gridMUA)
+        scatter(0,0,'r','o','filled');%fix spot
+        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+        axis equal
+        titleText=['MUAconds instance ',instanceName,' ch',num2str(channelInd)];
+        title(titleText);
+        imageText=['MUAconds_instance',instanceName,'_ch',num2str(channelInd)];
+        pathname=fullfile('D:\data',date,imageText);
+        print(pathname,'-dtiff');
+        
+        fileName=fullfile('D:\data',date,['MUAconds_',instanceName,'_ch',num2str(channelInd),'.mat']);
+        save(fileName,'condsMUAm','gridMUA','stimActBaselineSub','stimAct');
+        close all
+    end
 end
-
 %SKIP TO HERE if not analysing
 if 1
     %Basic plots,One figure per array
