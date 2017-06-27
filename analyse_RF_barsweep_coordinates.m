@@ -16,9 +16,7 @@ RFy = [];
 %No logfile so have to hardcode
 %Screen details (just pixperdeg required)
 pixperdeg = 25.8601;
-speed = 250/1000; %this is speed in pixels per ms
 bardur = 1000; %duration in miliseconds
-bardist = speed*bardur;
 
 direct{1} = 'L 2 R';
 direct{2} = 'D 2 U';
@@ -32,18 +30,25 @@ preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=300/1000;%length of post-stimulus-offset period, in s
 downsampleFreq=30;
 
-date='060617_B2';
+date='260617_B1';
 switch(date)%x & y co-ordinates of centre-point
     case '060617_B2'
         x0 = 70;
         y0 = -70;
+        speed = 250/1000; %this is speed in pixels per ms
     case '060617_B4'
         x0 = 100;
         y0 = -100;
+        speed = 250/1000; 
+    case '260617_B1'
+        x0 = 70;
+        y0 = -70;
+        speed = 500/1000; 
 end
+bardist = speed*bardur;
 
 colInd=jet(128);
-for instanceInd=1:2
+for instanceInd=1:8
     instanceName=['instance',num2str(instanceInd)];
     Ons = zeros(1,4);
     Offs = zeros(1,4);
@@ -304,11 +309,10 @@ for instanceInd=1:2
     countGoodSNR=find(meanChannelSNR>4);
     length(countGoodSNR)
     fileName=fullfile('D:\data',date,['RFs_',instanceName,'.mat']);
-    saveFile=0;
+    saveFile=1;
     if saveFile==1
         save(fileName,'RFs','channelRFs','meanChannelSNR');
-    end
-    
+    end    
     
     close all
     pause=1;

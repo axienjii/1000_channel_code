@@ -5,17 +5,22 @@ function plot_all_RFs
 
 % channelRFs(channelInd,:)=[RF.centrex RF.centrey RF.sz RF.szdeg RF.ang RF.theta RF.ecc channelSNR(channelInd,:) horizontalRadius verticalRadius];
 
-date='060617_B2';
+date='260617_B1';
 switch(date)%x & y co-ordinates of centre-point
     case '060617_B2'
         x0 = 70;
         y0 = -70;
+        speed = 250/1000; %this is speed in pixels per ms
     case '060617_B4'
         x0 = 100;
         y0 = -100;
+        speed = 250/1000;
+    case '260617_B1'
+        x0 = 70;
+        y0 = -70;
+        speed = 500/1000;
 end
 
-speed = 250/1000; %this is speed in pixels per ms
 bardur = 1; %duration in seconds
 bardist = speed*bardur*1000;
 
@@ -39,7 +44,7 @@ for instanceInd=1:8
     load(fileName)
     channelRFs1000=[channelRFs1000;channelRFs];
 end
-SNRthreshold=3;
+SNRthreshold=1;
 meanChannelSNR=mean(channelRFs1000(:,8:11),2);
 goodInd=find(meanChannelSNR>=SNRthreshold);
 badInd=find(meanChannelSNR<SNRthreshold);
@@ -166,9 +171,9 @@ for i=1:length(badInd)
 end
 
 %all good channels, colour-coded by eccentricity
-plotMtLAtP=2;%1: medial-lateral; 2: anterior-posterior
-plotV1=1;
-plotV4=0;
+plotMtLAtP=1;%1: medial-lateral; 2: anterior-posterior
+plotV1=0;
+plotV4=1;
 figure
 hold on
 scatter(0,0,'r','o','filled');%fix spot

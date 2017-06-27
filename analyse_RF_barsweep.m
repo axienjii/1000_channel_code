@@ -4,8 +4,8 @@ function analyse_RF_barsweep
 %of sweeping white bar stimuli for RF mapping.
 stimDurms=1000;%in ms
 stimDur=stimDurms/1000;%in seconds
-date='060617_B4';
-processRaw=1;
+date='260617_B1';
+processRaw=0;
 if processRaw==1
     for instanceInd=1:8
         instanceName=['instance',num2str(instanceInd)];
@@ -142,7 +142,7 @@ end
 %to draw plots from previously processed data:
 loadData=1;
 if loadData==1
-    for instanceInd=2:7
+    for instanceInd=1:8
         instanceName=['instance',num2str(instanceInd)];
         %     instanceName='instance1';
         fileName=['D:\data\',date,'\MUA_',instanceName,'.mat'];
