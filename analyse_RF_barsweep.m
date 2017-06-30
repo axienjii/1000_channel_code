@@ -4,10 +4,10 @@ function analyse_RF_barsweep
 %of sweeping white bar stimuli for RF mapping.
 stimDurms=1000;%in ms
 stimDur=stimDurms/1000;%in seconds
-date='260617_B1';
-processRaw=0;
+date='280617_B1';
+processRaw=1;
 if processRaw==1
-    for instanceInd=1:8
+    for instanceInd=1:2
         instanceName=['instance',num2str(instanceInd)];
         instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);

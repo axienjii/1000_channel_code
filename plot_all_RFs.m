@@ -5,7 +5,10 @@ function plot_all_RFs
 
 % channelRFs(channelInd,:)=[RF.centrex RF.centrey RF.sz RF.szdeg RF.ang RF.theta RF.ecc channelSNR(channelInd,:) horizontalRadius verticalRadius];
 
+drawBarArea=0;
+
 date='260617_B1';
+date='best_260617-280617';
 switch(date)%x & y co-ordinates of centre-point
     case '060617_B2'
         x0 = 70;
@@ -19,6 +22,10 @@ switch(date)%x & y co-ordinates of centre-point
         x0 = 70;
         y0 = -70;
         speed = 500/1000;
+    case 'best_260617-280617'
+        x0 = [70 30];
+        y0 = [-70 -30];  
+        speed = [500/1000 100/1000];      
 end
 
 bardur = 1; %duration in seconds
@@ -51,12 +58,14 @@ badInd=find(meanChannelSNR<SNRthreshold);
 length(goodInd)/1024
 
 %calculate area of sweeping bar
-leftEdge=x0-bardist/2;
-rightEdge=x0+bardist/2;
-topEdge=y0+bardist/2;
-bottomEdge=y0-bardist/2;
-XVEC1 = [leftEdge rightEdge rightEdge leftEdge leftEdge];
-YVEC1 = [bottomEdge bottomEdge topEdge topEdge bottomEdge];
+for i=1:length(x0)
+    leftEdge=x0(i)-bardist(i)/2;
+    rightEdge=x0(i)+bardist(i)/2;
+    topEdge=y0(i)+bardist(i)/2;
+    bottomEdge=y0(i)-bardist(i)/2;
+    XVEC1(i,:) = [leftEdge rightEdge rightEdge leftEdge leftEdge];
+    YVEC1(i,:) = [bottomEdge bottomEdge topEdge topEdge bottomEdge];
+end
 
 % %all channels
 % figure
@@ -106,8 +115,12 @@ YVEC1 = [bottomEdge bottomEdge topEdge topEdge bottomEdge];
 figure
 hold on
 scatter(0,0,'r','o','filled');%fix spot
-h = line(XVEC1,YVEC1,'LineWidth',1);
-set(h,'Color',[0.5 0.5 0.5])
+if drawBarArea==1
+    for i=1:size(XVEC1,1)
+        h = line(XVEC1(i,:),YVEC1(i,:),'LineWidth',1);
+        set(h,'Color',[0.5 0.5 0.5])
+    end
+end
 colind = hsv(16);
 arrayNums=[];
 goodArrays=1:16;
@@ -143,6 +156,8 @@ for i=1:length(goodInd)
 end
 xlim([-100 300]);
 ylim([-300 100]);
+xlim([-50 250]);
+ylim([-250 50]);
 arrayNums=unique(arrayNums);
 %draw dotted lines indicating [0,0]
 plot([0 0],[-250 200],'k:')
@@ -163,22 +178,35 @@ ax.XTick=[0 sampFreq*preStimDur/downsampleFreq sampFreq*(preStimDur+stimDur)/dow
 ax.XTickLabel={num2str(preStimDur*1000),'0',num2str(stimDurms)};
 titleText=['all good channel RFs, SNR=',num2str(SNRthreshold),', ',num2str(length(goodInd)),' channels'];
 title(titleText);
+% for i=1:16
+%     text(220,-100-i*8,num2str(i),'Color',colind(i,:))
+% end
 for i=1:16
-    text(220,-100-i*8,num2str(i),'Color',colind(i,:))
+    text(220,-5-i*8,num2str(i),'Color',colind(i,:))
 end
 for i=1:length(badInd)
     scatter(channelRFs1000(badInd(i),1),channelRFs1000(badInd(i),2),'r','x');
 end
 
+axis equal
+xlim([-40 260]);
+ylim([-170 30]);
+xlim([-50 250]);
+xlim([-25 150]);
+
 %all good channels, colour-coded by eccentricity
-plotMtLAtP=1;%1: medial-lateral; 2: anterior-posterior
-plotV1=0;
-plotV4=1;
+plotMtLAtP=2;%1: medial-lateral; 2: anterior-posterior
+plotV1=1;
+plotV4=0;
 figure
 hold on
 scatter(0,0,'r','o','filled');%fix spot
-h = line(XVEC1,YVEC1,'LineWidth',1);
-set(h,'Color',[0.5 0.5 0.5])
+if drawBarArea==1
+    for i=1:size(XVEC1,1)
+        h = line(XVEC1(i,:),YVEC1(i,:),'LineWidth',1);
+        set(h,'Color',[0.5 0.5 0.5])
+    end
+end
 if plotMtLAtP==1
     colind = cool(7);
     if plotV1==0
@@ -299,8 +327,12 @@ end
 xlim([-100 300]);
 ylim([-300 100]);
 %plot area of sweeping bar
-h = line(XVEC1,YVEC1,'LineWidth',2);
-set(h,'Color','k')
+if drawBarArea==1
+    for i=1:size(XVEC1,1)
+        h = line(XVEC1(i,:),YVEC1(i,:),'LineWidth',1);
+        set(h,'Color',[0.5 0.5 0.5])
+    end
+end
 xlim([50 150]);
 ylim([-150 -50]);
 axis square

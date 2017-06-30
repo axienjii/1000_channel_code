@@ -12,6 +12,7 @@ fileName = 'RF_GridMap_20170619_B1.mat';
 
 datadir = 'D:\data\190617_B1\';
 date='190617_B1';
+date='280617_B2';
 
 %Directory of stimulus logfile
 logdir = 'D:\data\190617_B1\';
@@ -32,7 +33,7 @@ startTrialCode=5;%sent by tracker software early during the trial, not sure exac
 
 stimDur=LOG.BART*nsquares+LOG.INTBAR*(nsquares-1);
 
-for instanceInd=1:2
+for instanceInd=5:5
     instanceName=['instance',num2str(instanceInd)];
     instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
     NEV=openNEV(instanceNEVFileName,'overwrite');
@@ -66,6 +67,8 @@ for instanceInd=1:2
             goodChannels=[1:5 18 20:23 34 35 37:42 56:57 59:60 69 72 74:78 90:98 107:110 113:116 125 128];
         case(8)
             goodChannels=[1:1];
+        case(5)
+            goodChannels=[];
     end
     
     sampFreq=30000;%hard coded
@@ -76,7 +79,7 @@ for instanceInd=1:2
         numMin=1;%duration of each segment to be read in, in minutes
         errorMessages=[];%keep a list of any errors
         for channelCount=1:length(goodChannels)
-            channelInd=1;
+            channelInd=goodChannels(channelCount);
             readChannel=['c:',num2str(channelInd),':',num2str(channelInd)];
             NSch=openNSx(instanceNS6FileName,'read',readChannel);
             fileName=fullfile('D:\data',date,[instanceName,'_ch',num2str(channelInd),'_rawdata.mat']);

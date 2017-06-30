@@ -5,15 +5,7 @@ function plot_array_RFs
 
 % channelRFs(channelInd,:)=[RF.centrex RF.centrey RF.sz RF.szdeg RF.ang RF.theta RF.ecc channelSNR(channelInd,:) horizontalRadius verticalRadius];
 
-date='060617_B2';
-switch(date)%x & y co-ordinates of centre-point
-    case '060617_B2'
-        x0 = 70;
-        y0 = -70;
-    case '060617_B4'
-        x0 = 100;
-        y0 = -100;
-end
+date='best_260617-280617';
 
 speed = 250/1000; %this is speed in pixels per ms
 bardur = 1; %duration in seconds
@@ -45,20 +37,46 @@ goodInd=find(meanChannelSNR>=SNRthreshold);
 badInd=find(meanChannelSNR<SNRthreshold);
 length(goodInd)/1024
 
-%calculate area of sweeping bar
-leftEdge=x0-bardist/2;
-rightEdge=x0+bardist/2;
-topEdge=y0+bardist/2;
-bottomEdge=y0-bardist/2;
-XVEC1 = [leftEdge rightEdge rightEdge leftEdge leftEdge];
-YVEC1 = [bottomEdge bottomEdge topEdge topEdge bottomEdge];
-
 %all good channels, colour-coded by eccentricity
 plotMtLAtP=1;%1: medial-lateral; 2: anterior-posterior
-plotV1=1;
-plotV4=0;
-arrayOfInterest=16;
-for arrayOfInterest=1:16
+for arrayOfInterest=5
+    switch(date)%x & y co-ordinates of centre-point
+        case '060617_B2'
+            x0 = 70;
+            y0 = -70;
+        case '060617_B4'
+            x0 = 100;
+            y0 = -100;
+        case '260617_B1'
+            x0 = 70;
+            y0 = -70;
+        case '280617_B1'
+            x0 = 30;
+            y0 = -30;
+        case 'best_260617-280617'
+            if arrayOfInterest==1||arrayOfInterest==4
+                x0 = 30;%280617 mapping with small thin bar
+                y0 = -30;
+            else
+                x0 = 70;%260617 mapping with larger bar
+                y0 = -70;
+            end
+    end
+    if arrayOfInterest==2||arrayOfInterest==3
+        plotV1=0;
+        plotV4=1;
+    else
+        plotV1=1;
+        plotV4=0;
+    end
+
+    %calculate area of sweeping bar
+    leftEdge=x0-bardist/2;
+    rightEdge=x0+bardist/2;
+    topEdge=y0+bardist/2;
+    bottomEdge=y0-bardist/2;
+    XVEC1 = [leftEdge rightEdge rightEdge leftEdge leftEdge];
+    YVEC1 = [bottomEdge bottomEdge topEdge topEdge bottomEdge];
     figure
     hold on
     scatter(0,0,'r','o','filled');%fix spot
@@ -102,7 +120,8 @@ for arrayOfInterest=1:16
                 plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',[1-1/arrayColumn 0 1-1/arrayRow],'MarkerFaceColor',[1-1/arrayColumn 0 1-1/arrayRow],'Marker','o');
                 %     ellipse(channelRFs1000(goodInd(i),12),channelRFs1000(goodInd(i),13),channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2));
             end
-            text(channelRFs1000(goodInd(i),1)+1,channelRFs1000(goodInd(i),2),num2str(channelNum));
+%             text(channelRFs1000(goodInd(i),1)+1,channelRFs1000(goodInd(i),2),num2str(channelNum));
+            text(channelRFs1000(goodInd(i),1)+0.2,channelRFs1000(goodInd(i),2),num2str(channelNum));
         end
     end
     xlim([-100 300]);
@@ -139,6 +158,10 @@ for arrayOfInterest=1:16
     title(titleText);
     pathName=fullfile('D:\data',date,fileName);
     set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-    print(pathName,'-dtiff');
+%     print(pathName,'-dtiff');
+
+    pathName=fullfile('D:\data',date,[fileName '_zoom']);
+    set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+%     print(pathName,'-dtiff');
     close all
 end

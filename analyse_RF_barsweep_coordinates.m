@@ -44,11 +44,18 @@ switch(date)%x & y co-ordinates of centre-point
         x0 = 70;
         y0 = -70;
         speed = 500/1000; 
+    case '280617_B1'
+        x0 = 30;
+        y0 = -30;
+        speed = 100/1000; 
 end
 bardist = speed*bardur;
 
+manualChannels=[];
+doManualChecks=1;
+
 colInd=jet(128);
-for instanceInd=1:8
+for instanceInd=2
     instanceName=['instance',num2str(instanceInd)];
     Ons = zeros(1,4);
     Offs = zeros(1,4);
@@ -61,7 +68,7 @@ for instanceInd=1:8
     stimCondCol='rgbk';
     SigDif=[];
     channelSNR=[];
-    for channelInd=1:128
+    for channelInd=[1:32 97:128]
         MUAmAllConds=[];
         for stimCond = 1:4
             MUAm=meanChannelMUAconds{stimCond}(channelInd,:);%each value corresponds to 1 ms
@@ -109,6 +116,31 @@ for instanceInd=1:8
             ax.XTickLabel={num2str(preStimDur*1000),'0',num2str(stimDurms)};
             %     set(gca,'ylim',[0 max(meanChannelMUA(channelInd,:))]);
             title(num2str(channelInd));
+            if doManualChecks==1
+                figCh=figure;hold on
+                set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+                plot(mua2fit,stimCondCol(stimCond));hold on
+                plot(y,stimCondCol(stimCond),'Color',[0.5 0.5 0.5]);
+                
+                prompt = 'Manual selection?';
+                manual = input(prompt)
+                if manual==1
+                    [xClick yClick]=ginput(4);
+                    params(1)=xClick(1)-300;
+                    params(2)=(xClick(3)-xClick(2))/2;
+                    params(4)=yClick(4);
+                    paramsConds(stimCond,:)=params;
+                    figure(figInd);hold on
+                    subplot(6,6,subplotInd);
+                    plot(params(1)+300,yClick(1),'x','Color',[0.5 0.5 0.5]);
+                    manualChannels=[manualChannels;instanceInd channelInd stimCond];%store identities of channels and conditions where manual selection used
+                    
+                    %Redo calculation of onset and offset:
+                    Ons(1,stimCond) = params(1)-(1.65.*params(2));
+                    Offs(1,stimCond) = params(1)+(1.65.*params(2));
+                end
+                close(figCh)
+            end
         end
         %set axis limits
         maxResponse=max(MUAmAllConds);
@@ -289,7 +321,7 @@ for instanceInd=1:8
     end
     print(pathname,'-dtiff');
     
-    printStimCondResponses=0;
+    printStimCondResponses=1;
     if printStimCondResponses==1
         for figInd=1:4
             figure(figInd)
@@ -311,7 +343,7 @@ for instanceInd=1:8
     fileName=fullfile('D:\data',date,['RFs_',instanceName,'.mat']);
     saveFile=1;
     if saveFile==1
-        save(fileName,'RFs','channelRFs','meanChannelSNR');
+        save(fileName,'RFs','channelRFs','meanChannelSNR','manualChannels');
     end    
     
     close all
