@@ -126,6 +126,7 @@ arrayNums=[];
 goodArrays=1:16;
 % goodArrays=[1 2 3 4 9 10 11 13 14 15 16];
 % colind = hsv(11);
+badQuadrant=[];
 for i=1:length(goodInd)
     channelRow=goodInd(i);
     instanceInd=ceil(channelRow/128);
@@ -147,6 +148,14 @@ for i=1:length(goodInd)
 %         plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',markerCol,'Marker','x');
 %         %     ellipse(channelRFs1000(goodInd(i),12),channelRFs1000(goodInd(i),13),channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2));
 %     end
+    if channelRFs1000(goodInd(i),1)<0||channelRFs1000(goodInd(i),2)>10
+        if area=='V1'
+            areaNum=1;
+        elseif area=='V4'
+            areaNum=4;
+        end
+        badQuadrant=[badQuadrant;arrayNum channelNum areaNum instanceInd channelInd];
+    end
     if channelRow>32&&channelRow<=96||channelRow>128&&channelRow<=128+32||channelRow>128*2-32&&channelRow<=128*2%V4 RFs
         plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o');
     else

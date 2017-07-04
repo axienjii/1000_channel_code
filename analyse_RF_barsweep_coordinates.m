@@ -55,7 +55,7 @@ manualChannels=[];
 doManualChecks=1;
 
 colInd=jet(128);
-for instanceInd=2
+for instanceInd=7
     instanceName=['instance',num2str(instanceInd)];
     Ons = zeros(1,4);
     Offs = zeros(1,4);
@@ -68,7 +68,7 @@ for instanceInd=2
     stimCondCol='rgbk';
     SigDif=[];
     channelSNR=[];
-    for channelInd=[1:32 97:128]
+    for channelInd=[41];%[1:32 97:128]
         MUAmAllConds=[];
         for stimCond = 1:4
             MUAm=meanChannelMUAconds{stimCond}(channelInd,:);%each value corresponds to 1 ms
