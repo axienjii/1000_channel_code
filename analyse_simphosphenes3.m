@@ -1,4 +1,4 @@
-function analyse_simphosphenes3
+function analyse_simphosphenes3(date,allInstanceInd,allGoodChannels)
 %3/7/17
 %Written by Xing. Extracts and analyses MUA data from raw .NS6 file, during presentation
 %of simulated phosphene letters. Extracts MUA for each channel, clips it
@@ -21,8 +21,8 @@ function analyse_simphosphenes3
 %correct order. This is implemented in the part of the code that flanks this line:
 %match=find(trialStimConds(nevSeqInd,rowInd)==convertedGoodTrialIDs(matchInd:8,goodTrialIDscounter));
 
-date='050717_B2';
-date='110717_B2';
+% date='050717_B2';
+% date='110717_B2';
 % date='060717_B1';
 matFile=['D:\data\',date,'\',date,'_data\simphosphenes6_',date,'.mat'];
 load(matFile);
@@ -45,7 +45,7 @@ sampFreq=30000;
 
 processRaw=1;
 if processRaw==1
-    for instanceInd=5:8%
+    for instanceInd=allInstanceInd
         instanceName=['instance',num2str(instanceInd)];
         instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);
@@ -155,12 +155,13 @@ if processRaw==1
         %incorrect trials.
         
         %read in neural data:
-        switch(instanceInd)
-            case(5)
-                goodChannels=53:128;
-            otherwise
-                goodChannels=1:128;
-        end
+%         switch(instanceInd)
+%             case(5)
+%                 goodChannels=53:128;
+%             otherwise
+%                 goodChannels=1:128;
+%         end
+        goodChannels=allGoodChannels{instanceInd};
         instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6']; 
         for channelCount=1:length(goodChannels)
             channelInd=goodChannels(channelCount);
@@ -248,16 +249,17 @@ if processRaw==1
         end
     end
 end
-drawImages=1;
+drawImages=0;
 if drawImages==1
-    for instanceInd=5:8%[1 3 4 6:8]
+    for instanceInd=allInstanceInd
         instanceName=['instance',num2str(instanceInd)];
-        switch(instanceInd)
-            case(4)
-                goodChannels=89:128;
-            otherwise
-                goodChannels=1:128;
-        end
+%         switch(instanceInd)
+%             case(4)
+%                 goodChannels=89:128;
+%             otherwise
+%                 goodChannels=1:128;
+%         end
+        goodChannels=allGoodChannels{instanceInd};
         for channelCount=1:length(goodChannels)
             channelInd=goodChannels(channelCount);
             fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'_downsample.mat']);
