@@ -1,7 +1,12 @@
-function analyse_simphosphenes
+function analyse_simphosphenes2
 %3/7/17
 %Written by Xing. Extracts and analyses MUA data from raw .NS6 file, during presentation
-%of simulated phosphene letters.
+%of simulated phosphene letters. Extracts MUA for each channel, clips it
+%for each trial, and subsequently saves this trial-wise data in a .mat file
+%(as opposed to analyse_simphosphenes, which saves the MUA data across the entire session).
+%Uses previous (simphosphenes5.m) code where instead of sending stimbit at
+%sample onset, stimbit was sent at target onset.
+
 %Matches data between .nev and .mat files, identifies indices of trials to
 %be included in analyses. From .mat file: variable performanceMatch
 %provide list of trial responses (correct or incorrect) & goodTrialCondsMatch 
@@ -17,12 +22,16 @@ function analyse_simphosphenes
 %match=find(trialStimConds(nevSeqInd,rowInd)==convertedGoodTrialIDs(matchInd:8,goodTrialIDscounter));
 
 date='050717_B2';
+% date='060717_B1';
 matFile=['D:\data\',date,'\',date,'_data\simphosphenes5_',date,'.mat'];
 load(matFile);
 [dummy goodTrials]=find(performance~=0);
 goodTrialConds=allTrialCond(goodTrials,:);
 goodTrialIDs=TRLMAT(goodTrials,:);
 allLetters='IUALTVSYJP';
+
+saveFullMUA=0;
+smoothResponse=1;
 
 downSampling=1;
 downsampleFreq=30;
@@ -35,7 +44,7 @@ sampFreq=30000;
 
 processRaw=0;
 if processRaw==1
-    for instanceInd=1:8%[1 3 4 6:8]
+    for instanceInd=4%[1 3 4 6:8]
         instanceName=['instance',num2str(instanceInd)];
         instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);
@@ -51,6 +60,7 @@ if processRaw==1
         indStimOns=[];
         timeStimOns=[];
         trialStimConds=[];
+        performanceNEV=[];
         for i=1:length(oldIndStimOns)
             if oldIndStimOns(i)+11<length(NEV.Data.SerialDigitalIO.UnparsedData)
                 trialCodes(i,:)=NEV.Data.SerialDigitalIO.UnparsedData(oldIndStimOns(i):oldIndStimOns(i)+11);
@@ -58,6 +68,11 @@ if processRaw==1
                     indStimOns=[indStimOns oldIndStimOns(i)];
                     timeStimOns=[timeStimOns oldTimeStimOns(i)];
                     trialStimConds=[trialStimConds NEV.Data.SerialDigitalIO.UnparsedData(oldIndStimOns(i)+4:oldIndStimOns(i)+11)];%read out stimulus condition
+                    if trialCodes(i,4)==2^corrBit
+                        performanceNEV=[performanceNEV 1];
+                    elseif trialCodes(i,4)==2^ErrorBit
+                        performanceNEV=[performanceNEV -1];
+                    end
                 end
             end
         end             
@@ -113,14 +128,24 @@ if processRaw==1
         end
         trialIndConds={};
         goodTrialCondsMatch=goodTrialConds(matMatchInd,:);%update list of stimulus conditions based on matched trials between .mat and .nev files
-        performanceMatch=goodTrials(matMatchInd);
+        performanceInd=goodTrials(matMatchInd);
+        performanceMatch=performance(performanceInd); 
+        numCorrTrials=length(find(performanceMatch==1));
+        numIncorrTrials=length(find(performanceMatch==-1));
+%         if length(performanceNEV)>matMatchInd(end)
+%         performanceNEVMatch=performanceNEV(performanceInd); 
+%         end
         for letterInd=1:10%10 letters 
             for lumInd=1:40%40 luminance combinations
                 a=find(goodTrialCondsMatch(:,1)==letterInd);
                 b=find(goodTrialCondsMatch(:,2)==lumInd);
                 trialIndConds{letterInd,lumInd}=intersect(a,b);%identify trials where stimulus was a particular letter and luminance combination
                 trialTypeConds{letterInd,lumInd}=goodTrialCondsMatch(intersect(a,b),3);%notes down whether trial was supposed to be 'consecutively presented' or 'solitary'
-                trialPerf{letterInd,lumInd}=performance(performanceMatch(intersect(a,b)));%notes down whether monkey's response was correct or incorrect
+                if letterInd<=8%familiar letters
+                    trialPerf{letterInd,lumInd}=performanceNEV(intersect(a,b));%notes down whether monkey's response was correct or incorrect
+                elseif letterInd>=9%unfamiliar letters, J & P, were always rewarded
+                    trialPerf{letterInd,lumInd}=ones(length(performanceNEV(intersect(a,b))),1);%notes down whether monkey's response was correct or incorrect
+                end
             end
         end
         %if his response was correct, always include the trial. if response
@@ -129,8 +154,17 @@ if processRaw==1
         %incorrect trials.
         
         %read in neural data:
+        switch(instanceInd)
+            case(4)
+                goodChannels=89:128;
+            case(5)
+                goodChannels=121:128;
+            otherwise
+                goodChannels=1:128;
+        end
         instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6']; 
-        for channelInd=1:128
+        for channelCount=1:length(goodChannels)
+            channelInd=goodChannels(channelCount);
             readChannel=['c:',num2str(channelInd),':',num2str(channelInd)];
             NSchOriginal=openNSx(instanceNS6FileName,'read',readChannel);
             NSch=NSchOriginal.Data;
@@ -171,7 +205,9 @@ if processRaw==1
             if downSampling==0
                 channelDataMUA=muafilt;
                 fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'.mat']);
-                save(fileName,'channelDataMUA','trialStimConds','matMatchInd','timeStimOnsMatch','indStimOnsMatch','goodTrialsInd','goodTrialCondsMatch','-v7.3');
+                if saveFullMUA==1
+                    save(fileName,'channelDataMUA','trialStimConds','matMatchInd','timeStimOnsMatch','indStimOnsMatch','goodTrialsInd','goodTrialCondsMatch','-v7.3');
+                end
             elseif downSampling==1
                 %Downsample
                 muafilt = downsample(muafilt,downsampleFreq); % apply filter to the data and downsample
@@ -188,118 +224,153 @@ if processRaw==1
                 %Assign to vargpout
                 channelDataMUA=muafilt;
                 fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'_downsample.mat']);
-                save(fileName,'channelDataMUA','trialStimConds','matMatchInd','timeStimOnsMatch','indStimOnsMatch','goodTrialsInd','goodTrialCondsMatch');
+                if saveFullMUA==1
+                    save(fileName,'channelDataMUA','trialStimConds','matMatchInd','timeStimOnsMatch','indStimOnsMatch','goodTrialsInd','goodTrialCondsMatch');
+                end
             end
             toc
-        end
-    end
-end
-         
-%to draw plots from previously processed data:
-loadData=1;
-if loadData==1
-    for instanceInd=1:3%8%[1 3 4 6:8]
-        load('D:\data\050717_B2\goodTrialCondsMatch.mat')
-        instanceName=['instance',num2str(instanceInd)];
-        for channelInd=1:128
-            fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'_downsample.mat']);
-            load(fileName);
             trialData=[];
             for trialInd=1:length(timeStimOnsMatch)
                 if downSampling==0
                     startPoint=timeStimOnsMatch(trialInd);
-                    if length(channelDataMUA)>=startPoint+sampFreq*stimDur+sampFreq*postStimDur-1
-                        trialData(trialInd,:)=channelDataMUA(startPoint-sampFreq*preStimDur:startPoint+sampFreq*stimDur+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
+                    if length(channelDataMUA)>=startPoint+sampFreq*postStimDur-1
+                        trialData(trialInd,:)=channelDataMUA(startPoint-sampFreq*preStimDur-sampFreq*stimDur:startPoint+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
                     end
                 elseif downSampling==1
                     startPoint=floor(timeStimOnsMatch(trialInd)/downsampleFreq);
-                    if length(channelDataMUA)>=startPoint+sampFreq/downsampleFreq*stimDur+sampFreq/downsampleFreq*postStimDur-1
-                        trialData(trialInd,:)=channelDataMUA(startPoint-sampFreq/downsampleFreq*preStimDur:startPoint+sampFreq/downsampleFreq*stimDur+sampFreq/downsampleFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
+                    if length(channelDataMUA)>=startPoint+sampFreq/downsampleFreq*postStimDur-1
+                        trialData(trialInd,:)=channelDataMUA(startPoint-sampFreq/downsampleFreq*preStimDur-sampFreq/downsampleFreq*stimDur:startPoint+sampFreq/downsampleFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
                     end
                 end
             end
             fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'_trialData.mat']);
-            save(fileName,'channelDataMUA','trialStimConds','matMatchInd','timeStimOnsMatch','indStimOnsMatch','goodTrialsInd','goodTrialCondsMatch','trialData');
-
-            meanChannelMUA(channelInd,:)=mean(trialData,1);
-            
-            figInd=ceil(channelInd/36);
-            figure(figInd);
-            subplotInd=channelInd-((figInd-1)*36);
-            subplot(6,6,subplotInd);
-            plot(meanChannelMUA(channelInd,:))
-            hold on
-            ax=gca;
-            if downSampling==0
-                ax.XTick=[0 sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*(preStimDur+stimDur)];
-                ax.XTickLabel={num2str(-preStimDur*1000),'0',num2str(stimDurms)};
-            elseif downSampling==1
-                ax.XTick=[0 sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*(preStimDur+stimDur)];
-                ax.XTickLabel={num2str(-preStimDur*1000),'0',num2str(stimDurms)};
-            end
-            %     set(gca,'ylim',[0 max(meanChannelMUA(channelInd,:))]);
-            title(num2str(channelInd));
-            %set axis limits
-            maxResponse=max(meanChannelMUA(channelInd,:));
-            minResponse=min(meanChannelMUA(channelInd,:));
-            diffResponse=maxResponse-minResponse;
-            %draw dotted lines indicating stimulus presentation
-            if downSampling==0
-                plot([sampFreq*preStimDur sampFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-                plot([sampFreq*(preStimDur+stimDur) sampFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-            elseif downSampling==1
-                plot([sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-                plot([sampFreq/downsampleFreq*(preStimDur+stimDur) sampFreq/downsampleFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-            end
-            ylim([minResponse-diffResponse/10 maxResponse+diffResponse/10]);
-            xlim([0 length(meanChannelMUA(channelInd,:))]);   
-            
-            figLetters=figure;
-            hold on
-            for letterCond=1:10
-                meanChannelMUA(letterCond,:)=mean(trialData(find(goodTrialCondsMatch(:,1)==letterCond),:),1);
-                if sum(meanChannelMUA(letterCond,:))>0
-%                     subplot(5,2,letterCond)
-                    plot(meanChannelMUA(letterCond,:));
-                    hold on
-                    ax=gca;
-                    if downSampling==0
-                        ax.XTick=[0 sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*(preStimDur+stimDur)];
-                        ax.XTickLabel={num2str(-preStimDur*1000),'0',num2str(stimDurms)};
-                    elseif downSampling==1
-                        ax.XTick=[0 sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*(preStimDur+stimDur)];
-                        ax.XTickLabel={num2str(-preStimDur*1000),'0',num2str(stimDurms)};
-                    end
-                    %     set(gca,'ylim',[0 max(meanChannelMUA(channelInd,:))]);
-                    title([num2str(channelInd),' letter ',allLetters(letterCond)]);
-                    %set axis limits
-                    maxResponse=max(meanChannelMUA(letterCond,:));
-                    minResponse=min(meanChannelMUA(letterCond,:));
-                    diffResponse=maxResponse-minResponse;
-                    %draw dotted lines indicating stimulus presentation
-                    if downSampling==0
-                        plot([sampFreq*preStimDur sampFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-                        plot([sampFreq*(preStimDur+stimDur) sampFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-                    elseif downSampling==1
-                        plot([sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-                        plot([sampFreq/downsampleFreq*(preStimDur+stimDur) sampFreq/downsampleFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-                    end
-                    ylim([minResponse-diffResponse/10 maxResponse+diffResponse/10]);
-                    xlim([0 length(meanChannelMUA(channelInd,:))]);
-                end
-            end
-            set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-            pathname=fullfile('D:\data',date,[instanceName,'_',num2str(figInd),'_','channel_',num2str(channelInd),'_visual_response_letters']);
-            print(pathname,'-dtiff');   
-            close(figLetters)
+            save(fileName,'channelDataMUA','trialStimConds','matMatchInd','timeStimOnsMatch','indStimOnsMatch','goodTrialsInd','goodTrialCondsMatch','trialData','performanceNEV');
         end
-        for figInd=1:4
-            figure(figInd)
-            set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-            pathname=fullfile('D:\data',date,[instanceName,'_',num2str(figInd),'_visual_response']);
-            print(pathname,'-dtiff');
-        end
-        close all
     end
+end
+for instanceInd=4%[1 3 4 6:8]
+    instanceName=['instance',num2str(instanceInd)];
+    switch(instanceInd)
+        case(4)
+            goodChannels=89:128;
+        case(5)
+            goodChannels=121:128;
+        otherwise
+            goodChannels=1:128;
+    end
+    for channelCount=1:length(goodChannels)
+        channelInd=goodChannels(channelCount);
+        fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'_trialData.mat']);
+        load(fileName);
+        meanChannelMUA(channelInd,:)=mean(trialData,1);
+        
+        figInd=ceil(channelInd/36);
+        figure(figInd);
+        subplotInd=channelInd-((figInd-1)*36);
+        subplot(6,6,subplotInd);
+        plot(meanChannelMUA(channelInd,:))
+        hold on
+        ax=gca;
+        if downSampling==0
+            ax.XTick=[0 sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*(preStimDur+stimDur)];
+            ax.XTickLabel={num2str(-preStimDur*1000),'0',num2str(stimDurms)};
+        elseif downSampling==1
+            ax.XTick=[0 sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*(preStimDur+stimDur)];
+            ax.XTickLabel={num2str(-preStimDur*1000),'0',num2str(stimDurms)};
+        end
+        %     set(gca,'ylim',[0 max(meanChannelMUA(channelInd,:))]);
+        title(num2str(channelInd));
+        %set axis limits
+        maxResponse=max(meanChannelMUA(channelInd,:));
+        minResponse=min(meanChannelMUA(channelInd,:));
+        diffResponse=maxResponse-minResponse;
+        %draw dotted lines indicating stimulus presentation
+        if downSampling==0
+            plot([sampFreq*preStimDur sampFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
+            plot([sampFreq*(preStimDur+stimDur) sampFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
+        elseif downSampling==1
+            plot([sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
+            plot([sampFreq/downsampleFreq*(preStimDur+stimDur) sampFreq/downsampleFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
+        end
+        ylim([minResponse-diffResponse/10 maxResponse+diffResponse/10]);
+        xlim([0 length(meanChannelMUA(channelInd,:))]);
+        
+        figLetters=figure;
+        hold on
+        letterYMin=[];
+        letterYMax=[];
+        letterYMaxLoc=[];
+        for letterCond=1:10
+            meanChannelMUA(letterCond,:)=mean(trialData(find(goodTrialCondsMatch(:,1)==letterCond),:),1);
+            if sum(meanChannelMUA(letterCond,:))>0
+                %                     subplot(5,2,letterCond)
+                colind = hsv(10);
+                if smoothResponse==1
+                    smoothMUA = smooth(meanChannelMUA(letterCond,:),30);
+                    plot(smoothMUA,'Color',colind(letterCond,:),'LineWidth',1);
+                elseif smoothResponse==0
+                    plot(meanChannelMUA(letterCond,:),'Color',colind(letterCond,:),'LineWidth',1);
+                end
+                hold on
+                ax=gca;
+                if downSampling==0
+                    ax.XTick=[0 sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*(preStimDur+stimDur)];
+                    ax.XTickLabel={num2str(-preStimDur*1000),'0',num2str(stimDurms)};
+                elseif downSampling==1
+                    ax.XTick=[0 sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*(preStimDur+stimDur)];
+                    ax.XTickLabel={num2str(-preStimDur*1000),'0',num2str(stimDurms)};
+                end
+                %     set(gca,'ylim',[0 max(meanChannelMUA(channelInd,:))]);
+                %                     title([num2str(channelInd),' letter ',allLetters(letterCond)]);
+                %set axis limits
+                if smoothResponse==1
+                    [maxResponse maxInd]=max(smoothMUA);
+                    minResponse=min(smoothMUA);
+                elseif smoothResponse==0
+                    [maxResponse maxInd]=max(meanChannelMUA(letterCond,:));
+                    minResponse=min(meanChannelMUA(letterCond,:));
+                end
+                diffResponse=maxResponse-minResponse;
+                letterYMin=[letterYMin minResponse];
+                letterYMax=[letterYMax maxResponse];
+                letterYMaxLoc=[letterYMaxLoc maxInd];
+            end
+        end
+        %draw dotted lines indicating stimulus presentation
+        if smoothResponse==1
+            minResponse=min(letterYMin);
+            [maxResponse maxLetter]=max(letterYMax);
+        end
+        diffResponse=maxResponse-minResponse;
+        if downSampling==0
+            plot([sampFreq*preStimDur sampFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
+            plot([sampFreq*(preStimDur+stimDur) sampFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
+        elseif downSampling==1
+            plot([sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
+            plot([sampFreq/downsampleFreq*(preStimDur+stimDur) sampFreq/downsampleFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
+        end
+        for i=1:10
+            text(letterYMaxLoc(i)+diffResponse/40,letterYMax(i)+diffResponse/40,allLetters(i),'Color',colind(i,:),'FontSize',10)
+            text(1450,maxResponse+diffResponse/10-i*diffResponse/40,allLetters(i),'Color',colind(i,:),'FontSize',8)
+        end
+        ylim([minResponse-diffResponse/10 maxResponse+diffResponse/10]);
+        xlim([0 length(meanChannelMUA(letterCond,:))]);
+        title([num2str(channelInd),' letters']);
+        axes('Position',[.7 .7 .2 .2])%left bottom width height: the left and bottom elements define the distance from the lower left corner of the container (typically a figure, uipanel, or uitab) to the lower left corner of the position boundary. The width and height elements are the position boundary dimensions.
+        box on
+        draw_rf_letters(instanceInd,channelInd,0)
+        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+        pathname=fullfile('D:\data',date,[instanceName,'_','channel_',num2str(channelInd),'_visual_response_letters_smooth']);
+        print(pathname,'-dtiff');
+        % create smaller axes in top right, and plot on it
+        close(figLetters)
+    end
+    for figInd=1:4
+        figure(figInd)
+        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+        pathname=fullfile('D:\data',date,[instanceName,'_',num2str(figInd),'_visual_response']);
+        print(pathname,'-dtiff');
+    end
+    close all
 end
 pause=1;
