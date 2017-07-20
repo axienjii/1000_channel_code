@@ -45,7 +45,8 @@ sampFreq=30000;
 
 processRaw=1;
 if processRaw==1
-    for instanceInd=allInstanceInd
+    for instanceCount=1:length(allInstanceInd)
+        instanceInd=allInstanceInd(instanceCount);
         instanceName=['instance',num2str(instanceInd)];
         instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);
@@ -161,7 +162,7 @@ if processRaw==1
 %             otherwise
 %                 goodChannels=1:128;
 %         end
-        goodChannels=allGoodChannels{instanceInd};
+        goodChannels=allGoodChannels{instanceCount};
         instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6']; 
         for channelCount=1:length(goodChannels)
             channelInd=goodChannels(channelCount);
