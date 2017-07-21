@@ -1,7 +1,7 @@
 function combine_simphosphenes_data
 
 %combine NEV data:
-allGoodChannels=[{1:128} {1:128} {1:128} {1:128}];
+allGoodChannels=[{37:128} {1:128} {1:128} {1:128}];
 allInstanceInd=1:4;
 for instanceCount=1:length(allInstanceInd)
     instanceInd=allInstanceInd(instanceCount);
@@ -42,17 +42,20 @@ for instanceCount=1:length(allInstanceInd)
     end
 end
 
-%combine mat data:
-load('D:\data\110717_B1\110717_B1_data\simphosphenes6_110717_B1.mat')
-[dummy goodTrials]=find(performance~=0);
-goodTrialConds_B1=allTrialCond(goodTrials,:);
-goodTrialIDs_B1=TRLMAT(goodTrials,:);
-load('D:\data\110717_B1\110717_B1_data\simphosphenes6_110717_B2.mat')
-[dummy goodTrials]=find(performance~=0);
-goodTrialConds_B2=allTrialCond(goodTrials,:);
-goodTrialIDs_B2=TRLMAT(goodTrials,:);
-%combine and save:
-goodTrialConds=[goodTrialConds_B1;goodTrialConds_B2];
-goodTrialIDs=[goodTrialIDs_B1;goodTrialIDs_B2];
-matFile=['D:\data\',date,'\',date,'_data\simphosphenes6_',date,'.mat'];
-save(matFile,'goodTrialConds','goodTrialIDs');
+combineMat=0;
+if combineMat==1
+    %combine mat data:
+    load('D:\data\110717_B1\110717_B1_data\simphosphenes6_110717_B1.mat')
+    [dummy goodTrials]=find(performance~=0);
+    goodTrialConds_B1=allTrialCond(goodTrials,:);
+    goodTrialIDs_B1=TRLMAT(goodTrials,:);
+    load('D:\data\110717_B1\110717_B1_data\simphosphenes6_110717_B2.mat')
+    [dummy goodTrials]=find(performance~=0);
+    goodTrialConds_B2=allTrialCond(goodTrials,:);
+    goodTrialIDs_B2=TRLMAT(goodTrials,:);
+    %combine and save:
+    goodTrialConds=[goodTrialConds_B1;goodTrialConds_B2];
+    goodTrialIDs=[goodTrialIDs_B1;goodTrialIDs_B2];
+    matFile=['D:\data\',date,'\',date,'_data\simphosphenes6_',date,'.mat'];
+    save(matFile,'goodTrialConds','goodTrialIDs');
+end
