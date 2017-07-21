@@ -276,9 +276,23 @@ title('low-high impedance: dark-light; V1: red; V4: blue');
 %[56.6533906531031,-81.9407615116783,127.603839118668,4.93439078420688]
 %SNR 17.5, impedance 12
 
+%instance 6, array 10, electrode 120
+%[166.195576128296,-96.3809042723624,151.647912162671,5.86416572877410,20.1854114808594,33,10,120]
+%instance 6, array 10, electrode 101
+%[133.714948524659,-114.150506000169,136.268283227182,5.26944146492792,20.6227236453806,43,10,101]
+%instance 6, array 10, electrode 93
+%[11.4398305000414,-95.8357101567443,48.7882988749086,1.88662452484362,12.2188898819256,49,10,93]
+%instance 6, array 10, electrode 121
+%[88.4493243025648,-133.453913576419,123.563710132212,4.77816056907019,5.12440771874461,27,10,121]
+
 array15=chInfo(chInfo(:,7)==15,:);
 %minimum impedance for array 15 starts at 50 kOhms
 array9=chInfo(chInfo(:,7)==9,:);
 %minimum impedance for array 15 after first channel starts at 41 kOhms
 array6=chInfo(chInfo(:,7)==6,:);
 %minimum impedance for array 15 after first channel starts at 33 kOhms
+array11=chInfo(chInfo(:,7)==11,:);
+%minimum impedance for array 11 after first channel starts at 12 kOhms
+array10=chInfo(chInfo(:,7)==10,:);
+%minimum impedance for array 10 after first channel starts at 23 kOhms
+pauseHere=1;

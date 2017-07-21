@@ -43,7 +43,7 @@ preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=400/1000;%length of post-stimulus-offset period, in s
 sampFreq=30000;
 
-processRaw=1;
+processRaw=0;
 if processRaw==1
     for instanceCount=1:length(allInstanceInd)
         instanceInd=allInstanceInd(instanceCount);
@@ -250,7 +250,7 @@ if processRaw==1
         end
     end
 end
-drawImages=0;
+drawImages=1;
 if drawImages==1
     for instanceInd=allInstanceInd
         instanceName=['instance',num2str(instanceInd)];
