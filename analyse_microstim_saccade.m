@@ -20,6 +20,8 @@ switch date
         electrodeConds=1;
     case '200717_B2'
         electrodeConds=[1 2 5 6];
+    case '210717_B3'
+        electrodeConds=11:14;
 end
 matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
 load(matFile);
@@ -199,12 +201,12 @@ if processRaw==1
         minFixDur=300/1000;%fixates for at least 300 ms, up to 800 ms
         fixTimes=allFixT(goodTrials)/1000;%durations of fixation period before target onset  
         instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6']; 
-        for channelInd=1:length(eyeChannels)
-            readChannel=['c:',num2str(eyeChannels(channelInd)),':',num2str(eyeChannels(channelInd))];
-            NSchOriginal=openNSx(instanceNS6FileName,'read',readChannel);
-            NSch{channelInd}=NSchOriginal.Data;
-        end
         if saveEyeData==1
+            for channelInd=1:length(eyeChannels)
+                readChannel=['c:',num2str(eyeChannels(channelInd)),':',num2str(eyeChannels(channelInd))];
+                NSchOriginal=openNSx(instanceNS6FileName,'read',readChannel);
+                NSch{channelInd}=NSchOriginal.Data;
+            end
             save(['D:\data\',date,'\',instanceName,'_NSch.mat'],'NSch');
         else
             load(['D:\data\',date,'\',instanceName,'_NSch.mat'],'NSch');
@@ -291,6 +293,34 @@ if processRaw==1
                     array=1;
                     instance=1;
                     %SNR 2.0, impedance 43
+                case 11
+                    electrode=101-64;
+                    RFx=133.7;
+                    RFy=-114.2;
+                    array=10;
+                    instance=6;
+                    %SNR 20.6, impedance 43
+                case 12
+                    electrode=112-64;
+                    RFx=150.4;
+                    RFy=-103.0;
+                    array=10;
+                    instance=6;
+                    %SNR 35.4, impedance 27
+                case 13
+                    electrode=120-64;
+                    RFx=166.2;
+                    RFy=-96.4;
+                    array=10;
+                    instance=6;
+                    %SNR 20.2, impedance 33
+                case 14
+                    electrode=121-64;
+                    RFx=88.4;
+                    RFy=-133.5;
+                    array=10;
+                    instance=6;
+                    %SNR 5.1, impedance 27
             end
             trialDataXY={};
             for channelInd=1:length(eyeChannels)
