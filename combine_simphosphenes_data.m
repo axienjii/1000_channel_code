@@ -1,8 +1,8 @@
 function combine_simphosphenes_data
 
 %combine NEV data:
-allGoodChannels=[{37:128} {1:128} {1:128} {1:128}];
-allInstanceInd=1:4;
+allGoodChannels=[{1:128} {1:128} {1:128} {1:128}];
+allInstanceInd=5:8;
 for instanceCount=1:length(allInstanceInd)
     instanceInd=allInstanceInd(instanceCount);
     instanceName=['instance',num2str(instanceInd)];
@@ -42,7 +42,7 @@ for instanceCount=1:length(allInstanceInd)
     end
 end
 
-combineMat=0;
+combineMat=1;
 if combineMat==1
     %combine mat data:
     load('D:\data\110717_B1\110717_B1_data\simphosphenes6_110717_B1.mat')
@@ -56,6 +56,7 @@ if combineMat==1
     %combine and save:
     goodTrialConds=[goodTrialConds_B1;goodTrialConds_B2];
     goodTrialIDs=[goodTrialIDs_B1;goodTrialIDs_B2];
+    date='110717_B1_B2';
     matFile=['D:\data\',date,'\',date,'_data\simphosphenes6_',date,'.mat'];
     save(matFile,'goodTrialConds','goodTrialIDs');
 end
