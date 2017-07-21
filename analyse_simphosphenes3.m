@@ -1,4 +1,4 @@
-function analyse_simphosphenes3(date,allInstanceInd,allGoodChannels)
+function analyse_simphosphenes3(date,allInstanceInd,allGoodChannels,processRaw,drawImages)
 %3/7/17
 %Written by Xing. Extracts and analyses MUA data from raw .NS6 file, during presentation
 %of simulated phosphene letters. Extracts MUA for each channel, clips it
@@ -45,7 +45,7 @@ preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=400/1000;%length of post-stimulus-offset period, in s
 sampFreq=30000;
 
-processRaw=0;
+% processRaw=0;
 if processRaw==1
     for instanceCount=1:length(allInstanceInd)
         instanceInd=allInstanceInd(instanceCount);
@@ -252,9 +252,10 @@ if processRaw==1
         end
     end
 end
-drawImages=1;
+% drawImages=1;
 if drawImages==1
-    for instanceInd=allInstanceInd
+    for instanceCount=1:length(allInstanceInd)
+        instanceInd=allInstanceInd(instanceCount);
         instanceName=['instance',num2str(instanceInd)];
 %         switch(instanceInd)
 %             case(4)
@@ -262,7 +263,7 @@ if drawImages==1
 %             otherwise
 %                 goodChannels=1:128;
 %         end
-        goodChannels=allGoodChannels{instanceInd};
+        goodChannels=allGoodChannels{instanceCount};
         for channelCount=1:length(goodChannels)
             channelInd=goodChannels(channelCount);
             fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'_downsample.mat']);
