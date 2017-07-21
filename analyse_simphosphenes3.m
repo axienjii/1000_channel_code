@@ -26,9 +26,11 @@ function analyse_simphosphenes3(date,allInstanceInd,allGoodChannels)
 % date='060717_B1';
 matFile=['D:\data\',date,'\',date,'_data\simphosphenes6_',date,'.mat'];
 load(matFile);
-[dummy goodTrials]=find(performance~=0);
-goodTrialConds=allTrialCond(goodTrials,:);
-goodTrialIDs=TRLMAT(goodTrials,:);
+if ~isequal(date,'110717_B1_B2')
+    [dummy goodTrials]=find(performance~=0);
+    goodTrialConds=allTrialCond(goodTrials,:);
+    goodTrialIDs=TRLMAT(goodTrials,:);
+end
 allLetters='IUALTVSYJP';
 
 saveFullMUA=1;

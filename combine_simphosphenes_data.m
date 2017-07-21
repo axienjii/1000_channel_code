@@ -1,6 +1,6 @@
 function combine_simphosphenes_data
 allGoodChannels=[{1:128} {1:128} {1:128} {1:128}];
-allInstanceInd=5:8;
+allInstanceInd=1:4;
 for instanceCount=1:length(allInstanceInd)
     instanceInd=allInstanceInd(instanceCount);
     instanceName=['instance',num2str(instanceInd)];
