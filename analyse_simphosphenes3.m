@@ -26,12 +26,37 @@ function analyse_simphosphenes3(date,allInstanceInd,allGoodChannels,processRaw,d
 % date='060717_B1';
 matFile=['D:\data\',date,'\',date,'_data\simphosphenes6_',date,'.mat'];
 load(matFile);
-if ~isequal(date,'110717_B1_B2')
+if ~isequal(date,'110717_B1_B2')&&~isequal(date,'120717_B1')&&~isequal(date,'110717_B1_B2_120717_B123')
     [dummy goodTrials]=find(performance~=0);
     goodTrialConds=allTrialCond(goodTrials,:);
     goodTrialIDs=TRLMAT(goodTrials,:);
 end
+if isequal(date,'120717_B1')
+    goodTrialConds=[];
+    load('D:\data\120717_B1\120717_B1_data\simphosphenes6_120717_B1.mat')
+    [dummy goodTrials1]=find(performance~=0);
+    goodTrialConds=allTrialCond(goodTrials1,:);
+    TRLMATcombine=TRLMAT;
+    performanceCombine=performance;
+    load('D:\data\120717_B1\120717_B1_data\simphosphenes6_120717_B2.mat')
+    [dummy goodTrials2]=find(performance~=0);
+    TRLMATcombine=[TRLMATcombine;TRLMAT];
+    goodTrialConds=[goodTrialConds;allTrialCond(goodTrials2,:)];
+    performanceCombine=[performanceCombine performance];
+    load('D:\data\120717_B1\120717_B1_data\simphosphenes6_120717_B3.mat')
+    [dummy goodTrials3]=find(performance~=0);
+    goodTrialConds=[goodTrialConds;allTrialCond(goodTrials3,:)];
+    TRLMATcombine=[TRLMATcombine;TRLMAT];
+    performanceCombine=[performanceCombine performance];
+    goodTrialIDs=TRLMATcombine([goodTrials1 goodTrials2 goodTrials3],:);
+    goodTrials=[goodTrials1 goodTrials2 goodTrials3];
+    performance=performanceCombine;
+    save('D:\data\120717_B1\120717_B1_data\simphosphenes6_120717_B123.mat','goodTrialConds','goodTrialIDs','performance')
+end
 allLetters='IUALTVSYJP';
+if isequal(date,'110717_B1_B2')||isequal(date,'110717_B1')||isequal(date,'110717_B2')||isequal(date,'120717_B1')||isequal(date,'110717_B1_B2_120717_B123')
+    allLetters='IUALTVSYJ?';
+end
 
 saveFullMUA=1;
 smoothResponse=1;
@@ -370,9 +395,15 @@ if drawImages==1
                 plot([sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
                 plot([sampFreq/downsampleFreq*(preStimDur+stimDur) sampFreq/downsampleFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
             end
+            allLetters='IUALTVSYJ?';
             for i=1:10
-                text(letterYMaxLoc(i)+diffResponse/40,letterYMax(i)+diffResponse/40,allLetters(i),'Color',colind(i,:),'FontSize',10)
-                text(1480,maxResponse+diffResponse/10-i*diffResponse/40,allLetters(i),'Color',colind(i,:),'FontSize',8)
+                if i==10
+                    plot(letterYMaxLoc(i)+diffResponse/40,letterYMax(i)+diffResponse/40,'square','Color',colind(i,:),'MarkerSize',10)
+                    plot(1485,maxResponse+diffResponse/10-i*diffResponse/40,'square','Color',colind(i,:),'MarkerSize',8)
+                else
+                    text(letterYMaxLoc(i)+diffResponse/40,letterYMax(i)+diffResponse/40,allLetters(i),'Color',colind(i,:),'FontSize',10)
+                    text(1480,maxResponse+diffResponse/10-i*diffResponse/40,allLetters(i),'Color',colind(i,:),'FontSize',8)
+                end
             end
             ylim([minResponse-diffResponse/10 maxResponse+diffResponse/10]);
             xlim([0 length(meanChannelMUA(letterCond,:))]);
