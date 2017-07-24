@@ -1,9 +1,10 @@
 function plot_eye_data
 %Written by Xing 7/7/17
 %Plot X and Y channels for each target response condition during
-%simphosphenes task (visually presented sitmulated phosphene letters with 4
+%simphosphenes task (visually presented stimulated phosphene letters with 4
 %target locations).
 date='050717_B2';
+date='110717_B1';
 load(['D:\data\',date,'\timeStimOnsMatch.mat'])%read in timeStimOnsMatch
 load(['D:\data\',date,'\performanceMatch.mat'],'performanceMatch')
 load(['D:\data\',date,'\goodTrialCondsMatch.mat'],'goodTrialCondsMatch')
@@ -13,7 +14,7 @@ stimDur=stimDurms/1000;%in seconds
 preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=400/1000;%length of post-stimulus-offset period, in s
 sampFreq=30000;
-allLetters='IUALTVSYJP';
+allLetters='IUALTVSYJ?';
 
 for eyeCh=129:130
     load(['D:\data\',date,'\MUA_instance1_ch',num2str(eyeCh),'.mat']);
