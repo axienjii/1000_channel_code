@@ -335,14 +335,40 @@ if processRaw==1
             figure%(figInd2)
             hold on
             axis square
-            h(uniqueElectrode) = histogram2(-posIndX,-posIndY);
+            %remove outliers (3 standard deviations from the mean):
+            posIndX_noOutliers=posIndX;
+            posIndY_noOutliers=posIndY;
+            meanX=mean(-posIndX);
+            sdX=std(posIndX);
+            a=find(-posIndX_noOutliers>meanX+3*sdX);
+            posIndX_noOutliers(a)=[];
+            posIndY_noOutliers(a)=[];
+            a=find(-posIndX_noOutliers<meanX-3*sdX);
+            posIndX_noOutliers(a)=[];
+            posIndY_noOutliers(a)=[];
+            meanY=mean(-posIndY);
+            sdY=std(posIndY);
+            a=find(-posIndY_noOutliers>meanY+3*sdY);
+            posIndX_noOutliers(a)=[];
+            posIndY_noOutliers(a)=[];
+            a=find(-posIndY_noOutliers<meanY-3*sdY);
+            posIndX_noOutliers(a)=[];
+            posIndY_noOutliers(a)=[];
+            %plot histogram
+            h(uniqueElectrode) = histogram2(-posIndX_noOutliers,-posIndY_noOutliers);
             h(uniqueElectrode).FaceColor = 'flat';
             h(uniqueElectrode).NumBins = [25 25];
             h(uniqueElectrode).DisplayStyle = 'tile';
             h(uniqueElectrode).BinWidth=[0.5 0.5];
             view(2)            
-            text(RFx/Par.PixPerDeg+0.3,RFy/Par.PixPerDeg+0.3,num2str(electrode),'FontSize',10,'Color',colInd(uniqueElectrode,:));
-            plot(RFx/Par.PixPerDeg,RFy/Par.PixPerDeg,'o','Color',colInd(uniqueElectrode,:),'MarkerSize',10,'MarkerFaceColor',colInd(uniqueElectrode,:));%RF location
+            plot(-posIndX,-posIndY,'ro');%plot original data
+            %calculate centroid using data from which outliers are removed
+            stats=regionprops(true(size(h(uniqueElectrode).Values)),h(uniqueElectrode).Values,'WeightedCentroid');%returns Y (counted from bottom element of h.values) in first element, and X (counted from left-most element in h.Values) in second element
+            centroidX=(stats.WeightedCentroid(2)/size(h(uniqueElectrode).Values,1))*(h(uniqueElectrode).XBinEdges(end)-h(uniqueElectrode).XBinEdges(1))+h(uniqueElectrode).XBinEdges(1);%convert the location of the centroid from h.Values coordinate space into visual field coordinate space
+            centroidY=(stats.WeightedCentroid(1)/size(h(uniqueElectrode).Values,2))*(h(uniqueElectrode).YBinEdges(end)-h(uniqueElectrode).YBinEdges(1))+h(uniqueElectrode).YBinEdges(1);
+            plot(centroidX,centroidY,'ko','MarkerFaceColor','r','MarkerSize',8);
+            text(RFx/Par.PixPerDeg+0.3,RFy/Par.PixPerDeg+0.3,num2str(electrode),'FontSize',10,'Color',[1 0 0]);
+            plot(RFx/Par.PixPerDeg,RFy/Par.PixPerDeg,'bo','MarkerSize',8,'MarkerFaceColor','y');%RF location
             scatter(0,0,'r','o','filled');%fix spot
             %draw dotted lines indicating [0,0]
             plot([0 0],[-350/Par.PixPerDeg 200/Par.PixPerDeg],'k:')
@@ -353,17 +379,17 @@ if processRaw==1
             ellipse(6,6,0,0,[0.1 0.1 0.1]);
             ellipse(8,8,0,0,[0.1 0.1 0.1]);
             ellipse(10,10,0,0,[0.1 0.1 0.1]);
-            text(sqrt(2),-sqrt(2),'2','FontSize',14,'Color',[1 0.4 0.4]);
-            text(sqrt(8),-sqrt(8),'4','FontSize',14,'Color',[1 0.4 0.4]);
-            text(sqrt(18),-sqrt(18),'6','FontSize',14,'Color',[1 0.4 0.4]);
-            text(sqrt(32),-sqrt(32),'8','FontSize',14,'Color',[1 0.4 0.4]);
-            text(sqrt(50),-sqrt(50),'10','FontSize',14,'Color',[1 0.4 0.4]);
+            text(sqrt(2),-sqrt(2),'2','FontSize',14,'Color',[0.3 0.3 0.3]);
+            text(sqrt(8),-sqrt(8),'4','FontSize',14,'Color',[0.3 0.3 0.3]);
+            text(sqrt(18),-sqrt(18),'6','FontSize',14,'Color',[0.3 0.3 0.3]);
+            text(sqrt(32),-sqrt(32),'8','FontSize',14,'Color',[0.3 0.3 0.3]);
+            text(sqrt(50),-sqrt(50),'10','FontSize',14,'Color',[0.3 0.3 0.3]);
             xlim([-5 12]);
             ylim([-12 5]);
-            title(['histogram of rough saccade end points, electrode ',num2str(electrode)]);
+            title(['histogram of rough saccade end points and centroid (black), electrode ',num2str(electrode)]);
             set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-            pathname=fullfile('D:\data',date,[instanceName,'_saccade_endpoints_RFs_electrode',num2str(electrode)]);
-            print(pathname,'-dtiff');            
+            pathname=fullfile('D:\data',date,[instanceName,'_saccade_endpoints_centroid_RFs_electrode',num2str(electrode)]);
+            print(pathname,'-dtiff'); 
         end
         figure(figInd1)
         scatter(0,0,'r','o','filled');%fix spot
@@ -385,242 +411,7 @@ if processRaw==1
         title('rough saccade end points');
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
         pathname=fullfile('D:\data',date,[instanceName,'_saccade_endpoints_RFs']);
-        print(pathname,'-dtiff');        
-        
-        %read in neural data:
-%         switch(instanceInd)
-%             case(5)
-%                 goodChannels=53:128;
-%             otherwise
-%                 goodChannels=1:128;
-%         end
-        goodChannels=allGoodChannels{instanceCount};
-        instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6']; 
-        for channelCount=1:length(goodChannels)
-            channelInd=goodChannels(channelCount);
-            readChannel=['c:',num2str(channelInd),':',num2str(channelInd)];
-            NSchOriginal=openNSx(instanceNS6FileName,'read',readChannel);
-            NSch=NSchOriginal.Data;
-%             load('D:\data\050717_B2\instance1_ch1_NSch_data.mat','NSchOriginal');
-%             load('D:\data\040717_B1\instance5_ch1_NSch_data.mat')
-            %         NS=openNSx(instanceNS6FileName);
-            % NS=openNSx('t:1:6000000');%200 s
-%             if size((NSchOriginal.Data),2)>1
-%                 NSchOriginal=NSch;
-%                 NSch=[];
-%                 for chunkInd=1:length(NSchOriginal.Data)
-%                     NSch=[NSch NSchOriginal.Data{(chunkInd)}];
-%                 end
-%             end
-            S=double(NSch);%for MUA extraction, process data for that channel at one shot, across entire session
-            %extract MUA for each channel and trial:
-            tic
-            channelDataMUA=[];
-            %MAKE MUAe
-            %Bandpassed, rectified and low-passed data
-            %================================================
-            Fs=sampFreq;%sampling frequency
-            %BANDPASS
-            Fbp=[500,9000];
-            N  = 2;    % filter order
-            Fn = Fs/2; % Nyquist frequency
-            [B, A] = butter(N, [min(Fbp)/Fn max(Fbp)/Fn]); % compute filter coefficients
-            dum1 = filtfilt(B, A, S); % apply filter to the data
-            %RECTIFY
-            dum2 = abs(dum1);
-            
-            %LOW-PASS
-            Fl=200;
-            N  = 2;    % filter order
-            Fn = Fs/2; % Nyquist frequency
-            [B, A] = butter(N,Fl/Fn,'low'); % compute filter coefficients
-            muafilt = filtfilt(B, A, dum2);
-            if downSampling==0
-                channelDataMUA=muafilt;
-                fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'.mat']);
-                if saveFullMUA==1
-                    save(fileName,'channelDataMUA','trialStimConds','matMatchInd','timeStimOnsMatch','indStimOnsMatch','goodTrialsInd','goodTrialCondsMatch','performanceNEV','performanceMatch','-v7.3');
-                end
-            elseif downSampling==1
-                %Downsample
-                muafilt = downsample(muafilt,downsampleFreq); % apply filter to the data and downsample
-                
-                %50Hz removal
-                FsD = Fs/downsampleFreq;
-                Fn = FsD/2; % Downsampled Nyquist frequency
-                for v = [50 100 150];
-                    Fbp = [v-2,v+2];
-                    [Blp, Alp] = butter(N, [min(Fbp)/Fn max(Fbp)/Fn],'stop'); % compute filter coefficients
-                    muafilt = filtfilt(Blp, Alp, muafilt);
-                end
-                
-                %Assign to vargpout
-                channelDataMUA=muafilt;
-                fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'_downsample.mat']);
-                if saveFullMUA==1
-                    save(fileName,'channelDataMUA','trialStimConds','matMatchInd','timeStimOnsMatch','indStimOnsMatch','goodTrialsInd','goodTrialCondsMatch','performanceNEV','performanceMatch');
-                end
-            end
-            toc
-%             trialData=[];
-%             for trialInd=1:length(timeStimOnsMatch)
-%                 if downSampling==0
-%                     startPoint=timeStimOnsMatch(trialInd);
-%                     if length(channelDataMUA)>=startPoint+sampFreq*postStimDur-1
-%                         trialData(trialInd,:)=channelDataMUA(startPoint-sampFreq*preStimDur-sampFreq*stimDur:startPoint+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
-%                     end
-%                 elseif downSampling==1
-%                     startPoint=floor(timeStimOnsMatch(trialInd)/downsampleFreq);
-%                     if length(channelDataMUA)>=startPoint+sampFreq/downsampleFreq*postStimDur-1
-%                         trialData(trialInd,:)=channelDataMUA(startPoint-sampFreq/downsampleFreq*preStimDur-sampFreq/downsampleFreq*stimDur:startPoint+sampFreq/downsampleFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
-%                     end
-%                 end
-% %             end
-%             fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'_trialData.mat']);
-%             save(fileName,'channelDataMUA','trialStimConds','matMatchInd','timeStimOnsMatch','indStimOnsMatch','goodTrialsInd','goodTrialCondsMatch','trialData','performanceNEV','performanceMatch');
-
-        end
-    end
-end
-drawImages=0;
-if drawImages==1
-    for instanceInd=allInstanceInd
-        instanceName=['instance',num2str(instanceInd)];
-%         switch(instanceInd)
-%             case(4)
-%                 goodChannels=89:128;
-%             otherwise
-%                 goodChannels=1:128;
-%         end
-        goodChannels=allGoodChannels{instanceInd};
-        for channelCount=1:length(goodChannels)
-            channelInd=goodChannels(channelCount);
-            fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'_downsample.mat']);
-            load(fileName);
-            goodTrialCondsMatch=goodTrialConds(matMatchInd,:);%update list of stimulus conditions based on matched trials between .mat and .nev files
-            trialData=[];
-            for trialInd=1:length(timeStimOnsMatch)
-                if downSampling==0
-                    startPoint=timeStimOnsMatch(trialInd);
-                    if length(channelDataMUA)>=startPoint+sampFreq*stimDur+sampFreq*postStimDur-1
-                        trialData(trialInd,:)=channelDataMUA(startPoint-sampFreq*preStimDur:startPoint+sampFreq*stimDur+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
-                    end
-                elseif downSampling==1
-                    startPoint=floor(timeStimOnsMatch(trialInd)/downsampleFreq);
-                    if length(channelDataMUA)>=startPoint+sampFreq/downsampleFreq*stimDur+sampFreq/downsampleFreq*postStimDur-1
-                        trialData(trialInd,:)=channelDataMUA(startPoint-sampFreq/downsampleFreq*preStimDur:startPoint+sampFreq/downsampleFreq*stimDur+sampFreq/downsampleFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
-                    end
-                end
-            end
-            meanChannelMUA(channelInd,:)=mean(trialData,1);
-            
-            figInd=ceil(channelInd/36);
-            figure(figInd);
-            subplotInd=channelInd-((figInd-1)*36);
-            subplot(6,6,subplotInd);
-            plot(meanChannelMUA(channelInd,:))
-            hold on
-            ax=gca;
-            if downSampling==0
-                ax.XTick=[0 sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*(preStimDur+stimDur)];
-                ax.XTickLabel={num2str(-preStimDur*1000),'0',num2str(stimDurms)};
-            elseif downSampling==1
-                ax.XTick=[0 sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*(preStimDur+stimDur)];
-                ax.XTickLabel={num2str(-preStimDur*1000),'0',num2str(stimDurms)};
-            end
-            %     set(gca,'ylim',[0 max(meanChannelMUA(channelInd,:))]);
-            title(num2str(channelInd));
-            %set axis limits
-            maxResponse=max(meanChannelMUA(channelInd,:));
-            minResponse=min(meanChannelMUA(channelInd,:));
-            diffResponse=maxResponse-minResponse;
-            %draw dotted lines indicating stimulus presentation
-            if downSampling==0
-                plot([sampFreq*preStimDur sampFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-                plot([sampFreq*(preStimDur+stimDur) sampFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-            elseif downSampling==1
-                plot([sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-                plot([sampFreq/downsampleFreq*(preStimDur+stimDur) sampFreq/downsampleFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-            end
-            ylim([minResponse-diffResponse/10 maxResponse+diffResponse/10]);
-            xlim([0 length(meanChannelMUA(channelInd,:))]);
-            
-            figLetters=figure;
-            hold on
-            letterYMin=[];
-            letterYMax=[];
-            letterYMaxLoc=[];
-            for letterCond=1:10
-                meanChannelMUA(letterCond,:)=mean(trialData(find(goodTrialCondsMatch(:,1)==letterCond),:),1);
-                if sum(meanChannelMUA(letterCond,:))>0
-                    %                     subplot(5,2,letterCond)
-                    colind = hsv(10);
-                    if smoothResponse==1
-                        smoothMUA = smooth(meanChannelMUA(letterCond,:),30);
-                        plot(smoothMUA,'Color',colind(letterCond,:),'LineWidth',1);
-                    elseif smoothResponse==0
-                        plot(meanChannelMUA(letterCond,:),'Color',colind(letterCond,:),'LineWidth',1);
-                    end
-                    hold on
-                    ax=gca;
-                    if downSampling==0
-                        ax.XTick=[0 sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*(preStimDur+stimDur)];
-                        ax.XTickLabel={num2str(-preStimDur*1000),'0',num2str(stimDurms)};
-                    elseif downSampling==1
-                        ax.XTick=[0 sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*(preStimDur+stimDur)];
-                        ax.XTickLabel={num2str(-preStimDur*1000),'0',num2str(stimDurms)};
-                    end
-                    %     set(gca,'ylim',[0 max(meanChannelMUA(channelInd,:))]);
-                    %                     title([num2str(channelInd),' letter ',allLetters(letterCond)]);
-                    %set axis limits
-                    if smoothResponse==1
-                        [maxResponse maxInd]=max(smoothMUA);
-                        minResponse=min(smoothMUA);
-                    elseif smoothResponse==0
-                        [maxResponse maxInd]=max(meanChannelMUA(letterCond,:));
-                        minResponse=min(meanChannelMUA(letterCond,:));
-                    end
-                    diffResponse=maxResponse-minResponse;
-                    letterYMin=[letterYMin minResponse];
-                    letterYMax=[letterYMax maxResponse];
-                    letterYMaxLoc=[letterYMaxLoc maxInd];
-                end
-            end
-            %draw dotted lines indicating stimulus presentation
-            if smoothResponse==1
-                minResponse=min(letterYMin);
-                [maxResponse maxLetter]=max(letterYMax);
-            end
-            diffResponse=maxResponse-minResponse;
-            if downSampling==0
-                plot([sampFreq*preStimDur sampFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-                plot([sampFreq*(preStimDur+stimDur) sampFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-            elseif downSampling==1
-                plot([sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-                plot([sampFreq/downsampleFreq*(preStimDur+stimDur) sampFreq/downsampleFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-            end
-            for i=1:10
-                text(letterYMaxLoc(i)+diffResponse/40,letterYMax(i)+diffResponse/40,allLetters(i),'Color',colind(i,:),'FontSize',10)
-                text(1480,maxResponse+diffResponse/10-i*diffResponse/40,allLetters(i),'Color',colind(i,:),'FontSize',8)
-            end
-            ylim([minResponse-diffResponse/10 maxResponse+diffResponse/10]);
-            xlim([0 length(meanChannelMUA(letterCond,:))]);
-            title([num2str(channelInd),' letters']);
-            axes('Position',[.75 .75 .15 .15])%left bottom width height: the left and bottom elements define the distance from the lower left corner of the container (typically a figure, uipanel, or uitab) to the lower left corner of the position boundary. The width and height elements are the position boundary dimensions.
-            box on
-            draw_rf_letters(instanceInd,channelInd,0)
-            set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-            pathname=fullfile('D:\data',date,[instanceName,'_','channel_',num2str(channelInd),'_visual_response_letters_smooth']);
-            print(pathname,'-dtiff');
-            % create smaller axes in top right, and plot on it
-            close(figLetters)
-        end
-        for figInd=1:4
-            figure(figInd)
-            set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-            pathname=fullfile('D:\data',date,[instanceName,'_visual_response']);
-            print(pathname,'-dtiff');
-        end
+        print(pathname,'-dtiff');    
         close all
     end
 end
