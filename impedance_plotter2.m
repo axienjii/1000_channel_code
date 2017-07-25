@@ -1,10 +1,12 @@
-function impedance_plotter
+function impedance_plotter2
 %Written by Xing 29/06/17 to draw plots of impedance values from txt files,
 %generated from Central's impedance tester function.
 %Also checks channels with lowest impedances, looks up RF centre locations
 %and positions of electrodes on array, and identifies good candidate
 %channels for microstimulation (and for early testing, for simultaneous
 %recording).
+%Corrected the indexing of RF coordinate data, which was previously incorrect in 
+%impedance_plotter.m
 date='260617';
 date='110717';
 date='170717';
@@ -150,7 +152,7 @@ save('C:\Users\User\Documents\impedance_values\170717\goodLocationImpedances.mat
 %record from 30, 31, 32
 
 figure;hold on
-impThreshold=60;
+impThreshold=100;
 goodChImps=[];
 goodChV1SimRec=[];%candidate V1 channels for simultaneous microstimulation and recording 
 for candidateInd=1:size(sortImpedanceAllChannels,1)
@@ -225,79 +227,23 @@ title('low-high impedance: dark-light; V1: red; V4: blue');
 %[18.9191954998266,-18.1188925426432,41.1144261886403,1.58987885540428]
 %SNR 16.6, impedance 7
 
-% instance 4, array 8, electrode 121: RF x, RF y, size (pix), size (dva):
-%[5.83548768269884,-24.9505894250383,44.1345384951858,1.70666542260802]
-%SNR 4.0, impedance 8
-
-% instance 4, array 8, electrode 122: RF x, RF y, size (pix), size (dva):
-%[14.2628043331416,-23.1728161588885,87.8823514861295,3.39837632051421]
-%SNR 5.2, impedance 8
-
-% instance 4, array 8, electrode 123: RF x, RF y, size (pix), size (dva):
-%[18.8736598115074,-19.1785135536444,89.0915267659024,3.44513465786685]
-%SNR 25.0, impedance 8
-
-% instance 4, array 8, electrode 124: RF x, RF y, size (pix), size (dva):
-%[22.7334581721677,-27.8508046603016,72.4882535990094,2.80309254794101]
-%SNR 23.6, impedance 8
-
-% instance 4, array 8, electrode 125: RF x, RF y, size (pix), size (dva):
-%[15.7641484499534,-30.3691796912043,77.0760920633259,2.98050247537039]
-%SNR 20.6, impedance 7
-
-% instance 4, array 8, electrode 126: RF x, RF y, size (pix), size (dva):
-%[19.4234871027064,-20.9326334326478,53.9012053353548,2.08433862728121]
-%SNR 25.1, impedance 7
-
-% instance 4, array 8, electrode 127: RF x, RF y, size (pix), size (dva):
-%[19.5865739412017,-14.3352960499900,42.5654632033185,1.64598989189208]
-%SNR 6.1, impedance 8
-
-% instance 5, array 9, electrode 5: RF x, RF y, size (pix), size (dva):
-%[106.030259206136,-107.462947072272,126.434691360936,4.88918029554935]
-%SNR 18.3, impedance 9
-
-% instance 6, array 12, electrode 104: RF x, RF y, size (pix), size (dva):
-%[56.7164941670460,-82.0448096250140,127.871133150069,4.94472694034707]
-%SNR 17.7, impedance 11
-
-% instance 6, array 12, electrode 69: RF x, RF y, size (pix), size (dva):
-%[132.682064194946,-99.2683119319364,45.3110567885385,1.75216092700873]
-%SNR 7.8, impedance 12
-
-% instance 6, array 12, electrode 86: RF x, RF y, size (pix), size (dva):
-%[143.539559564982,-90.4973014181805,21.0755409373353,0.814982963613263]
-%SNR 10.3, impedance 12
-
-% instance 6, array 12, electrode 87: RF x, RF y, size (pix), size (dva):
-%[141.745990847105,-85.1748320239885,19.9702464156854,0.772241654737817]
-%SNR 11.7, impedance 12
-
-% instance 6, array 12, electrode 88: RF x, RF y, size (pix), size (dva):
-%[144.795218055862,-84.5804812320114,29.8328069895041,1.15362303276105]
-%SNR 26.1, impedance 12
-
-% instance 6, array 11, electrode 51: RF x, RF y, size (pix), size (dva):
-%[56.6533906531031,-81.9407615116783,127.603839118668,4.93439078420688]
-%SNR 17.5, impedance 12
-
-%instance 6, array 10, electrode 120
-%[166.195576128296,-96.3809042723624,151.647912162671,5.86416572877410,20.1854114808594,33,10,120]
-%instance 6, array 10, electrode 101
-%[133.714948524659,-114.150506000169,136.268283227182,5.26944146492792,20.6227236453806,43,10,101]
-%instance 6, array 10, electrode 93
-%[11.4398305000414,-95.8357101567443,48.7882988749086,1.88662452484362,12.2188898819256,49,10,93]
-%instance 6, array 10, electrode 121
-%[88.4493243025648,-133.453913576419,123.563710132212,4.77816056907019,5.12440771874461,27,10,121]
+%These are correct:
+% instance 5, array 10: RF x, RF y, size (pix), size (dva), SNR, impedance, array number, electrode number (out of 64):
+[119.701744766328,-114.902061945310,148.407519394543,5.73886100187327,8.55946739176848,23,10,58;
+    107.469065110580,-92.5349426896800,94.5179974107760,3.65497416524979,24.0787991767124,27,10,39;
+    120.498566663956,-96.0902879547491,120.435796995545,4.65720538573110,26.0532252659700,27,10,48;
+    113.242437418102,-120.191022943488,157.634217633635,6.09565383094556,22.4494946497284,27,10,57;
+    120.948840957758,-130.685637209769,104.447223178057,4.03893346035232,8.28530816496006,29,10,59;
+    126.224705050819,-96.3022802669606,125.985208239135,4.87179895820726,27.5326674055054,33,10,56]
 
 array15=chInfo(chInfo(:,7)==15,:);
-%minimum impedance for array 15 starts at 50 kOhms
+%minimum impedance for array 15 starts at  kOhms
 array9=chInfo(chInfo(:,7)==9,:);
-%minimum impedance for array 15 after first channel starts at 41 kOhms
+%minimum impedance for array 15 after first channel starts at  kOhms
 array6=chInfo(chInfo(:,7)==6,:);
-%minimum impedance for array 15 after first channel starts at 33 kOhms
+%minimum impedance for array 15 after first channel starts at  kOhms
 array11=chInfo(chInfo(:,7)==11,:);
-%minimum impedance for array 11 after first channel starts at 12 kOhms
+%minimum impedance for array 11 after first channel starts at  kOhms
 array10=chInfo(chInfo(:,7)==10,:);
-%minimum impedance for array 10 after first channel starts at 23 kOhms
+%minimum impedance for array 10 after first channel starts at  kOhms
 pauseHere=1;

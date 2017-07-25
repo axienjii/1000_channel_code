@@ -4,7 +4,7 @@ function combine_simphosphenes_data2
 
 %combine NEV data:
 allGoodChannels=[{1:128} {1:128} {1:128} {1:128}];
-allInstanceInd=1:4;
+allInstanceInd=5:8;
 for instanceCount=1:length(allInstanceInd)
     instanceInd=allInstanceInd(instanceCount);
     instanceName=['instance',num2str(instanceInd)];
@@ -76,6 +76,10 @@ for instanceCount=1:length(allInstanceInd)
         timeStimOnsMatch=[timeStimOnsMatch timeStimOnsMatch_B2 timeStimOnsMatch_12B123];
         trialStimConds=[trialStimConds trialStimConds_B2 trialStimConds_12B123];
         date='110717_B1_B2_120717_B123';
+        folderName=fullfile('D:\data',date);
+        if ~exist(folderName)%'exist' returns value of 7 if folder exists
+            mkdir(folderName)
+        end
         fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'_downsample.mat']);
         save(fileName,'channelDataMUA','goodTrialCondsMatch','goodTrialsInd','indStimOnsMatch','matMatchInd','performanceMatch','performanceNEV','timeStimOnsMatch','trialStimConds')
     end
@@ -100,6 +104,10 @@ if combineMat==1
     goodTrialConds=[goodTrialConds_B1;goodTrialConds_B2;goodTrialConds_B123];
     goodTrialIDs=[goodTrialIDs_B1;goodTrialIDs_B2;goodTrialIDs_B123];
     date='110717_B1_B2_120717_B123';
+    folderName=fullfile('D:\data',date,[date,'_data']);
+    if ~exist(folderName)
+        mkdir(folderName)
+    end
     matFile=['D:\data\',date,'\',date,'_data\simphosphenes6_',date,'.mat'];
     save(matFile,'goodTrialConds','goodTrialIDs');
 end
