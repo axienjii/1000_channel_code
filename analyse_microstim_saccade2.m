@@ -1,7 +1,8 @@
-function analyse_microstim_saccade(date,allInstanceInd,allGoodChannels)
+function analyse_microstim_saccade2(date,allInstanceInd,allGoodChannels)
 %20/7/17
 %Written by Xing. Extracts and analyses MUA data from raw .NS6 file, during presentation
 %of simulated and real phosphenes. 
+%Used to analyse data from 24/7/17, with correct RF coordinates.
 
 %Matches data between .nev and .mat files, identifies indices of trials to
 %be included in analyses. 
@@ -14,14 +15,10 @@ function analyse_microstim_saccade(date,allInstanceInd,allGoodChannels)
 %match=find(trialStimConds(nevSeqInd,rowInd)==convertedGoodTrialIDs(matchInd:8,goodTrialIDscounter));
 
 % date='200717_B1';
-saveEyeData=1;
+saveEyeData=0;
 switch date
-    case '200717_B1'
-        electrodeConds=1;
-    case '200717_B2'
-        electrodeConds=[1 2 5 6];
-    case '210717_B3'
-        electrodeConds=11:14;
+    case '240717_B1'
+        electrodeConds=1:6;
 end
 matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
 load(matFile);
@@ -56,7 +53,12 @@ if processRaw==1
         indCorrBit=find(NEV.Data.SerialDigitalIO.UnparsedData==2^corrBit);
         checkTargOns=NEV.Data.SerialDigitalIO.UnparsedData(indCorrBit-2);%these occur two places before sending of the correct bit, and should have the value of 4
         if ~isempty(find(checkTargOns~=4))
-            checkEncodes=1
+            excludeInd=find(checkTargOns~=4);
+            indCorrBit(excludeInd)=[];%remove falsely identified 'trials'
+            checkTargOns=NEV.Data.SerialDigitalIO.UnparsedData(indCorrBit-2);
+            if ~isempty(find(checkTargOns~=4))
+                checkEncodes=1
+            end
         end
         oldIndStimOns=indCorrBit-2;
         oldTimeStimOns=NEV.Data.SerialDigitalIO.TimeStamp(oldIndStimOns);%time stamps corresponding to stimulus onset
@@ -212,115 +214,52 @@ if processRaw==1
             load(['D:\data\',date,'\',instanceName,'_NSch.mat'],'NSch');
         end
         figInd1=figure;hold on
-        figInd2=figure;
+        figInd2=figure;hold on
         for uniqueElectrode=1:length(trialIndConds(:))
 %             figure;
             switch electrodeConds(uniqueElectrode)
-                case 1
-                    electrode=34;
-                    RFx=101.4;
-                    RFy=-87.2;
-                    array=13;
-                    instance=7;
-                    %candidate channels for simultaneous stimulation and recording:
-                    % instance 7, array 13, electrode 34: RF x, RF y, size (pix), size (dva):
-                    %[101.373182692835,-87.1965720730945,30.6314285392835,1.18450541719806]
-                    %SNR 20.7, impedance 13
-                    %record from 25, 26, 27
-                case 2
-                    electrode=35;
-                    RFx=101.4;
-                    RFy=-86.9;
-                    array=13;
-                    instance=7;
-                    % instance 7, array 13, electrode 35: RF x, RF y, size (pix), size (dva):
-                    %[101.419820931771,-86.8574476383865,38.9826040277579,1.50744212233355]
-                    %SNR 20.8, impedance 13
-                    %record from 26, 27, 28
-                case 3
-                    electrode=38;
-                    RFx=37.6;
-                    RFy=-44.1;
-                    array=1;
-                    instance=1;
-                    %SNR 6.5, impedance 38
-                case 4
-                    electrode=36;
-                    RFx=40.5;
-                    RFy=-44.7;
-                    array=1;
-                    instance=1;
-                    %SNR 12, impedance 58
-                case 5
-                    electrode=37;
-                    RFx=112.9;
-                    RFy=-71.3;
-                    array=13;
-                    instance=7;
-                    %SNR 23.5, impedance 33
-                case 6
-                    electrode=38;
-                    RFx=112.9;
-                    RFy=-71.3;
-                    array=13;
-                    instance=7;
-                    %SNR 23.6, impedance 33
-                case 7
-                    electrode=27;
-                    RFx=120.9;
-                    RFy=-130.7;
-                    array=9;
-                    instance=5;
-                    %SNR 8.3, impedance 43
-                case 8
-                    electrode=26;
-                    RFx=119.7;
-                    RFy=-114.9;
-                    array=9;
-                    instance=5;
-                    %SNR 8.6, impedance 52
-                case 9
-                    electrode=37;
-                    RFx=31.6;
-                    RFy=-63.3;
-                    array=1;
-                    instance=1;
-                    %SNR 6.1, impedance 40
-                case 10
-                    electrode=34;
-                    RFx=27.5;
-                    RFy=-22.4;
-                    array=1;
-                    instance=1;
-                    %SNR 2.0, impedance 43
-                case 11
-                    electrode=101-64;
-                    RFx=133.7;
-                    RFy=-114.2;
-                    array=10;
-                    instance=6;
-                    %SNR 20.6, impedance 43
-                case 12
-                    electrode=112-64;
-                    RFx=150.4;
-                    RFy=-103.0;
-                    array=10;
-                    instance=6;
-                    %SNR 35.4, impedance 27
-                case 13
-                    electrode=120-64;
-                    RFx=166.2;
-                    RFy=-96.4;
-                    array=10;
-                    instance=6;
-                    %SNR 20.2, impedance 33
-                case 14
-                    electrode=121-64;
-                    RFx=88.4;
-                    RFy=-133.5;
-                    array=10;
-                    instance=6;
-                    %SNR 5.1, impedance 27
+            case 1
+                electrode=58;
+                RFx=119.7;
+                RFy=-114.9;
+                array=10;
+                instance=5;
+                %SNR 8.6, impedance 23
+            case 2
+                electrode=39;
+                RFx=107.5;
+                RFy=-92.5;
+                array=10;
+                instance=5;
+                %SNR 24, impedance 27
+            case 3
+                electrode=48;
+                RFx=120.5;
+                RFy=-96.1;
+                array=10;
+                instance=5;
+                %SNR 26, impedance 27
+            case 4
+                electrode=57;
+                RFx=113.2;
+                RFy=-120.2;
+                array=10;
+                instance=5;
+                %SNR 22, impedance 27
+            case 5
+                electrode=59;
+                RFx=120.9;
+                RFy=-130.7;
+                array=10;
+                instance=5;
+                %SNR 8, impedance 29
+            case 6
+                electrode=56;
+                RFx=126.2;
+                RFy=-96.3;
+                array=10;
+                instance=5;
+                %SNR 27, impedance 33                
             end
             trialDataXY={};
             for channelInd=1:length(eyeChannels)
@@ -373,9 +312,9 @@ if processRaw==1
                 degpervoltx=-degpervoltx;
             end
             degpervoltx=0.0027;
+            flankingSamples=(30000/50)/2;%50-ms period before reward delivery
             figure(figInd1)
             hold on
-            flankingSamples=(30000/50)/2;%50-ms period before reward delivery
             for trialInd=1:length(trialIndConds{uniqueElectrode})
                 time=trialIndConds{uniqueElectrode}(trialInd);
                 tempInd=find(eyepx<saccadeDur(time));%find(eyepx<saccRTx(trialInd)+0.05);
@@ -388,12 +327,45 @@ if processRaw==1
                 text(RFx/Par.PixPerDeg-0.2,RFy/Par.PixPerDeg+0.15,num2str(electrode),'FontSize',8,'Color',colInd(uniqueElectrode,:));
             else
                 plot(RFx/Par.PixPerDeg,RFy/Par.PixPerDeg,'+','Color',colInd(uniqueElectrode,:),'MarkerSize',14);%RF location
-                plot(RFx/Par.PixPerDeg,RFy/Par.PixPerDeg,'o','Color',colInd(uniqueElectrode,:),'MarkerSize',14);%RF location
                 text(RFx/Par.PixPerDeg+0.1,RFy/Par.PixPerDeg+0.15,num2str(electrode),'FontSize',8,'Color',colInd(uniqueElectrode,:));
             end
+            plot(RFx/Par.PixPerDeg,RFy/Par.PixPerDeg,'o','Color',colInd(uniqueElectrode,:),'MarkerSize',14);%RF location
             %scatter(RFx/Par.PixPerDeg,RFy/Par.PixPerDeg,[],colInd(uniqueElectrode,:),'filled');%RF location
+
+            figure%(figInd2)
             hold on
+            axis square
+            h(uniqueElectrode) = histogram2(-posIndX,-posIndY);
+            h(uniqueElectrode).FaceColor = 'flat';
+            h(uniqueElectrode).NumBins = [25 25];
+            h(uniqueElectrode).DisplayStyle = 'tile';
+            h(uniqueElectrode).BinWidth=[0.5 0.5];
+            view(2)            
+            text(RFx/Par.PixPerDeg+0.3,RFy/Par.PixPerDeg+0.3,num2str(electrode),'FontSize',10,'Color',colInd(uniqueElectrode,:));
+            plot(RFx/Par.PixPerDeg,RFy/Par.PixPerDeg,'o','Color',colInd(uniqueElectrode,:),'MarkerSize',10,'MarkerFaceColor',colInd(uniqueElectrode,:));%RF location
+            scatter(0,0,'r','o','filled');%fix spot
+            %draw dotted lines indicating [0,0]
+            plot([0 0],[-350/Par.PixPerDeg 200/Par.PixPerDeg],'k:')
+            plot([-200/Par.PixPerDeg 350/Par.PixPerDeg],[0 0],'k:')
+            plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:')
+            ellipse(2,2,0,0,[0.1 0.1 0.1]);
+            ellipse(4,4,0,0,[0.1 0.1 0.1]);
+            ellipse(6,6,0,0,[0.1 0.1 0.1]);
+            ellipse(8,8,0,0,[0.1 0.1 0.1]);
+            ellipse(10,10,0,0,[0.1 0.1 0.1]);
+            text(sqrt(2),-sqrt(2),'2','FontSize',14,'Color',[1 0.4 0.4]);
+            text(sqrt(8),-sqrt(8),'4','FontSize',14,'Color',[1 0.4 0.4]);
+            text(sqrt(18),-sqrt(18),'6','FontSize',14,'Color',[1 0.4 0.4]);
+            text(sqrt(32),-sqrt(32),'8','FontSize',14,'Color',[1 0.4 0.4]);
+            text(sqrt(50),-sqrt(50),'10','FontSize',14,'Color',[1 0.4 0.4]);
+            xlim([-5 12]);
+            ylim([-12 5]);
+            title(['histogram of rough saccade end points, electrode ',num2str(electrode)]);
+            set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+            pathname=fullfile('D:\data',date,[instanceName,'_saccade_endpoints_RFs_electrode',num2str(electrode)]);
+            print(pathname,'-dtiff');            
         end
+        figure(figInd1)
         scatter(0,0,'r','o','filled');%fix spot
         %draw dotted lines indicating [0,0]
         plot([0 0],[-250/Par.PixPerDeg 200/Par.PixPerDeg],'k:')
@@ -413,7 +385,8 @@ if processRaw==1
         title('rough saccade end points');
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
         pathname=fullfile('D:\data',date,[instanceName,'_saccade_endpoints_RFs']);
-        print(pathname,'-dtiff');
+        print(pathname,'-dtiff');        
+        
         %read in neural data:
 %         switch(instanceInd)
 %             case(5)
