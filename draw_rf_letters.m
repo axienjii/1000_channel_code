@@ -23,7 +23,7 @@ plot([-60 240],[0 0],'k:')
 colind = hsv(10);
 for i=1:10
     targetLetter=allLetters(i);
-    letterPath=['Y:\Xing\letters\',targetLetter,'.bmp'];
+    letterPath=['D:\data\letters\',targetLetter,'.bmp'];
     originalOutline=imread(letterPath);
     shape=imresize(originalOutline,[visualHeight,visualWidth]);
     whiteMask=shape==0;
