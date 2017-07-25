@@ -14,7 +14,7 @@ function analyse_microstim_saccade(date,allInstanceInd,allGoodChannels)
 %match=find(trialStimConds(nevSeqInd,rowInd)==convertedGoodTrialIDs(matchInd:8,goodTrialIDscounter));
 
 % date='200717_B1';
-saveEyeData=0;
+saveEyeData=1;
 switch date
     case '200717_B1'
         electrodeConds=1;
