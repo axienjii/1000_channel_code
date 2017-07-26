@@ -1,8 +1,8 @@
-function analyse_microstim_saccade2(date,allInstanceInd,allGoodChannels)
+function analyse_microstim_saccade3(date,allInstanceInd,allGoodChannels)
 %20/7/17
 %Written by Xing. Extracts and analyses MUA data from raw .NS6 file, during presentation
 %of simulated and real phosphenes. 
-%Used to analyse data from 24/7/17, with correct RF coordinates.
+%Used to analyse data from 25/7/17, microstimulation on array 12, with correct RF coordinates.
 
 %Matches data between .nev and .mat files, identifies indices of trials to
 %be included in analyses. 
@@ -14,11 +14,11 @@ function analyse_microstim_saccade2(date,allInstanceInd,allGoodChannels)
 %correct order. This is implemented in the part of the code that flanks this line:
 %match=find(trialStimConds(nevSeqInd,rowInd)==convertedGoodTrialIDs(matchInd:8,goodTrialIDscounter));
 
-% date='200717_B1';
+% date='250717_B1';
 saveEyeData=0;
 switch date
-    case '240717_B1'
-        electrodeConds=1:6;
+    case '250717_B1'
+        electrodeConds=1:7;
 end
 matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
 load(matFile);
@@ -216,50 +216,56 @@ if processRaw==1
         figInd1=figure;hold on
         figInd2=figure;hold on
         for uniqueElectrode=1:length(trialIndConds(:))
-%             figure;
             switch electrodeConds(uniqueElectrode)
-            case 1
-                electrode=58;
-                RFx=119.7;
-                RFy=-114.9;
-                array=10;
-                instance=5;
-                %SNR 8.6, impedance 23
-            case 2
-                electrode=39;
-                RFx=107.5;
-                RFy=-92.5;
-                array=10;
-                instance=5;
-                %SNR 24, impedance 27
-            case 3
-                electrode=48;
-                RFx=120.5;
-                RFy=-96.1;
-                array=10;
-                instance=5;
-                %SNR 26, impedance 27
-            case 4
-                electrode=57;
-                RFx=113.2;
-                RFy=-120.2;
-                array=10;
-                instance=5;
-                %SNR 22, impedance 27
-            case 5
-                electrode=59;
-                RFx=120.9;
-                RFy=-130.7;
-                array=10;
-                instance=5;
-                %SNR 8, impedance 29
-            case 6
-                electrode=56;
-                RFx=126.2;
-                RFy=-96.3;
-                array=10;
-                instance=5;
-                %SNR 27, impedance 33                
+                case 1
+                    electrode=40;
+                    RFx=6.1;
+                    RFy=-57.6;
+                    array=12;
+                    instance=6;
+                    %SNR 27, impedance 11
+                case 2
+                    electrode=23;
+                    RFx=55.9;
+                    RFy=-71.0;
+                    array=12;
+                    instance=6;
+                    %SNR 15, impedance 12
+                case 3
+                    electrode=39;
+                    RFx=16.3;
+                    RFy=-55.4;
+                    array=12;
+                    instance=6;
+                    %SNR 22, impedance 12
+                case 4
+                    electrode=59;
+                    RFx=41.3;
+                    RFy=-76.5;
+                    array=12;
+                    instance=6;
+                    %SNR 10, impedance 12
+                case 5
+                    electrode=21;
+                    RFx=12.9;
+                    RFy=-71.2;
+                    array=12;
+                    instance=6;
+                    %SNR 3, impedance 13
+                case 6
+                    electrode=41;
+                    RFx=29.6;
+                    RFy=-73.4;
+                    array=12;
+                    instance=6;
+                    %SNR 9, impedance 13
+                case 7
+                    electrode=6;
+                    RFx=126.2;
+                    RFy=-96.3;
+                    array=12;
+                    instance=6;
+                    %SNR 4, impedance 16
             end
             trialDataXY={};
             for channelInd=1:length(eyeChannels)
