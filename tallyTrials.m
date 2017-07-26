@@ -69,3 +69,23 @@ find(numTrialsCombined<5)
 % 9 34 0
 % 4 36 1
 % 7 36 0
+
+%final dataset from 11/7/17 B1 & B2, and 12/7/17 B1:
+load('D:\data\110717_B1_B2_120717_B123\MUA_instance1_ch1_downsample.mat')
+for letterInd=1:10
+    for lumInd=1:40
+        a=find(goodTrialCondsMatch(:,1)==letterInd);
+        b=find(goodTrialCondsMatch(:,2)==lumInd);
+        combinedTrialIndConds{letterInd,lumInd}=intersect(a,b);
+        numTrialsCombined(letterInd,lumInd)=length(intersect(a,b));
+        if letterInd<=8%familiar letters
+            combinedTrialPerf{letterInd,lumInd}=performanceMatch(intersect(a,b));
+            numCorrTrialsCombined(letterInd,lumInd)=sum(combinedTrialPerf{letterInd,lumInd}==1);
+        elseif letterInd>=9%unfamiliar letters/symbols, J & square, were always rewarded, ignore whether script records trial as being incorrect or incorrect
+            combinedTrialPerf1{letterInd,lumInd}=ones(length(performanceMatch(intersect(a,b))),1);
+            numCorrTrialsCombined(letterInd,lumInd)=length(combinedTrialPerf2{letterInd,lumInd});
+        end
+    end
+end
+find(numCorrTrialsCombined<3)
+find(numTrialsCombined<5)
