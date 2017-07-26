@@ -237,13 +237,26 @@ title('low-high impedance: dark-light; V1: red; V4: blue');
     126.224705050819,-96.3022802669606,125.985208239135,4.87179895820726,27.5326674055054,33,10,56]
 
 array15=chInfo(chInfo(:,7)==15,:);
-%minimum impedance for array 15 starts at  kOhms
+%minimum impedance for array 15 starts at 50 kOhms
 array9=chInfo(chInfo(:,7)==9,:);
-%minimum impedance for array 15 after first channel starts at  kOhms
+%minimum impedance for array 15 after first channel starts at 41 kOhms
 array6=chInfo(chInfo(:,7)==6,:);
-%minimum impedance for array 15 after first channel starts at  kOhms
+%minimum impedance for array 6 starts at 33 kOhms
 array11=chInfo(chInfo(:,7)==11,:);
-%minimum impedance for array 11 after first channel starts at  kOhms
+%minimum impedance for array 11 after first channel starts at 71 kOhms
 array10=chInfo(chInfo(:,7)==10,:);
-%minimum impedance for array 10 after first channel starts at  kOhms
+%minimum impedance for array 10 starts at 23 kOhms
+array12=chInfo(chInfo(:,7)==12,:);
+%many channels with low impedance on array 12
+
+figure;plot(array12(1:12,1),array12(1:12,2),'ko')
+hold on
+for ind=1:12
+    plot(array12(ind,1),array12(ind,2),'go')
+    text(array12(ind,1),array12(ind,2),num2str(ind))
+    pause(2);
+end
+a=[1 6 10 12 8 4 9];a=sort(a);
+array12selectedChs=array12(a,:);
+save('C:\Users\User\Documents\impedance_values\170717\array12selectedChs.mat','array12selectedChs')
 pauseHere=1;
