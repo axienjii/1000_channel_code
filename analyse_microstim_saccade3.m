@@ -32,6 +32,10 @@ smoothResponse=1;
 downSampling=1;
 downsampleFreq=30;
 
+alignTargOn=1;%1: align eye movement data across trials, relative to target onset (variable from trial to trial, from 300 to 800 ms after fixation). 0: plot the first 300 ms of fixation, followed by the period from target onset to saccade response?
+onlyGoodSaccadeTrials=0;%set to 1 to exclude trials where the time taken to reach the target exceeds the allowedSacTime.
+allowedSacTime=250/1000;
+
 stimDurms=500;%in ms- min 0, max 500
 stimDur=stimDurms/1000;%in seconds
 preStimDur=300/1000;%length of pre-stimulus-onset period, in s
@@ -162,6 +166,16 @@ if processRaw==1
         end
         electrodeNums=unique(electrodeID(~isnan(electrodeID)));
         arrayNums=unique(arrayID(~isnan(arrayID)));
+        
+        if onlyGoodSaccadeTrials==1
+            goodSaccadeInd=find(saccadeDur<allowedSacTime);
+            electrodeID=electrodeID(goodSaccadeInd);
+            arrayID=arrayID(goodSaccadeInd);
+            saccadeEndX=saccadeEndX(goodSaccadeInd);
+            saccadeEndY=saccadeEndY(goodSaccadeInd);
+            timeStimOnsMatch=timeStimOnsMatch(goodSaccadeInd);
+        end
+        
         %identify trials where microstimulation was delivered on a
         %particular electrode:
         for arrayInd=1:length(arrayNums)
@@ -195,6 +209,9 @@ if processRaw==1
         title('saccade endpoints'); 
         
         RTs=allHitRT(goodTrials);%reaction time from target onset
+        if onlyGoodSaccadeTrials==1
+            RTs=RTs(goodSaccadeInd);
+        end
         figure
         plot(sort(RTs))
         
@@ -272,10 +289,18 @@ if processRaw==1
                 trialData=[];
                 for trialInd=1:length(trialIndConds{uniqueElectrode})
                     time=trialIndConds{uniqueElectrode}(trialInd);
-                    startPoint=timeStimOnsMatch(time)-sampFreq*fixTimes(time)+1;
-                    if size(NSch{channelInd},2)>=startPoint+sampFreq*(fixTimes(time)+saccadeWindow)-1%from start of fixation through the variable fixation period (ranging from 300 to 800 ms), plus 250 ms after target onset.
-                        trialData(trialInd,:)=NSch{channelInd}([startPoint:startPoint+sampFreq*minFixDur-1 startPoint+sampFreq*fixTimes(time):startPoint+sampFreq*fixTimes(time)+sampFreq*saccadeWindow-1]);%splice two periods together: first 300 ms after onset of fixation, and 250 ms following target onset
-                        %trialData{channelInd}(trialInd,:)=NSch{channelInd}(startPoint:startPoint+sampFreq*(fixTimes(trialInd)+saccadeWindow)-1);%raw data in uV, read in data during fixation
+                    if alignTargOn==0
+                        startPoint=timeStimOnsMatch(time)-sampFreq*fixTimes(time)+1;%start fixating
+                        if size(NSch{channelInd},2)>=startPoint+sampFreq*(fixTimes(time)+saccadeWindow)-1%from start of fixation through the variable fixation period (ranging from 300 to 800 ms), plus 250 ms after target onset.
+                            trialData(trialInd,:)=NSch{channelInd}([startPoint:startPoint+sampFreq*minFixDur-1 startPoint+sampFreq*fixTimes(time):startPoint+sampFreq*fixTimes(time)+sampFreq*saccadeWindow-1]);%splice two periods together: first 300 ms after onset of fixation, and 250 ms following target onset
+                            %trialData{channelInd}(trialInd,:)=NSch{channelInd}(startPoint:startPoint+sampFreq*(fixTimes(trialInd)+saccadeWindow)-1);%raw data in uV, read in data during fixation
+                        end
+                    elseif alignTargOn==1
+                        startPoint=timeStimOnsMatch(time)-sampFreq*preStimDur+1;%align trials relative to target onset, examine 300 ms prior (min duration of fixation period prior to target onset)
+                        if size(NSch{channelInd},2)>=startPoint+sampFreq*(preStimDur+saccadeWindow)-1%from start of fixation through the variable fixation period (ranging from 300 to 800 ms), plus 250 ms after target onset.
+                            trialData(trialInd,:)=NSch{channelInd}([startPoint:startPoint+sampFreq*(preStimDur+saccadeWindow)-1]);%from 300 ms prior to target onset, to 250 ms after target onset
+                            %trialData{channelInd}(trialInd,:)=NSch{channelInd}(startPoint:startPoint+sampFreq*(fixTimes(trialInd)+saccadeWindow)-1);%raw data in uV, read in data during fixation
+                        end
                     end
                 end
                 trialDataXY{channelInd}=trialData;
@@ -310,7 +335,11 @@ if processRaw==1
             ax.XTick=[0 sampFreq*preStimDur];
             ax.XTickLabel={num2str(-preStimDur*1000),'0'};
             set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-            pathname=fullfile('D:\data',date,[instanceName,'_electrode',num2str(electrode),'_eye_traces']);
+            if alignTargOn==0
+                pathname=fullfile('D:\data',date,[instanceName,'_electrode',num2str(electrode),'_eye_traces']);
+            elseif alignTargOn==1
+                pathname=fullfile('D:\data',date,[instanceName,'_electrode',num2str(electrode),'_eye_traces_align_to_target_on']);
+            end
             print(pathname,'-dtiff');
             eyert=find(eyepx>0);
             [degpervoltx,saccRTx] = eyeanalysis_calibration(EYExs,EYEys,eyepx,eyert,sampFreq,RFx/Par.PixPerDeg);
