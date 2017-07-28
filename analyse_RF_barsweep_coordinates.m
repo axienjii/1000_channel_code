@@ -8,8 +8,8 @@ function analyse_RF_barsweep_coordinates
 SNRthreshold=1;
 
 % To plot dots on top of data:
-%USeful fo rtesting potential positions for stimuli
-%Set to empty e.g. RFx = []; if y0u don't want this
+%Useful for testing potential positions for stimuli
+%Set to empty e.g. RFx = []; if you don't want this
 RFx = [];
 RFy = [];
 
