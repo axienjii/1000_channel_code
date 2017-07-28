@@ -62,6 +62,7 @@ for instanceCount=1:length(allInstanceInd)
     normMeanChannelResponse1024=[normMeanChannelResponse1024;normMeanChannelResponse];%mean activity across stimulus presentation period, with channels in rows, and letter conditions in columns
     fileName=['D:\data\',date,'\visual_response_instance',num2str(instanceInd),'.mat'];
     save(fileName,'normChannelsResponse','normMeanChannelResponse1024')
+end
     
     loadDate='best_260617-280617';
     fileName=['D:\data\',loadDate,'\RFs_instance',num2str(instanceInd),'.mat'];
@@ -91,10 +92,9 @@ for instanceCount=1:length(allInstanceInd)
         for timePoint=1:size(normChannelsResponse{letterCond},2)
             col=normChannelsResponse{letterCond}(:,timePoint);
             scatter(channelRFs(1:128,1),channelRFs(1:128,2),[],col);
-            pause(0.01);
+            pause(0.001);
         end
     end
-end
 %             %draw dotted lines indicating stimulus presentation
 %             if smoothResponse==1
 %                 minResponse=min(letterYMin);
