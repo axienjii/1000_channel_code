@@ -41,6 +41,13 @@ if calculateVisualResponses==1
         load(fileName,'meanChannelMUA')
         for channelCount=1:length(goodChannels)
             channelInd=goodChannels(channelCount);
+            
+            %calculate max response during checkerboard task:
+            maxCheckerboard=max(meanChannelMUA(channelInd,sampFreq*preStimDurCheckerboard/downsampleFreq:sampFreq*(preStimDurCheckerboard+stimDurCheckerboard)/downsampleFreq));
+            baselineRespCheckerboard=mean(meanChannelMUA(channelInd,1:sampFreq*preStimDurCheckerboard/downsampleFreq-1));
+            maxCheckerboardResp=maxCheckerboard-baselineRespCheckerboard;
+
+            %letter task:
             fileName=fullfile('D:\data',date,['MUA_',instanceName,'_ch',num2str(channelInd),'_downsample.mat'])
             load(fileName)
             trialData=[];
@@ -56,19 +63,12 @@ if calculateVisualResponses==1
                         trialData(trialInd,:)=channelDataMUA(startPoint-sampFreq/downsampleFreq*preStimDur:startPoint+sampFreq/downsampleFreq*stimDur+sampFreq/downsampleFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
                     end
                 end
-            end
-            
-            %calculate max response during checkerboard task:
-            maxCheckerboard=max(meanChannelMUA(channelInd,sampFreq*preStimDurCheckerboard/downsampleFreq:sampFreq*(preStimDurCheckerboard+stimDurCheckerboard)/downsampleFreq));
-            baselineRespCheckerboard=mean(meanChannelMUA(channelInd,1:sampFreq*preStimDurCheckerboard/downsampleFreq-1));
-            maxCheckerboardResp=maxCheckerboard-baselineRespCheckerboard;
-            
-            %letter task:
+            end                       
             baseline=mean(mean(trialData(:,1:sampFreq/downsampleFreq*preStimDur)));%calculate baseline activity over initial 300-ms fixation period
             for letterCond=1:10
-                meanChannelMUA(letterCond,:)=mean(trialData(find(goodTrialCondsMatch(:,1)==letterCond),:),1);
-                meanChannelResponse(letterCond,:)=mean(meanChannelMUA(letterCond,sampFreq/downsampleFreq*preStimDur+1:sampFreq/downsampleFreq*(preStimDur+stimDur)));
-                normChannelsResponse{letterCond}=[normChannelsResponse{letterCond};meanChannelMUA(letterCond,:)-baseline];%store activity over the whole trial. each cell contains activity levels, with channels in rows, and time in columns
+                meanChannelMUAletter(letterCond,:)=mean(trialData(find(goodTrialCondsMatch(:,1)==letterCond),:),1);
+                meanChannelResponse(letterCond,:)=mean(meanChannelMUAletter(letterCond,sampFreq/downsampleFreq*preStimDur+1:sampFreq/downsampleFreq*(preStimDur+stimDur)));
+                normChannelsResponse{letterCond}=[normChannelsResponse{letterCond};meanChannelMUAletter(letterCond,:)-baseline];%store activity over the whole trial. each cell contains activity levels, with channels in rows, and time in columns
             end
             normMeanChannelResponse(channelCount,:)=(meanChannelResponse-baseline)/maxCheckerboardResp;%normalise response for each channel to maximum observed during checkerboard task, subtract spontaneous activity levels
             %normMeanChannelResponse(channelCount,:)=(meanChannelResponse-baseline)/(max(meanChannelResponse)-baseline);%normalise response for each channel to maximum, subtract spontaneous activity levels
