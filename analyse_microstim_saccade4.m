@@ -1,8 +1,10 @@
-function analyse_microstim_saccade3(date,allInstanceInd,allGoodChannels)
+function analyse_microstim_saccade4(date,allInstanceInd,allGoodChannels)
 %20/7/17
 %Written by Xing. Extracts and analyses MUA data from raw .NS6 file, during presentation
 %of simulated and real phosphenes. 
-%Used to analyse data from 25/7/17, microstimulation on array 12, with correct RF coordinates.
+%Used to analyse data from 25-26/7/17, microstimulation on array 12, with correct RF coordinates.
+%Also plots saccade end points for trials where simulated phosphene was
+%visually presented.
 
 %Matches data between .nev and .mat files, identifies indices of trials to
 %be included in analyses. 
@@ -218,6 +220,14 @@ if processRaw==1
         figure
         plot(sort(RTs))
         
+        %visual trials (block type 1):
+        blockTypeGoodTrials=allBlockType(goodTrials);
+        visualTrialsGood=find(blockTypeGoodTrials==1);%index of good trials with visually presented simulated phosphene
+        goodSampleX=allSampleX(goodTrials);
+        goodSampleY=allSampleY(goodTrials);
+        visualSampleX=goodSampleX(visualTrialsGood);
+        visualSampleY=goodSampleY(visualTrialsGood);
+% 
         %read in eye data:        
         eyeChannels=[129 130];
         minFixDur=300/1000;%fixates for at least 300 ms, up to 800 ms
@@ -234,6 +244,79 @@ if processRaw==1
             end
             save(eyeDataMat,'NSch');
         end
+        
+        %visually presented simulated phosphene trials:
+        visColInd=hsv(length(visualTrialsGood));
+        trialDataXY={};
+        for channelInd=1:length(eyeChannels)
+            trialData=[];
+            for trialInd=1:length(visualTrialsGood)
+                startPoint=timeStimOnsMatch(visualTrialsGood(trialInd))-sampFreq*preStimDur+1;%align trials relative to target onset, examine 300 ms prior (min duration of fixation period prior to target onset)
+                if size(NSch{channelInd},2)>=startPoint+sampFreq*(preStimDur+saccadeWindow)-1%from start of fixation through the variable fixation period (ranging from 300 to 800 ms), plus 250 ms after target onset.
+                    trialDataVis(trialInd,:)=double(NSch{channelInd}([startPoint:startPoint+sampFreq*(preStimDur+saccadeWindow)-1]));%from 300 ms prior to target onset, to 250 ms after target onset
+                end
+            end
+            trialDataXYVis{channelInd}=trialDataVis;
+        end
+        eyepx=-sampFreq*minFixDur:sampFreq*saccadeWindow-1;
+        eyepx=eyepx/sampFreq;
+        [EYExsVis,EYEysVis] = eyeanalysis_baseline_correct(trialDataXYVis{1},trialDataXYVis{2},eyepx,sampFreq,1:size(trialDataXYVis{1},1));
+        
+        figure
+        for trialInd=1:length(visualTrialsGood)
+            time=visualTrialsGood(trialInd);
+            tempInd=find(eyepx<saccadeDur(time));
+            subplot(2,1,1)
+            plot(EYExsVis(trialInd,tempInd));
+            hold on
+            subplot(2,1,2)
+            plot(EYEysVis(trialInd,tempInd));
+            hold on
+        end
+        subplot(2,1,1)
+        title(['X eye position up till reward delivery. N trials = ',num2str(length(trialIndConds{uniqueElectrode}))])
+        yLim=get(gca,'YLim');
+        plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:')
+        ax=gca;
+        ax.XTick=[0 sampFreq*preStimDur];
+        ax.XTickLabel={num2str(-preStimDur*1000),'0'};
+        subplot(2,1,2)
+        yLim=get(gca,'YLim');
+        plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:')
+        ax=gca;
+        title(['Y eye position up till reward delivery. N trials = ',num2str(length(trialIndConds{uniqueElectrode}))])
+        ax.XTick=[0 sampFreq*preStimDur];
+        ax.XTickLabel={num2str(-preStimDur*1000),'0'};
+        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+        if alignTargOn==0
+            pathname=fullfile('D:\data',date,[instanceName,'_electrode',num2str(electrode),'_eye_traces']);
+        elseif alignTargOn==1
+            pathname=fullfile('D:\data',date,[instanceName,'_electrode',num2str(electrode),'_eye_traces_align_to_target_on']);
+        end
+%         print(pathname,'-dtiff');
+        eyert=find(eyepx>0);
+        [degpervoltx,saccRTx] = eyeanalysis_calibration(EYExsVis,EYEysVis,eyepx,eyert,sampFreq,RFx/Par.PixPerDeg);
+        if degpervoltx<0
+            degpervoltx=-degpervoltx;
+        end
+        degpervoltx=0.0027;
+        flankingSamples=(30000/50)/2;%50-ms period before reward delivery
+        figure
+        hold on
+        for trialInd=1:length(visualTrialsGood)
+            time=visualTrialsGood(trialInd);
+            tempInd=find(eyepx<saccadeDur(time));%find(eyepx<saccRTx(trialInd)+0.05);
+            posIndXVis(trialInd)=mean(EYExsVis(trialInd,tempInd(end)-flankingSamples:tempInd(end)+flankingSamples))*degpervoltx;%position during saccade
+            posIndYVis(trialInd)=mean(EYEysVis(trialInd,tempInd(end)-flankingSamples:tempInd(end)+flankingSamples))*degpervoltx;
+            scatter(-posIndXVis(trialInd),-posIndYVis(trialInd),[],visColInd(trialInd,:));
+            scatter(visualSampleX(trialInd)/Par.PixPerDeg,-visualSampleY(trialInd)/Par.PixPerDeg,[],visColInd(trialInd,:),'s');
+            line([-posIndXVis(trialInd) visualSampleX(trialInd)/Par.PixPerDeg],[-posIndYVis(trialInd) -visualSampleY(trialInd)/Par.PixPerDeg],'Color',visColInd(trialInd,:))
+            distanceTargetSaccade(trialInd)=sqrt((visualSampleX(trialInd)/Par.PixPerDeg+posIndXVis(trialInd))^2+(-posIndYVis(trialInd)+visualSampleY(trialInd)/Par.PixPerDeg)^2);%distance between target location and saccade end location, in dva
+        end 
+        figure;
+        histogram(distanceTargetSaccade,10)
+        
+        %microstim:
         figInd1=figure;hold on
         figInd2=figure;hold on
         for uniqueElectrode=1:length(trialIndConds(:))
@@ -375,23 +458,16 @@ if processRaw==1
             hold on
             axis square
             %remove outliers (3 standard deviations from the mean):
-            SDcutoff=3;
+            SDcutoff=2;
+            if isequal(date,'260717_B2')&&electrode==21
+                SDcutoff=1;
+            end
             posIndX_noOutliers=posIndX;
             posIndY_noOutliers=posIndY;
-            meanX=mean(-posIndX);
-            sdX=std(posIndX);
-            a=find(-posIndX_noOutliers>meanX+SDcutoff*sdX);
-            posIndX_noOutliers(a)=[];
-            posIndY_noOutliers(a)=[];
-            a=find(-posIndX_noOutliers<meanX-SDcutoff*sdX);
-            posIndX_noOutliers(a)=[];
-            posIndY_noOutliers(a)=[];
-            meanY=mean(-posIndY);
-            sdY=std(posIndY);
-            a=find(-posIndY_noOutliers>meanY+SDcutoff*sdY);
-            posIndX_noOutliers(a)=[];
-            posIndY_noOutliers(a)=[];
-            a=find(-posIndY_noOutliers<meanY-SDcutoff*sdY);
+            eccentricity=sqrt(posIndX.^2+posIndY.^2);
+            meanEccentricity=mean(eccentricity);
+            sdEccentricity=std(eccentricity);
+            a=find(eccentricity>meanEccentricity+SDcutoff*sdEccentricity);
             posIndX_noOutliers(a)=[];
             posIndY_noOutliers(a)=[];
             %plot histogram
@@ -437,6 +513,8 @@ if processRaw==1
             plot(centroidX,centroidY,'ko','MarkerFaceColor',colInd(uniqueElectrode,:),'MarkerSize',10);
             plot(RFx/Par.PixPerDeg,RFy/Par.PixPerDeg,'ks','MarkerSize',14,'MarkerFaceColor',colInd(uniqueElectrode,:));%RF location
             text(RFx/Par.PixPerDeg-0.01,RFy/Par.PixPerDeg,num2str(electrode),'FontSize',8,'Color',[0 0 0]);
+            distanceRFSaccade(uniqueElectrode)=sqrt((RFx/Par.PixPerDeg-centroidX)^2+(RFy/Par.PixPerDeg-centroidY)^2);
+            text(centroidX,centroidY,num2str(distanceRFSaccade(uniqueElectrode)),'FontSize',8,'Color',[0 0 0]);
         end
         figure(figInd1)
         scatter(0,0,'r','o','filled');%fix spot

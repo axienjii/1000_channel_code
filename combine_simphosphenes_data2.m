@@ -105,7 +105,7 @@ if combineMat==1
     goodTrialIDs=[goodTrialIDs_B1;goodTrialIDs_B2;goodTrialIDs_B123];
     date='110717_B1_B2_120717_B123';
     folderName=fullfile('D:\data',date,[date,'_data']);
-    if ~exist(folderName)
+    if ~exist(folderName,'dir')
         mkdir(folderName)
     end
     matFile=['D:\data\',date,'\',date,'_data\simphosphenes6_',date,'.mat'];
