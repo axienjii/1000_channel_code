@@ -77,19 +77,11 @@ if calculateVisualResponses==1
         fileName=['D:\data\',date,'\visual_response_instance',num2str(instanceInd),'.mat'];
         save(fileName,'normChannelsResponse','normMeanChannelResponse1024')        
     end
-<<<<<<< HEAD
-    normMeanChannelResponse1024=[normMeanChannelResponse1024;normMeanChannelResponse];%mean activity across stimulus presentation period, with channels in rows, and letter conditions in columns
-    fileName=['D:\data\',date,'\visual_response_instance',num2str(instanceInd),'.mat'];
-    save(fileName,'normChannelsResponse','normMeanChannelResponse1024')
 end
     
-=======
-end
-
 %combine RF data and visual response data across 4 of the instances:
 allChannelRFs=[];
 for instanceInd=1:8
->>>>>>> e0dd07bfd8fa750695d358cd07bf1e7939811859
     loadDate='best_260617-280617';
     fileName=['D:\data\',loadDate,'\RFs_instance',num2str(instanceInd),'.mat'];
     load(fileName)
@@ -108,81 +100,10 @@ for instanceInd=1:8
     load(fileName,'normChannelsResponse','normMeanChannelResponse1024')
     allNormMeanChannelResponse1024=[allNormMeanChannelResponse1024;normMeanChannelResponse1024];
     for letterCond=1:10
-<<<<<<< HEAD
-        figure;hold on
-        col=normMeanChannelResponse(:,letterCond);
-        scatter(channelRFs(1:128,1),channelRFs(1:128,2),[],col);
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:')
-        plot([-200 300],[0 0],'k:')
-        plot([-200 300],[200 -300],'k:')
-        ellipse(50,50,0,0,[0.1 0.1 0.1]);
-        ellipse(100,100,0,0,[0.1 0.1 0.1]);
-        ellipse(150,150,0,0,[0.1 0.1 0.1]);
-        ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis square
-        xlim([0 200]);
-        ylim([-200 0]);
-        title(['visual responses to symbol ',allLetters(letterCond)]);
-        figure;
-        for timePoint=1:size(normChannelsResponse{letterCond},2)
-            col=normChannelsResponse{letterCond}(:,timePoint);
-            scatter(channelRFs(1:128,1),channelRFs(1:128,2),[],col);
-            pause(0.001);
-        end
-    end
-%             %draw dotted lines indicating stimulus presentation
-%             if smoothResponse==1
-%                 minResponse=min(letterYMin);
-%                 [maxResponse maxLetter]=max(letterYMax);
-%             end
-%             diffResponse=maxResponse-minResponse;
-%             if downSampling==0
-%                 plot([sampFreq*preStimDur sampFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-%                 plot([sampFreq*(preStimDur+stimDur) sampFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-%             elseif downSampling==1
-%                 plot([sampFreq/downsampleFreq*preStimDur sampFreq/downsampleFreq*preStimDur],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-%                 plot([sampFreq/downsampleFreq*(preStimDur+stimDur) sampFreq/downsampleFreq*(preStimDur+stimDur)],[minResponse-diffResponse/10 maxResponse+diffResponse/10],'k:')
-%             end
-%             for i=1:10
-%                 if i==10
-%                     plot(letterYMaxLoc(i)+diffResponse/40,letterYMax(i)+diffResponse/40,'square','Color',colind(i,:),'MarkerSize',10)
-%                     plot(1485,maxResponse+diffResponse/10-i*diffResponse/40,'square','Color',colind(i,:),'MarkerSize',8)
-%                 else
-%                     text(letterYMaxLoc(i)+diffResponse/40,letterYMax(i)+diffResponse/40,allLetters(i),'Color',colind(i,:),'FontSize',10)
-%                     text(1480,maxResponse+diffResponse/10-i*diffResponse/40,allLetters(i),'Color',colind(i,:),'FontSize',8)
-%                 end
-%             end
-%             ylim([minResponse-diffResponse/10 maxResponse+diffResponse/10]);
-%             xlim([0 length(meanChannelMUA(letterCond,:))]);
-%             title([num2str(channelInd),' letters']);
-%             axes('Position',[.75 .75 .15 .15])%left bottom width height: the left and bottom elements define the distance from the lower left corner of the container (typically a figure, uipanel, or uitab) to the lower left corner of the position boundary. The width and height elements are the position boundary dimensions.
-%             box on
-%             draw_rf_letters(instanceInd,channelInd,0)
-%             set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-%             pathname=fullfile('D:\data',date,[instanceName,'_','channel_',num2str(channelInd),'_visual_response_letters_smooth']);
-%             print(pathname,'-dtiff');
-%             % create smaller axes in top right, and plot on it
-%             close(figLetters)
-%         end
-%         for figInd=1:4
-%             figure(figInd)
-%             set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-%             pathname=fullfile('D:\data',date,[instanceName,'_',num2str(figInd),'_visual_response']);
-%             print(pathname,'-dtiff');
-%         end
-%         close all
-=======
         allNormChannelsResponse{letterCond}=[allNormChannelsResponse{letterCond};normChannelsResponse{letterCond}];
     end
 end
 for letterCond=1:10
-    figure;hold on
     colInd=allNormMeanChannelResponse1024(:,letterCond)./maxCheckerboardResp;
     col=[colInd*255 colInd*255 colInd];
     scatter(allChannelRFs(:,1),allChannelRFs(:,2),[],col);
@@ -239,7 +160,6 @@ for letterCond=1:10
 %         xlim([0 200]);
 %         ylim([-200 0]);
 %         pause(0.0001);
->>>>>>> e0dd07bfd8fa750695d358cd07bf1e7939811859
 %     end
 end
 pauseHere=1;
