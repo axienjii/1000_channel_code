@@ -102,7 +102,7 @@ for instanceInd=1:8
     end
 end
 % figure;hold on
-for letterCond=1:10
+for letterCond=2:10
     figure;hold on
 %     subplot(2,5,letterCond);hold on
     colInd=allNormMeanChannelResponse1024(:,letterCond);
@@ -216,6 +216,7 @@ for letterCond=1:10
         colInd=allNormChannelsResponse{letterCond}(:,timePoint);
         col=[colInd*250 colInd*5 colInd];
 %         col=allNormChannelsResponse{letterCond}(:,timePoint);
+%         scatter(allChannelRFs(:,1),allChannelRFs(:,2),[],col,'filled','MarkerFaceAlpha',0.8);
         scatter(allChannelRFs(:,1),allChannelRFs(:,2),[],col);
         axis square
         xlim([0 200]);
@@ -225,8 +226,8 @@ for letterCond=1:10
     end
     pathname=fullfile('D:\data',date,['1024-channel responses to letter ',allLetters(letterCond),'.mat']);
     save(pathname,'framesResponse')
-    movieFig=figure;
-    movie(movieFig,framesResponse,1,50);  
+%     movieFig=figure;
+%     movie(movieFig,framesResponse,1,50);  
     moviename=fullfile('D:\data',date,['1024-channel responses to letter ',allLetters(letterCond),'.avi']);
     v = VideoWriter(moviename);
     v.FrameRate=1000;
