@@ -79,7 +79,6 @@ for instanceInd=1:8
             normalisedResponse{stimCond}=[normalisedResponse{stimCond};mua2fit/(max(mua2fit))];%each cell contains channels in rows and time in columns, for entire trial
         end
     end
-    pause=1;
 end
 fileName=fullfile('D:\data',date,['normalised_visual_response_all_conds','.mat']);
 save(fileName,'normalisedResponse')
@@ -97,26 +96,27 @@ for instanceInd=1:8
 end
 for stimCond=1:4
     figure;hold on
+    scatter(0,0,'r','o','filled');%fix spot
+    %draw dotted lines indicating [0,0]
+    plot([0 0],[-250 200],'k:')
+    plot([-200 300],[0 0],'k:')
+    plot([-200 300],[200 -300],'k:')
+    ellipse(50,50,0,0,[0.1 0.1 0.1]);
+    ellipse(100,100,0,0,[0.1 0.1 0.1]);
+    ellipse(150,150,0,0,[0.1 0.1 0.1]);
+    ellipse(200,200,0,0,[0.1 0.1 0.1]);
+    text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+    text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+    text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+    text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+    axis square
+    title(['visual responses to bar sweeping ',direct{stimCond}]);
+    set(gca,'Color',[0.7 0.7 0.7]);
     for timePoint=1:size(normalisedResponse{stimCond},2)
         col=normalisedResponse{stimCond}(:,timePoint);
         scatter(allChannelRFs(:,1),allChannelRFs(:,2),[],col);
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:')
-        plot([-200 300],[0 0],'k:')
-        plot([-200 300],[200 -300],'k:')
-        ellipse(50,50,0,0,[0.1 0.1 0.1]);
-        ellipse(100,100,0,0,[0.1 0.1 0.1]);
-        ellipse(150,150,0,0,[0.1 0.1 0.1]);
-        ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis square
         xlim([0 200]);
         ylim([-200 0]);
-        title(['visual responses to bar sweeping ',direct{stimCond}]);
-        pause(0.01);
+        pause(0.0001);
     end
 end

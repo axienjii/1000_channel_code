@@ -24,7 +24,7 @@ stimDurCheckerboard=400/1000;%in seconds
 preStimDurCheckerboard=300/1000;%length of pre-stimulus-onset period, in s
 postStimDurCheckerboard=300/1000;%length of post-stimulus-offset period, in s
 
-calculateVisualResponses=1;
+calculateVisualResponses=0;
 if calculateVisualResponses==1
     for instanceCount=1:length(allInstanceInd)
         instanceInd=allInstanceInd(instanceCount);
@@ -93,8 +93,6 @@ for instanceInd=1:8
     loadDate='best_260617-280617';
     fileName=['D:\data\',loadDate,'\RFs_instance',num2str(instanceInd),'.mat'];
     load(fileName)
-    allChannelRFs=[allChannelRFs;channelRFs];
-    instanceInd=allInstanceInd(instanceInd);
     instanceName=['instance',num2str(instanceInd)];
     fileName=['D:\data\',date,'\visual_response_instance',num2str(instanceInd),'.mat'];
     load(fileName,'normChannelsResponse','normMeanChannelResponse1024')
@@ -103,10 +101,12 @@ for instanceInd=1:8
         allNormChannelsResponse{letterCond}=[allNormChannelsResponse{letterCond};normChannelsResponse{letterCond}];
     end
 end
+% figure;hold on
 for letterCond=1:10
     figure;hold on
-    colInd=allNormMeanChannelResponse1024(:,letterCond)./maxCheckerboardResp;
-    col=[colInd*255 colInd*255 colInd];
+%     subplot(2,5,letterCond);hold on
+    colInd=allNormMeanChannelResponse1024(:,letterCond);
+    col=255-[colInd*255 colInd*5 colInd];
     scatter(allChannelRFs(:,1),allChannelRFs(:,2),[],col);
     xlim([0 200]);
     ylim([-200 0]);
@@ -142,25 +142,98 @@ for letterCond=1:10
     plot([0 0],[-240 60],'k:')
     plot([-60 240],[0 0],'k:')
     colind = hsv(10);
+    colind = colind(5,:);
     targetLetter=allLetters(letterCond);
     letterPath=['D:\data\letters\',targetLetter,'.bmp'];
     originalOutline=imread(letterPath);
     shape=imresize(originalOutline,[visualHeight,visualWidth]);
     whiteMask=shape==0;
     whiteMask=whiteMask*255;
-    shapeRGB(:,:,1)=whiteMask+shape*255*colind(letterCond,1);
-    shapeRGB(:,:,2)=whiteMask+shape*255*colind(letterCond,2);
-    shapeRGB(:,:,3)=whiteMask+shape*255*colind(letterCond,3);
+    shapeRGB(:,:,1)=whiteMask+shape*255*colind(1);
+    shapeRGB(:,:,2)=whiteMask+shape*255*colind(2);
+    shapeRGB(:,:,3)=whiteMask+shape*255*colind(3);
     h=image(sampleX,-sampleY-visualHeight,flip(shapeRGB,1)); 
     set(h, 'AlphaData', 0.1);
-%     figure;
-%     for timePoint=1:size(normChannelsResponse{letterCond},2)
+    set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+    pathname=fullfile('D:\data',date,['1024-channel visual responses to simulated phosphene letter ',allLetters(letterCond)]);
+    print(pathname,'-dtiff');   
+    
+    for timePoint=1:size(normChannelsResponse{letterCond},2)
+        figure;hold on
+        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+        set(gca,'Color',[0 0 0]);
+        %     subplot(2,5,letterCond);hold on
+        xlim([0 200]);
+        ylim([-200 0]);
+        scatter(0,0,'r','o','filled');%fix spot
+        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+        axis square
+        xlim([0 200]);
+        ylim([-200 0]);
+        title(['visual responses to symbol ',allLetters(letterCond)]);
+        allLetters='IUALTVSYJP';
+        screenWidth=1024;
+        screenHeight=768;
+        sampleSize=112;%a multiple of 14, the number of divisions in the letters
+        visualWidth=sampleSize;%in pixels
+        visualHeight=visualWidth;%in pixels
+        Par.PixPerDeg=25.860053410707074;
+        
+        topLeft=1;%distance from fixation spot to top-left corner of sample, measured diagonally (eccentricity)
+        sampleX = round(sqrt((topLeft^2)/2)*Par.PixPerDeg);%randi([30 100]);%location of sample stimulus, in RF quadrant 150 230%want to try 20
+        sampleY = round(sqrt((topLeft^2)/2)*Par.PixPerDeg);%randi([30 100]);%[30 140]
+        destRect=[screenWidth/2+sampleX screenHeight/2+sampleY screenWidth/2+sampleX+visualWidth screenHeight/2+sampleY+visualHeight];
+        plot([0 0],[-240 60],'k:')
+        plot([-60 240],[0 0],'k:')
+        if timePoint>=300&&timePoint<=1100
+            colind = hsv(10);
+            colind = colind(5,:);
+            colind = [0 0 0];
+            targetLetter=allLetters(letterCond);
+            letterPath=['D:\data\letters\',targetLetter,'.bmp'];
+            originalOutline=imread(letterPath);
+            shape=imresize(originalOutline,[visualHeight,visualWidth]);
+            whiteMask=shape==0;
+            whiteMask=whiteMask*255;
+            shapeRGB(:,:,1)=255-whiteMask+shape*255*colind(1);
+            shapeRGB(:,:,2)=255-whiteMask+shape*255*colind(2);
+            shapeRGB(:,:,3)=255-whiteMask+shape*255*colind(3);
+            h=image(sampleX,-sampleY-visualHeight,flip(shapeRGB,1));
+            set(h, 'AlphaData', 0.4);
+        end
+        hold on            
+        %draw dotted lines indicating [0,0]
+        plot([0 0],[-250 200],'r:')
+        plot([-200 300],[0 0],'r:')
+        plot([-200 300],[200 -300],'r:')
+        ellipse(50,50,0,0,[1 1 1]);
+        ellipse(100,100,0,0,[1 1 1]);
+        ellipse(150,150,0,0,[1 1 1]);
+        ellipse(200,200,0,0,[1 1 1]);
+        colInd=allNormChannelsResponse{letterCond}(:,timePoint);
+        col=[colInd*250 colInd*5 colInd];
 %         col=allNormChannelsResponse{letterCond}(:,timePoint);
-%         scatter(allChannelRFs(:,1),allChannelRFs(:,2),[],col);
-%         axis square
-%         xlim([0 200]);
-%         ylim([-200 0]);
-%         pause(0.0001);
-%     end
+        scatter(allChannelRFs(:,1),allChannelRFs(:,2),[],col);
+        axis square
+        xlim([0 200]);
+        ylim([-200 0]);
+        framesResponse(timePoint)=getframe;
+        close all
+    end
+    pathname=fullfile('D:\data',date,['1024-channel responses to letter ',allLetters(letterCond),'.mat']);
+    save(pathname,'framesResponse')
+    movieFig=figure;
+    movie(movieFig,framesResponse,1,50);  
+    moviename=fullfile('D:\data',date,['1024-channel responses to letter ',allLetters(letterCond),'.avi']);
+    v = VideoWriter(moviename);
+    v.FrameRate=1000;
+    open(v)
+    for timePoint=1:1500
+        writeVideo(v,framesResponse(timePoint))
+    end
+    close(v)
 end
 pauseHere=1;
