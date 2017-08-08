@@ -157,17 +157,17 @@ if processRaw==1
         numIncorrTrials=length(find(performanceMatch==-1));
         saccadeDur=double((rewOnsMatch-timeStimOnsMatch))./30000;%calculate the time between target onset and reward delivery
         saccadeWindow=ceil(10*max(saccadeDur))/10;%find the timing of the saccade on the trial with the latest saccade
-        saccadeEndX=allHitX(goodTrials);%x-coordinate of saccade endpoint
-        saccadeEndY=allHitY(goodTrials);%y-coordinate of saccade endpoint
+        saccadeEndX=allHitX(matMatchInd);%x-coordinate of saccade endpoint
+        saccadeEndY=allHitY(matMatchInd);%y-coordinate of saccade endpoint
         if iscell(allElectrodeNum)
-            electrodeID=cell2mat(allElectrodeNum(goodTrials));%electrode through which microstimulation was delivered
+            electrodeID=cell2mat(allElectrodeNum(matMatchInd));%electrode through which microstimulation was delivered
         else
-            electrodeID=allElectrodeNum(goodTrials);%electrode through which microstimulation was delivered
+            electrodeID=allElectrodeNum(matMatchInd);%electrode through which microstimulation was delivered
         end
         if iscell(allArrayNum)
-            arrayID=cell2mat(allArrayNum(goodTrials));%array containing electrode through which microstimulation was delivered
+            arrayID=cell2mat(allArrayNum(matMatchInd));%array containing electrode through which microstimulation was delivered
         else
-            arrayID=allArrayNum(goodTrials);%array containing electrode through which microstimulation was delivered
+            arrayID=allArrayNum(matMatchInd);%array containing electrode through which microstimulation was delivered
         end
         electrodeNums=unique(electrodeID(~isnan(electrodeID)));
         arrayNums=unique(arrayID(~isnan(arrayID)));

@@ -101,18 +101,12 @@ for instanceInd=1:8
         allNormChannelsResponse{letterCond}=[allNormChannelsResponse{letterCond};normChannelsResponse{letterCond}];
     end
 end
-<<<<<<< HEAD
-for letterCond=1:10
-    colInd=allNormMeanChannelResponse1024(:,letterCond)./maxCheckerboardResp;
-    col=[colInd*255 colInd*255 colInd];
-=======
 % figure;hold on
-for letterCond=2:10
+for letterCond=7:10
     figure;hold on
 %     subplot(2,5,letterCond);hold on
     colInd=allNormMeanChannelResponse1024(:,letterCond);
     col=255-[colInd*255 colInd*5 colInd];
->>>>>>> 1a38f970456a363ec4802eac295879efe7177ea8
     scatter(allChannelRFs(:,1),allChannelRFs(:,2),[],col);
     xlim([0 200]);
     ylim([-200 0]);
