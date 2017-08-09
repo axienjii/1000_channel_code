@@ -5,11 +5,7 @@ function analyse_CheckSNR(date)
 %visually evoked responses.
 % date='240717_B2';
 stimDur=400/1000;%in seconds
-<<<<<<< HEAD
 allInstanceInd=5:8;
-=======
-allInstanceInd=1:4;
->>>>>>> 94474b598669df7ca887097fa626e7bdd216f455
 for instanceCount=1:length(allInstanceInd)
     instanceInd=allInstanceInd(instanceCount);
     instanceName=['instance',num2str(instanceInd)];

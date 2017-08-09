@@ -118,11 +118,7 @@ colInds(1)=-10000;%some arbitrarily low value, to capture all the low activity l
 tempAllNormChannelsResponse=allNormChannelsResponse;
 
 % figure;hold on
-<<<<<<< HEAD
 for letterCond=1:10
-=======
-for letterCond=7:10
->>>>>>> 94474b598669df7ca887097fa626e7bdd216f455
     figure;hold on
 %     subplot(2,5,letterCond);hold on
     colInd=allNormMeanChannelResponse1024(:,letterCond);
