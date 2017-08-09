@@ -10,6 +10,7 @@ function impedance_plotter2
 date='260617';
 date='110717';
 date='170717';
+date='200717';
 colind = hsv(16);
 colindImp = hsv(1000);%colour-code impedances
 
@@ -59,6 +60,18 @@ switch(date)
         titleText='red: 110717; blue: 170717';
         xLabelsConds={'260617 TW','170717 HT'};
         titleText='red: 260617; blue: 170717';
+        
+    case('200717')
+%         load('C:\Users\User\Documents\impedance_values\170717\impedanceAllChannels.mat','impedanceAllChannels');
+        load('C:\Users\User\Documents\impedance_values\200717\impedanceAllChannels_170717_vs_200717.mat','impedanceAllChannels');
+        %column 1: impedance on previous date, 17/7/17
+        %column 2: impedance on 20/7/17
+        %column 3: array number
+        %column 4: electrode number (out of 1024)
+        xLabelsConds={'170717 HT','200717 HT'};
+        titleText='red: 170717; blue: 200717';
+%         xLabelsConds={'260617 TW','170717 HT'};
+%         titleText='red: 260617; blue: 170717';
 end
 figure;hold on
 length(find(impedanceAllChannels(:,1)>800))%number of channels with too-high impedances values during hand-tightening, 485
@@ -248,6 +261,8 @@ array10=chInfo(chInfo(:,7)==10,:);
 %minimum impedance for array 10 starts at 23 kOhms
 array12=chInfo(chInfo(:,7)==12,:);
 %many channels with low impedance on array 12
+array13=chInfo(chInfo(:,7)==13,:);
+%many channels with low impedance on array 13
 
 figure;plot(array12(1:12,1),array12(1:12,2),'ko')
 hold on

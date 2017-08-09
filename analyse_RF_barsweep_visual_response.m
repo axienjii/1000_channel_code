@@ -7,10 +7,10 @@ SNRthreshold=1;
 pixperdeg = 25.8601;
 bardur = 1000; %duration in miliseconds
 
-direct{1} = 'L 2 R';
-direct{2} = 'D 2 U';
-direct{3} = 'R 2 L';
-direct{4} = 'U 2 D';
+direct{1} = 'L to R';
+direct{2} = 'D to U';
+direct{3} = 'R to L';
+direct{4} = 'U to D';
 
 sampFreq=30000;
 stimDurms=1000;%in ms
@@ -95,28 +95,56 @@ for instanceInd=1:8
     allChannelRFs=[allChannelRFs;channelRFs];
 end
 for stimCond=1:4
-    figure;hold on
-    scatter(0,0,'r','o','filled');%fix spot
-    %draw dotted lines indicating [0,0]
-    plot([0 0],[-250 200],'k:')
-    plot([-200 300],[0 0],'k:')
-    plot([-200 300],[200 -300],'k:')
-    ellipse(50,50,0,0,[0.1 0.1 0.1]);
-    ellipse(100,100,0,0,[0.1 0.1 0.1]);
-    ellipse(150,150,0,0,[0.1 0.1 0.1]);
-    ellipse(200,200,0,0,[0.1 0.1 0.1]);
-    text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-    text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-    text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-    text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-    axis square
-    title(['visual responses to bar sweeping ',direct{stimCond}]);
-    set(gca,'Color',[0.7 0.7 0.7]);
-    for timePoint=1:size(normalisedResponse{stimCond},2)
+    for timePoint=1:size(normalisedResponse{stimCond},2)  
+        figure;hold on
+        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+        set(gca,'Color',[0.7 0.7 0.7]);
+        scatter(0,0,'r','o','filled');%fix spot
+        %draw dotted lines indicating [0,0]
+        plot([0 0],[-250 200],'r:')
+        plot([-200 300],[0 0],'r:')
+        plot([-200 300],[200 -300],'r:')
+        ellipse(50,50,0,0,[1 1 1]);
+        ellipse(100,100,0,0,[1 1 1]);
+        ellipse(150,150,0,0,[1 1 1]);
+        ellipse(200,200,0,0,[1 1 1]);
+        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.5 0.5 0.5]);
+        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.5 0.5 0.5]);
+        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.5 0.5 0.5]);
+        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.5 0.5 0.5]);
+
         col=normalisedResponse{stimCond}(:,timePoint);
         scatter(allChannelRFs(:,1),allChannelRFs(:,2),[],col);
+        
+        %Draw bar
+        if timePoint>preStimDur*1000&&timePoint<=preStimDur*1000+stimDurms
+            if stimCond==1
+                plot([x0-(speed*1000)/2+timePoint-preStimDur*1000 x0-(speed*1000)/2+timePoint-preStimDur*1000],[y0-(speed*1000)/2 y0+(speed*1000)/2],'w-')
+            elseif stimCond==2
+                plot([x0-(speed*1000)/2 x0+(speed*1000)/2],[y0-(speed*1000)/2+timePoint-preStimDur*1000 y0-(speed*1000)/2+timePoint-preStimDur*1000],'w-')
+            elseif stimCond==3
+                plot([x0+(speed*1000)/2-timePoint+preStimDur*1000 x0+(speed*1000)/2-timePoint+preStimDur*1000],[y0-(speed*1000)/2 y0+(speed*1000)/2],'w-')
+            elseif stimCond==4
+                plot([x0-(speed*1000)/2 x0+(speed*1000)/2],[y0+(speed*1000)/2-timePoint+preStimDur*1000 y0+(speed*1000)/2-timePoint+preStimDur*1000],'w-')
+            end
+        end
         xlim([0 200]);
         ylim([-200 0]);
-        pause(0.0001);
+        axis square
+        title(['visual responses to bar sweeping ',direct{stimCond}]);
+        framesResponse(timePoint)=getframe;
+        close all
     end
+    pathname=fullfile('D:\data',date,['1024-channel responses to bar sweeping ',direct{stimCond},'.mat']);
+    save(pathname,'framesResponse','-v7.3')
+%     movieFig=figure;
+%     movie(movieFig,framesResponse,1,50);  
+    moviename=fullfile('D:\data',date,['1024-channel responses to  bar sweeping ',direct{stimCond},'.avi']);
+    v = VideoWriter(moviename);
+    v.FrameRate=500;%has to be a factor of the number of frames, otherwise part of data will not be written. I.e. for 1500-frame movie, cannot set frame rate to be 1000
+    open(v)
+    for timePoint=1:length(framesResponse)
+        writeVideo(v,framesResponse(timePoint))
+    end
+    close(v)
 end

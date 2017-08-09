@@ -101,8 +101,24 @@ for instanceInd=1:8
         allNormChannelsResponse{letterCond}=[allNormChannelsResponse{letterCond};normChannelsResponse{letterCond}];
     end
 end
+
+blueColorMap = [linspace(1, 0, 124) linspace(0, 1, 132)];%zeros(1, 132)
+redColorMap = [zeros(1, 132) linspace(0, 1, 124)];
+colorMap = [redColorMap; redColorMap; blueColorMap]';
+singleArray=[];
+for i=1:10
+    singleArray=[singleArray allNormChannelsResponse{i}];
+end
+figure;
+histogram(singleArray)
+meanAllResp=mean(singleArray(:));%calculate mean across all responses, channels and time points
+sdAllResp=std(singleArray(:));%calculate SD across all responses, channels and time points
+colInds=linspace(meanAllResp-2*sdAllResp,meanAllResp+2*sdAllResp,255);
+colInds(1)=-10000;%some arbitrarily low value, to capture all the low activity levels 
+tempAllNormChannelsResponse=allNormChannelsResponse;
+
 % figure;hold on
-for letterCond=2:10
+for letterCond=1:10
     figure;hold on
 %     subplot(2,5,letterCond);hold on
     colInd=allNormMeanChannelResponse1024(:,letterCond);
@@ -127,7 +143,7 @@ for letterCond=2:10
     xlim([0 200]);
     ylim([-200 0]);
     title(['visual responses to symbol ',allLetters(letterCond)]);
-    allLetters='IUALTVSYJP';
+    allLetters='IUALTVSYJ?';
     screenWidth=1024;
     screenHeight=768;
     sampleSize=112;%a multiple of 14, the number of divisions in the letters
@@ -143,20 +159,22 @@ for letterCond=2:10
     plot([-60 240],[0 0],'k:')
     colind = hsv(10);
     colind = colind(5,:);
-    targetLetter=allLetters(letterCond);
-    letterPath=['D:\data\letters\',targetLetter,'.bmp'];
-    originalOutline=imread(letterPath);
-    shape=imresize(originalOutline,[visualHeight,visualWidth]);
-    whiteMask=shape==0;
-    whiteMask=whiteMask*255;
-    shapeRGB(:,:,1)=whiteMask+shape*255*colind(1);
-    shapeRGB(:,:,2)=whiteMask+shape*255*colind(2);
-    shapeRGB(:,:,3)=whiteMask+shape*255*colind(3);
-    h=image(sampleX,-sampleY-visualHeight,flip(shapeRGB,1)); 
-    set(h, 'AlphaData', 0.1);
-    set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-    pathname=fullfile('D:\data',date,['1024-channel visual responses to simulated phosphene letter ',allLetters(letterCond)]);
-    print(pathname,'-dtiff');   
+    if letterCond<10%all symbols except the square
+        targetLetter=allLetters(letterCond);
+        letterPath=['D:\data\letters\',targetLetter,'.bmp'];
+        originalOutline=imread(letterPath);
+        shape=imresize(originalOutline,[visualHeight,visualWidth]);
+        whiteMask=shape==0;
+        whiteMask=whiteMask*255;
+        shapeRGB(:,:,1)=whiteMask+shape*255*colind(1);
+        shapeRGB(:,:,2)=whiteMask+shape*255*colind(2);
+        shapeRGB(:,:,3)=whiteMask+shape*255*colind(3);
+        h=image(sampleX,-sampleY-visualHeight,flip(shapeRGB,1));
+        set(h, 'AlphaData', 0.1);
+        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+        pathname=fullfile('D:\data',date,['1024-channel visual responses to simulated phosphene letter ',allLetters(letterCond)]);
+        print(pathname,'-dtiff');
+    end
     
     for timePoint=1:size(normChannelsResponse{letterCond},2)
         figure;hold on
@@ -174,7 +192,7 @@ for letterCond=2:10
         xlim([0 200]);
         ylim([-200 0]);
         title(['visual responses to symbol ',allLetters(letterCond)]);
-        allLetters='IUALTVSYJP';
+        allLetters='IUALTVSYJ?';
         screenWidth=1024;
         screenHeight=768;
         sampleSize=112;%a multiple of 14, the number of divisions in the letters
@@ -192,16 +210,25 @@ for letterCond=2:10
             colind = hsv(10);
             colind = colind(5,:);
             colind = [0 0 0];
-            targetLetter=allLetters(letterCond);
-            letterPath=['D:\data\letters\',targetLetter,'.bmp'];
-            originalOutline=imread(letterPath);
-            shape=imresize(originalOutline,[visualHeight,visualWidth]);
-            whiteMask=shape==0;
-            whiteMask=whiteMask*255;
-            shapeRGB(:,:,1)=255-whiteMask+shape*255*colind(1);
-            shapeRGB(:,:,2)=255-whiteMask+shape*255*colind(2);
-            shapeRGB(:,:,3)=255-whiteMask+shape*255*colind(3);
-            h=image(sampleX,-sampleY-visualHeight,flip(shapeRGB,1));
+            if letterCond<10%all symbols except the square
+                targetLetter=allLetters(letterCond);
+                letterPath=['D:\data\letters\',targetLetter,'.bmp'];
+                originalOutline=imread(letterPath);
+                shape=imresize(originalOutline,[visualHeight,visualWidth]);
+                whiteMask=shape==0;
+                whiteMask=whiteMask*255;
+                shapeRGB(:,:,1)=255-whiteMask+shape*255*colind(1);
+                shapeRGB(:,:,2)=255-whiteMask+shape*255*colind(2);
+                shapeRGB(:,:,3)=255-whiteMask+shape*255*colind(3);
+                h=image(sampleX,-sampleY-visualHeight,flip(shapeRGB,1));
+            elseif letterCond==10%square full of sim phosphenes
+                shape=zeros(visualHeight,visualWidth);
+                whiteMask=shape==0;
+                shapeRGB(:,:,1)=255-whiteMask+shape*255*colind(1);
+                shapeRGB(:,:,2)=255-whiteMask+shape*255*colind(2);
+                shapeRGB(:,:,3)=255-whiteMask+shape*255*colind(3);
+                h=image(sampleX,-sampleY-visualHeight,flip(shapeRGB,1));
+            end
             set(h, 'AlphaData', 0.4);
         end
         hold on            
@@ -213,11 +240,20 @@ for letterCond=2:10
         ellipse(100,100,0,0,[1 1 1]);
         ellipse(150,150,0,0,[1 1 1]);
         ellipse(200,200,0,0,[1 1 1]);
-        colInd=allNormChannelsResponse{letterCond}(:,timePoint);
-        col=[colInd*250 colInd*5 colInd];
-%         col=allNormChannelsResponse{letterCond}(:,timePoint);
-%         scatter(allChannelRFs(:,1),allChannelRFs(:,2),[],col,'filled','MarkerFaceAlpha',0.8);
+%         colInd=allNormChannelsResponse{letterCond}(:,timePoint);
+%         col=[colInd*250 colInd*5 colInd];
+        %scale activity levels between -7.7 and 25.5, while keeping zero
+        %point constant:
+        findPositive=find(allNormChannelsResponse{letterCond}(:,timePoint)>=0);
+        tempAllNormChannelsResponse{letterCond}(findPositive,timePoint)=allNormChannelsResponse{letterCond}(findPositive,timePoint);%/25.5479;
+        findNegative=find(allNormChannelsResponse{letterCond}(:,timePoint)<0);
+        tempAllNormChannelsResponse{letterCond}(findNegative,timePoint)=allNormChannelsResponse{letterCond}(findNegative,timePoint);%/7.7113;
+        for tempInd=1:length(allNormChannelsResponse{letterCond}(:,timePoint))%convert activity levels into colour indices for 'colorMap' colour map
+            temp=find(colInds<=tempAllNormChannelsResponse{letterCond}(tempInd,timePoint));
+            colInd(tempInd)=temp(end);
+        end
         scatter(allChannelRFs(:,1),allChannelRFs(:,2),[],col);
+        scatter(allChannelRFs(:,1),allChannelRFs(:,2),[],colorMap(colInd));
         axis square
         xlim([0 200]);
         ylim([-200 0]);
@@ -225,16 +261,59 @@ for letterCond=2:10
         close all
     end
     pathname=fullfile('D:\data',date,['1024-channel responses to letter ',allLetters(letterCond),'.mat']);
-    save(pathname,'framesResponse')
+    if letterCond==10%square full of sim phosphenes
+        pathname=fullfile('D:\data',date,['1024-channel responses to square.mat']);
+    end
+    save(pathname,'framesResponse','-v7.3')
 %     movieFig=figure;
 %     movie(movieFig,framesResponse,1,50);  
     moviename=fullfile('D:\data',date,['1024-channel responses to letter ',allLetters(letterCond),'.avi']);
+    if letterCond==10%square full of sim phosphenes
+        moviename=fullfile('D:\data',date,'1024-channel responses to square.avi');
+    end
     v = VideoWriter(moviename);
-    v.FrameRate=1000;
+    v.FrameRate=500;%has to be a factor of the number of frames, otherwise part of data will not be written. I.e. for 1500-frame movie, cannot set frame rate to be 1000
     open(v)
-    for timePoint=1:1500
+    for timePoint=1:length(framesResponse)
         writeVideo(v,framesResponse(timePoint))
     end
     close(v)
 end
 pauseHere=1;
+
+%to draw a frame from the saved data:
+date='110717_B1_B2_120717_B123';
+timePoint=390;
+allLetters='IUALTVSYJ?';
+for letterCond=9%1:10
+    if letterCond<10
+        load(['D:\data\110717_B1_B2_120717_B123\1024-channel responses to letter ',allLetters(letterCond),'.mat'])
+    else
+        load('D:\data\110717_B1_B2_120717_B123\1024-channel responses to square.mat')
+    end
+    figure;
+    imshow(framesResponse(timePoint).cdata)
+    if letterCond<10
+        pathname=fullfile('D:\data',date,['1024-channel visual responses to simulated phosphene letter ',allLetters(letterCond),'_time',num2str(timePoint)]);
+    else
+        pathname=fullfile('D:\data',date,['1024-channel visual responses to simulated phosphene square_time',num2str(timePoint)]);
+    end
+    print(pathname,'-dtiff');
+end
+
+%all symbols in one figure:
+figure;
+date='110717_B1_B2_120717_B123';
+timePoint=390;
+allLetters='IUALTVSYJ?';
+for letterCond=1:10
+    if letterCond<10
+        load(['D:\data\110717_B1_B2_120717_B123\1024-channel responses to letter ',allLetters(letterCond),'.mat'])
+    else
+        load('D:\data\110717_B1_B2_120717_B123\1024-channel responses to square.mat')
+    end
+    subplot(2,5,letterCond);
+    imshow(framesResponse(timePoint).cdata)
+end
+pathname=fullfile('D:\data',date,['1024-channel visual responses to simulated phosphene letters_time',num2str(timePoint)]);
+print(pathname,'-dtiff');
