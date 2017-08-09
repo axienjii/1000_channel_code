@@ -1,6 +1,8 @@
-function analyse_microstim_saccade6(date,allInstanceInd)
-%20/7/17
-%Written by Xing. Extracts and analyses MUA data from raw .NS6 file, during presentation
+function analyse_microstim_saccade7(date,allInstanceInd)
+%09/7/17
+%Written by Xing, modified from analyse_microstim_saccade6. Reads in RF
+%coordinate data from .mat files, instead of hard-coding in code. 
+%Extracts and analyses MUA data from raw .NS6 file, during presentation
 %of simulated and real phosphenes. Modified from analyse_microstim_saccade4
 %Used to analyse data from 7/8/17, microstimulation on array 13. Similar to
 %analyse_microstim_saccade5 but based on newer code.
@@ -20,14 +22,19 @@ function analyse_microstim_saccade6(date,allInstanceInd)
 %correct order. This is implemented in the part of the code that flanks this line:
 %match=find(trialStimConds(nevSeqInd,rowInd)==convertedGoodTrialIDs(matchInd:8,goodTrialIDscounter));
 
-% date='250717_B1';
 switch date
-    case '070817_B1'
-        electrodeConds=5;
-    case '070817_B2'
-        electrodeConds=5;
-    case '070817_B3'
-        electrodeConds=6;
+    case '080817_B1'
+        electrodeConds=1;
+    case '080817_B2'
+        electrodeConds=2;
+    case '080817_B3'
+        electrodeConds=3;
+    case '080817_B4'
+        electrodeConds=4:8;
+    case '080817_B5'
+        electrodeConds=8:9;
+    case '080817_B6'
+        electrodeConds=10;
 end
 matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
 load(matFile);
@@ -192,6 +199,8 @@ if processRaw==1
                 a=find(arrayID==arrayNums(arrayInd));%identify particular combination of array and electrode number
                 b=find(electrodeID==electrodeNums(electrodeInd));
                 trialIndConds{arrayInd,electrodeInd}=intersect(a,b);%identify trials where stimulus was a particular electrode and array combination
+                arrayCondsLUT(arrayInd,electrodeInd)=arrayNums(arrayInd);
+                electrodeCondsLUT(arrayInd,electrodeInd)=electrodeNums(electrodeInd);
                 %                 trialPerf{arrayInd,electrodeInd}=performanceNEV(intersect(a,b));%notes down whether monkey's response was correct or incorrect
             end
         end
@@ -201,9 +210,9 @@ if processRaw==1
         end
         scatter(0,0,'r','o','filled');%fix spot
         %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:')
-        plot([-200 300],[0 0],'k:')
-        plot([-200 300],[200 -300],'k:')
+        plot([0 0],[-250 200],'k:');
+        plot([-200 300],[0 0],'k:');
+        plot([-200 300],[200 -300],'k:');
         ellipse(50,50,0,0,[0.1 0.1 0.1]);
         ellipse(100,100,0,0,[0.1 0.1 0.1]);
         ellipse(150,150,0,0,[0.1 0.1 0.1]);
@@ -283,24 +292,24 @@ if processRaw==1
         subplot(2,1,1)
         title(['X eye position up till reward delivery. N trials = ',num2str(length(trialIndConds{uniqueElectrode}))])
         yLim=get(gca,'YLim');
-        plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:')
+        plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:');
         ax=gca;
         ax.XTick=[0 sampFreq*preStimDur];
         ax.XTickLabel={num2str(-preStimDur*1000),'0'};
         subplot(2,1,2)
         yLim=get(gca,'YLim');
-        plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:')
+        plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:');
         ax=gca;
         title(['Y eye position up till reward delivery. N trials = ',num2str(length(trialIndConds{uniqueElectrode}))])
         ax.XTick=[0 sampFreq*preStimDur];
         ax.XTickLabel={num2str(-preStimDur*1000),'0'};
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
         if alignTargOn==0
-            pathname=fullfile('D:\data',date,[instanceName,'_electrode',num2str(electrode),'_eye_traces']);
+            pathname=fullfile('D:\data',date,[instanceName,'_eye_traces']);
         elseif alignTargOn==1
-            pathname=fullfile('D:\data',date,[instanceName,'_electrode',num2str(electrode),'_eye_traces_align_to_target_on']);
+            pathname=fullfile('D:\data',date,[instanceName,'_eye_traces_align_to_target_on']);
         end
-%         print(pathname,'-dtiff');
+        print(pathname,'-dtiff');
         eyert=find(eyepx>0);
         [degpervoltx,saccRTx] = eyeanalysis_calibration(EYExsVis,EYEysVis,eyepx,eyert,sampFreq,RFx/Par.PixPerDeg);
         if degpervoltx<0
@@ -323,9 +332,9 @@ if processRaw==1
         end
         scatter(0,0,'r','o','filled');%fix spot
         %draw dotted lines indicating [0,0]
-        plot([0 0],[-250/Par.PixPerDeg 200/Par.PixPerDeg],'k:')
-        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[0 0],'k:')
-        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:')
+        plot([0 0],[-250/Par.PixPerDeg 200/Par.PixPerDeg],'k:');
+        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[0 0],'k:');
+        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:');
         ellipse(50/Par.PixPerDeg,50/Par.PixPerDeg,0,0,[0.1 0.1 0.1]);
         ellipse(100/Par.PixPerDeg,100/Par.PixPerDeg,0,0,[0.1 0.1 0.1]);
         ellipse(150/Par.PixPerDeg,150/Par.PixPerDeg,0,0,[0.1 0.1 0.1]);
@@ -350,85 +359,13 @@ if processRaw==1
         figInd1=figure;hold on
         figInd2=figure;hold on
         for uniqueElectrode=1:length(trialIndConds(:))
-            switch electrodeConds(uniqueElectrode)
-                case 1
-                    electrode=34;
-                    RFx=101.4;
-                    RFy=-87.2;
-                    array=13;
-                    instance=7;
-                    %candidate channels for simultaneous stimulation and recording:
-                    % instance 7, array 13, electrode 34: RF x, RF y, size (pix), size (dva):
-                    %[101.373182692835,-87.1965720730945,30.6314285392835,1.18450541719806]
-                    %SNR 20.7, impedance 13
-                    %record from 25, 26, 27
-                case 2
-                    electrode=35;
-                    RFx=101.4;
-                    RFy=-86.9;
-                    array=13;
-                    instance=7;
-                    % instance 7, array 13, electrode 35: RF x, RF y, size (pix), size (dva):
-                    %[101.419820931771,-86.8574476383865,38.9826040277579,1.50744212233355]
-                    %SNR 20.8, impedance 13
-                    %record from 26, 27, 28
-                case 3
-                    electrode=38;
-                    RFx=37.6;
-                    RFy=-44.1;
-                    array=1;
-                    instance=1;
-                    %SNR 6.5, impedance 38
-                case 4
-                    electrode=36;
-                    RFx=40.5;
-                    RFy=-44.7;
-                    array=1;
-                    instance=1;
-                    %SNR 12, impedance 58
-                case 5
-                    electrode=37;
-                    RFx=112.9;
-                    RFy=-71.3;
-                    array=13;
-                    instance=7;
-                    %SNR 23.5, impedance 33
-                case 6
-                    electrode=38;
-                    RFx=112.9;
-                    RFy=-71.3;
-                    array=13;
-                    instance=7;
-                    %SNR 23.6, impedance 33
-                case 7
-                    electrode=27;
-                    RFx=120.9;
-                    RFy=-130.7;
-                    array=9;
-                    instance=5;
-                    %SNR 8.3, impedance 43
-                case 8
-                    electrode=26;
-                    RFx=119.7;
-                    RFy=-114.9;
-                    array=9;
-                    instance=5;
-                    %SNR 8.6, impedance 52
-                case 9
-                    electrode=37;
-                    RFx=31.6;
-                    RFy=-63.3;
-                    array=1;
-                    instance=1;
-                    %SNR 6.1, impedance 40
-                case 10
-                    electrode=34;
-                    RFx=27.5;
-                    RFy=-22.4;
-                    array=1;
-                    instance=1;
-                    %SNR 2.0, impedance 43
-            end
+            array=arrayCondsLUT(uniqueElectrode);
+            electrode=electrodeCondsLUT(uniqueElectrode);  
+            load(['D:\data\',date,'\',date,'_data\impedance_array',num2str(array),'.mat']);
+            eval(['arrayRFs=array',num2str(array),';']);              
+            electrodeRFind=find(arrayRFs(:,8)==electrode);
+            RFx=arrayRFs(electrodeRFind,1);
+            RFy=arrayRFs(electrodeRFind,2);
             trialDataXY={};
             for channelInd=1:length(eyeChannels)
                 trialData=[];
@@ -470,13 +407,13 @@ if processRaw==1
             subplot(2,1,1)
             title(['X eye position up till reward delivery. N trials = ',num2str(length(trialIndConds{uniqueElectrode}))])
             yLim=get(gca,'YLim');
-            plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:')
+            plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:');
             ax=gca;
             ax.XTick=[0 sampFreq*preStimDur];
             ax.XTickLabel={num2str(-preStimDur*1000),'0'};
             subplot(2,1,2)
             yLim=get(gca,'YLim');
-            plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:')
+            plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:');
             ax=gca;
             title(['Y eye position up till reward delivery. N trials = ',num2str(length(trialIndConds{uniqueElectrode}))])
             ax.XTick=[0 sampFreq*preStimDur];
@@ -551,9 +488,9 @@ if processRaw==1
             plot(RFx/Par.PixPerDeg,RFy/Par.PixPerDeg,'ko','MarkerSize',8,'MarkerFaceColor','g');%RF location
             scatter(0,0,'r','o','filled');%fix spot
             %draw dotted lines indicating [0,0]
-            plot([0 0],[-350/Par.PixPerDeg 200/Par.PixPerDeg],'k:')
-            plot([-200/Par.PixPerDeg 350/Par.PixPerDeg],[0 0],'k:')
-            plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:')
+            plot([0 0],[-350/Par.PixPerDeg 200/Par.PixPerDeg],'k:');
+            plot([-200/Par.PixPerDeg 350/Par.PixPerDeg],[0 0],'k:');
+            plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:');
             ellipse(2,2,0,0,[0.1 0.1 0.1]);
             ellipse(4,4,0,0,[0.1 0.1 0.1]);
             ellipse(6,6,0,0,[0.1 0.1 0.1]);
@@ -583,9 +520,9 @@ if processRaw==1
         figure(figInd1)
         scatter(0,0,'r','o','filled');%fix spot
         %draw dotted lines indicating [0,0]
-        plot([0 0],[-250/Par.PixPerDeg 200/Par.PixPerDeg],'k:')
-        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[0 0],'k:')
-        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:')
+        plot([0 0],[-250/Par.PixPerDeg 200/Par.PixPerDeg],'k:');
+        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[0 0],'k:');
+        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:');
         ellipse(2,2,0,0,[0.1 0.1 0.1]);
         ellipse(4,4,0,0,[0.1 0.1 0.1]);
         ellipse(6,6,0,0,[0.1 0.1 0.1]);
@@ -605,9 +542,9 @@ if processRaw==1
         figure(figInd2)
         scatter(0,0,'r','o','filled');%fix spot
         %draw dotted lines indicating [0,0]
-        plot([0 0],[-250/Par.PixPerDeg 200/Par.PixPerDeg],'k:')
-        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[0 0],'k:')
-        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:')
+        plot([0 0],[-250/Par.PixPerDeg 200/Par.PixPerDeg],'k:');
+        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[0 0],'k:');
+        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:');
         ellipse(2,2,0,0,[0.1 0.1 0.1]);
         ellipse(4,4,0,0,[0.1 0.1 0.1]);
         ellipse(6,6,0,0,[0.1 0.1 0.1]);
