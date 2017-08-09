@@ -1,8 +1,14 @@
-function analyse_microstim_saccade4(date,allInstanceInd,allGoodChannels)
-%20/7/17
-%Written by Xing. Extracts and analyses MUA data from raw .NS6 file, during presentation
-%of simulated and real phosphenes. 
-%Used to analyse data from 25-26/7/17, microstimulation on array 12, with correct RF coordinates.
+function analyse_microstim_saccade7(date,allInstanceInd)
+%09/7/17
+%Written by Xing, modified from analyse_microstim_saccade6. Reads in RF
+%coordinate data from .mat files, instead of hard-coding in code. 
+%Extracts and analyses MUA data from raw .NS6 file, during presentation
+%of simulated and real phosphenes. Modified from analyse_microstim_saccade4
+%Used to analyse data from 7/8/17, microstimulation on array 13. Similar to
+%analyse_microstim_saccade5 but based on newer code.
+%In this paradigm, catch dot presented after 1000 ms if no saccade made to
+%microstim target. Exclude trials where saccade made to catch dot, from
+%calculation of centroid.
 %Also plots saccade end points for trials where simulated phosphene was
 %visually presented.
 
@@ -16,14 +22,19 @@ function analyse_microstim_saccade4(date,allInstanceInd,allGoodChannels)
 %correct order. This is implemented in the part of the code that flanks this line:
 %match=find(trialStimConds(nevSeqInd,rowInd)==convertedGoodTrialIDs(matchInd:8,goodTrialIDscounter));
 
-% date='250717_B1';
 switch date
-    case '250717_B1'
-        electrodeConds=1:7;
-    case '260717_B1'
-        electrodeConds=1:7;
-    case '260717_B2'
-        electrodeConds=1:7;
+    case '080817_B1'
+        electrodeConds=1;
+    case '080817_B2'
+        electrodeConds=2;
+    case '080817_B3'
+        electrodeConds=3;
+    case '080817_B4'
+        electrodeConds=4:8;
+    case '080817_B5'
+        electrodeConds=8:9;
+    case '080817_B6'
+        electrodeConds=10;
 end
 matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
 load(matFile);
@@ -188,6 +199,8 @@ if processRaw==1
                 a=find(arrayID==arrayNums(arrayInd));%identify particular combination of array and electrode number
                 b=find(electrodeID==electrodeNums(electrodeInd));
                 trialIndConds{arrayInd,electrodeInd}=intersect(a,b);%identify trials where stimulus was a particular electrode and array combination
+                arrayCondsLUT(arrayInd,electrodeInd)=arrayNums(arrayInd);
+                electrodeCondsLUT(arrayInd,electrodeInd)=electrodeNums(electrodeInd);
                 %                 trialPerf{arrayInd,electrodeInd}=performanceNEV(intersect(a,b));%notes down whether monkey's response was correct or incorrect
             end
         end
@@ -197,9 +210,9 @@ if processRaw==1
         end
         scatter(0,0,'r','o','filled');%fix spot
         %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:')
-        plot([-200 300],[0 0],'k:')
-        plot([-200 300],[200 -300],'k:')
+        plot([0 0],[-250 200],'k:');
+        plot([-200 300],[0 0],'k:');
+        plot([-200 300],[200 -300],'k:');
         ellipse(50,50,0,0,[0.1 0.1 0.1]);
         ellipse(100,100,0,0,[0.1 0.1 0.1]);
         ellipse(150,150,0,0,[0.1 0.1 0.1]);
@@ -221,17 +234,17 @@ if processRaw==1
         plot(sort(RTs))
         
         %visual trials (block type 1):
-        blockTypeGoodTrials=allBlockType(goodTrials);
+        blockTypeGoodTrials=allBlockType(matMatchInd);
         visualTrialsGood=find(blockTypeGoodTrials==1);%index of good trials with visually presented simulated phosphene
-        goodSampleX=allSampleX(goodTrials);
-        goodSampleY=allSampleY(goodTrials);
+        goodSampleX=allSampleX(matMatchInd);
+        goodSampleY=allSampleY(matMatchInd);
         visualSampleX=goodSampleX(visualTrialsGood);
         visualSampleY=goodSampleY(visualTrialsGood);
 % 
         %read in eye data:        
         eyeChannels=[129 130];
         minFixDur=300/1000;%fixates for at least 300 ms, up to 800 ms
-        fixTimes=allFixT(goodTrials)/1000;%durations of fixation period before target onset  
+        fixTimes=allFixT(matMatchInd)/1000;%durations of fixation period before target onset  
         instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6']; 
         eyeDataMat=['D:\data\',date,'\',instanceName,'_NSch_eye_channels.mat'];
         if exist(eyeDataMat,'file')
@@ -246,6 +259,7 @@ if processRaw==1
         end
         
         %visually presented simulated phosphene trials:
+        flankingSamples=(30000/50)/2;%50-ms period before reward delivery
         visColInd=hsv(length(visualTrialsGood));
         trialDataXY={};
         for channelInd=1:length(eyeChannels)
@@ -253,7 +267,7 @@ if processRaw==1
             for trialInd=1:length(visualTrialsGood)
                 startPoint=timeStimOnsMatch(visualTrialsGood(trialInd))-sampFreq*preStimDur+1;%align trials relative to target onset, examine 300 ms prior (min duration of fixation period prior to target onset)
                 if size(NSch{channelInd},2)>=startPoint+sampFreq*(preStimDur+saccadeWindow)-1%from start of fixation through the variable fixation period (ranging from 300 to 800 ms), plus 250 ms after target onset.
-                    trialDataVis(trialInd,:)=double(NSch{channelInd}([startPoint:startPoint+sampFreq*(preStimDur+saccadeWindow)-1]));%from 300 ms prior to target onset, to 250 ms after target onset
+                    trialDataVis(trialInd,:)=double(NSch{channelInd}([startPoint:startPoint+sampFreq*(preStimDur+saccadeWindow)+flankingSamples-1]));%from 300 ms prior to target onset, to 250 ms after target onset
                 end
             end
             trialDataXYVis{channelInd}=trialDataVis;
@@ -266,41 +280,42 @@ if processRaw==1
         for trialInd=1:length(visualTrialsGood)
             time=visualTrialsGood(trialInd);
             tempInd=find(eyepx<saccadeDur(time));
-            subplot(2,1,1)
-            plot(EYExsVis(trialInd,tempInd));
-            hold on
-            subplot(2,1,2)
-            plot(EYEysVis(trialInd,tempInd));
-            hold on
+            if EYEysVis(trialInd,tempInd(end))>-500%exclude trials where saccade made to catch dot
+                subplot(2,1,1)
+                plot(EYExsVis(trialInd,tempInd));
+                hold on
+                subplot(2,1,2)
+                plot(EYEysVis(trialInd,tempInd));
+                hold on
+            end
         end
         subplot(2,1,1)
         title(['X eye position up till reward delivery. N trials = ',num2str(length(trialIndConds{uniqueElectrode}))])
         yLim=get(gca,'YLim');
-        plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:')
+        plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:');
         ax=gca;
         ax.XTick=[0 sampFreq*preStimDur];
         ax.XTickLabel={num2str(-preStimDur*1000),'0'};
         subplot(2,1,2)
         yLim=get(gca,'YLim');
-        plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:')
+        plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:');
         ax=gca;
         title(['Y eye position up till reward delivery. N trials = ',num2str(length(trialIndConds{uniqueElectrode}))])
         ax.XTick=[0 sampFreq*preStimDur];
         ax.XTickLabel={num2str(-preStimDur*1000),'0'};
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
         if alignTargOn==0
-            pathname=fullfile('D:\data',date,[instanceName,'_electrode',num2str(electrode),'_eye_traces']);
+            pathname=fullfile('D:\data',date,[instanceName,'_eye_traces']);
         elseif alignTargOn==1
-            pathname=fullfile('D:\data',date,[instanceName,'_electrode',num2str(electrode),'_eye_traces_align_to_target_on']);
+            pathname=fullfile('D:\data',date,[instanceName,'_eye_traces_align_to_target_on']);
         end
-%         print(pathname,'-dtiff');
+        print(pathname,'-dtiff');
         eyert=find(eyepx>0);
         [degpervoltx,saccRTx] = eyeanalysis_calibration(EYExsVis,EYEysVis,eyepx,eyert,sampFreq,RFx/Par.PixPerDeg);
         if degpervoltx<0
             degpervoltx=-degpervoltx;
         end
         degpervoltx=0.0027;
-        flankingSamples=(30000/50)/2;%50-ms period before reward delivery
         figure
         hold on
         for trialInd=1:length(visualTrialsGood)
@@ -308,69 +323,49 @@ if processRaw==1
             tempInd=find(eyepx<saccadeDur(time));%find(eyepx<saccRTx(trialInd)+0.05);
             posIndXVis(trialInd)=mean(EYExsVis(trialInd,tempInd(end)-flankingSamples:tempInd(end)+flankingSamples))*degpervoltx;%position during saccade
             posIndYVis(trialInd)=mean(EYEysVis(trialInd,tempInd(end)-flankingSamples:tempInd(end)+flankingSamples))*degpervoltx;
-            scatter(-posIndXVis(trialInd),-posIndYVis(trialInd),[],visColInd(trialInd,:));
-            scatter(visualSampleX(trialInd)/Par.PixPerDeg,-visualSampleY(trialInd)/Par.PixPerDeg,[],visColInd(trialInd,:),'s');
-            line([-posIndXVis(trialInd) visualSampleX(trialInd)/Par.PixPerDeg],[-posIndYVis(trialInd) -visualSampleY(trialInd)/Par.PixPerDeg],'Color',visColInd(trialInd,:))
-            distanceTargetSaccade(trialInd)=sqrt((visualSampleX(trialInd)/Par.PixPerDeg+posIndXVis(trialInd))^2+(-posIndYVis(trialInd)+visualSampleY(trialInd)/Par.PixPerDeg)^2);%distance between target location and saccade end location, in dva
-        end 
+            if posIndYVis(trialInd)>=0%exclude trials where saccades made to catch dot
+                scatter(-posIndXVis(trialInd),-posIndYVis(trialInd),[],visColInd(trialInd,:));
+                scatter(visualSampleX(trialInd)/Par.PixPerDeg,-visualSampleY(trialInd)/Par.PixPerDeg,[],visColInd(trialInd,:),'s');
+                line([-posIndXVis(trialInd) visualSampleX(trialInd)/Par.PixPerDeg],[-posIndYVis(trialInd) -visualSampleY(trialInd)/Par.PixPerDeg],'Color',visColInd(trialInd,:))
+                distanceTargetSaccade(trialInd)=sqrt((visualSampleX(trialInd)/Par.PixPerDeg+posIndXVis(trialInd))^2+(-posIndYVis(trialInd)+visualSampleY(trialInd)/Par.PixPerDeg)^2);%distance between target location and saccade end location, in dva
+            end
+        end
+        scatter(0,0,'r','o','filled');%fix spot
+        %draw dotted lines indicating [0,0]
+        plot([0 0],[-250/Par.PixPerDeg 200/Par.PixPerDeg],'k:');
+        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[0 0],'k:');
+        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:');
+        ellipse(50/Par.PixPerDeg,50/Par.PixPerDeg,0,0,[0.1 0.1 0.1]);
+        ellipse(100/Par.PixPerDeg,100/Par.PixPerDeg,0,0,[0.1 0.1 0.1]);
+        ellipse(150/Par.PixPerDeg,150/Par.PixPerDeg,0,0,[0.1 0.1 0.1]);
+        ellipse(200/Par.PixPerDeg,200/Par.PixPerDeg,0,0,[0.1 0.1 0.1]);
+        text(sqrt(1000/Par.PixPerDeg),-sqrt(1000/Par.PixPerDeg),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+        text(sqrt(4000/Par.PixPerDeg),-sqrt(4000/Par.PixPerDeg),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+        text(sqrt(10000/Par.PixPerDeg),-sqrt(10000/Par.PixPerDeg),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+        text(sqrt(18000/Par.PixPerDeg),-sqrt(18000/Par.PixPerDeg),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+        axis square
+        xlim([0 200/Par.PixPerDeg]);
+        ylim([-200/Par.PixPerDeg 0]);
+        title('visual stimulus saccade endpoints'); 
+        pathname=fullfile('D:\data',date,[instanceName,'_dva_visual_target_saccade_end']);
+        print(pathname,'-dtiff');
+        
         figure;
-        histogram(distanceTargetSaccade,10)
+        histogram(distanceTargetSaccade(find(distanceTargetSaccade~=0)),10)
+        pathname=fullfile('D:\data',date,[instanceName,'_dva_distance_histogram_visual_target_saccade_end']);
+        print(pathname,'-dtiff');
         
         %microstim:
         figInd1=figure;hold on
         figInd2=figure;hold on
         for uniqueElectrode=1:length(trialIndConds(:))
-            switch electrodeConds(uniqueElectrode)
-                case 1
-                    electrode=40;
-                    RFx=6.1;
-                    RFy=-57.6;
-                    array=12;
-                    instance=6;
-                    %SNR 27, impedance 11
-                case 2
-                    electrode=23;
-                    RFx=55.9;
-                    RFy=-71.0;
-                    array=12;
-                    instance=6;
-                    %SNR 15, impedance 12
-                case 3
-                    electrode=39;
-                    RFx=16.3;
-                    RFy=-55.4;
-                    array=12;
-                    instance=6;
-                    %SNR 22, impedance 12
-                case 4
-                    electrode=59;
-                    RFx=41.3;
-                    RFy=-76.5;
-                    array=12;
-                    instance=6;
-                    %SNR 10, impedance 12
-                case 5
-                    electrode=21;
-                    RFx=12.9;
-                    RFy=-71.2;
-                    array=12;
-                    instance=6;
-                    %SNR 3, impedance 13
-                case 6
-                    electrode=41;
-                    RFx=29.6;
-                    RFy=-73.4;
-                    array=12;
-                    instance=6;
-                    %SNR 9, impedance 13
-                case 7
-                    electrode=6;
-                    RFx=126.2;
-                    RFy=-96.3;
-                    array=12;
-                    instance=6;
-                    %SNR 4, impedance 16
-            end
+            array=arrayCondsLUT(uniqueElectrode);
+            electrode=electrodeCondsLUT(uniqueElectrode);  
+            load(['D:\data\',date,'\',date,'_data\impedance_array',num2str(array),'.mat']);
+            eval(['arrayRFs=array',num2str(array),';']);              
+            electrodeRFind=find(arrayRFs(:,8)==electrode);
+            RFx=arrayRFs(electrodeRFind,1);
+            RFy=arrayRFs(electrodeRFind,2);
             trialDataXY={};
             for channelInd=1:length(eyeChannels)
                 trialData=[];
@@ -400,23 +395,25 @@ if processRaw==1
             for trialInd=1:length(trialIndConds{uniqueElectrode})
                 time=trialIndConds{uniqueElectrode}(trialInd);
                 tempInd=find(eyepx<saccadeDur(time));
-                subplot(2,1,1)
-                plot(EYExs(trialInd,tempInd));
-                hold on
-                subplot(2,1,2)
-                plot(EYEys(trialInd,tempInd));
-                hold on
+                if EYEys(trialInd,tempInd(end))>-500%exclude trials where saccade made to catch dot                    
+                    subplot(2,1,1)
+                    plot(EYExs(trialInd,tempInd));
+                    hold on
+                    subplot(2,1,2)
+                    plot(EYEys(trialInd,tempInd));
+                    hold on
+                end
             end
             subplot(2,1,1)
             title(['X eye position up till reward delivery. N trials = ',num2str(length(trialIndConds{uniqueElectrode}))])
             yLim=get(gca,'YLim');
-            plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:')
+            plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:');
             ax=gca;
             ax.XTick=[0 sampFreq*preStimDur];
             ax.XTickLabel={num2str(-preStimDur*1000),'0'};
             subplot(2,1,2)
             yLim=get(gca,'YLim');
-            plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:')
+            plot([sampFreq*preStimDur sampFreq*preStimDur],[yLim(1) yLim(2)],'k:');
             ax=gca;
             title(['Y eye position up till reward delivery. N trials = ',num2str(length(trialIndConds{uniqueElectrode}))])
             ax.XTick=[0 sampFreq*preStimDur];
@@ -457,6 +454,10 @@ if processRaw==1
             figure%(figInd2)
             hold on
             axis square
+            %remove saccades to catch dot:
+            notCatchDotInd=find(posIndY>0);%catch dot located in upper hemifield at [0 100];
+            posIndY=posIndY(notCatchDotInd);
+            posIndX=posIndX(notCatchDotInd);
             %remove outliers (3 standard deviations from the mean):
             SDcutoff=2;
             if isequal(date,'260717_B2')&&electrode==21
@@ -487,9 +488,9 @@ if processRaw==1
             plot(RFx/Par.PixPerDeg,RFy/Par.PixPerDeg,'ko','MarkerSize',8,'MarkerFaceColor','g');%RF location
             scatter(0,0,'r','o','filled');%fix spot
             %draw dotted lines indicating [0,0]
-            plot([0 0],[-350/Par.PixPerDeg 200/Par.PixPerDeg],'k:')
-            plot([-200/Par.PixPerDeg 350/Par.PixPerDeg],[0 0],'k:')
-            plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:')
+            plot([0 0],[-350/Par.PixPerDeg 200/Par.PixPerDeg],'k:');
+            plot([-200/Par.PixPerDeg 350/Par.PixPerDeg],[0 0],'k:');
+            plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:');
             ellipse(2,2,0,0,[0.1 0.1 0.1]);
             ellipse(4,4,0,0,[0.1 0.1 0.1]);
             ellipse(6,6,0,0,[0.1 0.1 0.1]);
@@ -519,9 +520,9 @@ if processRaw==1
         figure(figInd1)
         scatter(0,0,'r','o','filled');%fix spot
         %draw dotted lines indicating [0,0]
-        plot([0 0],[-250/Par.PixPerDeg 200/Par.PixPerDeg],'k:')
-        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[0 0],'k:')
-        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:')
+        plot([0 0],[-250/Par.PixPerDeg 200/Par.PixPerDeg],'k:');
+        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[0 0],'k:');
+        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:');
         ellipse(2,2,0,0,[0.1 0.1 0.1]);
         ellipse(4,4,0,0,[0.1 0.1 0.1]);
         ellipse(6,6,0,0,[0.1 0.1 0.1]);
@@ -541,9 +542,9 @@ if processRaw==1
         figure(figInd2)
         scatter(0,0,'r','o','filled');%fix spot
         %draw dotted lines indicating [0,0]
-        plot([0 0],[-250/Par.PixPerDeg 200/Par.PixPerDeg],'k:')
-        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[0 0],'k:')
-        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:')
+        plot([0 0],[-250/Par.PixPerDeg 200/Par.PixPerDeg],'k:');
+        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[0 0],'k:');
+        plot([-200/Par.PixPerDeg 300/Par.PixPerDeg],[200/Par.PixPerDeg -300/Par.PixPerDeg],'k:');
         ellipse(2,2,0,0,[0.1 0.1 0.1]);
         ellipse(4,4,0,0,[0.1 0.1 0.1]);
         ellipse(6,6,0,0,[0.1 0.1 0.1]);
