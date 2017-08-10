@@ -385,4 +385,27 @@ switch date
                 SNR=4;
                 impedance=16;
         end
+        
+    case '080817_B7'
+        array=10;
+        load(['D:\data\',date,'\',date,'_data\impedance_array',num2str(array),'.mat']);
+        eval(['arrayRFs=array',num2str(array),';']);
+        electrode=arrayRFs(electrodeInd,8);
+        RFx=arrayRFs(electrodeInd,1);
+        RFy=arrayRFs(electrodeInd,2);
+        instance=ceil(array/2);
+        SNR=arrayRFs(electrodeInd,5);
+        impedance=arrayRFs(electrodeInd,6);
+        
+    case '090817_B8'
+        array=10;
+        array=12;
+        load(['D:\data\',date,'\',date,'_data\impedance_array',num2str(array),'.mat']);
+        eval(['arrayRFs=array',num2str(array),';']);
+        electrode=arrayRFs(electrodeInd,8);
+        RFx=arrayRFs(electrodeInd,1);
+        RFy=arrayRFs(electrodeInd,2);
+        instance=ceil(array/2);
+        SNR=arrayRFs(electrodeInd,5);
+        impedance=arrayRFs(electrodeInd,6);
 end

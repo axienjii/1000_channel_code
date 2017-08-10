@@ -10,7 +10,7 @@ postStimDur=300/1000;%length of post-stimulus-offset period, in s
 sampFreq=30000;
 downsampleFreq=30;
 
-for dateInd=3
+for dateInd=8
     useOtherDate=[];
     switch dateInd
         case 1
@@ -36,6 +36,18 @@ for dateInd=3
             date='260717_B3';%something wrong with NEV file for instance 6 on this day
             electrodeInds=1:7;
             previousDate='250717_B2';
+        case 6
+            date='080817_B7';
+            electrodeInds=1:10;
+            previousDate='260717_B3';
+        case 7
+            date='090817_B8';%array 10; adjust code in lookup_microstim_electrodes to set this date to array 10
+            electrodeInds=1:6;
+            previousDate='260717_B3';
+        case 8
+            date='090817_B8';%array 12; adjust code in lookup_microstim_electrodes to set this date to array 12
+            electrodeInds=1:13;
+            previousDate='080817_B7';
     end
     figure;
     for electrodeInd=1:length(electrodeInds)
@@ -47,7 +59,7 @@ for dateInd=3
         %plot data from previous checkSNR session:
         fileName=fullfile('D:\data',previousDate,['mean_MUA_',instanceName,'.mat']);
         load(fileName,'meanChannelMUA');
-        subplot(2,4,electrodeInd);
+        subplot(ceil(length(electrodeInds)/4),4,electrodeInd);
         plot(meanChannelMUA(channel_InstanceNo,:),'k')
         hold on
         %plot data from checkSNR immediately after microstimulation:

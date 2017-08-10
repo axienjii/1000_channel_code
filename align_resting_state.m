@@ -9,6 +9,8 @@ function align_resting_state
 date='180717_resting_state';
 date='200717_resting_state';
 date='210717_resting_state';
+date='260717_resting_state';
+% date='090817_resting_state';
 for instanceInd=1:8
     instanceName=['instance',num2str(instanceInd)];
     instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
@@ -29,7 +31,11 @@ switch date
     case '200717_resting_state';
         load('D:\data\200717_resting_state\200717_data\sync_pulse_resting_state_200717_B7.mat')        
     case '210717_resting_state';
-        load('D:\data\210717_resting_state\210717_data\sync_pulse_resting_state_210717.mat')        
+        load('D:\data\210717_resting_state\210717_data\sync_pulse_resting_state_210717.mat')         
+    case '260717_resting_state';
+        load('D:\data\210717_resting_state\260717_resting_state_data\sync_pulse_resting_state_260717_resting_state.mat')      
+    case '090817_resting_state';
+        load('D:\data\090817_resting_state\090817_data\sync_pulse_resting_state_090817_B7.mat')      
 end
 convertedAllBits=2.^allBits;%convert into the code that is saved in the NEV events file by the NSPs
 
