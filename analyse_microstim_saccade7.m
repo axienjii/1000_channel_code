@@ -4,8 +4,7 @@ function analyse_microstim_saccade7(date,allInstanceInd)
 %coordinate data from .mat files, instead of hard-coding in code. 
 %Extracts and analyses MUA data from raw .NS6 file, during presentation
 %of simulated and real phosphenes. Modified from analyse_microstim_saccade4
-%Used to analyse data from 7/8/17, microstimulation on array 13. Similar to
-%analyse_microstim_saccade5 but based on newer code.
+%Used to analyse data from 8/8/17.
 %In this paradigm, catch dot presented after 1000 ms if no saccade made to
 %microstim target. Exclude trials where saccade made to catch dot, from
 %calculation of centroid.
@@ -35,6 +34,18 @@ switch date
         electrodeConds=8:9;
     case '080817_B6'
         electrodeConds=10;
+    case '090817_B1'
+        electrodeConds=2;
+    case '090817_B2'
+        electrodeConds=7;
+    case '090817_B3'
+        electrodeConds=1:4;%microstim accidentally delivered to array 10, instead of 12
+    case '090817_B4'
+        electrodeConds=1:13;
+    case '090817_B5'
+        electrodeConds=1;
+    case '090817_B6'
+        electrodeConds=5;
 end
 matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
 load(matFile);
@@ -201,6 +212,11 @@ if processRaw==1
                 trialIndConds{arrayInd,electrodeInd}=intersect(a,b);%identify trials where stimulus was a particular electrode and array combination
                 arrayCondsLUT(arrayInd,electrodeInd)=arrayNums(arrayInd);
                 electrodeCondsLUT(arrayInd,electrodeInd)=electrodeNums(electrodeInd);
+                if strcmp(date,'090817_B3')%microstimulation accidentally delivered to array 10, instead of 12
+                    arrayCondsLUT(arrayInd,electrodeInd)=10;
+                    load(['D:\data\',date,'\',date,'_data\impedance_array10.mat']);
+                    electrodeCondsLUT(arrayInd,electrodeInd)=array10(electrodeInd,8);%for this recording session, electrodes used were ind 1 to 4 from array10 matrix
+                end
                 %                 trialPerf{arrayInd,electrodeInd}=performanceNEV(intersect(a,b));%notes down whether monkey's response was correct or incorrect
             end
         end
