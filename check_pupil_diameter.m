@@ -4,31 +4,32 @@ function check_pupil_diameter
 %instance 1, to obtain eye position and pupil diameter, respectively.
 date='250717_resting_state';
 date='120717_resting_state';
+date='090817_resting_state';
 saveEyeData=1;
 instanceName='instance1';
-% eyeChannels=[131 132];%horizontal and vertical pupil diameter
-% instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
-% if saveEyeData==1
-%     for channelInd=1:length(eyeChannels)
-%         readChannel=['c:',num2str(eyeChannels(channelInd)),':',num2str(eyeChannels(channelInd))];
-%         NSchOriginal=openNSx(instanceNS6FileName,'read',readChannel);
-%         NSch{channelInd}=NSchOriginal.Data;
-%     end
-%     save(['D:\data\',date,'\',instanceName,'_NSch_eye_channels_pupil_diameter.mat'],'NSch');
-% else
-%     load(['D:\data\',date,'\',instanceName,'_NSch_eye_channels_pupil_diameter.mat'],'NSch');
-% end
-% 
-% figure;
-% subplot(2,6,1:6);
-% plot(NSch{1});
-% title('Pupil diameter X')
-% subplot(2,6,7:12);
-% plot(NSch{2});
-% title('Pupil diameter Y')
-% set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-% pathname=fullfile('D:\data',date,[instanceName,'_pupil_diameter']);
-% print(pathname,'-dtiff');
+eyeChannels=[131 132];%horizontal and vertical pupil diameter
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+if saveEyeData==1
+    for channelInd=1:length(eyeChannels)
+        readChannel=['c:',num2str(eyeChannels(channelInd)),':',num2str(eyeChannels(channelInd))];
+        NSchOriginal=openNSx(instanceNS6FileName,'read',readChannel);
+        NSch{channelInd}=NSchOriginal.Data;
+    end
+    save(['D:\data\',date,'\',instanceName,'_NSch_eye_channels_pupil_diameter.mat'],'NSch');
+else
+    load(['D:\data\',date,'\',instanceName,'_NSch_eye_channels_pupil_diameter.mat'],'NSch');
+end
+
+figure;
+subplot(2,6,1:6);
+plot(NSch{1});
+title('Pupil diameter X')
+subplot(2,6,7:12);
+plot(NSch{2});
+title('Pupil diameter Y')
+set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+pathname=fullfile('D:\data',date,[instanceName,'_pupil_diameter']);
+print(pathname,'-dtiff');
 
 %Plot eye position
 eyeChannels=[129 130];%X and Y position
