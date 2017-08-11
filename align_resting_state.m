@@ -11,9 +11,11 @@ date='200717_resting_state';
 date='210717_resting_state';
 date='260717_resting_state';
 % date='090817_resting_state';
+date='100817_resting_state';
 for instanceInd=1:8
     instanceName=['instance',num2str(instanceInd)];
     instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+    instanceNEVFileName=['X:\best\',date,'\',instanceName,'.nev'];
     NEV=openNEV(instanceNEVFileName);
     events{instanceInd}=NEV.Data.SerialDigitalIO.UnparsedData;
 end
@@ -47,6 +49,8 @@ switch date
         load('D:\data\260717_resting_state\260717_resting_state_data\sync_pulse_resting_state_260717_resting_state.mat')      
     case '090817_resting_state';
         load('D:\data\090817_resting_state\090817_data\sync_pulse_resting_state_090817_B7.mat')      
+    case '100817_resting_state';
+        load('D:\data\100817_resting_state\100817_resting_state_data\sync_pulse_resting_state_100817.mat')      
 end
 convertedAllBits=2.^allBits;%convert into the code that is saved in the NEV events file by the NSPs
 
