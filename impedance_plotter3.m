@@ -1,6 +1,7 @@
-function impedance_plotter2
-%Written by Xing 29/06/17 to draw plots of impedance values from txt files,
-%generated from Central's impedance tester function.
+function impedance_plotter3
+%Written by Xing 10/8/17 to read impedance values from txt files and draw
+%plots of impedance values from txt files, generated from Central's
+%impedance tester function. 
 %Also checks channels with lowest impedances, looks up RF centre locations
 %and positions of electrodes on array, and identifies good candidate
 %channels for microstimulation (and for early testing, for simultaneous
@@ -10,12 +11,39 @@ function impedance_plotter2
 date='260617';
 date='110717';
 date='170717';
-% date='200717';
+date='200717';
+date='080817';
 colind = hsv(16);
 colindImp = hsv(1000);%colour-code impedances
 
 figure
 hold on
+allArray=[];
+allElectrode=[];
+allImpedance=[];
+for instanceInd=1:8
+    instanceName=['instance',num2str(instanceInd)];
+    instanceImpFileName=['C:\Users\User\Documents\impedance_values\',date,'\impedance_',instanceName,'_',date];%impedance values, hand-tightening
+    fileID = fopen(instanceImpFileName,'r');
+    [A,count] = fscanf(fileID,'%c',inf);
+    indStart=regexp(A,'elec');
+    indHyphen=regexp(A,'-');
+    indEnd=regexp(A,'kOhm');
+    if length(indStart)~=128||length(indHyphen)~=128||length(indEnd)~=128
+        sprintf('Number of identifying markers are not identical. Check file.')
+    end
+    fclose(fileID);
+    for i=1:length(indStart)
+        array(i)=str2num(A(indStart(i)+4:indHyphen(i)-1));
+        electrode(i)=str2num(A(indHyphen(i)+1:indHyphen(i)+4));
+        impedance(i)=str2num(A(indEnd(i)-4:indEnd(i)-1));
+    end
+    allArray=[allArray array];
+    allElectrode=[allElectrode electrode];
+    allImpedance=[allImpedance impedance];
+end
+impedanceAllChannels=[allImpedance' allArray' allElectrode'];
+save(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
 
 switch(date)
     case('260617')
@@ -61,54 +89,62 @@ switch(date)
 %         titleText='red: 260617; blue: 170717';
 
     case('080817')
-%         load('C:\Users\User\Documents\impedance_values\170717\impedanceAllChannels.mat','impedanceAllChannels');
-        load('C:\Users\User\Documents\impedance_values\080817\impedanceAllChannels_200717_vs_080817.mat','impedanceAllChannels');
-        %column 1: impedance on previous date, 17/7/17
-        %column 2: impedance on 20/7/17
-        %column 3: array number
-        %column 4: electrode number (out of 1024)
+        load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsNew=impedanceAllChannels;
+        previousDate='200717';
+        load(['C:\Users\User\Documents\impedance_values\',previousDate,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsPrevious=impedanceAllChannels;
+        %column 1: impedance
+        %column 2: array number
+        %column 3: electrode number (out of 1024)
         xLabelsConds={'200717 HT','080817 HT'};
         titleText='red: 200717; blue: 080817';
 end
 figure;hold on
-length(find(impedanceAllChannels(:,1)>800))%number of channels with too-high impedances values during hand-tightening, 485
-length(find(impedanceAllChannels(:,2)>800))%number of channels with too-high impedances values using a torque wrench, 111
-for i=1:size(impedanceAllChannels,1)
-    plot([1 2],[impedanceAllChannels(i,1),impedanceAllChannels(i,2)]);
+length(find(impedanceAllChannelsPrevious(:,1)>800))%number of channels with too-high impedances values during hand-tightening, 485
+length(find(impedanceAllChannelsNew(:,1)>800))%number of channels with too-high impedances values using a torque wrench, 111
+for i=1:size(impedanceAllChannelsNew,1)
+    plot([1 2],[impedanceAllChannelsPrevious(i,1),impedanceAllChannelsNew(i,1)]);
 end
 set(gca,'XTick',[1 2])
 set(gca,'XTickLabel',xLabelsConds)
 xlim([0.5 2.5]);
+pathname=fullfile('C:\Users\User\Documents\impedance_values\',date,['impedance_changes_',previousDate,'_to_',date]);
+print(pathname,'-dtiff');
 
 figure;hold on
 bins=0:50:7000; 
-hist(impedanceAllChannels(:,1),bins); 
+hist(impedanceAllChannelsPrevious(:,1),bins); 
 h = findobj(gca,'Type','patch'); 
 set(h,'EdgeColor','none') 
 set(h,'FaceColor','r','facealpha',0.5) 
 hold on 
-hist(impedanceAllChannels(:,2),bins); 
+hist(impedanceAllChannelsNew(:,1),bins); 
 h = findobj(gca,'Type','patch'); 
 set(h,'facealpha',0.5,'EdgeColor','none') 
 xlim([0 7000]); 
 set(gca,'box','off'); 
 title(titleText)
+pathname=fullfile('C:\Users\User\Documents\impedance_values\',date,'impedance_histograms');
+print(pathname,'-dtiff');
 
 %zoom in on cluster of lower impedance values
 figure;hold on
 bins=0:10:7000;
-hist(impedanceAllChannels(:,1),bins); 
+hist(impedanceAllChannelsPrevious(:,1),bins); 
 h = findobj(gca,'Type','patch'); 
 set(h,'EdgeColor','none') 
 set(h,'FaceColor','r','facealpha',0.5) 
 hold on 
-hist(impedanceAllChannels(:,2),bins); 
+hist(impedanceAllChannelsNew(:,1),bins); 
 h = findobj(gca,'Type','patch'); 
 set(h,'facealpha',0.5,'EdgeColor','none') 
 xlim([0 7000]); 
 set(gca,'box','off'); 
 xlim([0 1400]); 
 ylim([0 70]); 
+pathname=fullfile('C:\Users\User\Documents\impedance_values\',date,'impedance_histograms_zoom_lower_values');
+print(pathname,'-dtiff');
 
 %identify electrodes with lowest impedance values:
 for instanceInd=1:8%determine the electrode number on a given array
@@ -117,10 +153,10 @@ for instanceInd=1:8%determine the electrode number on a given array
     else
         channelOrder=[65:96 33:64 1:32 97:128];%CBAD
     end
-    impedanceAllChannels((instanceInd-1)*128+1:(instanceInd-1)*128+128,5)=channelOrder;
+    impedanceAllChannelsNew((instanceInd-1)*128+1:(instanceInd-1)*128+128,5)=channelOrder;
 end
-[dummy ind]=sort(impedanceAllChannels(:,2));
-sortImpedanceAllChannels=impedanceAllChannels(ind,:);%column 3: array number; column 5: electrode number (out of 128). column 1: old/previous impedance; column 2: latest impedance; column 4: electrode number (out of 1024)
+[dummy ind]=sort(impedanceAllChannelsNew(:,1));
+sortImpedanceAllChannels=impedanceAllChannelsNew(ind,:);%column 2: array number; column 5: electrode number (out of 128). column 1: latest impedance; column 3: electrode number (out of 1024)
 %identify electrodes with low impedance values that are situated along
 %middle rows of arrays, i.e. electrode numbers 25:40 (not inclusive, as
 %those electrodes are on the edge of the array, and hence have only 2
@@ -131,7 +167,7 @@ a=find(sortImpedanceAllChannels(:,5)>25);
 b=find(sortImpedanceAllChannels(:,5)<40);
 goodLocationInd=intersect(a,b);
 goodLocationImpedances=sortImpedanceAllChannels(goodLocationInd,:);
-save('C:\Users\User\Documents\impedance_values\170717\goodLocationImpedances.mat','goodLocationImpedances')
+save(['C:\Users\User\Documents\impedance_values\',date,'\goodLocationImpedances.mat'],'goodLocationImpedances')
 
 %candidate channels for simultaneous stimulation and recording:
 % instance 7, array 13, electrode 34: RF x, RF y, size (pix), size (dva):
@@ -148,8 +184,8 @@ save('C:\Users\User\Documents\impedance_values\170717\goodLocationImpedances.mat
 %Adapter manual, these two channels are located on Omnetics connector J26,
 %and correspond to CH-802 and CH-803.
 %Doublecheck channel numbering for above two channels:
-[channelNum,arrayNum,area]=electrode_mapping(7,mod(802,128))
-[channelNum,arrayNum,area]=electrode_mapping(7,mod(803,128))
+[channelNum,arrayNum,area]=electrode_mapping(7,mod(802,128));
+[channelNum,arrayNum,area]=electrode_mapping(7,mod(803,128));
 
 % instance 3, array 5, electrode 31: RF x, RF y, size (pix), size (dva):
 %[9.35463857442747,-9.91935483870969,38.3226146663019,1.48192059065131]
@@ -166,7 +202,7 @@ impThreshold=100;
 goodChImps=[];
 goodChV1SimRec=[];%candidate V1 channels for simultaneous microstimulation and recording 
 for candidateInd=1:size(sortImpedanceAllChannels,1)
-    array=sortImpedanceAllChannels(candidateInd,3);
+    array=sortImpedanceAllChannels(candidateInd,2);
     channel=sortImpedanceAllChannels(candidateInd,5);
     instance=ceil(array/2);
     if instance<=2
@@ -185,7 +221,7 @@ for candidateInd=1:size(sortImpedanceAllChannels,1)
     end
     chInfo(candidateInd,1:4)=channelRFs(channel,1:4);%RF.centrex RF.centrey RF.sz RF.szdeg
     chInfo(candidateInd,5)=meanChannelSNR(channel);%SNR
-    chInfo(candidateInd,6)=sortImpedanceAllChannels(candidateInd,2);%impedance
+    chInfo(candidateInd,6)=sortImpedanceAllChannels(candidateInd,1);%impedance
     chInfo(candidateInd,7)=array;
     chInfo(candidateInd,8)=channel;
     if chInfo(candidateInd,1)>0&&chInfo(candidateInd,2)<0%RF coordinates are in correct quadrant
@@ -215,9 +251,9 @@ for candidateInd=1:size(sortImpedanceAllChannels,1)
 end
 scatter(0,0,'r','o','filled');%fix spot
 %draw dotted lines indicating [0,0]
-plot([0 0],[-250 200],'k:')
-plot([-200 300],[0 0],'k:')
-plot([-200 300],[200 -300],'k:')
+plot([0 0],[-250 200],'k:');
+plot([-200 300],[0 0],'k:');
+plot([-200 300],[200 -300],'k:');
 ellipse(50,50,0,0,[0.1 0.1 0.1]);
 ellipse(100,100,0,0,[0.1 0.1 0.1]);
 ellipse(150,150,0,0,[0.1 0.1 0.1]);
@@ -261,11 +297,11 @@ array12=chInfo(chInfo(:,7)==12,:);
 array13=chInfo(chInfo(:,7)==13,:);
 %many channels with low impedance on array 13
 
-figure;plot(array12(1:12,1),array12(1:12,2),'ko')
+figure;plot(array12(1:12,1),array12(1:12,2),'ko');
 hold on
 for ind=1:12
-    plot(array12(ind,1),array12(ind,2),'go')
-    text(array12(ind,1),array12(ind,2),num2str(ind))
+    plot(array12(ind,1),array12(ind,2),'go');
+    text(array12(ind,1),array12(ind,2),num2str(ind));
     pause(2);
 end
 a=[1 6 10 12 8 4 9];a=sort(a);
