@@ -6,13 +6,19 @@ function analyse_microstim_responses3
 %electrode identities.
 
 close all
-date='150817_B9';arrayNumber=13;electrodeNumber=37;%array 13, electrode 37 (g)
-date='160817_B1';arrayNumber=13;electrodeNumber=37;%array 13, electrode 37 (g)
-date='160817_B2';arrayNumber=13;electrodeNumber=38;%array 13, electrode 37 (g)
-date='160817_B5';arrayNumber=13;electrodeNumber=41;%array 13, electrode 41 
-date='160817_B6';arrayNumber=13;electrodeNumber=55;%array 13, electrode 55 
-date='160817_B7';arrayNumber=13;electrodeNumber=56;%array 13, electrode 56 
-date='160817_B8';arrayNumber=13;electrodeNumber=61;%array 13, electrode 61 
+date='150817_B9';arrayNumber=13;electrodeNumber=37;finalCurrentValsFile=1;%array 13, electrode 37 (g)
+date='160817_B1';arrayNumber=13;electrodeNumber=37;finalCurrentValsFile=2;%array 13, electrode 37 (g)
+date='160817_B2';arrayNumber=13;electrodeNumber=38;finalCurrentValsFile=2;%array 13, electrode 38 (g)
+date='160817_B5';arrayNumber=13;electrodeNumber=41;finalCurrentValsFile=2;%array 13, electrode 41 
+date='160817_B6';arrayNumber=13;electrodeNumber=55;finalCurrentValsFile=2;%array 13, electrode 55 
+date='160817_B7';arrayNumber=13;electrodeNumber=56;finalCurrentValsFile=2;%array 13, electrode 56 
+date='160817_B8';arrayNumber=13;electrodeNumber=61;finalCurrentValsFile=2;%array 13, electrode 61 
+date='170817_B1';arrayNumber=13;electrodeNumber=41;finalCurrentValsFile=3; %(g)
+date='170817_B3';arrayNumber=13;electrodeNumber=55;finalCurrentValsFile=3; %(g)
+date='170817_B4';arrayNumber=13;electrodeNumber=56;finalCurrentValsFile=3; %(g)
+date='170817_B5';arrayNumber=13;electrodeNumber=61;finalCurrentValsFile=3; %(g)
+date='170817_B12';arrayNumber=10;electrodeNumber=56;finalCurrentValsFile=3; %(g)
+date='170817_B18';arrayNumber=10;electrodeNumber=45;finalCurrentValsFile=3;
 
 load(['X:\best\',date,'\',date,'_data\microstim_saccade_',date,'.mat'])
 microstimAllHitTrials=intersect(find(allCurrentLevel>0),find(performance==1));
@@ -27,7 +33,7 @@ falseAlarms=length(intersect(catchAllFATrials,currentAmpTrials));
 %microstim trials:
 hits=[];
 misses=[];
-if strcmp(date,'150817_B9')%staircase procedure not used
+if finalCurrentValsFile==1%strcmp(date,'150817_B9'), staircase procedure not used
     load(['X:\best\',date,'\',date,'_data\finalCurrentVals.mat'])
     for currentAmpCond=1:length(finalCurrentVals)/2
         currentAmplitude=finalCurrentVals(currentAmpCond+length(finalCurrentVals)/2);
@@ -36,11 +42,15 @@ if strcmp(date,'150817_B9')%staircase procedure not used
         misses(currentAmpCond)=length(intersect(microstimAllMissTrials,currentAmpTrials));
         currentAmplitudes=finalCurrentVals(find(finalCurrentVals~=0));
     end
-else%staircase procedure was used
+else
+    if finalCurrentValsFile==2%staircase procedure was used, finalCurrentVals3.mat
+        load(['X:\best\',date,'\',date,'_data\finalCurrentVals3.mat'])
+    elseif finalCurrentValsFile==3%staircase procedure was used, finalCurrentVals4.mat
+        load(['X:\best\',date,'\',date,'_data\finalCurrentVals4.mat'])
+    end
     currentAmplitudes=[];
     hits=[];
     misses=[];
-    load(['X:\best\',date,'\',date,'_data\finalCurrentVals3.mat'])
     for currentAmpCond=1:length(finalCurrentVals)
         currentAmplitude=finalCurrentVals(currentAmpCond);
         currentAmpTrials=find(allCurrentLevel==currentAmplitude);
@@ -49,7 +59,7 @@ else%staircase procedure was used
             misses=[misses length(intersect(microstimAllMissTrials,currentAmpTrials))];
             currentAmplitudes=[currentAmplitudes currentAmplitude];
         end
-    end    
+    end  
 end
 hits./misses;
 for Weibull=0:1% set to 1 to get the Weibull fit, 0 for a sigmoid fit

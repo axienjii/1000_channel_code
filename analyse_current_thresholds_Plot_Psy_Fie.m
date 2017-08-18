@@ -44,7 +44,7 @@ end
 
 
 % plot the result
-CurrentVals = (1:250)*0.5;
+CurrentVals = (1:Current(end)*2)*0.5;
 if Weibull
   Perf = LumWeibull(CurrentVals, x(1), x(2), x(3), x(4));
 else
