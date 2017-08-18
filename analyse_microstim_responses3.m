@@ -19,9 +19,14 @@ date='170817_B4';arrayNumber=13;electrodeNumber=56;finalCurrentValsFile=3; %(g)
 date='170817_B5';arrayNumber=13;electrodeNumber=61;finalCurrentValsFile=3; %(g)
 date='170817_B12';arrayNumber=10;electrodeNumber=56;finalCurrentValsFile=3; %(g)
 date='170817_B18';arrayNumber=10;electrodeNumber=45;finalCurrentValsFile=3;
-date='180817_B1';arrayNumber=10;electrodeNumber=48;finalCurrentValsFile=3;
-% date='180817_B2';arrayNumber=10;electrodeNumber=38;finalCurrentValsFile=3;
-% date='180817_B3';arrayNumber=10;electrodeNumber=47;finalCurrentValsFile=3;
+date='180817_B1';arrayNumber=10;electrodeNumber=48;finalCurrentValsFile=3;%.mat file from stimulus presentation computer corrupted- only 1 KB in size
+date='180817_B2';arrayNumber=10;electrodeNumber=38;finalCurrentValsFile=3;
+date='180817_B3';arrayNumber=10;electrodeNumber=47;finalCurrentValsFile=3;
+date='180817_B4';arrayNumber=10;electrodeNumber=46;finalCurrentValsFile=3;
+date='180817_B5';arrayNumber=10;electrodeNumber=39;finalCurrentValsFile=3;
+date='180817_B6';arrayNumber=10;electrodeNumber=39;finalCurrentValsFile=3;
+date='180817_B7';arrayNumber=10;electrodeNumber=45;finalCurrentValsFile=3;
+date='180817_B8';arrayNumber=10;electrodeNumber=59;finalCurrentValsFile=4;
 
 load(['X:\best\',date,'\',date,'_data\microstim_saccade_',date,'.mat'])
 microstimAllHitTrials=intersect(find(allCurrentLevel>0),find(performance==1));
@@ -50,6 +55,8 @@ else
         load(['X:\best\',date,'\',date,'_data\finalCurrentVals3.mat'])
     elseif finalCurrentValsFile==3%staircase procedure was used, finalCurrentVals4.mat
         load(['X:\best\',date,'\',date,'_data\finalCurrentVals4.mat'])
+    elseif finalCurrentValsFile==4%staircase procedure was used, finalCurrentVals4.mat
+        load(['X:\best\',date,'\',date,'_data\finalCurrentVals5.mat'])
     end
     currentAmplitudes=[];
     hits=[];
