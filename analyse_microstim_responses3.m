@@ -19,6 +19,9 @@ date='170817_B4';arrayNumber=13;electrodeNumber=56;finalCurrentValsFile=3; %(g)
 date='170817_B5';arrayNumber=13;electrodeNumber=61;finalCurrentValsFile=3; %(g)
 date='170817_B12';arrayNumber=10;electrodeNumber=56;finalCurrentValsFile=3; %(g)
 date='170817_B18';arrayNumber=10;electrodeNumber=45;finalCurrentValsFile=3;
+date='180817_B1';arrayNumber=10;electrodeNumber=48;finalCurrentValsFile=3;
+% date='180817_B2';arrayNumber=10;electrodeNumber=38;finalCurrentValsFile=3;
+% date='180817_B3';arrayNumber=10;electrodeNumber=47;finalCurrentValsFile=3;
 
 load(['X:\best\',date,'\',date,'_data\microstim_saccade_',date,'.mat'])
 microstimAllHitTrials=intersect(find(allCurrentLevel>0),find(performance==1));
