@@ -377,7 +377,7 @@ if processRaw==1
         for uniqueElectrode=1:length(trialIndConds(:))
             array=arrayCondsLUT(uniqueElectrode);
             electrode=electrodeCondsLUT(uniqueElectrode);  
-            load(['D:\data\',date,'\',date,'_data\impedance_array',num2str(array),'.mat']);
+            load(['D:\data\',date,'\',date,'_data\array',num2str(array),'.mat']);
             eval(['arrayRFs=array',num2str(array),';']);              
             electrodeRFind=find(arrayRFs(:,8)==electrode);
             RFx=arrayRFs(electrodeRFind,1);
