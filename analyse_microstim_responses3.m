@@ -73,18 +73,19 @@ else
 end
 hits./misses;
 for Weibull=0:1% set to 1 to get the Weibull fit, 0 for a sigmoid fit
-    threshold=analyse_current_thresholds_Plot_Psy_Fie(currentAmplitudes,hits,misses,falseAlarms,correctRejections,Weibull);
+    [theta threshold]=analyse_current_thresholds_Plot_Psy_Fie(currentAmplitudes,hits,misses,falseAlarms,correctRejections,Weibull);
     hold on
     yLimits=get(gca,'ylim');
-    plot([threshold threshold],yLimits,'k:')
+    plot([threshold threshold],yLimits,'r:')
+    plot([theta theta],yLimits,'k:')
     text(threshold-20,yLimits(2)-0.05,['threshold = ',num2str(round(threshold)),' uA'],'FontSize',12,'Color','k');
     ylabel('proportion of trials');
     xlabel('current amplitude (uA)');
     if Weibull==1
-        title('Psychometric function for microstimulation current amplitude, Weibull fit.')
+        title(['Psychometric function for array',num2str(arrayNumber),'_electrode',num2str(electrodeNumber),', Weibull fit.'])
         pathname=fullfile('D:\data',date,['array',num2str(arrayNumber),'_electrode',num2str(electrodeNumber),'_current_amplitudes_weibull']);
     elseif Weibull==0
-        title('Psychometric function for microstimulation current amplitude, sigmoid fit.')
+        title('Psychometric function for array',num2str(arrayNumber),'_electrode',num2str(electrodeNumber),', sigmoid fit.')
         pathname=fullfile('D:\data',date,['array',num2str(arrayNumber),'_electrode',num2str(electrodeNumber),'_current_amplitudes_sigmoid']);
     end
     set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
