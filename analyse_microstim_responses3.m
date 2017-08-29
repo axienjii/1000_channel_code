@@ -6,6 +6,13 @@ function analyse_microstim_responses3
 %electrode identities.
 
 close all
+localDisk=1;
+if localDisk==1
+    rootdir='D:\data\';
+elseif localDisk==0
+    rootdir='X:\best\';
+end
+
 date='150817_B9';arrayNumber=13;electrodeNumber=37;finalCurrentValsFile=1;%array 13, electrode 37 (g)
 date='160817_B1';arrayNumber=13;electrodeNumber=37;finalCurrentValsFile=2;%array 13, electrode 37 (g)
 date='160817_B2';arrayNumber=13;electrodeNumber=38;finalCurrentValsFile=2;%array 13, electrode 38 (g)
@@ -49,13 +56,13 @@ date='210817_B2';arrayNumber=12;electrodeNumber=57;finalCurrentValsFile=4; %(m?)
 % date='210817_B21';arrayNumber=12;electrodeNumber=43;finalCurrentValsFile=6; %(m) 
 useFinalCurrentVals=1;
 
-% date='220817_B1';arrayNumber=12;electrodeNumber=34;finalCurrentValsFile=6; %(m) uses quest
+date='220817_B1';arrayNumber=12;electrodeNumber=34;finalCurrentValsFile=6; %(m) uses quest
 % date='220817_B2';arrayNumber=12;electrodeNumber=36;finalCurrentValsFile=6; %(m) uses quest
 % date='220817_B4';arrayNumber=12;electrodeNumber=42;finalCurrentValsFile=6; %(m) uses quest
 % date='220817_B5';arrayNumber=12;electrodeNumber=2;finalCurrentValsFile=6; %(r) uses quest
 % date='220817_B7';arrayNumber=12;electrodeNumber=12;finalCurrentValsFile=6; %(m) uses quest
 % date='220817_B10';arrayNumber=12;electrodeNumber=3;finalCurrentValsFile=6; %(m) uses quest
-% useFinalCurrentVals=0;
+useFinalCurrentVals=0;
 
 % date='220817_B26';arrayNumber=12;electrodeNumber=3;finalCurrentValsFile=6; %(g)
 % date='220817_B30';arrayNumber=12;electrodeNumber=29;finalCurrentValsFile=6; %(r)
@@ -78,13 +85,102 @@ useFinalCurrentVals=1;
 % date='230817_B11';arrayNumber=12;electrodeNumber=28;finalCurrentValsFile=6; %(g)
 % date='230817_B12';arrayNumber=12;electrodeNumber=35;finalCurrentValsFile=6; %(g)
 % date='230817_B13';arrayNumber=12;electrodeNumber=19;finalCurrentValsFile=6; %(g)
-date='230817_B16';arrayNumber=12;electrodeNumber=29;finalCurrentValsFile=6; %(m)
+% date='230817_B16';arrayNumber=12;electrodeNumber=29;finalCurrentValsFile=6; %(m)
 % date='230817_B17';arrayNumber=12;electrodeNumber=19;finalCurrentValsFile=6; %(r)%can discard
 % date='230817_B18';arrayNumber=12;electrodeNumber=13;finalCurrentValsFile=6; %(g)
 % date='230817_B19';arrayNumber=12;electrodeNumber=26;finalCurrentValsFile=6; %(m)
+% useFinalCurrentVals=1;
+
+date='240817_B1';arrayNumber=12;electrodeNumber=57;finalCurrentValsFile=6; %(m)
+date='240817_B2';arrayNumber=12;electrodeNumber=40;finalCurrentValsFile=6; %(m)
+date='240817_B3';arrayNumber=12;electrodeNumber=21;finalCurrentValsFile=6; %(r)
+date='240817_B4';arrayNumber=12;electrodeNumber=6;finalCurrentValsFile=6; %(r)
+% date='240817_B5';arrayNumber=12;electrodeNumber=43;finalCurrentValsFile=6; %(g)
+% date='240817_B6';arrayNumber=12;electrodeNumber=11;finalCurrentValsFile=6; %(g)
+% date='240817_B7';arrayNumber=12;electrodeNumber=34;finalCurrentValsFile=6; %(g)
+% date='240817_B8';arrayNumber=12;electrodeNumber=36;finalCurrentValsFile=6; %(g)
+% date='240817_B9';arrayNumber=12;electrodeNumber=42;finalCurrentValsFile=6; %(g)
+% date='240817_B10';arrayNumber=12;electrodeNumber=2;finalCurrentValsFile=6; %(r)
+% date='240817_B11';arrayNumber=12;electrodeNumber=12;finalCurrentValsFile=6; %(g)
+% date='240817_B12';arrayNumber=12;electrodeNumber=29;finalCurrentValsFile=6; %(m-g)
+% date='240817_B13';arrayNumber=12;electrodeNumber=4;finalCurrentValsFile=6; %(r)
+% date='240817_B15';arrayNumber=12;electrodeNumber=26;finalCurrentValsFile=6; %(g)
+% date='240817_B16';arrayNumber=12;electrodeNumber=60;finalCurrentValsFile=6; %(r)
+% date='240817_B17';arrayNumber=13;electrodeNumber=35;finalCurrentValsFile=6; %(g)
+% date='240817_B18';arrayNumber=13;electrodeNumber=33;finalCurrentValsFile=6; %(g)
+% date='240817_B19';arrayNumber=13;electrodeNumber=34;finalCurrentValsFile=6; %(m)
+% date='240817_B20';arrayNumber=13;electrodeNumber=50;finalCurrentValsFile=6; %(g)
+% date='240817_B21';arrayNumber=13;electrodeNumber=51;finalCurrentValsFile=6; %(g)
+% date='240817_B22';arrayNumber=13;electrodeNumber=11;finalCurrentValsFile=6; %(g)
+% date='240817_B23';arrayNumber=13;electrodeNumber=12;finalCurrentValsFile=6; %(g)
+% date='240817_B24';arrayNumber=13;electrodeNumber=13;finalCurrentValsFile=6; %(r)
+% date='240817_B25';arrayNumber=13;electrodeNumber=52;finalCurrentValsFile=6; %(m-g)
+% date='240817_B26';arrayNumber=13;electrodeNumber=53;finalCurrentValsFile=6; %(m)
+% date='240817_B27';arrayNumber=13;electrodeNumber=14;finalCurrentValsFile=6; %(r)
+date='240817_B28';arrayNumber=11;electrodeNumber=3;finalCurrentValsFile=6; %(g) repeat with lower currents
+date='240817_B29';arrayNumber=11;electrodeNumber=3;finalCurrentValsFile=6; %(g) repeat with lower currents
+date='240817_B30';arrayNumber=11;electrodeNumber=3;finalCurrentValsFile=6; %(g) final
+% date='240817_B31';arrayNumber=11;electrodeNumber=18;finalCurrentValsFile=6; %(g)
+% date='240817_B32';arrayNumber=11;electrodeNumber=22;finalCurrentValsFile=6; %(g)
+% date='240817_B33';arrayNumber=11;electrodeNumber=22;finalCurrentValsFile=6; %(g)
+% date='240817_B36';arrayNumber=11;electrodeNumber=55;finalCurrentValsFile=6; %(m)
+% date='240817_B38';arrayNumber=11;electrodeNumber=34;finalCurrentValsFile=6; %(r)
 useFinalCurrentVals=1;
 
-load(['X:\best\',date,'\',date,'_data\microstim_saccade_',date,'.mat'])
+date='250817_B3';arrayNumber=12;electrodeNumber=6;finalCurrentValsFile=6; %(m)
+% date='250817_B4';arrayNumber=12;electrodeNumber=22;finalCurrentValsFile=6; %(g)
+% date='250817_B5';arrayNumber=12;electrodeNumber=41;finalCurrentValsFile=6; %(g)
+date='250817_B6';arrayNumber=12;electrodeNumber=6;finalCurrentValsFile=6; %(r)
+% date='250817_B7';arrayNumber=12;electrodeNumber=2;finalCurrentValsFile=6; %(r)
+% date='250817_B8';arrayNumber=12;electrodeNumber=4;finalCurrentValsFile=6; %(r)
+% date='250817_B9';arrayNumber=12;electrodeNumber=44;finalCurrentValsFile=6; %(g)
+% date='250817_B10';arrayNumber=12;electrodeNumber=60;finalCurrentValsFile=6; %(m)
+% date='250817_B12';arrayNumber=13;electrodeNumber=13;finalCurrentValsFile=6; %(g)
+% date='250817_B13';arrayNumber=13;electrodeNumber=14;finalCurrentValsFile=6; %(r)
+% date='250817_B14';arrayNumber=10;electrodeNumber=48;finalCurrentValsFile=6; %(g)
+% date='250817_B15';arrayNumber=10;electrodeNumber=48;finalCurrentValsFile=6; %(g)
+% date='250817_B20';arrayNumber=11;electrodeNumber=51;finalCurrentValsFile=6; %(m-g)
+% date='250817_B21';arrayNumber=11;electrodeNumber=21;finalCurrentValsFile=6; %(g) can discard
+% date='250817_B22';arrayNumber=11;electrodeNumber=21;finalCurrentValsFile=6; %(g)
+% date='250817_B23';arrayNumber=11;electrodeNumber=34;finalCurrentValsFile=6; %(g)
+% date='250817_B24';arrayNumber=11;electrodeNumber=24;finalCurrentValsFile=6; %(g)
+% date='250817_B25';arrayNumber=11;electrodeNumber=34;finalCurrentValsFile=6; %(g)
+% date='250817_B26';arrayNumber=14;electrodeNumber=5;finalCurrentValsFile=6; %(g)
+% date='250817_B27';arrayNumber=14;electrodeNumber=4;finalCurrentValsFile=6; %(g)
+% date='250817_B29';arrayNumber=14;electrodeNumber=12;finalCurrentValsFile=6; %(m-g)
+% date='250817_B30';arrayNumber=14;electrodeNumber=21;finalCurrentValsFile=6; %(g)
+useFinalCurrentVals=1;
+
+date='280817_B1';arrayNumber=14;electrodeNumber=20;finalCurrentValsFile=6; %(g)
+date='280817_B2';arrayNumber=14;electrodeNumber=20;finalCurrentValsFile=6; %(m) 
+date='280817_B3';arrayNumber=14;electrodeNumber=28;finalCurrentValsFile=6; %(g)
+date='280817_B4';arrayNumber=14;electrodeNumber=63;finalCurrentValsFile=6; %(g)
+date='280817_B5';arrayNumber=14;electrodeNumber=13;finalCurrentValsFile=6; %(m)
+date='280817_B6';arrayNumber=14;electrodeNumber=62;finalCurrentValsFile=6; %(g)
+date='280817_B7';arrayNumber=14;electrodeNumber=54;finalCurrentValsFile=6; %(g)
+date='280817_B8';arrayNumber=14;electrodeNumber=55;finalCurrentValsFile=6; %(g)
+date='280817_B9';arrayNumber=14;electrodeNumber=29;finalCurrentValsFile=6; %(r)
+date='280817_B11';arrayNumber=14;electrodeNumber=37;finalCurrentValsFile=6; %(g)
+date='280817_B12';arrayNumber=14;electrodeNumber=36;finalCurrentValsFile=6; %(g)
+date='280817_B13';arrayNumber=14;electrodeNumber=31;finalCurrentValsFile=6; %(g)
+date='280817_B14';arrayNumber=14;electrodeNumber=53;finalCurrentValsFile=6; %(r) can discard
+date='280817_B16';arrayNumber=14;electrodeNumber=53;finalCurrentValsFile=6; %(g)
+% date='280817_B19';arrayNumber=14;electrodeNumber=3;finalCurrentValsFile=6; %(r)
+% date='280817_B20';arrayNumber=14;electrodeNumber=32;finalCurrentValsFile=6; %(g)
+% date='280817_B21';arrayNumber=14;electrodeNumber=47;finalCurrentValsFile=6; %(g)
+% date='280817_B22';arrayNumber=14;electrodeNumber=59;finalCurrentValsFile=6; %(g)
+% date='280817_B23';arrayNumber=14;electrodeNumber=40;finalCurrentValsFile=6; %(g)
+% date='280817_B24';arrayNumber=14;electrodeNumber=61;finalCurrentValsFile=6; %(g)
+% date='280817_B25';arrayNumber=14;electrodeNumber=39;finalCurrentValsFile=6; %(g)
+% date='280817_B27';arrayNumber=14;electrodeNumber=15;finalCurrentValsFile=6; %(r)
+% date='280817_B28';arrayNumber=14;electrodeNumber=58;finalCurrentValsFile=6; %(r)
+% date='280817_B29';arrayNumber=14;electrodeNumber=44;finalCurrentValsFile=6; %(r)
+% date='280817_B30';arrayNumber=14;electrodeNumber=45;finalCurrentValsFile=6; %(g)
+% date='280817_B31';arrayNumber=14;electrodeNumber=46;finalCurrentValsFile=6; %(g)
+useFinalCurrentVals=1;
+
+copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
+load([rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'])
 microstimAllHitTrials=intersect(find(allCurrentLevel>0),find(performance==1));
 microstimAllMissTrials=intersect(find(allCurrentLevel>0),find(performance==-1));
 catchAllCRTrials=intersect(find(allCurrentLevel==0),find(performance==1));%correct rejections
@@ -99,7 +195,7 @@ hits=[];
 misses=[];
 if useFinalCurrentVals==1
     if finalCurrentValsFile==1%strcmp(date,'150817_B9'), staircase procedure not used
-        load(['X:\best\',date,'\',date,'_data\finalCurrentVals.mat'])
+        load([rootdir,date,'\',date,'_data\finalCurrentVals.mat'])
         for currentAmpCond=1:length(finalCurrentVals)/2
             currentAmplitude=finalCurrentVals(currentAmpCond+length(finalCurrentVals)/2);
             currentAmpTrials=find(allCurrentLevel==currentAmplitude);
@@ -109,15 +205,15 @@ if useFinalCurrentVals==1
         end
     else
         if finalCurrentValsFile==2%staircase procedure was used, finalCurrentVals3.mat
-            load(['X:\best\',date,'\',date,'_data\finalCurrentVals3.mat'])
+            load([rootdir,date,'\',date,'_data\finalCurrentVals3.mat'])
         elseif finalCurrentValsFile==3%staircase procedure was used, finalCurrentVals4.mat
-            load(['X:\best\',date,'\',date,'_data\finalCurrentVals4.mat'])
+            load([rootdir,date,'\',date,'_data\finalCurrentVals4.mat'])
         elseif finalCurrentValsFile==4%staircase procedure was used, finalCurrentVals4.mat
-            load(['X:\best\',date,'\',date,'_data\finalCurrentVals5.mat'])
+            load([rootdir,date,'\',date,'_data\finalCurrentVals5.mat'])
         elseif finalCurrentValsFile==5%staircase procedure was used, finalCurrentVals4.mat
-            load(['X:\best\',date,'\',date,'_data\finalCurrentVals6.mat'])
+            load([rootdir,date,'\',date,'_data\finalCurrentVals6.mat'])
         elseif finalCurrentValsFile==6%staircase procedure was used, finalCurrentVals4.mat
-            load(['X:\best\',date,'\',date,'_data\finalCurrentVals7.mat'])
+            load([rootdir,date,'\',date,'_data\finalCurrentVals7.mat'])
         end
         currentAmplitudes=[];
         hits=[];
@@ -146,6 +242,9 @@ elseif useFinalCurrentVals==0
             currentAmplitudes=[currentAmplitudes currentAmplitude];
         end
     end
+%     perfInd=find(performance~=0);
+%     q=QuestUpdate(q,log10(intensity(reps,n)),correct);
+%         currentthresh(reps,n) = 10.^QuestMean(q);
 end
 hits./misses;
 for Weibull=0:1% set to 1 to get the Weibull fit, 0 for a sigmoid fit
