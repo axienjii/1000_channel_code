@@ -179,6 +179,39 @@ date='280817_B16';arrayNumber=14;electrodeNumber=53;finalCurrentValsFile=6; %(g)
 % date='280817_B31';arrayNumber=14;electrodeNumber=46;finalCurrentValsFile=6; %(g)
 useFinalCurrentVals=1;
 
+date='290817_B1';arrayNumber=14;electrodeNumber=16;finalCurrentValsFile=6; %(g)
+date='290817_B2';arrayNumber=14;electrodeNumber=30;finalCurrentValsFile=6; %(g)
+date='290817_B3';arrayNumber=14;electrodeNumber=30;finalCurrentValsFile=6; %(g)
+date='290817_B4';arrayNumber=14;electrodeNumber=13;finalCurrentValsFile=6; %(r)
+date='290817_B7';arrayNumber=14;electrodeNumber=29;finalCurrentValsFile=6; %(m-g)
+date='290817_B9';arrayNumber=14;electrodeNumber=3;finalCurrentValsFile=6; %(g)
+date='290817_B10';arrayNumber=14;electrodeNumber=15;finalCurrentValsFile=6; %(g)
+date='290817_B13';arrayNumber=14;electrodeNumber=58;finalCurrentValsFile=6; %(g)
+date='290817_B14';arrayNumber=14;electrodeNumber=44;finalCurrentValsFile=6; %(g)
+date='290817_B21';arrayNumber=13;electrodeNumber=44;finalCurrentValsFile=6; %(g)
+date='290817_B23';arrayNumber=13;electrodeNumber=41;finalCurrentValsFile=6; %(r)
+date='290817_B23';arrayNumber=13;electrodeNumber=41;finalCurrentValsFile=6; %(r)
+date='290817_B24';arrayNumber=13;electrodeNumber=62;finalCurrentValsFile=6; %(g)
+date='290817_B25';arrayNumber=13;electrodeNumber=62;finalCurrentValsFile=6; %(g)
+date='290817_B26';arrayNumber=13;electrodeNumber=43;finalCurrentValsFile=6; %(g)
+date='290817_B28';arrayNumber=13;electrodeNumber=32;finalCurrentValsFile=6; %(g)
+date='290817_B29';arrayNumber=13;electrodeNumber=48;finalCurrentValsFile=6; %(g)
+date='290817_B30';arrayNumber=13;electrodeNumber=49;finalCurrentValsFile=6; %(g)
+date='290817_B31';arrayNumber=13;electrodeNumber=22;finalCurrentValsFile=6; %(g)
+date='290817_B33';arrayNumber=13;electrodeNumber=58;finalCurrentValsFile=6; %(r)
+date='290817_B34';arrayNumber=13;electrodeNumber=31;finalCurrentValsFile=6; %(g)
+date='290817_B36';arrayNumber=13;electrodeNumber=25;finalCurrentValsFile=6; %(g)
+date='290817_B37';arrayNumber=13;electrodeNumber=3;finalCurrentValsFile=6; %(g) use log fit
+date='290817_B38';arrayNumber=13;electrodeNumber=23;finalCurrentValsFile=6; %(g)
+date='290817_B39';arrayNumber=13;electrodeNumber=47;finalCurrentValsFile=6; %(g) use log fit
+date='290817_B40';arrayNumber=13;electrodeNumber=26;finalCurrentValsFile=6; %(g)
+date='290817_B41';arrayNumber=13;electrodeNumber=42;finalCurrentValsFile=6; %(g)
+date='290817_B42';arrayNumber=13;electrodeNumber=3;finalCurrentValsFile=6; %(r)
+date='290817_B44';arrayNumber=13;electrodeNumber=55;finalCurrentValsFile=6; %(m-g) bipolar, 55+56
+date='290817_B45';arrayNumber=13;electrodeNumber=55;finalCurrentValsFile=6; %(m-g) bipolar, 55+56
+date='290817_B46';arrayNumber=13;electrodeNumber=37;finalCurrentValsFile=6; %(m) bipolar, 37+38
+useFinalCurrentVals=1;
+
 copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
 load([rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'])
 microstimAllHitTrials=intersect(find(allCurrentLevel>0),find(performance==1));
