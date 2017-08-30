@@ -190,7 +190,6 @@ date='290817_B13';arrayNumber=14;electrodeNumber=58;finalCurrentValsFile=6; %(g)
 date='290817_B14';arrayNumber=14;electrodeNumber=44;finalCurrentValsFile=6; %(g)
 date='290817_B21';arrayNumber=13;electrodeNumber=44;finalCurrentValsFile=6; %(g)
 date='290817_B23';arrayNumber=13;electrodeNumber=41;finalCurrentValsFile=6; %(r)
-date='290817_B23';arrayNumber=13;electrodeNumber=41;finalCurrentValsFile=6; %(r)
 date='290817_B24';arrayNumber=13;electrodeNumber=62;finalCurrentValsFile=6; %(g)
 date='290817_B25';arrayNumber=13;electrodeNumber=62;finalCurrentValsFile=6; %(g)
 date='290817_B26';arrayNumber=13;electrodeNumber=43;finalCurrentValsFile=6; %(g)
@@ -205,11 +204,49 @@ date='290817_B37';arrayNumber=13;electrodeNumber=3;finalCurrentValsFile=6; %(g) 
 date='290817_B38';arrayNumber=13;electrodeNumber=23;finalCurrentValsFile=6; %(g)
 date='290817_B39';arrayNumber=13;electrodeNumber=47;finalCurrentValsFile=6; %(g) use log fit
 date='290817_B40';arrayNumber=13;electrodeNumber=26;finalCurrentValsFile=6; %(g)
-date='290817_B41';arrayNumber=13;electrodeNumber=42;finalCurrentValsFile=6; %(g)
-date='290817_B42';arrayNumber=13;electrodeNumber=3;finalCurrentValsFile=6; %(r)
+date='290817_B41';arrayNumber=13;electrodeNumber=60;finalCurrentValsFile=6; %(g)
+date='290817_B42';arrayNumber=13;electrodeNumber=42;finalCurrentValsFile=6; %(r)
 date='290817_B44';arrayNumber=13;electrodeNumber=55;finalCurrentValsFile=6; %(m-g) bipolar, 55+56
 date='290817_B45';arrayNumber=13;electrodeNumber=55;finalCurrentValsFile=6; %(m-g) bipolar, 55+56
-date='290817_B46';arrayNumber=13;electrodeNumber=37;finalCurrentValsFile=6; %(m) bipolar, 37+38
+date='290817_B46';arrayNumber=13;electrodeNumber=37;finalCurrentValsFile=6; %(m) bipolar, 37+38, can discard
+date='290817_B47';arrayNumber=13;electrodeNumber=37;finalCurrentValsFile=6; %(g) bipolar, 37+38
+useFinalCurrentVals=1;
+
+date='300817_B1';arrayNumber=13;electrodeNumber=11;finalCurrentValsFile=7; %(g) bipolar, 11+12
+date='300817_B2';arrayNumber=13;electrodeNumber=33;finalCurrentValsFile=7; %(g) bipolar, 33+34
+date='300817_B3';arrayNumber=13;electrodeNumber=11;finalCurrentValsFile=7; %(m-g) 
+date='300817_B4';arrayNumber=13;electrodeNumber=12;finalCurrentValsFile=7; %(m) 
+date='300817_B5';arrayNumber=13;electrodeNumber=37;finalCurrentValsFile=7; %(g) 
+date='300817_B6';arrayNumber=13;electrodeNumber=38;finalCurrentValsFile=7; %(g) 
+date='300817_B7';arrayNumber=13;electrodeNumber=33;finalCurrentValsFile=7; %(g) 
+date='300817_B8';arrayNumber=13;electrodeNumber=34;finalCurrentValsFile=7; %(g) 
+date='300817_B9';arrayNumber=13;electrodeNumber=35;finalCurrentValsFile=7; %(m) 
+date='300817_B10';arrayNumber=13;electrodeNumber=33;finalCurrentValsFile=7; %(g) bipolar, 33+35
+date='300817_B11';arrayNumber=13;electrodeNumber=34;finalCurrentValsFile=7; %(g) bipolar, 34+35
+date='300817_B12';arrayNumber=13;electrodeNumber=50;finalCurrentValsFile=7; %(g) bipolar, 50+51
+date='300817_B13';arrayNumber=13;electrodeNumber=52;finalCurrentValsFile=7; %(g) bipolar, 52+53
+date='300817_B16';arrayNumber=9;electrodeNumber=1;finalCurrentValsFile=7; %(g) 
+date='300817_B17';arrayNumber=9;electrodeNumber=17;finalCurrentValsFile=7; %(g) 
+date='300817_B18';arrayNumber=9;electrodeNumber=27;finalCurrentValsFile=7; %(m) use log fit
+date='300817_B19';arrayNumber=9;electrodeNumber=44;finalCurrentValsFile=7; %(g) 
+date='300817_B20';arrayNumber=9;electrodeNumber=64;finalCurrentValsFile=7; %(m) 
+date='300817_B21';arrayNumber=9;electrodeNumber=9;finalCurrentValsFile=7; %(g)
+date='300817_B22';arrayNumber=9;electrodeNumber=26;finalCurrentValsFile=7; %(g)
+date='300817_B23';arrayNumber=9;electrodeNumber=19;finalCurrentValsFile=7; %(m-g)
+date='300817_B24';arrayNumber=9;electrodeNumber=37;finalCurrentValsFile=7; %(r)
+date='300817_B25';arrayNumber=9;electrodeNumber=63;finalCurrentValsFile=7; %(m)
+date='300817_B26';arrayNumber=9;electrodeNumber=45;finalCurrentValsFile=7; %(r) start higher
+date='300817_B27';arrayNumber=9;electrodeNumber=48;finalCurrentValsFile=7; %(g)
+date='300817_B28';arrayNumber=9;electrodeNumber=47;finalCurrentValsFile=7; %(g)
+date='300817_B29';arrayNumber=12;electrodeNumber=21;finalCurrentValsFile=7; %(g)
+date='300817_B30';arrayNumber=12;electrodeNumber=6;finalCurrentValsFile=7; %(g)
+date='300817_B31';arrayNumber=12;electrodeNumber=2;finalCurrentValsFile=7; %(g) use log fit
+date='300817_B32';arrayNumber=12;electrodeNumber=4;finalCurrentValsFile=7; %(g)
+date='300817_B33';arrayNumber=12;electrodeNumber=10;finalCurrentValsFile=7; %(m)
+date='300817_B34';arrayNumber=12;electrodeNumber=18;finalCurrentValsFile=7; %(g)
+date='300817_B35';arrayNumber=12;electrodeNumber=8;finalCurrentValsFile=7; %(r) use lower values
+date='300817_B36';arrayNumber=12;electrodeNumber=14;finalCurrentValsFile=7; %(g)
+date='300817_B37';arrayNumber=12;electrodeNumber=30;finalCurrentValsFile=7; %(g)
 useFinalCurrentVals=1;
 
 copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
@@ -247,6 +284,8 @@ if useFinalCurrentVals==1
             load([rootdir,date,'\',date,'_data\finalCurrentVals6.mat'])
         elseif finalCurrentValsFile==6%staircase procedure was used, finalCurrentVals4.mat
             load([rootdir,date,'\',date,'_data\finalCurrentVals7.mat'])
+        elseif finalCurrentValsFile==7%staircase procedure was used, finalCurrentVals4.mat
+            load([rootdir,date,'\',date,'_data\finalCurrentVals8.mat'])
         end
         currentAmplitudes=[];
         hits=[];

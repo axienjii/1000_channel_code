@@ -3,15 +3,16 @@ function plot_current_vs_impedance
 %Load impedance values and current thresholds for channels on which
 %microstim was delivered, check for any relationship.
 
-load('D:\data\currentThresholds_250817.mat')
-load('Y:\Xing\240817_data\array10.mat')
-load('Y:\Xing\240817_data\array11.mat')
-load('Y:\Xing\240817_data\array12.mat')
-load('Y:\Xing\240817_data\array13.mat')
-load('Y:\Xing\250817_data\array14.mat')
+load('D:\data\currentThresholds_300817.mat')
+load('Y:\Xing\300817_data\array9.mat')
+load('Y:\Xing\300817_data\array10.mat')
+load('Y:\Xing\300817_data\array11.mat')
+load('Y:\Xing\300817_data\array12.mat')
+load('Y:\Xing\300817_data\array13.mat')
+load('Y:\Xing\300817_data\array14.mat')
 
 figure;hold on
-arrays=[10 11 12 13 14];
+arrays=[9 10 11 12 13 14];
 for arrayInd=1:length(arrays)
     subplot(1,length(arrays)+1,arrayInd)
     evalText=['indCurrents=find(array',num2str(arrays(arrayInd)),'_currentThresholds~=0);'];
@@ -29,7 +30,7 @@ ylabel('current threshold at 50%');
 figure;hold on
 allGoodImpedances=[];
 allGoodCurrents=[];
-cols='rgbkm';
+cols='crgbkm';
 for arrayInd=1:length(arrays)
     evalText=['indCurrents=find(array',num2str(arrays(arrayInd)),'_currentThresholds~=0);'];
     eval(evalText);
@@ -49,7 +50,6 @@ title(['current thresholds vs electrode impedances, colour-coded by array, N = '
 figure;hold on
 allRFx=[];
 allRFy=[];
-cols='rgbkm';
 for arrayInd=1:length(arrays)
     evalText=['indCurrents=find(array',num2str(arrays(arrayInd)),'_currentThresholds~=0);'];
     eval(evalText);
