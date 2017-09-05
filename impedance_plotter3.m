@@ -285,17 +285,25 @@ title('low-high impedance: dark-light; V1: red; V4: blue');
 array15=chInfo(chInfo(:,7)==15,:);
 %minimum impedance for array 15 starts at 50 kOhms
 array9=chInfo(chInfo(:,7)==9,:);
-%minimum impedance for array 15 after first channel starts at 41 kOhms
+%minimum impedance for array 9 after first channel starts at 41 kOhms
 array6=chInfo(chInfo(:,7)==6,:);
 %minimum impedance for array 6 starts at 33 kOhms
 array11=chInfo(chInfo(:,7)==11,:);
-%minimum impedance for array 11 after first channel starts at 71 kOhms
+%minimum impedance for array 11 after first 5 channels starts at 51 kOhms
 array10=chInfo(chInfo(:,7)==10,:);
 %minimum impedance for array 10 starts at 23 kOhms
 array12=chInfo(chInfo(:,7)==12,:);
 %many channels with low impedance on array 12
 array13=chInfo(chInfo(:,7)==13,:);
 %many channels with low impedance on array 13
+array15=chInfo(chInfo(:,7)==15,:);
+%minimum impedance for array 15 after first channel starts at 59 kOhms
+array14=chInfo(chInfo(:,7)==14,:);
+%some channels with low impedance on array 14
+array16=chInfo(chInfo(:,7)==16,:);
+%some channels with low impedance on array 16
+array8=chInfo(chInfo(:,7)==8,:);
+%some channels with low impedance on array 8
 
 figure;plot(array12(1:12,1),array12(1:12,2),'ko');
 hold on
