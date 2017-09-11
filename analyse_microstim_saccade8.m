@@ -49,6 +49,21 @@ switch date
 end
 matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
 load(matFile);
+maxNumTrials=size(TRLMAT,1);
+performance=performance(1:maxNumTrials);
+allArrayNum=allArrayNum(1:maxNumTrials);
+allBlockNo=allBlockNo(1:maxNumTrials);
+allElectrodeNum=allElectrodeNum(1:maxNumTrials);
+allFixT=allFixT(1:maxNumTrials);
+allHitRT=allHitRT(1:maxNumTrials);
+allHitX=allHitX(1:maxNumTrials);
+allHitY=allHitY(1:maxNumTrials);
+allInstanceNum=allInstanceNum(1:maxNumTrials);
+allSampleX=allSampleX(1:maxNumTrials);
+allSampleY=allSampleY(1:maxNumTrials);
+allStimDur=allStimDur(1:maxNumTrials);
+allTargetArrivalTime=allTargetArrivalTime(1:maxNumTrials);
+allTargetArrivalTime=allTargetArrivalTime(1:maxNumTrials);
 [dummy goodTrials]=find(performance~=0);
 % goodTrialConds=allTrialCond(goodTrials,:);
 goodTrialIDs=TRLMAT(goodTrials,:);
@@ -250,8 +265,8 @@ if processRaw==1
         plot(sort(RTs))
         
         %visual trials (block type 1):
-        blockTypeGoodTrials=allBlockType(matMatchInd);
-        visualTrialsGood=find(blockTypeGoodTrials==1);%index of good trials with visually presented simulated phosphene
+        blockTypeGoodTrials=allCurrentLevel(matMatchInd);
+        visualTrialsGood=find(blockTypeGoodTrials==0);%index of good trials with visually presented simulated phosphene
         goodSampleX=allSampleX(matMatchInd);
         goodSampleY=allSampleY(matMatchInd);
         visualSampleX=goodSampleX(visualTrialsGood);

@@ -3,16 +3,13 @@ function plot_current_vs_impedance
 %Load impedance values and current thresholds for channels on which
 %microstim was delivered, check for any relationship.
 
-load('D:\data\currentThresholds_300817.mat')
-load('Y:\Xing\300817_data\array9.mat')
-load('Y:\Xing\300817_data\array10.mat')
-load('Y:\Xing\300817_data\array11.mat')
-load('Y:\Xing\300817_data\array12.mat')
-load('Y:\Xing\300817_data\array13.mat')
-load('Y:\Xing\300817_data\array14.mat')
+load('D:\data\currentThresholds_070917.mat')
+arrays=8:16;
+for arrayInd=arrays
+    load(['Y:\Xing\070917_data\array',num2str(arrayInd),'.mat'])
+end
 
 figure;hold on
-arrays=[9 10 11 12 13 14];
 for arrayInd=1:length(arrays)
     subplot(1,length(arrays)+1,arrayInd)
     evalText=['indCurrents=find(array',num2str(arrays(arrayInd)),'_currentThresholds~=0);'];
@@ -30,7 +27,8 @@ ylabel('current threshold at 50%');
 figure;hold on
 allGoodImpedances=[];
 allGoodCurrents=[];
-cols='crgbkm';
+cols='crgbkmy';
+cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
 for arrayInd=1:length(arrays)
     evalText=['indCurrents=find(array',num2str(arrays(arrayInd)),'_currentThresholds~=0);'];
     eval(evalText);
@@ -40,8 +38,8 @@ for arrayInd=1:length(arrays)
     evalText=['goodImpedances=array',num2str(arrays(arrayInd)),'(indCurrents,6);'];
     eval(evalText);
     allGoodImpedances=[allGoodImpedances;goodImpedances];
-    scatter(goodImpedances,goodCurrents,[],cols(arrayInd),'filled');
-    text(80,170-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd));
+    scatter(goodImpedances,goodCurrents,[],cols(arrayInd,:),'filled');
+    text(80,200-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
 end
 xlabel('impedance (kOhms)');
 ylabel('current threshold at 50% (uA)');
@@ -59,8 +57,8 @@ for arrayInd=1:length(arrays)
     evalText=['RFy=array',num2str(arrays(arrayInd)),'(indCurrents,2);'];
     eval(evalText);
     allRFy=[allRFy;RFy];
-    scatter(RFx,RFy,[],cols(arrayInd),'filled');
-    text(80,170-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd));
+    scatter(RFx,RFy,[],cols(arrayInd,:),'filled');
+    text(140,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
 end
 xlabel('x-coordinates (pixels)');
 ylabel('y-coordinates (pixels)');
