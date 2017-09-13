@@ -1,4 +1,4 @@
-function analyse_microstim_saccade7(date,allInstanceInd)
+function analyse_microstim_saccade8(date,allInstanceInd)
 %09/7/17
 %Written by Xing, modified from analyse_microstim_saccade6. Reads in RF
 %coordinate data from .mat files, instead of hard-coding in code. 
