@@ -107,7 +107,7 @@ for instanceCount=1:length(allInstanceInd)
         ax=gca;
         ax.XTick=[0 sampFreq*preStimDur/downsampleFreq sampFreq*(preStimDur+stimDur)/downsampleFreq];
         ax.XTickLabel={'-300','0','400'};
-        %     set(gca,'ylim',[0 max(meanChannelMUA(channelInd,:))]);
+            set(gca,'ylim',[min(meanChannelMUA(channelInd,:)) max(meanChannelMUA(channelInd,:))]);
         title(num2str(channelInd));
     end
     for figInd=1:4
