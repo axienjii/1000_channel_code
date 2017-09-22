@@ -408,4 +408,14 @@ switch date
         instance=ceil(array/2);
         SNR=arrayRFs(electrodeInd,5);
         impedance=arrayRFs(electrodeInd,6);
+        
+    case '200917_B2'       
+        load('Y:\Xing\200917_data\currentThresholdChs.mat'); 
+        array=goodArrays8to16(electrodeInd,7);       
+        electrode=goodArrays8to16(electrodeInd,8);
+        RFx=goodArrays8to16(electrodeInd,1);
+        RFy=goodArrays8to16(electrodeInd,2);
+        instance=ceil(array/2);
+        SNR=goodArrays8to16(electrodeInd,5);
+        impedance=goodArrays8to16(electrodeInd,6);
 end

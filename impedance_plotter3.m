@@ -13,6 +13,7 @@ date='110717';
 date='170717';
 date='200717';
 date='080817';
+date='200917';
 colind = hsv(16);
 colindImp = hsv(1000);%colour-code impedances
 
@@ -99,6 +100,18 @@ switch(date)
         %column 3: electrode number (out of 1024)
         xLabelsConds={'200717 HT','080817 HT'};
         titleText='red: 200717; blue: 080817';
+        
+    case('200917')
+        load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsNew=impedanceAllChannels;
+        previousDate='080817';
+        load(['C:\Users\User\Documents\impedance_values\',previousDate,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsPrevious=impedanceAllChannels;
+        %column 1: impedance
+        %column 2: array number
+        %column 3: electrode number (out of 1024)
+        xLabelsConds={[previousDate,' HT'],[date,' HT']};
+        titleText=['red: ',previousDate,'; blue: ',date];
 end
 figure;hold on
 length(find(impedanceAllChannelsPrevious(:,1)>800))%number of channels with too-high impedances values during hand-tightening, 485
@@ -266,7 +279,10 @@ axis square
 xlim([0 200]);
 ylim([-200 0]);
 title('low-high impedance: dark-light; V1: red; V4: blue');
-
+pathname=fullfile('C:\Users\User\Documents\impedance_values\',date,['RFs_channels_impedance_below_',num2str(impThreshold),'kOhms_vals']);
+set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+print(pathname,'-dtiff','-r300');
+    
 %Note: the following RFs may be incorrect:
 %candidate channels for stimulation:
 % instance 4, array 8, electrode 117: RF x, RF y, size (pix), size (dva):
@@ -281,6 +297,21 @@ title('low-high impedance: dark-light; V1: red; V4: blue');
     113.242437418102,-120.191022943488,157.634217633635,6.09565383094556,22.4494946497284,27,10,57;
     120.948840957758,-130.685637209769,104.447223178057,4.03893346035232,8.28530816496006,29,10,59;
     126.224705050819,-96.3022802669606,125.985208239135,4.87179895820726,27.5326674055054,33,10,56]
+
+load('Y:\Xing\200917_data\currentThresholdChs.mat');
+for electrodeInd=1:size(goodArrays8to16,1)
+    array=goodArrays8to16(electrodeInd,7);
+    electrode=goodArrays8to16(electrodeInd,8);
+    temp1=find(impedanceAllChannelsNew(:,2)==array);
+    [channel_InstanceNo channel_1024No]=convert_channel_1024_2(array,electrode);
+    temp2=find(impedanceAllChannelsNew(:,3)==channel_1024No);
+    rowInd=intersect(temp1,temp2);
+    newImpedance(electrodeInd)=impedanceAllChannelsNew(rowInd,1);
+    oldImpedance(electrodeInd)=impedanceAllChannelsPrevious(rowInd,1);
+end
+figure;
+plot(newImpedance,'r');hold on
+plot(oldImpedance,'k');
 
 array15=chInfo(chInfo(:,7)==15,:);
 %minimum impedance for array 15 starts at 50 kOhms
