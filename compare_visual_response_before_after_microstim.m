@@ -10,7 +10,7 @@ postStimDur=300/1000;%length of post-stimulus-offset period, in s
 sampFreq=30000;
 downsampleFreq=30;
 
-for dateInd=8
+for dateInd=9
     useOtherDate=[];
     switch dateInd
         case 1
@@ -48,6 +48,20 @@ for dateInd=8
             date='090817_B8';%array 12; adjust code in lookup_microstim_electrodes to set this date to array 12
             electrodeInds=1:13;
             previousDate='080817_B7';
+        case 9
+            date='200917_B2';%arrays 8-16
+            electrodeInds=1:20;
+%             electrodeInds=21:40;
+%             electrodeInds=41:60;
+%             electrodeInds=61:80;
+%             electrodeInds=81:100;
+%             electrodeInds=101:120;
+%             electrodeInds=121:140;
+%             electrodeInds=141:160;
+%             electrodeInds=161:180;
+%             electrodeInds=181:200;
+            electrodeInds=201:201;
+            previousDate='090817_B8';
     end
     figure;
     for electrodeInd=1:length(electrodeInds)
