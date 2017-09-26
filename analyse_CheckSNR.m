@@ -94,9 +94,24 @@ for instanceCount=1:length(allInstanceInd)
     for channelInd=1:NS.MetaTags.ChannelCount
         meanChannelMUA(channelInd,:)=mean(channelDataMUA{channelInd}(:,:),1);
         %     plot(meanChannelMUA(channelInd,:))
+            
+        MUAm=meanChannelMUA(channelInd,:);%each value corresponds to 1 ms
+        %Get noise levels before smoothing
+        BaseT = 1:sampFreq*preStimDur/downsampleFreq;
+        Base = nanmean(MUAm(BaseT));
+        BaseS = nanstd(MUAm(BaseT));
+        
+        %Smooth it to get a maximum...
+        sm = smooth(MUAm,20);
+        [mx,mi] = max(sm);
+        Scale = mx-Base;
+        
+        %calculate SNR
+        SNR=Scale/BaseS;
+        channelSNR(channelInd)=SNR;
     end
     fileName=fullfile('D:\data',date,['mean_MUA_',instanceName,'.mat']);
-    save(fileName,'meanChannelMUA');
+    save(fileName,'meanChannelMUA','channelSNR');
     
     for channelInd=1:NS.MetaTags.ChannelCount
         figInd=ceil(channelInd/36);
