@@ -42,7 +42,7 @@ elseif whichDir==2
     topDir='X:\other\';
 end
 stimDur=400/1000;%in seconds
-allInstanceInd=1:4;
+allInstanceInd=5:8;
 for instanceCount=1:length(allInstanceInd)
     instanceInd=allInstanceInd(instanceCount);
     instanceName=['instance',num2str(instanceInd)];
