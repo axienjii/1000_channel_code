@@ -1,9 +1,19 @@
-function analyse_microstim_2phosphene(date,allInstanceInd)
+function analyse_microstim_2phosphene_visual_only(date,allInstanceInd)
 %25/9/17
 %Written by Xing, calculates behavioural performance during a
 %microstimulation/visual 2-phosphene task.
 
+localDisk=1;
+if localDisk==1
+    rootdir='D:\data\';
+elseif localDisk==0
+    rootdir='X:\best\';
+end
 matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
+dataDir=['D:\data\',date,'\',date,'_data'];
+if ~exist('dataDir','dir')
+    copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);    
+end
 load(matFile);
 maxNumTrials=size(TRLMAT,1);
 if maxNumTrials<=length(performance)
@@ -107,6 +117,8 @@ if processRaw==1
                 end
                 if length(find(trialEncodes==2^MicroB))==2
                     microstimTrialNEV(trialNo)=1;
+                else
+                    microstimTrialNEV(trialNo)=0;
                 end
                 trialNo=trialNo+1;
             end
@@ -128,48 +140,41 @@ if processRaw==1
         correctVisualTrialsInd=intersect(visualTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
         incorrectVisualTrialsInd=intersect(visualTrialsInd,incorrectTrialsInd);%trialNo for microstim trials with a correct saccade
         correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
-        meanPerfVisual=length(correctMicrostimTrialsInd)/(length(correctMicrostimTrialsInd)+length(incorrectVisualTrialsInd))
+        meanPerfVisual=length(correctVisualTrialsInd)/(length(correctVisualTrialsInd)+length(incorrectVisualTrialsInd))
         incorrectMicrostimTrialsInd=intersect(microstimTrialsInd,incorrectTrialsInd);%trialNo for microstim trials with a correct saccade
         meanPerfMicrostim=length(correctMicrostimTrialsInd)/(length(correctMicrostimTrialsInd)+length(incorrectMicrostimTrialsInd))
         totalRespTrials=length(correctTrialsInd)+length(incorrectTrialsInd);%number of trials where a response was made
         indRespTrials=sort([correctTrialsInd incorrectTrialsInd]);%indices of trials where response was made
+        micro=[];
         for trialRespInd=1:totalRespTrials
             trialNo=indRespTrials(trialRespInd);
             corr(trialRespInd)=~isempty(find(correctTrialsInd==trialNo));
             incorr(trialRespInd)=~isempty(find(incorrectTrialsInd==trialNo));
-            if length(microstimTrialNEV)>=trialNo
-                micro(trialRespInd)=microstimTrialNEV(trialNo);
+            if exist('microstimTrialNEV','var')
+                if length(microstimTrialNEV)>=trialNo
+                    micro(trialRespInd)=microstimTrialNEV(trialNo);
+                end
             end
         end
         visualInd=find(micro~=1);
         corrInd=find(corr==1);
         corrVisualInd=intersect(visualInd,corrInd);
-        microInd=find(micro==1);
-        corrMicroInd=intersect(microInd,corrInd);
+        if exist('microstimTrialNEV','var')
+            microInd=find(micro==1);
+            corrMicroInd=intersect(microInd,corrInd);
+        end
         perfMicroBin=[];
         perfVisualBin=[];
         perfMicroTrialNo=[];
         perfVisualTrialNo=[];
         numTrialsPerBin=20;
         for trialRespInd=1:totalRespTrials-numTrialsPerBin
-            if length(micro)>=trialRespInd
-                if micro(trialRespInd)==1
-                    firstMicroTrialInBin=find(microInd==trialRespInd);
-                    if firstMicroTrialInBin<=length(microInd)-numTrialsPerBin+1
-                        binMicroTrials=microInd(firstMicroTrialInBin:firstMicroTrialInBin+numTrialsPerBin-1);
-                        corrMicroInBin=intersect(binMicroTrials,corrMicroInd);
-                        perfMicroBin=[perfMicroBin length(corrMicroInBin)/numTrialsPerBin];
-                        perfMicroTrialNo=[perfMicroTrialNo trialRespInd];
-                    end
-                elseif micro(trialRespInd)==0
-                    firstVisualTrialInBin=find(visualInd==trialRespInd);
-                    if firstVisualTrialInBin<=length(visualInd)-numTrialsPerBin+1
-                        binVisualTrials=visualInd(firstVisualTrialInBin:firstVisualTrialInBin+numTrialsPerBin-1);
-                        corrVisualInBin=intersect(binVisualTrials,corrVisualInd);
-                        perfVisualBin=[perfVisualBin length(corrVisualInBin)/numTrialsPerBin];
-                        perfVisualTrialNo=[perfVisualTrialNo trialRespInd];
-                    end
-                end
+            firstVisualTrialInBin=find(visualInd==trialRespInd);
+            if firstVisualTrialInBin<=length(visualInd)-numTrialsPerBin+1
+                binVisualTrials=visualInd(firstVisualTrialInBin:firstVisualTrialInBin+numTrialsPerBin-1);
+                corrVisualInBin=intersect(binVisualTrials,corrVisualInd);
+                perfVisualBin=[perfVisualBin length(corrVisualInBin)/numTrialsPerBin];
+                perfVisualTrialNo=[perfVisualTrialNo trialRespInd];
             end
         end
         

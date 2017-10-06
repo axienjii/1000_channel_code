@@ -1,4 +1,4 @@
-function analyse_microstim_saccade12(date,allInstanceInd)
+function analyse_microstim_saccade12_moviedata(date,allInstanceInd)
 %09/7/17
 %Written by Xing, uses serial port data to identify trial number. Analyses
 %data for runstim_microstim_saccade_catch10.m, with an arbitrarily large
@@ -10,7 +10,6 @@ function analyse_microstim_saccade12(date,allInstanceInd)
 %Finds saccade end point using function calculateSaccadeEndpoint2,
 %which calculates velocity of eye movements in dva per s, and identifies
 %time points corresponding to peak velocities.
-%Also generate data for Feng, to create movie of eye movements.
 
 matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
 load(matFile);
@@ -141,7 +140,7 @@ if processRaw==1
         if ~exist('goodArrays8to16','var')
             load('D:\data\270917_B16\270917_B16_data\currentThresholdChs2.mat')
         end
-        for uniqueElectrode=53%1:size(goodArrays8to16,1)%53
+        for uniqueElectrode=1:size(goodArrays8to16,1)
             figInd9(uniqueElectrode)=figure;hold on
             array=goodArrays8to16(uniqueElectrode,7);
             arrayColInd=find(arrays==array);
@@ -187,19 +186,6 @@ if processRaw==1
                 timeSmooth=timeMicrostim-preStimDur*sampFreq:timeReward;%timestamps from 150 ms before end of microstimulation to reward delivery (because eyeanalysis_baseline_correct requires at least 150 ms of eye fixation time)
                 trialDataXSmooth{trialCounter}=double(NSch{1}(timeSmooth));
                 trialDataYSmooth{trialCounter}=double(NSch{2}(timeSmooth));
-                timeSmoothFix=timeMicrostim-(166.7+allFixT(trialNo))*sampFreq/1000:timeReward;%timestamps from acquisition of fixation to reward delivery 
-                trialDataXSmoothFix{trialCounter}=double(NSch{1}(timeSmoothFix));
-                trialDataYSmoothFix{trialCounter}=double(NSch{2}(timeSmoothFix));
-                startMicrostim(trialCounter)=allFixT(trialNo)*sampFreq/1000;
-                endMicrostim(trialCounter)=(166.7+allFixT(trialNo))*sampFreq/1000;
-%                 figure;
-%                 plot(trialDataXSmoothFix{trialCounter});
-%                 hold on
-%                 yLims=get(gca,'ylim');
-%                 plot([startMicrostim(trialCounter) startMicrostim(trialCounter)],[yLims(1) yLims(2)],'k:');
-%                 plot([endMicrostim(trialCounter) endMicrostim(trialCounter)],[yLims(1) yLims(2)],'k:');
-% %                 trialDataArtefactFix{trialCounter}=double(NSch{1}(timeSmoothFix));
-% %                 plot(trialDataArtefactFix{trialCounter}+mean(trialDataXSmoothFix{trialCounter}));
                 numDataPointsAfterStim=timeReward-timeMicrostim;
                 eyepx=-0.15*sampFreq:double(numDataPointsAfterStim);
                 eyepx=eyepx/sampFreq;
@@ -382,59 +368,59 @@ if processRaw==1
                     ellipse(stdSaccadeXY(1),stdSaccadeXY(2),RFx,RFy,cols(arrayColInd,:));
                 end
                 
-                figure(figInd5)
-                plot(meanSaccadeXY(1),-meanSaccadeXY(2),'MarkerFaceColor',cols(arrayColInd,:),'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',10);
-                ellipse(stdSaccadeXY(1),stdSaccadeXY(2),meanSaccadeXY(1),-meanSaccadeXY(2),cols(arrayColInd,:));
-                plot(RFx,RFy,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',6);
-                text(meanSaccadeXY(1)-0.07,-meanSaccadeXY(2),num2str(electrode),'FontSize',8,'Color',[0 0 0]);
-                text(RFx-0.07,RFy,num2str(electrode),'FontSize',8,'Color',[0 0 0]);
-                plot([meanSaccadeXY(1) RFx],[-meanSaccadeXY(2) RFy],'-','Color',cols(arrayColInd,:));
-                
-                figure(figInd6)
-                plot(meanSaccadeXY(1),-meanSaccadeXY(2),'MarkerFaceColor',cols(arrayColInd,:),'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',6);
-                plot(RFx,RFy,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',6);
-                text(meanSaccadeXY(1)+0.2,-meanSaccadeXY(2),num2str(electrode),'FontSize',8,'Color',[0 0 0]);
-                text(RFx+0.2,RFy,num2str(electrode),'FontSize',8,'Color',[0 0 0]);
-                plot([meanSaccadeXY(1) RFx],[-meanSaccadeXY(2) RFy],'-','Color',cols(arrayColInd,:));
-                
-                figure(figInd8)
-                plot(meanSaccadeXY(1),-meanSaccadeXY(2),'MarkerFaceColor',cols(arrayColInd,:),'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',6);
-                text(meanSaccadeXY(1)+0.2,-meanSaccadeXY(2),num2str(electrode),'FontSize',8,'Color',[0 0 0]);
-                plot([meanSaccadeXY(1) RFx],[-meanSaccadeXY(2) RFy],'-','Color',cols(arrayColInd,:));
+% %                 figure(figInd5)
+% %                 plot(meanSaccadeXY(1),-meanSaccadeXY(2),'MarkerFaceColor',cols(arrayColInd,:),'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',10);
+% %                 ellipse(stdSaccadeXY(1),stdSaccadeXY(2),meanSaccadeXY(1),-meanSaccadeXY(2),cols(arrayColInd,:));
+% %                 plot(RFx,RFy,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',6);
+% %                 text(meanSaccadeXY(1)-0.07,-meanSaccadeXY(2),num2str(electrode),'FontSize',8,'Color',[0 0 0]);
+% %                 text(RFx-0.07,RFy,num2str(electrode),'FontSize',8,'Color',[0 0 0]);
+% %                 plot([meanSaccadeXY(1) RFx],[-meanSaccadeXY(2) RFy],'-','Color',cols(arrayColInd,:));
+% %                 
+% %                 figure(figInd6)
+% %                 plot(meanSaccadeXY(1),-meanSaccadeXY(2),'MarkerFaceColor',cols(arrayColInd,:),'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',6);
+% %                 plot(RFx,RFy,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',6);
+% %                 text(meanSaccadeXY(1)+0.2,-meanSaccadeXY(2),num2str(electrode),'FontSize',8,'Color',[0 0 0]);
+% %                 text(RFx+0.2,RFy,num2str(electrode),'FontSize',8,'Color',[0 0 0]);
+% %                 plot([meanSaccadeXY(1) RFx],[-meanSaccadeXY(2) RFy],'-','Color',cols(arrayColInd,:));
+% %                 
+% %                 figure(figInd8)
+% %                 plot(meanSaccadeXY(1),-meanSaccadeXY(2),'MarkerFaceColor',cols(arrayColInd,:),'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',6);
+% %                 text(meanSaccadeXY(1)+0.2,-meanSaccadeXY(2),num2str(electrode),'FontSize',8,'Color',[0 0 0]);
+% %                 plot([meanSaccadeXY(1) RFx],[-meanSaccadeXY(2) RFy],'-','Color',cols(arrayColInd,:));
             end
             
-            figure(figInd9(uniqueElectrode))
-            scatter(0,0,'r','o','filled');%fix spot
-            %draw dotted lines indicating [0,0]
-            plot([0 0],[-250 200],'k:');
-            plot([-200 300],[0 0],'k:');
-            plot([-200 300],[200 -300],'k:');
-            ellipse(50,50,0,0,[0.1 0.1 0.1]);
-            ellipse(100,100,0,0,[0.1 0.1 0.1]);
-            ellipse(150,150,0,0,[0.1 0.1 0.1]);
-            ellipse(200,200,0,0,[0.1 0.1 0.1]);
-            text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-            text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-            text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-            text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-            axis equal
-            xlim([-20 220]);
-            ylim([-160 20]);
-            title('saccade endpoints');
-            for arrayInd=1:length(arrays)
-                text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-            end
-            ax=gca;
-            ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
-            ax.XTickLabel={'0','2','4','6','8'};
-            ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
-            ax.YTickLabel={'-8','-6','-4','-2','0'};
-            xlabel('x-coordinates (dva)')
-            ylabel('y-coordinates (dva)')
-            set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-            pathname=fullfile('D:\data',date,['saccade_endpoints_dva_array_',num2str(array),'_electrode_',num2str(electrode),'_',date]);
-            print(pathname,'-dtiff');
-            close(figInd9(uniqueElectrode))
+% %             figure(figInd9(uniqueElectrode))
+% %             scatter(0,0,'r','o','filled');%fix spot
+% %             %draw dotted lines indicating [0,0]
+% %             plot([0 0],[-250 200],'k:');
+% %             plot([-200 300],[0 0],'k:');
+% %             plot([-200 300],[200 -300],'k:');
+% %             ellipse(50,50,0,0,[0.1 0.1 0.1]);
+% %             ellipse(100,100,0,0,[0.1 0.1 0.1]);
+% %             ellipse(150,150,0,0,[0.1 0.1 0.1]);
+% %             ellipse(200,200,0,0,[0.1 0.1 0.1]);
+% %             text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %             text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %             text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %             text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %             axis equal
+% %             xlim([-20 220]);
+% %             ylim([-160 20]);
+% %             title('saccade endpoints');
+% %             for arrayInd=1:length(arrays)
+% %                 text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
+% %             end
+% %             ax=gca;
+% %             ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
+% %             ax.XTickLabel={'0','2','4','6','8'};
+% %             ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
+% %             ax.YTickLabel={'-8','-6','-4','-2','0'};
+% %             xlabel('x-coordinates (dva)')
+% %             ylabel('y-coordinates (dva)')
+% %             set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+% %             pathname=fullfile('D:\data',date,['saccade_endpoints_dva_array_',num2str(array),'_electrode_',num2str(electrode),'_',date]);
+% %             print(pathname,'-dtiff');
+% %             close(figInd9(uniqueElectrode))
             baselineXChs{uniqueElectrode}=baselineXTrials;
             baselineYChs{uniqueElectrode}=baselineYTrials;
             trialDataXSmoothChs{uniqueElectrode}=trialDataXSmooth;
@@ -442,81 +428,77 @@ if processRaw==1
             trialNoChs{uniqueElectrode}=trialNoTrials;
             posIndXChs{uniqueElectrode}=posIndXTrials;
             posIndYChs{uniqueElectrode}=posIndYTrials;
-            trialDataXSmoothFixChs{uniqueElectrode}=trialDataXSmoothFix;
-            trialDataYSmoothFixChs{uniqueElectrode}=trialDataYSmoothFix;
-            startMicrostimChs{uniqueElectrode}=startMicrostim;
-            endMicrostimChs{uniqueElectrode}=endMicrostim;
         end
-        save(['D:\data\',date,'\saccade_data_',date,'_fix_to_rew.mat'],'baselineXChs','baselineYChs','trialDataXSmoothFixChs','trialDataYSmoothFixChs','trialNoChs','posIndXChs','posIndYChs','startMicrostimChs','endMicrostimChs');
+        save(['D:\data\',date,'\saccade_data_',date,'.mat'],'baselineXChs','baselineYChs','trialDataXSmoothChs','trialDataYSmoothChs','trialNoChs','posIndXChs','posIndYChs');
         
 % %         
-        figure(figInd10)
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:');
-        plot([-200 300],[0 0],'k:');
-        plot([-200 300],[200 -300],'k:');
-        ellipse(50,50,0,0,[0.1 0.1 0.1]);
-        ellipse(100,100,0,0,[0.1 0.1 0.1]);
-        ellipse(150,150,0,0,[0.1 0.1 0.1]);
-        ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis equal
-        xlim([-20 220]);
-        ylim([-160 20]);
-        title(['RF locations, SD saccade end points, max SD = ',num2str(stdCutoff)]);
-        for arrayInd=1:length(arrays)
-            text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-        end
-        ax=gca;
-        ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
-        ax.XTickLabel={'0','2','4','6','8'};
-        ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
-        ax.YTickLabel={'-8','-6','-4','-2','0'};
-        xlabel('x-coordinates (dva)')
-        ylabel('y-coordinates (dva)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['RF_centres_dva_',date,'_std',num2str(stdCutoff)]);
-        print(pathname,'-dtiff','-r600');
-        
-        figure;
-        subplot(2,1,1)
-        histogram(timePeakVelocityXYsAllTrials)
-        hold on
-        yLims=get(gca,'ylim');
-        plot([-165 -165],[yLims(1) yLims(2)],'k:')
-        plot([0 0],[yLims(1) yLims(2)],'k:')
-        ylabel('counts')
-        plot([-165 -165],[yLims(1) yLims(2)],'k:')
-        plot([0 0],[yLims(1) yLims(2)],'k:')
-%         xlim([0 400])
-        xlabel('time (ms)')
-        ylabel('counts')
-        subplot(2,1,2)
-        histogram(timePeakVelocityXYSecsAllTrials)
-        hold on
-        yLims=get(gca,'ylim');
-        plot([-165 -165],[yLims(1) yLims(2)],'k:')
-        plot([0 0],[yLims(1) yLims(2)],'k:')
-        ylabel('counts')
-        pathname=fullfile('D:\data',date,['all_saccade_latencies_relative_to_end_microstim_',date]);
-        print(pathname,'-dtiff','-r600'); 
-        
-        figure;
-        histogram(timePeakVelocityXYsAllTrials)
-        hold on
-        histogram(timePeakVelocityXYSecsAllTrials)
-        ylabel('counts')
-        yLims=get(gca,'ylim');
-        plot([-165 -165],[yLims(1) yLims(2)],'k:')
-        plot([0 0],[yLims(1) yLims(2)],'k:')
-        pathname=fullfile('D:\data',date,['saccade_latencies_blue_second_red_relative_to_end_microstim_',date]);
-        print(pathname,'-dtiff','-r600');
-        
-        save(['D:\data\',date,'\saccade_endpoints_',date,'.mat'],'saccadeEndAllTrials','electrodeAllTrials','arrayAllTrials','timePeakVelocityXYsAllTrials','timePeakVelocityXYSecsAllTrials');
+% %         figure(figInd10)
+% %         scatter(0,0,'r','o','filled');%fix spot
+% %         %draw dotted lines indicating [0,0]
+% %         plot([0 0],[-250 200],'k:');
+% %         plot([-200 300],[0 0],'k:');
+% %         plot([-200 300],[200 -300],'k:');
+% %         ellipse(50,50,0,0,[0.1 0.1 0.1]);
+% %         ellipse(100,100,0,0,[0.1 0.1 0.1]);
+% %         ellipse(150,150,0,0,[0.1 0.1 0.1]);
+% %         ellipse(200,200,0,0,[0.1 0.1 0.1]);
+% %         text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         axis equal
+% %         xlim([-20 220]);
+% %         ylim([-160 20]);
+% %         title(['RF locations, SD saccade end points, max SD = ',num2str(stdCutoff)]);
+% %         for arrayInd=1:length(arrays)
+% %             text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
+% %         end
+% %         ax=gca;
+% %         ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
+% %         ax.XTickLabel={'0','2','4','6','8'};
+% %         ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
+% %         ax.YTickLabel={'-8','-6','-4','-2','0'};
+% %         xlabel('x-coordinates (dva)')
+% %         ylabel('y-coordinates (dva)')
+% %         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+% %         pathname=fullfile('D:\data',date,['RF_centres_dva_',date,'_std',num2str(stdCutoff)]);
+% %         print(pathname,'-dtiff','-r600');
+% %         
+% %         figure;
+% %         subplot(2,1,1)
+% %         histogram(timePeakVelocityXYsAllTrials)
+% %         hold on
+% %         yLims=get(gca,'ylim');
+% %         plot([-165 -165],[yLims(1) yLims(2)],'k:')
+% %         plot([0 0],[yLims(1) yLims(2)],'k:')
+% %         ylabel('counts')
+% %         plot([-165 -165],[yLims(1) yLims(2)],'k:')
+% %         plot([0 0],[yLims(1) yLims(2)],'k:')
+% % %         xlim([0 400])
+% %         xlabel('time (ms)')
+% %         ylabel('counts')
+% %         subplot(2,1,2)
+% %         histogram(timePeakVelocityXYSecsAllTrials)
+% %         hold on
+% %         yLims=get(gca,'ylim');
+% %         plot([-165 -165],[yLims(1) yLims(2)],'k:')
+% %         plot([0 0],[yLims(1) yLims(2)],'k:')
+% %         ylabel('counts')
+% %         pathname=fullfile('D:\data',date,['all_saccade_latencies_relative_to_end_microstim_',date]);
+% %         print(pathname,'-dtiff','-r600'); 
+% %         
+% %         figure;
+% %         histogram(timePeakVelocityXYsAllTrials)
+% %         hold on
+% %         histogram(timePeakVelocityXYSecsAllTrials)
+% %         ylabel('counts')
+% %         yLims=get(gca,'ylim');
+% %         plot([-165 -165],[yLims(1) yLims(2)],'k:')
+% %         plot([0 0],[yLims(1) yLims(2)],'k:')
+% %         pathname=fullfile('D:\data',date,['saccade_latencies_blue_second_red_relative_to_end_microstim_',date]);
+% %         print(pathname,'-dtiff','-r600');
+% %         
+% %         save(['D:\data\',date,'\saccade_endpoints_',date,'.mat'],'saccadeEndAllTrials','electrodeAllTrials','arrayAllTrials','timePeakVelocityXYsAllTrials','timePeakVelocityXYSecsAllTrials');
         
 %         figure(figInd2)
 %         subplot(2,1,1)
@@ -551,167 +533,167 @@ if processRaw==1
 %         pathname=fullfile('D:\data',date,['instance1_eye_traces_align_to_end_microstim_pulsetrain_',date]);
 %         print(pathname,'-dtiff','-r600'); 
         
-        figure(figInd3)
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:');
-        plot([-200 300],[0 0],'k:');
-        plot([-200 300],[200 -300],'k:');
-        ellipse(50,50,0,0,[0.1 0.1 0.1]);
-        ellipse(100,100,0,0,[0.1 0.1 0.1]);
-        ellipse(150,150,0,0,[0.1 0.1 0.1]);
-        ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis equal
-        xlim([-20 220]);
-        ylim([-160 20]);
-        title('saccade endpoints'); 
-        for arrayInd=1:length(arrays)
-            text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-        end
-        xlabel('x-coordinates (pixels)')
-        ylabel('y-coordinates (pixels)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['saccade_endpoints_pixels_',date]);
-        if cleanUp==1
-            pathname=[pathname,'_cleaned'];
-        end
-        print(pathname,'-dtiff','-r600');   
-        
-        ax=gca;
-        ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
-        ax.XTickLabel={'0','2','4','6','8'};
-        ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
-        ax.YTickLabel={'-8','-6','-4','-2','0'};
-        xlabel('x-coordinates (dva)')
-        ylabel('y-coordinates (dva)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['saccade_endpoints_dva_',date]);
-        if cleanUp==1
-            pathname=[pathname,'_cleaned'];
-        end
-        print(pathname,'-dtiff','-r600');   
-        
-        figure(figInd4)
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:');
-        plot([-200 300],[0 0],'k:');
-        plot([-200 300],[200 -300],'k:');
-        ellipse(50,50,0,0,[0.1 0.1 0.1]);
-        ellipse(100,100,0,0,[0.1 0.1 0.1]);
-        ellipse(150,150,0,0,[0.1 0.1 0.1]);
-        ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis equal
-        xlim([-20 220]);
-        ylim([-160 20]);
-        title('saccade endpoints');
-        for arrayInd=1:length(arrays)
-            text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-        end
-        xlabel('x-coordinates (pixels)')
-        ylabel('y-coordinates (pixels)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['saccade_endpoints_pixels_mean_filled_',date]);
-        print(pathname,'-dtiff','-r600');
-
-        figure(figInd5)
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:');
-        plot([-200 300],[0 0],'k:');
-        plot([-200 300],[200 -300],'k:');
-        ellipse(50,50,0,0,[0.1 0.1 0.1]);
-        ellipse(100,100,0,0,[0.1 0.1 0.1]);
-        ellipse(150,150,0,0,[0.1 0.1 0.1]);
-        ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis equal
-        xlim([-20 220]);
-        ylim([-160 20]);
-        title('saccade endpoints and RF centres');
-        for arrayInd=1:length(arrays)
-            text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-        end
-        xlabel('x-coordinates (pixels)')
-        ylabel('y-coordinates (pixels)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['saccade_endpoints_RFs_std_',date]);
-        print(pathname,'-dtiff','-r600');
-        
-        figure(figInd6)
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:');
-        plot([-200 300],[0 0],'k:');
-%         plot([-200 300],[200 -300],'k:');
-%         ellipse(50,50,0,0,[0.1 0.1 0.1]);
-%         ellipse(100,100,0,0,[0.1 0.1 0.1]);
-%         ellipse(150,150,0,0,[0.1 0.1 0.1]);
-%         ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis equal
-        xlim([-20 220]);
-        ylim([-160 20]);
-        title('saccade endpoints (filled) and RF centres');
-        for arrayInd=1:length(arrays)
-            text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-        end
-        ax=gca;
-        ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
-        ax.XTickLabel={'0','2','4','6','8'};
-        ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
-        ax.YTickLabel={'-8','-6','-4','-2','0'};
-        xlabel('x-coordinates (dva)')
-        ylabel('y-coordinates (dva)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['saccade_endpoints_RFs_',date]);
-        print(pathname,'-dtiff','-r600');
-        
-        figure(figInd8)
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:');
-        plot([-200 380],[0 0],'k:');
-%         plot([-200 300],[200 -300],'k:');
-%         ellipse(50,50,0,0,[0.1 0.1 0.1]);
-%         ellipse(100,100,0,0,[0.1 0.1 0.1]);
-%         ellipse(150,150,0,0,[0.1 0.1 0.1]);
-%         ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis equal
-        xlim([-20 360]);
-        ylim([-220 20]);
-        title('saccade endpoints (filled), second saccade endpoints (X), and RF centres');
-        for arrayInd=1:length(arrays)
-            text(260,0-6*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-        end
-        ax=gca;
-        ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8 Par.PixPerDeg*10 Par.PixPerDeg*12];
-        ax.XTickLabel={'0','2','4','6','8','10','12'};
-        ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
-        ax.YTickLabel={'-8','-6','-4','-2','0'};
-        xlabel('x-coordinates (dva)')
-        ylabel('y-coordinates (dva)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['saccade_endpoints_RFs_second_saccade_',date]);
-        print(pathname,'-dtiff','-r600');      
+% %         figure(figInd3)
+% %         scatter(0,0,'r','o','filled');%fix spot
+% %         %draw dotted lines indicating [0,0]
+% %         plot([0 0],[-250 200],'k:');
+% %         plot([-200 300],[0 0],'k:');
+% %         plot([-200 300],[200 -300],'k:');
+% %         ellipse(50,50,0,0,[0.1 0.1 0.1]);
+% %         ellipse(100,100,0,0,[0.1 0.1 0.1]);
+% %         ellipse(150,150,0,0,[0.1 0.1 0.1]);
+% %         ellipse(200,200,0,0,[0.1 0.1 0.1]);
+% %         text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         axis equal
+% %         xlim([-20 220]);
+% %         ylim([-160 20]);
+% %         title('saccade endpoints'); 
+% %         for arrayInd=1:length(arrays)
+% %             text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
+% %         end
+% %         xlabel('x-coordinates (pixels)')
+% %         ylabel('y-coordinates (pixels)')
+% %         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+% %         pathname=fullfile('D:\data',date,['saccade_endpoints_pixels_',date]);
+% %         if cleanUp==1
+% %             pathname=[pathname,'_cleaned'];
+% %         end
+% %         print(pathname,'-dtiff','-r600');   
+% %         
+% %         ax=gca;
+% %         ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
+% %         ax.XTickLabel={'0','2','4','6','8'};
+% %         ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
+% %         ax.YTickLabel={'-8','-6','-4','-2','0'};
+% %         xlabel('x-coordinates (dva)')
+% %         ylabel('y-coordinates (dva)')
+% %         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+% %         pathname=fullfile('D:\data',date,['saccade_endpoints_dva_',date]);
+% %         if cleanUp==1
+% %             pathname=[pathname,'_cleaned'];
+% %         end
+% %         print(pathname,'-dtiff','-r600');   
+% %         
+% %         figure(figInd4)
+% %         scatter(0,0,'r','o','filled');%fix spot
+% %         %draw dotted lines indicating [0,0]
+% %         plot([0 0],[-250 200],'k:');
+% %         plot([-200 300],[0 0],'k:');
+% %         plot([-200 300],[200 -300],'k:');
+% %         ellipse(50,50,0,0,[0.1 0.1 0.1]);
+% %         ellipse(100,100,0,0,[0.1 0.1 0.1]);
+% %         ellipse(150,150,0,0,[0.1 0.1 0.1]);
+% %         ellipse(200,200,0,0,[0.1 0.1 0.1]);
+% %         text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         axis equal
+% %         xlim([-20 220]);
+% %         ylim([-160 20]);
+% %         title('saccade endpoints');
+% %         for arrayInd=1:length(arrays)
+% %             text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
+% %         end
+% %         xlabel('x-coordinates (pixels)')
+% %         ylabel('y-coordinates (pixels)')
+% %         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+% %         pathname=fullfile('D:\data',date,['saccade_endpoints_pixels_mean_filled_',date]);
+% %         print(pathname,'-dtiff','-r600');
+% % 
+% %         figure(figInd5)
+% %         scatter(0,0,'r','o','filled');%fix spot
+% %         %draw dotted lines indicating [0,0]
+% %         plot([0 0],[-250 200],'k:');
+% %         plot([-200 300],[0 0],'k:');
+% %         plot([-200 300],[200 -300],'k:');
+% %         ellipse(50,50,0,0,[0.1 0.1 0.1]);
+% %         ellipse(100,100,0,0,[0.1 0.1 0.1]);
+% %         ellipse(150,150,0,0,[0.1 0.1 0.1]);
+% %         ellipse(200,200,0,0,[0.1 0.1 0.1]);
+% %         text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         axis equal
+% %         xlim([-20 220]);
+% %         ylim([-160 20]);
+% %         title('saccade endpoints and RF centres');
+% %         for arrayInd=1:length(arrays)
+% %             text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
+% %         end
+% %         xlabel('x-coordinates (pixels)')
+% %         ylabel('y-coordinates (pixels)')
+% %         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+% %         pathname=fullfile('D:\data',date,['saccade_endpoints_RFs_std_',date]);
+% %         print(pathname,'-dtiff','-r600');
+% %         
+% %         figure(figInd6)
+% %         scatter(0,0,'r','o','filled');%fix spot
+% %         %draw dotted lines indicating [0,0]
+% %         plot([0 0],[-250 200],'k:');
+% %         plot([-200 300],[0 0],'k:');
+% % %         plot([-200 300],[200 -300],'k:');
+% % %         ellipse(50,50,0,0,[0.1 0.1 0.1]);
+% % %         ellipse(100,100,0,0,[0.1 0.1 0.1]);
+% % %         ellipse(150,150,0,0,[0.1 0.1 0.1]);
+% % %         ellipse(200,200,0,0,[0.1 0.1 0.1]);
+% %         text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         axis equal
+% %         xlim([-20 220]);
+% %         ylim([-160 20]);
+% %         title('saccade endpoints (filled) and RF centres');
+% %         for arrayInd=1:length(arrays)
+% %             text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
+% %         end
+% %         ax=gca;
+% %         ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
+% %         ax.XTickLabel={'0','2','4','6','8'};
+% %         ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
+% %         ax.YTickLabel={'-8','-6','-4','-2','0'};
+% %         xlabel('x-coordinates (dva)')
+% %         ylabel('y-coordinates (dva)')
+% %         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+% %         pathname=fullfile('D:\data',date,['saccade_endpoints_RFs_',date]);
+% %         print(pathname,'-dtiff','-r600');
+% %         
+% %         figure(figInd8)
+% %         scatter(0,0,'r','o','filled');%fix spot
+% %         %draw dotted lines indicating [0,0]
+% %         plot([0 0],[-250 200],'k:');
+% %         plot([-200 380],[0 0],'k:');
+% % %         plot([-200 300],[200 -300],'k:');
+% % %         ellipse(50,50,0,0,[0.1 0.1 0.1]);
+% % %         ellipse(100,100,0,0,[0.1 0.1 0.1]);
+% % %         ellipse(150,150,0,0,[0.1 0.1 0.1]);
+% % %         ellipse(200,200,0,0,[0.1 0.1 0.1]);
+% %         text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+% %         axis equal
+% %         xlim([-20 360]);
+% %         ylim([-220 20]);
+% %         title('saccade endpoints (filled), second saccade endpoints (X), and RF centres');
+% %         for arrayInd=1:length(arrays)
+% %             text(260,0-6*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
+% %         end
+% %         ax=gca;
+% %         ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8 Par.PixPerDeg*10 Par.PixPerDeg*12];
+% %         ax.XTickLabel={'0','2','4','6','8','10','12'};
+% %         ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
+% %         ax.YTickLabel={'-8','-6','-4','-2','0'};
+% %         xlabel('x-coordinates (dva)')
+% %         ylabel('y-coordinates (dva)')
+% %         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+% %         pathname=fullfile('D:\data',date,['saccade_endpoints_RFs_second_saccade_',date]);
+% %         print(pathname,'-dtiff','-r600');      
         
     end
 end

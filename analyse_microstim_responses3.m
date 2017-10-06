@@ -360,6 +360,46 @@ date='070917_B1';arrayNumber=8;electrodeNumber=48;finalCurrentValsFile=7; %(g)
 % date='070917_B5';arrayNumber=8;electrodeNumber=6;finalCurrentValsFile=7; %(g)
 useFinalCurrentVals=1;
 
+date='270917_B22';arrayNumber=10;electrodeNumber=51;finalCurrentValsFile=7; %(g)
+useFinalCurrentVals=1;
+
+date='041017_B6';arrayNumber=10;electrodeNumber=51;finalCurrentValsFile=7; %(?)
+% date='041017_B7';arrayNumber=13;electrodeNumber=37;finalCurrentValsFile=7; %(g)
+% date='041017_B8';arrayNumber=13;electrodeNumber=50;finalCurrentValsFile=7; %(r)
+date='041017_B9';arrayNumber=13;electrodeNumber=49;finalCurrentValsFile=7; %(g)
+date='041017_B10';arrayNumber=11;electrodeNumber=55;finalCurrentValsFile=7; %(r)
+% date='041017_B13';arrayNumber=14;electrodeNumber=32;finalCurrentValsFile=7; %(r)
+% date='041017_B14';arrayNumber=16;electrodeNumber=15;finalCurrentValsFile=7; %(r)
+% date='041017_B18';arrayNumber=10;electrodeNumber=8;finalCurrentValsFile=7; %(g)
+date='041017_B19';arrayNumber=12;electrodeNumber=39;finalCurrentValsFile=7; %(r)
+useFinalCurrentVals=1;
+
+date='051017_B1';arrayNumber=11;electrodeNumber=24;finalCurrentValsFile=7; %(m)
+% date='051017_B3';arrayNumber=11;electrodeNumber=24;finalCurrentValsFile=7; %(r)
+% date='051017_B4';arrayNumber=15;electrodeNumber=63;finalCurrentValsFile=7; %(g)
+date='051017_B6';arrayNumber=10;electrodeNumber=42;finalCurrentValsFile=7; %(g)
+date='051017_B7';arrayNumber=12;electrodeNumber=10;finalCurrentValsFile=7; %(g)
+date='051017_B9';arrayNumber=12;electrodeNumber=25;finalCurrentValsFile=7; %(m-g)
+date='051017_B10';arrayNumber=12;electrodeNumber=27;finalCurrentValsFile=7; %(m-g)
+date='051017_B15';arrayNumber=12;electrodeNumber=39;finalCurrentValsFile=7; %(r)
+date='051017_B16';arrayNumber=14;electrodeNumber=32;finalCurrentValsFile=7; %(m-g)
+date='051017_B17';arrayNumber=8;electrodeNumber=40;finalCurrentValsFile=7; %(r)
+date='051017_B18';arrayNumber=12;electrodeNumber=20;finalCurrentValsFile=7; %(g)
+date='051017_B19';arrayNumber=12;electrodeNumber=10;finalCurrentValsFile=7; %(g)
+date='051017_B20';arrayNumber=12;electrodeNumber=49;finalCurrentValsFile=7; %(g)
+date='051017_B21';arrayNumber=15;electrodeNumber=62;finalCurrentValsFile=7; %(g)
+date='051017_B22';arrayNumber=8;electrodeNumber=45;finalCurrentValsFile=7; %(r)
+date='051017_B23';arrayNumber=8;electrodeNumber=26;finalCurrentValsFile=7; %(g)
+date='051017_B24';arrayNumber=12;electrodeNumber=26;finalCurrentValsFile=7; %(r-m)
+date='051017_B25';arrayNumber=13;electrodeNumber=38;finalCurrentValsFile=7; %(g)
+date='051017_B26';arrayNumber=13;electrodeNumber=53;finalCurrentValsFile=7; %(g)
+date='051017_B27';arrayNumber=12;electrodeNumber=30;finalCurrentValsFile=7; %(r)
+date='051017_B28';arrayNumber=12;electrodeNumber=29;finalCurrentValsFile=7; %(g)
+% date='051017_B29';arrayNumber=12;electrodeNumber=23;finalCurrentValsFile=7; %(r)
+% date='051017_B30';arrayNumber=12;electrodeNumber=28;finalCurrentValsFile=7; %(r)
+date='051017_B33';arrayNumber=10;electrodeNumber=40;finalCurrentValsFile=7; %(g)
+useFinalCurrentVals=1;
+
 copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
 load([rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'])
 microstimAllHitTrials=intersect(find(allCurrentLevel>0),find(performance==1));

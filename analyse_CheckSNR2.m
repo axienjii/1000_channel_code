@@ -1,54 +1,78 @@
-function analyse_CheckSNR(date)
-%23/5/17
+function analyse_CheckSNR2(date)
+%26/9/17
 %Written by Xing. Extracts MUA data from raw .NS6 file, during presentation
 %of fullscreen flashing checkerboard stimuli to analyse signals for
-%visually evoked responses.
+%visually evoked responses. Calculates SNR, saves to file. Works with data
+%on local disk or on server, depending on the date.
 % date='240717_B2';
 switch(date)
     case '040717_B2'
         whichDir=2;
+        best=0;
     case '050717_B3'
         whichDir=2;
     case '060717_B2'
         whichDir=2;
     case '110717_B3'
         whichDir=2;
+        best=1;
     case '180717_B1'
         whichDir=1;
+        best=1;
     case '200717_B7'
         whichDir=1;
+        best=1;
     case '210717_B4'
         whichDir=1;
+        best=1;
     case '240717_B2'
         whichDir=1;
+        best=1;
     case '250717_B2'
         whichDir=1;
+        best=1;
     case '260717_B3'
         whichDir=1;
+        best=1;
     case '080817_B7'
         whichDir=1;
+        best=1;
     case '090817_B8'
         whichDir=1;
+        best=1;
     case '100817_B2'
         whichDir=1;
+        best=1;
     case '180817_B10'
         whichDir=1;
+        best=1;
     case '230817_B20'
         whichDir=1;
+    case '240817_B39'
+        whichDir=1;
+    case '290817_B48'
+        whichDir=1;
+    case '200917_B2'
+        whichDir=1;
+        best=1;
 end
-if whichDir==2
-    topDir='D:\data\';
-elseif whichDir==2
-    topDir='X:\other\';
+if whichDir==1%local copy available
+    topDir='D:\data';
+elseif whichDir==2%local copy deleted; use server copy
+    if best==1
+        topDir='X:\best';
+    elseif best==0
+        topDir='X:\other';
+    end
 end
 stimDur=400/1000;%in seconds
-allInstanceInd=1:4;
+allInstanceInd=1:8;
 for instanceCount=1:length(allInstanceInd)
     instanceInd=allInstanceInd(instanceCount);
     instanceName=['instance',num2str(instanceInd)];
-    instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+    instanceNEVFileName=fullfile(topDir,date,[instanceName,'.nev']);
     NEV=openNEV(instanceNEVFileName);
-    instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+    instanceNS6FileName=fullfile(topDir,date,[instanceName,'.ns6']);
     NS=openNSx(instanceNS6FileName);
     sampFreq=NS.MetaTags.SamplingFreq;
     codeStimOn=1;%In runstim code, StimB (stimulus bit) is 1.
@@ -120,8 +144,12 @@ for instanceCount=1:length(allInstanceInd)
             channelDataMUA{channelInd}(trialInd,:)=MUA;
         end
     end
-    fileName=fullfile('D:\data',date,['MUA_',instanceName,'.mat']);
+    fileName=fullfile(topDir,date,['MUA_',instanceName,'.mat']);
     save(fileName,'channelDataMUA');
+    if whichDir==1
+        fileName=fullfile('X:\other',date,['MUA_',instanceName,'.mat']);
+        save(fileName,'channelDataMUA');
+    end
     
     %Average across trials and plot activity:
     % load(fileName);
@@ -147,10 +175,12 @@ for instanceCount=1:length(allInstanceInd)
         SNR=Scale/BaseS;
         channelSNR(channelInd)=SNR;
     end
-    fileName=fullfile('D:\data',date,['mean_MUA_',instanceName,'.mat']);
+    fileName=fullfile(topDir,date,['mean_MUA_',instanceName,'.mat']);
     save(fileName,'meanChannelMUA','channelSNR');
-    fileName=fullfile('D:\data',date,['mean_MUA_',instanceName,'.mat']);
-    save(fileName,'meanChannelMUA','channelSNR');
+    if whichDir==1
+        fileName=fullfile('X:\other',date,['mean_MUA_',instanceName,'.mat']);
+        save(fileName,'meanChannelMUA','channelSNR');
+    end
     
     for channelInd=1:NS.MetaTags.ChannelCount
         figInd=ceil(channelInd/36);
@@ -167,8 +197,12 @@ for instanceCount=1:length(allInstanceInd)
     for figInd=1:4
         figure(figInd)
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,[instanceName,'_',num2str(figInd),'_visual_response']);
+        pathname=fullfile(topDir,date,[instanceName,'_',num2str(figInd),'_visual_response']);
         print(pathname,'-dtiff');
+        if whichDir==1
+            pathname=fullfile('X:\other',date,[instanceName,'_',num2str(figInd),'_visual_response']);
+            print(pathname,'-dtiff');
+        end
     end
     close all
 end
