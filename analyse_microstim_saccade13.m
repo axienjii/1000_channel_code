@@ -141,7 +141,7 @@ if processRaw==1
         if ~exist('goodArrays8to16','var')
             load('D:\data\270917_B16\270917_B16_data\currentThresholdChs2.mat')
         end
-        for uniqueElectrode=53%1:size(goodArrays8to16,1)%53
+        for uniqueElectrode=118%1:size(goodArrays8to16,1)%53
             figInd9(uniqueElectrode)=figure;hold on
             array=goodArrays8to16(uniqueElectrode,7);
             arrayColInd=find(arrays==array);
@@ -234,7 +234,7 @@ if processRaw==1
                 posIndYSec=NaN;
                 timePeakVelocityXY=NaN;
                 timePeakVelocityXYSec=NaN;
-                if min(trialDataXSmooth{trialCounter})>5500&&max(trialDataYSmooth{trialCounter})<1500%exclude extreme outliers
+%                 if min(trialDataXSmooth{trialCounter})>5500&&max(trialDataYSmooth{trialCounter})<1500%exclude extreme outliers
 %                     try
                         figInd7=figure;  
                         saccadeTimeAfterPeakVel=50/1000;%time interval following occurrence of peak velocity of eye movement, before saccade end point is calculated
@@ -282,7 +282,7 @@ if processRaw==1
                             close(figInd7);
 %                     catch ME
 %                     end
-                end
+%                 end
                 cleanUp=0;%remove datapoints that are too close to fixation?
                 if posIndX<5&&posIndY<5&&cleanUp==1
                     manualCheck=1;
@@ -303,12 +303,12 @@ if processRaw==1
                 pulseDuration=1000/freqMicrostim;%duration of each pulse in ms
                 numPulsesTrain=50;%number of pulses delivered in a train on every trial
                 if ~isempty(timePeakVelocityXY)
-                    if strcmp(date,'110917_B1')||strcmp(date,'110917_B2')%for bipolar stimulation, dasbit for target occurred at the beginning of stimulation
-                        timePeakVelocityXYs(trialCounter)=(timePeakVelocityXY(1)/sampFreq-preStimDur)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity relative to end of microstimulation delivery, in ms
-                        timePeakVelocityXYSecs(trialCounter)=(timePeakVelocityXYSec/sampFreq-preStimDur)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity for 2nd saccade, relative to end of microstimulation delivery, in ms
-                    else %for monopolar stimulation, dasbit for target occurred at the end of stimulation
+                    if strcmp(date,'110917_B3')%for monopolar stimulation, dasbit for target occurred at the end of stimulation
                         timePeakVelocityXYs(trialCounter)=(timePeakVelocityXY(1)/sampFreq-preStimDur+0.166)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity relative to end of microstimulation delivery, in ms
                         timePeakVelocityXYSecs(trialCounter)=(timePeakVelocityXYSec/sampFreq-preStimDur+0.166)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity for 2nd saccade, relative to end of microstimulation delivery, in ms
+                    else %strcmp(date,'110917_B1')||strcmp(date,'110917_B2')%for bipolar stimulation, dasbit for target occurred at the beginning of stimulation
+                        timePeakVelocityXYs(trialCounter)=(timePeakVelocityXY(1)/sampFreq-preStimDur)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity relative to end of microstimulation delivery, in ms
+                        timePeakVelocityXYSecs(trialCounter)=(timePeakVelocityXYSec/sampFreq-preStimDur)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity for 2nd saccade, relative to end of microstimulation delivery, in ms
                     end
                 else
                     timePeakVelocityXYs(trialCounter)=NaN;

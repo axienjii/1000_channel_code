@@ -100,10 +100,10 @@ if processRaw==1
                 ErrorB=Par.ErrorB;
                 CorrectB=Par.CorrectB;
                 MicroB=Par.MicroB;
-                if find(trialEncodes==2^CorrectB)
-                    perfNEV(trialNo)=1;
-                elseif find(trialEncodes==2^ErrorB)
+                if find(trialEncodes==2^ErrorB)
                     perfNEV(trialNo)=-1;
+                elseif find(trialEncodes==2^CorrectB)
+                    perfNEV(trialNo)=1;
                 end
                 if length(find(trialEncodes==2^MicroB))==2
                     microstimTrialNEV(trialNo)=1;
@@ -121,54 +121,49 @@ if processRaw==1
                 
 %         microstimTrialsInd=find(allCurrentLevel>0);
 %         visualTrialsInd=find(allCurrentLevel==0);
-        visualTrialsInd=find(allCurrentLevel==0);%not entirely correct- includes microstim trials where fix breaks happen before dasbit sent MicroB
-        microstimTrialsInd=find(allCurrentLevel~=0);
+        visualTrialsInd=find(microstimTrialNEV~=1);%not entirely correct- includes microstim trials where fix breaks happen before dasbit sent MicroB
+        microstimTrialsInd=find(microstimTrialNEV==1);
         correctTrialsInd=find(perfNEV==1);
         incorrectTrialsInd=find(perfNEV==-1);
         correctVisualTrialsInd=intersect(visualTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
         incorrectVisualTrialsInd=intersect(visualTrialsInd,incorrectTrialsInd);%trialNo for microstim trials with a correct saccade
         correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
-        meanPerfVisual=length(correctMicrostimTrialsInd)/(length(correctMicrostimTrialsInd)+length(incorrectVisualTrialsInd))
+        meanPerfVisual=length(correctMicrostimTrialsInd)/(length(correctMicrostimTrialsInd)+length(incorrectVisualTrialsInd));
         incorrectMicrostimTrialsInd=intersect(microstimTrialsInd,incorrectTrialsInd);%trialNo for microstim trials with a correct saccade
-        meanPerfMicrostim=length(correctMicrostimTrialsInd)/(length(correctMicrostimTrialsInd)+length(incorrectMicrostimTrialsInd))
+        meanPerfMicrostim=length(correctMicrostimTrialsInd)/(length(correctMicrostimTrialsInd)+length(incorrectMicrostimTrialsInd));
         totalRespTrials=length(correctTrialsInd)+length(incorrectTrialsInd);%number of trials where a response was made
         indRespTrials=sort([correctTrialsInd incorrectTrialsInd]);%indices of trials where response was made
         for trialRespInd=1:totalRespTrials
             trialNo=indRespTrials(trialRespInd);
             corr(trialRespInd)=~isempty(find(correctTrialsInd==trialNo));
             incorr(trialRespInd)=~isempty(find(incorrectTrialsInd==trialNo));
-            if length(microstimTrialNEV)>=trialNo
-                micro(trialRespInd)=microstimTrialNEV(trialNo);
-            end
+            micro(trialRespInd)=microstimTrialNEV(trialNo);            
         end
+        microInd=find(micro==1);
         visualInd=find(micro~=1);
         corrInd=find(corr==1);
-        corrVisualInd=intersect(visualInd,corrInd);
-        microInd=find(micro==1);
         corrMicroInd=intersect(microInd,corrInd);
+        corrVisualInd=intersect(visualInd,corrInd);
         perfMicroBin=[];
         perfVisualBin=[];
         perfMicroTrialNo=[];
         perfVisualTrialNo=[];
-        numTrialsPerBin=20;
-        for trialRespInd=1:totalRespTrials-numTrialsPerBin
-            if length(micro)>=trialRespInd
-                if micro(trialRespInd)==1
-                    firstMicroTrialInBin=find(microInd==trialRespInd);
-                    if firstMicroTrialInBin<=length(microInd)-numTrialsPerBin+1
-                        binMicroTrials=microInd(firstMicroTrialInBin:firstMicroTrialInBin+numTrialsPerBin-1);
-                        corrMicroInBin=intersect(binMicroTrials,corrMicroInd);
-                        perfMicroBin=[perfMicroBin length(corrMicroInBin)/numTrialsPerBin];
-                        perfMicroTrialNo=[perfMicroTrialNo trialRespInd];
-                    end
-                elseif micro(trialRespInd)==0
-                    firstVisualTrialInBin=find(visualInd==trialRespInd);
-                    if firstVisualTrialInBin<=length(visualInd)-numTrialsPerBin+1
-                        binVisualTrials=visualInd(firstVisualTrialInBin:firstVisualTrialInBin+numTrialsPerBin-1);
-                        corrVisualInBin=intersect(binVisualTrials,corrVisualInd);
-                        perfVisualBin=[perfVisualBin length(corrVisualInBin)/numTrialsPerBin];
-                        perfVisualTrialNo=[perfVisualTrialNo trialRespInd];
-                    end
+        for trialRespInd=1:totalRespTrials-10
+            if micro(trialRespInd)==1
+                firstMicroTrialInBin=find(microInd==trialRespInd);
+                if firstMicroTrialInBin<=length(microInd)-9
+                    binMicroTrials=microInd(firstMicroTrialInBin:firstMicroTrialInBin+9);
+                    corrMicroInBin=intersect(binMicroTrials,corrMicroInd);
+                    perfMicroBin=[perfMicroBin length(corrMicroInBin)/10];
+                    perfMicroTrialNo=[perfMicroTrialNo trialRespInd];
+                end
+            elseif micro(trialRespInd)==0
+                firstVisualTrialInBin=find(visualInd==trialRespInd);
+                if firstVisualTrialInBin<=length(visualInd)-9
+                    binVisualTrials=visualInd(firstVisualTrialInBin:firstVisualTrialInBin+9);
+                    corrVisualInBin=intersect(binVisualTrials,corrVisualInd);
+                    perfVisualBin=[perfVisualBin length(corrVisualInBin)/10];
+                    perfVisualTrialNo=[perfVisualTrialNo trialRespInd];
                 end
             end
         end
@@ -181,10 +176,77 @@ if processRaw==1
         plot([0 xLimits(2)],[0.5 0.5],'k:');
         title('performance on visual (blue) and microstim (red) trials');
         xlabel('trial number (across the session)');
-        ylabel('performance'); 
-        pathname=fullfile('D:\data',date,['behavioural_performance_',date,'_',num2str(numTrialsPerBin),'trialsperbin']);
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        print(pathname,'-dtiff');
+        ylabel('performance');
+        
+        figInd2=figure;hold on
+        figInd3=figure;hold on
+        figInd4=figure;hold on
+        figInd5=figure;hold on
+        figInd6=figure;hold on
+        figInd8=figure;hold on
+        figInd10=figure;hold on
+        saccadeEndAllTrials=[]; 
+        electrodeAllTrials=[];
+        timePeakVelocityXYsAllTrials=[];
+        timePeakVelocityXYSecsAllTrials=[];
+        arrayAllTrials=[];
+        for uniqueElectrode=1:size(goodArrays8to16,1)
+            figInd9(uniqueElectrode)=figure;hold on
+            array=goodArrays8to16(uniqueElectrode,7);
+            arrayColInd=find(arrays==array);
+            electrode=goodArrays8to16(uniqueElectrode,8);
+            impedance=goodArrays8to16(uniqueElectrode,6);
+            RFx=goodArrays8to16(uniqueElectrode,1);
+            RFy=goodArrays8to16(uniqueElectrode,2);
+            if RFy<-500
+                RFy=NaN;
+            end
+            
+            electrodeInd=find(cell2mat(allElectrodeNum)==electrode);
+            arrayInd=find(cell2mat(allArrayNum)==array);
+            matchTrials=intersect(electrodeInd,arrayInd);%identify trials where stimulation was delivered on a particular array and electrode
+            matchTrials=intersect(matchTrials,correctMicrostimTrialsInd);%identify subset of trials where performance was correct
+        
+            trialDataXY={};
+            degPerVoltXFinal=0.0024;
+            degPerVoltYFinal=0.0022;
+            flankingSamples=(30000/50)/2;%50-ms period before reward delivery
+            saccadeEndTrials=[];
+            electrodeTrials=[];
+            timePeakVelocityXYs=[];
+            timePeakVelocityXYSecs=[];
+            for trialCounter=1:length(matchTrials)%for each correct microstim trial
+                trialNo=matchTrials(trialCounter);%trial number, out of all trials from that session  
+                %identify time of reward delivery:
+                temp=find(NEV.Data.SerialDigitalIO.UnparsedData(1:encodeInd(trialNo))==2^4);
+                timeTrialStartInd=temp(end);%index in NEV file that appears in trial- though not necessarily the start (I think)
+                timeTrialStart=NEV.Data.SerialDigitalIO.TimeStamp(timeTrialStartInd);%timestamp in NEV file corresponding to something
+                corrBit=7;
+                temp=find(NEV.Data.SerialDigitalIO.UnparsedData(1:encodeInd(trialNo))==2^corrBit);
+                timeRewardInd=temp(end);%index in NEV file corresponding to reward delivery
+                timeReward=NEV.Data.SerialDigitalIO.TimeStamp(timeRewardInd);%timestamp in NEV file corresponding to reward delivery
+                codeMicrostimOn=2;%sent at the end of microstimulation train
+                temp=find(NEV.Data.SerialDigitalIO.UnparsedData(1:timeRewardInd)==2^codeMicrostimOn);%(two encodes before reward encode)
+                timeMicrostimInd=temp(end);%index in NEV file corresponding to end of microstim train
+                timeMicrostim=NEV.Data.SerialDigitalIO.TimeStamp(timeMicrostimInd);%timestamp in NEV file corresponding to reward delivery
+                timeMicrostimToReward=timeMicrostim:timeReward;%timestamps from 150 ms before end of microstimulation to reward delivery (because eyeanalysis_baseline_correct requires at least 150 ms of eye fixation time)
+                trialDataX{trialCounter}=NSch{1}(timeMicrostimToReward);
+                trialDataY{trialCounter}=NSch{2}(timeMicrostimToReward);
+                timeSmooth=timeMicrostim-preStimDur*sampFreq:timeReward;%timestamps from 150 ms before end of microstimulation to reward delivery (because eyeanalysis_baseline_correct requires at least 150 ms of eye fixation time)
+                trialDataXSmooth{trialCounter}=double(NSch{1}(timeSmooth));
+                trialDataYSmooth{trialCounter}=double(NSch{2}(timeSmooth));
+                numDataPointsAfterStim=timeReward-timeMicrostim;
+                eyepx=-0.15*sampFreq:double(numDataPointsAfterStim);
+                eyepx=eyepx/sampFreq;
+                figure(figInd2)
+                subplot(2,1,1)
+                plot(trialDataXSmooth{trialCounter},'Color',cols(arrayColInd,:));hold on
+                subplot(2,1,2)
+                plot(trialDataYSmooth{trialCounter},'Color',cols(arrayColInd,:));hold on
+                baselineX=mean(trialDataXSmooth{trialCounter}(1:5000));
+                baselineY=mean(trialDataYSmooth{trialCounter}(1:5000));
+            end
+        end        
     end
 end
 pause=1;

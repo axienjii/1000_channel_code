@@ -1,4 +1,4 @@
-function analyse_microstim_artefact2(date,allInstanceInd,allGoodChannels)
+function analyse_microstim_artefact4(date,allInstanceInd,allGoodChannels)
 %15/9/17
 %Written by Xing. Plots profile of stimulation artefact across V4 channels,
 %while microstimulation delivered on V1 channels.
@@ -73,12 +73,25 @@ if processRaw==1
             elseif recordedRaw==1
                 for channelInd=1%:length(neuronalChannels)
                     readChannel=['c:',num2str(neuronalChannels(channelInd)),':',num2str(neuronalChannels(channelInd))];
-                    NSchOriginal=openNSx(instanceNS6FileName,readChannel);
+                    NSchOriginal=openNSx(instanceNS6FileName,readChannel);%,'t:01:3000000');
                     NSch{channelInd}=NSchOriginal.Data;
                 end
             end
             save(neuronalDataMat,'NSch');
-        end       
+        end     
+        syncPulseDataMat=['D:\data\',date,'\',instanceName,'_NSchSyncCh_channels.mat'];
+        syncPulseAnalogInputs=[7 8 10]+128;%analog input 7 (Cerestim 14173), array 10; analog input 8 (Cerestim 14174), array 11; analog input 10 (Cerestim 14176), array 13
+        colInd='m c g';
+%         if exist(syncPulseDataMat,'file')
+%             load(syncPulseDataMat,'NSch');
+%         else
+%             for syncChInd=1:length(syncPulseAnalogInputs)
+%                 readChannel=['c:',num2str(syncPulseAnalogInputs(syncChInd)),':',num2str(syncPulseAnalogInputs(syncChInd))];
+%                 NSchOriginal=openNSx(instanceNS6FileName,readChannel);
+%                 NSchSyncCh{syncChInd}=NSchOriginal.Data;
+%             end
+%             save(syncPulseDataMat,'NSch');
+%         end
         
         %identify trials using encodes sent via serial port: 
         trialNo=1;
@@ -91,11 +104,27 @@ if processRaw==1
             else
                 timeInd(trialNo)=NEV.Data.SerialDigitalIO.TimeStamp(tempInd(1));
                 encodeInd(trialNo)=tempInd(1);
+                if trialNo>1
+                    trialEncodes=NEV.Data.SerialDigitalIO.UnparsedData(encodeInd(trialNo-1):encodeInd(trialNo));
+                else
+                    trialEncodes=NEV.Data.SerialDigitalIO.UnparsedData(1:encodeInd(trialNo));
+                end
+                ErrorB=Par.ErrorB;
+                CorrectB=Par.CorrectB;
+                MicroB=Par.MicroB;
+                if find(trialEncodes==2^CorrectB)
+                    perfNEV(trialNo)=1;
+                elseif find(trialEncodes==2^ErrorB)
+                    perfNEV(trialNo)=-1;
+                end
+                if length(find(trialEncodes==2^MicroB))==3
+                    microstimTrialNEV(trialNo)=1;
+                end
                 trialNo=trialNo+1;
             end
         end
                 
-        microstimTrialsInd=find(allCurrentLevel>0);
+        microstimTrialsInd=find(microstimTrialNEV==1);
         correctTrialsInd=find(performance==1);
         correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
         fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
@@ -142,14 +171,18 @@ if processRaw==1
             for trialCounter=1:length(matchTrials)%for each correct microstim trial
                 trialNo=matchTrials(trialCounter);%trial number, out of all trials from that session  
                 corrBit=7;
+                microB=6;
+                targetB=2;
                 temp=find(NEV.Data.SerialDigitalIO.UnparsedData(1:encodeInd(trialNo))==2^corrBit);
                 timeRewardInd=temp(end);%index in NEV file corresponding to reward delivery
                 timeReward=NEV.Data.SerialDigitalIO.TimeStamp(timeRewardInd);%timestamp in NEV file corresponding to reward delivery
-                codeMicrostimOn=2;%sent at the end of microstimulation train, for monopolar, and at start, for bipolar
-                temp=find(NEV.Data.SerialDigitalIO.UnparsedData(1:timeRewardInd)==2^codeMicrostimOn);%(two encodes before reward encode)
+                temp=find(NEV.Data.SerialDigitalIO.UnparsedData(1:encodeInd(trialNo))==2^targetB);
+                timeTargetInd=temp(end);%index in NEV file corresponding to reward delivery
+                timeTarget=NEV.Data.SerialDigitalIO.TimeStamp(timeTargetInd);%timestamp in NEV file corresponding to reward delivery
+                temp=find(NEV.Data.SerialDigitalIO.UnparsedData(1:timeTargetInd)==2^microB);%(two encodes before reward encode)
                 timeMicrostimInd=temp(end);%index in NEV file corresponding to end of microstim train
                 timeMicrostim=NEV.Data.SerialDigitalIO.TimeStamp(timeMicrostimInd);%timestamp in NEV file corresponding to reward delivery
-                preStimDur=100;
+                preStimDur=300;
                 postStimDur=100;
                 stimDur=167;
                 if strcmp(date,'110917_B2')
@@ -157,7 +190,7 @@ if processRaw==1
                 elseif strcmp(date,'110917_B3')
                     timeMicrostimToReward=timeMicrostim-(preStimDur+stimDur)/1000*sampFreq:timeMicrostim+(postStimDur)/1000*sampFreq;%timestamps from 150 ms before end of microstimulation to reward delivery (because eyeanalysis_baseline_correct requires at least 150 ms of eye fixation time)
                 else%for runstim_microstim_saccade_catch10_checks, 100-ms pause follows stimulation, then dasbit sends target bit
-                    timeMicrostimToReward=timeMicrostim-(preStimDur+stimDur)/1000*sampFreq:timeMicrostim+(postStimDur)/1000*sampFreq;%timestamps from 150 ms before end of microstimulation to reward delivery (because eyeanalysis_baseline_correct requires at least 150 ms of eye fixation time)
+                    timeMicrostimToReward=timeMicrostim-(preStimDur)/1000*sampFreq:timeMicrostim+(stimDur+postStimDur)/1000*sampFreq;%timestamps from 150 ms before end of microstimulation to reward delivery (because eyeanalysis_baseline_correct requires at least 150 ms of eye fixation time)
                 end
                 trialData{trialCounter}=NSch{1}(timeMicrostimToReward);
                 figure;
@@ -169,7 +202,12 @@ if processRaw==1
                 plot([preStimDur/1000*sampFreq preStimDur/1000*sampFreq],[yLims(1) yLims(2)],'k:')
                 plot([(preStimDur+166)/1000*sampFreq (preStimDur+166)/1000*sampFreq],[yLims(1) yLims(2)],'k:')
                 title(['V4 channel stimulation artefact'])
+%                 for syncChInd=1:length(syncPulseAnalogInputs)
+%                     syncPulseData1{trialCounter}=NSchSyncCh{syncChInd}(timeMicrostimToReward);
+%                     plot(syncPulseData1{trialCounter},colInd(syncChInd));
+%                 end
             end
+            pauseHere=1;
         end
     end
 end
