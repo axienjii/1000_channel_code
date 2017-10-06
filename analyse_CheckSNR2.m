@@ -55,6 +55,9 @@ switch(date)
     case '200917_B2'
         whichDir=1;
         best=1;
+    case '061017_B6'
+        whichDir=1;
+        best=1;
 end
 if whichDir==1%local copy available
     topDir='D:\data';
@@ -65,8 +68,16 @@ elseif whichDir==2%local copy deleted; use server copy
         topDir='X:\other';
     end
 end
+copyRemotely=1;%make a copy to the remote directory?
+if copyRemotely==1
+    if best==1
+        copyDir='X:\best';
+    elseif best==0
+        copyDir='X:\other';
+    end
+end
 stimDur=400/1000;%in seconds
-allInstanceInd=1:8;
+allInstanceInd=5:8;
 for instanceCount=1:length(allInstanceInd)
     instanceInd=allInstanceInd(instanceCount);
     instanceName=['instance',num2str(instanceInd)];
@@ -83,7 +94,9 @@ for instanceCount=1:length(allInstanceInd)
     preStimDur=300/1000;%length of pre-stimulus-onset period, in s
     postStimDur=300/1000;%length of post-stimulus-offset period, in s
     for trialInd=1:length(timeStimOns)
-        trialData{trialInd}=NS.Data(:,timeStimOns(trialInd)-sampFreq*preStimDur:timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
+        if size(NS.Data,2)>=timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1
+            trialData{trialInd}=NS.Data(:,timeStimOns(trialInd)-sampFreq*preStimDur:timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
+        end
     end
     channelData={};
     for channelInd=1:NS.MetaTags.ChannelCount
@@ -146,8 +159,8 @@ for instanceCount=1:length(allInstanceInd)
     end
     fileName=fullfile(topDir,date,['MUA_',instanceName,'.mat']);
     save(fileName,'channelDataMUA');
-    if whichDir==1
-        fileName=fullfile('X:\other',date,['MUA_',instanceName,'.mat']);
+    if copyRemotely==1
+        fileName=fullfile(copyDir,date,['MUA_',instanceName,'.mat']);
         save(fileName,'channelDataMUA');
     end
     
@@ -177,8 +190,8 @@ for instanceCount=1:length(allInstanceInd)
     end
     fileName=fullfile(topDir,date,['mean_MUA_',instanceName,'.mat']);
     save(fileName,'meanChannelMUA','channelSNR');
-    if whichDir==1
-        fileName=fullfile('X:\other',date,['mean_MUA_',instanceName,'.mat']);
+    if copyRemotely==1
+        fileName=fullfile(copyDir,date,['mean_MUA_',instanceName,'.mat']);
         save(fileName,'meanChannelMUA','channelSNR');
     end
     
@@ -199,8 +212,8 @@ for instanceCount=1:length(allInstanceInd)
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
         pathname=fullfile(topDir,date,[instanceName,'_',num2str(figInd),'_visual_response']);
         print(pathname,'-dtiff');
-        if whichDir==1
-            pathname=fullfile('X:\other',date,[instanceName,'_',num2str(figInd),'_visual_response']);
+        if copyRemotely==1
+            pathname=fullfile(copyDir,date,[instanceName,'_',num2str(figInd),'_visual_response']);
             print(pathname,'-dtiff');
         end
     end

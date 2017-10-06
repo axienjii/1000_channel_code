@@ -14,6 +14,7 @@ date='170717';
 date='200717';
 date='080817';
 date='200917';
+% date='061017';
 colind = hsv(16);
 colindImp = hsv(1000);%colour-code impedances
 
@@ -105,6 +106,18 @@ switch(date)
         load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
         impedanceAllChannelsNew=impedanceAllChannels;
         previousDate='080817';
+        load(['C:\Users\User\Documents\impedance_values\',previousDate,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsPrevious=impedanceAllChannels;
+        %column 1: impedance
+        %column 2: array number
+        %column 3: electrode number (out of 1024)
+        xLabelsConds={[previousDate,' HT'],[date,' HT']};
+        titleText=['red: ',previousDate,'; blue: ',date];
+        
+    case('061017')
+        load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsNew=impedanceAllChannels;
+        previousDate='200917';
         load(['C:\Users\User\Documents\impedance_values\',previousDate,'\impedanceAllChannels.mat'],'impedanceAllChannels');
         impedanceAllChannelsPrevious=impedanceAllChannels;
         %column 1: impedance
@@ -298,7 +311,7 @@ print(pathname,'-dtiff','-r300');
     120.948840957758,-130.685637209769,104.447223178057,4.03893346035232,8.28530816496006,29,10,59;
     126.224705050819,-96.3022802669606,125.985208239135,4.87179895820726,27.5326674055054,33,10,56]
 
-load('Y:\Xing\200917_data\currentThresholdChs.mat');
+load(['Y:\Xing\',date,'_data\currentThresholdChs.mat']);
 for electrodeInd=1:size(goodArrays8to16,1)
     array=goodArrays8to16(electrodeInd,7);
     electrode=goodArrays8to16(electrodeInd,8);
@@ -345,5 +358,5 @@ for ind=1:12
 end
 a=[1 6 10 12 8 4 9];a=sort(a);
 array12selectedChs=array12(a,:);
-save('C:\Users\User\Documents\impedance_values\170717\array12selectedChs.mat','array12selectedChs')
+% save('C:\Users\User\Documents\impedance_values\170717\array12selectedChs.mat','array12selectedChs')
 pauseHere=1;
