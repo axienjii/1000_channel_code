@@ -70,6 +70,26 @@ if analyseConds==1
             setArrays=[13 11 13 10;12 10 15 13];
             setInd=1;
             numTargets=4;
+        case '091017_B13'
+            setElectrodes=[49 8 37 51;29 38 63 40];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[13 10 13 10;12 13 15 10];
+            setInd=2;
+            numTargets=2;
+        case '091017_B15'
+            setElectrodes=[49 8 37 51;29 38 63 40];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[13 10 13 10;12 13 15 10];
+            setInd=2;
+            numTargets=2;
+        case '091017_B16'
+            setElectrodes=[49 8 37 51;29 38 63 40];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[13 10 13 10;12 13 15 10];
+            setInd=2;
+            numTargets=2;
+        case '091017_B17'
+            setElectrodes=[49 8 37 51;29 38 63 40];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[13 10 13 10;12 13 15 10];
+            setInd=2;
+            numTargets=4;
     end
 end
     

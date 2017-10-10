@@ -144,7 +144,7 @@ if processRaw==1
         if ~exist('goodArrays8to16','var')
             load('D:\data\270917_B16\270917_B16_data\currentThresholdChs2.mat')
         end
-        for uniqueElectrode=1:size(goodArrays8to16,1)
+        for uniqueElectrode=87%1:size(goodArrays8to16,1)
             array=goodArrays8to16(uniqueElectrode,7);
             arrayColInd=find(arrays==array);
             electrode=goodArrays8to16(uniqueElectrode,8);
@@ -206,8 +206,8 @@ if processRaw==1
 %                     syncPulseData1{trialCounter}=NSchSyncCh{syncChInd}(timeMicrostimToReward);
 %                     plot(syncPulseData1{trialCounter},colInd(syncChInd));
 %                 end
+                pauseHere=1;
             end
-            pauseHere=1;
         end
     end
 end

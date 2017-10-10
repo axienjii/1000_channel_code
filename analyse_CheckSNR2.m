@@ -58,6 +58,9 @@ switch(date)
     case '061017_B6'
         whichDir=1;
         best=1;
+    case '091017_B2'
+        whichDir=1;
+        best=1;
 end
 if whichDir==1%local copy available
     topDir='D:\data';
@@ -77,7 +80,7 @@ if copyRemotely==1
     end
 end
 stimDur=400/1000;%in seconds
-allInstanceInd=5:8;
+allInstanceInd=1:4;
 for instanceCount=1:length(allInstanceInd)
     instanceInd=allInstanceInd(instanceCount);
     instanceName=['instance',num2str(instanceInd)];

@@ -1291,3 +1291,85 @@ for i=1:length(microBTimestamps)
 end
 (cursor_info.Position(1) - cursor_info2.Position(1))/30000
 %delay: 0.0005 s = 0.5 ms
+
+%Used Matlab code to send pulse on test pair of electrodes, on same CereStim, with wait(50).
+%CereStim 14293, using runstim_microstim_test_waveform3.m code. 10 pulses.
+%anodic first on one electrode, cathodic first on the other.
+%Connected normal MIT cable to Y adaptor on NSS, and connected CerePlex M
+%to Y adapter, sending input to instance 1.
+%Simultaneously recorded sync pulse from CereStim 14293 on analog input
+%12, and copy of trigger pulse on analog input 14.
+date='101017_test_microstim_waveform';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(1,:),'b');
+plot(NSch(3,:),'m');%plot signal on analog input 16, indicates timing of dasbit for trigger
+plot(NSch(2,:),'c');%plot signal on analog input 7, which shows sync pulse from second CereStim
+ylimits=get(gca,'ylim');
+microB=6;
+microBTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^microB);
+for i=1:length(microBTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i))],ylimits,'r:');
+end
+(cursor_info.Position(1) - cursor_info2.Position(1))/30000
+%delay: 0.0005 s = 0.5 ms
+
+%Used Matlab code to send pulse on test pair of electrodes, on same CereStim, with wait(50).
+%CereStim 14293, using runstim_microstim_test_waveform3.m code. 1 pulse.
+%Connected normal MIT cable to Y adaptor on NSS, and connected CerePlex M
+%to Y adapter, sending input to instance 1.
+%Simultaneously recorded sync pulse from CereStim 14293 on analog input
+%12, and copy of trigger pulse on analog input 14.
+date='101017_test_microstim_waveform2';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(1,:),'b');
+plot(NSch(3,:),'m');%plot signal on analog input 16, indicates timing of dasbit for trigger
+plot(NSch(2,:),'c');%plot signal on analog input 7, which shows sync pulse from second CereStim
+ylimits=get(gca,'ylim');
+microB=6;
+microBTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^microB);
+for i=1:length(microBTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i))],ylimits,'r:');
+end
+(cursor_info.Position(1) - cursor_info2.Position(1))/30000
+%delay: 0.0032 s = 3.2 ms?
+
+%Used Matlab code to send pulse on test pair of electrodes, on same CereStim, with wait(200).
+%CereStim 14293, using runstim_microstim_test_waveform3.m code. 1 pulse.
+%Connected normal MIT cable to Y adaptor on NSS, and connected CerePlex M
+%to Y adapter, sending input to instance 1.
+%Simultaneously recorded sync pulse from CereStim 14293 on analog input
+%12, and copy of trigger pulse on analog input 14.
+date='101017_test_microstim_waveform3';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(1,:),'b');
+plot(NSch(3,:),'m');%plot signal on analog input 16, indicates timing of dasbit for trigger
+plot(NSch(2,:),'c');%plot signal on analog input 7, which shows sync pulse from second CereStim
+ylimits=get(gca,'ylim');
+microB=6;
+microBTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^microB);
+for i=1:length(microBTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i))],ylimits,'r:');
+end
+(cursor_info.Position(1) - cursor_info2.Position(1))/30000
+%delay: 0.0033 s = 3.3 ms?
