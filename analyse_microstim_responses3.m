@@ -431,6 +431,107 @@ date='101017_B43';arrayNumber=14;electrodeNumber=55;finalCurrentValsFile=7; %(g)
 date='101017_B44';arrayNumber=14;electrodeNumber=63;finalCurrentValsFile=7; %(g)
 useFinalCurrentVals=1;
 
+date='111017_B2';arrayNumber=16;electrodeNumber=50;finalCurrentValsFile=7; %(g)
+date='111017_B3';arrayNumber=8;electrodeNumber=27;finalCurrentValsFile=7; %(g)
+date='111017_B4';arrayNumber=14;electrodeNumber=63;finalCurrentValsFile=7; %(g)
+date='111017_B5';arrayNumber=12;electrodeNumber=44;finalCurrentValsFile=7; %(g)
+date='111017_B20';arrayNumber=12;electrodeNumber=36;finalCurrentValsFile=7; %(r-m)
+date='111017_B21';arrayNumber=12;electrodeNumber=15;finalCurrentValsFile=7; %(r)
+date='111017_B22';arrayNumber=16;electrodeNumber=15;finalCurrentValsFile=7; %(r-m)
+date='111017_B22';arrayNumber=16;electrodeNumber=64;finalCurrentValsFile=7; %(r-m)
+useFinalCurrentVals=1;
+
+date='121017_B2';arrayNumber=16;electrodeNumber=15;finalCurrentValsFile=7; %(r-m)
+date='121017_B4';arrayNumber=16;electrodeNumber=64;finalCurrentValsFile=7; %(m)
+date='121017_B5';arrayNumber=8;electrodeNumber=44;finalCurrentValsFile=7; %(g)
+date='121017_B6';arrayNumber=8;electrodeNumber=43;finalCurrentValsFile=7; %(g)
+date='121017_B7';arrayNumber=12;electrodeNumber=28;finalCurrentValsFile=7; %(r)
+date='121017_B8';arrayNumber=13;electrodeNumber=33;finalCurrentValsFile=7; %(g)
+date='121017_B9';arrayNumber=8;electrodeNumber=45;finalCurrentValsFile=7; %(r)
+date='121017_B10';arrayNumber=12;electrodeNumber=25;finalCurrentValsFile=7; %(m-g)
+date='121017_B11';arrayNumber=12;electrodeNumber=26;finalCurrentValsFile=7; %(r)
+date='121017_B12';arrayNumber=12;electrodeNumber=27;finalCurrentValsFile=7; %(r)
+date='121017_B13';arrayNumber=12;electrodeNumber=37;finalCurrentValsFile=7; %(m)
+date='121017_B17';arrayNumber=14;electrodeNumber=45;finalCurrentValsFile=7; %(g)
+date='121017_B18';arrayNumber=14;electrodeNumber=32;finalCurrentValsFile=7; %(g)
+date='121017_B19';arrayNumber=16;electrodeNumber=37;finalCurrentValsFile=7; %(m)
+date='121017_B20';arrayNumber=8;electrodeNumber=50;finalCurrentValsFile=7; %(g)
+useFinalCurrentVals=1;
+
+date='131017_B3';arrayNumber=14;electrodeNumber=45;finalCurrentValsFile=7; %(g)
+date='131017_B4';arrayNumber=14;electrodeNumber=32;finalCurrentValsFile=7; %(g)
+date='131017_B5';arrayNumber=8;electrodeNumber=50;finalCurrentValsFile=7; %(g)
+date='131017_B6';arrayNumber=13;electrodeNumber=33;finalCurrentValsFile=7; %(g)
+useFinalCurrentVals=1;
+
+date='171017_B1';arrayNumber=10;electrodeNumber=16;finalCurrentValsFile=7; %(g) very low threshold
+% date='171017_B2';arrayNumber=11;electrodeNumber=18;finalCurrentValsFile=7; %(g) very low threshold
+% date='171017_B3';arrayNumber=11;electrodeNumber=21;finalCurrentValsFile=7; %(g) very low threshold
+% date='171017_B4';arrayNumber=10;electrodeNumber=24;finalCurrentValsFile=7; %(g) very low threshold
+% date='171017_B5';arrayNumber=10;electrodeNumber=37;finalCurrentValsFile=7; %(g) very low threshold
+% date='171017_B6';arrayNumber=10;electrodeNumber=20;finalCurrentValsFile=7; %(g) very low threshold
+% date='171017_B7';arrayNumber=10;electrodeNumber=43;finalCurrentValsFile=7; %(g) very low threshold
+date='171017_B8';arrayNumber=13;electrodeNumber=32;finalCurrentValsFile=7; %(g) very low threshold
+date='171017_B10';arrayNumber=10;electrodeNumber=29;finalCurrentValsFile=7; %(g)
+date='171017_B11';arrayNumber=10;electrodeNumber=57;finalCurrentValsFile=7; %(g) very low threshold
+date='171017_B12';arrayNumber=11;electrodeNumber=21;finalCurrentValsFile=7; %(g) very low threshold
+date='171017_B13';arrayNumber=10;electrodeNumber=46;finalCurrentValsFile=7; %(g) very low threshold
+date='171017_B14';arrayNumber=10;electrodeNumber=47;finalCurrentValsFile=7; %(g) very low threshold
+date='171017_B15';arrayNumber=10;electrodeNumber=48;finalCurrentValsFile=7; %(g) very low threshold
+% date='171017_B17';arrayNumber=11;electrodeNumber=22;finalCurrentValsFile=7; %(g) very low threshold
+date='171017_B18';arrayNumber=11;electrodeNumber=55;finalCurrentValsFile=7; %(g) very low threshold
+date='171017_B19';arrayNumber=10;electrodeNumber=36;finalCurrentValsFile=7; %(g) 
+date='171017_B20';arrayNumber=10;electrodeNumber=37;finalCurrentValsFile=7; %(g) very low threshold
+date='171017_B21';arrayNumber=13;electrodeNumber=26;finalCurrentValsFile=7; %(g) very low threshold
+% date='171017_B22';arrayNumber=13;electrodeNumber=3;finalCurrentValsFile=7; %(g) 
+date='171017_B23';arrayNumber=13;electrodeNumber=23;finalCurrentValsFile=7; %(r) 
+date='171017_B24';arrayNumber=16;electrodeNumber=40;finalCurrentValsFile=7; %(r) 
+date='171017_B25';arrayNumber=9;electrodeNumber=44;finalCurrentValsFile=7; %(m-g) 
+date='171017_B27';arrayNumber=16;electrodeNumber=39;finalCurrentValsFile=7; %(r) 
+date='171017_B29';arrayNumber=10;electrodeNumber=16;finalCurrentValsFile=7; %(m-g) 
+date='171017_B30';arrayNumber=11;electrodeNumber=18;finalCurrentValsFile=7; %(m)  
+date='171017_B31';arrayNumber=11;electrodeNumber=21;finalCurrentValsFile=7; %(g) 
+date='171017_B32';arrayNumber=10;electrodeNumber=24;finalCurrentValsFile=7; %(g) 
+date='171017_B33';arrayNumber=10;electrodeNumber=37;finalCurrentValsFile=7; %(g) 
+date='171017_B34';arrayNumber=10;electrodeNumber=20;finalCurrentValsFile=7; %(g) 
+date='171017_B35';arrayNumber=10;electrodeNumber=43;finalCurrentValsFile=7; %(g) 
+date='171017_B36';arrayNumber=13;electrodeNumber=32;finalCurrentValsFile=7; %(m) 
+date='171017_B37';arrayNumber=10;electrodeNumber=29;finalCurrentValsFile=7; %(g) 
+date='171017_B38';arrayNumber=10;electrodeNumber=57;finalCurrentValsFile=7; %(g) 
+date='171017_B39';arrayNumber=11;electrodeNumber=21;finalCurrentValsFile=7; %(g) 
+date='171017_B40';arrayNumber=10;electrodeNumber=46;finalCurrentValsFile=7; %(g) 
+date='171017_B41';arrayNumber=10;electrodeNumber=47;finalCurrentValsFile=7; %(g) 
+date='171017_B42';arrayNumber=10;electrodeNumber=58;finalCurrentValsFile=7; %(r-m) 
+date='171017_B43';arrayNumber=10;electrodeNumber=59;finalCurrentValsFile=7; %(m) 
+date='171017_B44';arrayNumber=10;electrodeNumber=51;finalCurrentValsFile=7; %(g) 
+date='171017_B45';arrayNumber=11;electrodeNumber=34;finalCurrentValsFile=7; %(g) 
+useFinalCurrentVals=1;
+
+date='181017_B2';arrayNumber=13;electrodeNumber=26;finalCurrentValsFile=7; %(g) too many false alarms
+date='181017_B3';arrayNumber=13;electrodeNumber=53;finalCurrentValsFile=7; %(g) too many false alarms
+date='181017_B4';arrayNumber=13;electrodeNumber=32;finalCurrentValsFile=7; %(g) too many false alarms
+date='181017_B5';arrayNumber=10;electrodeNumber=51;finalCurrentValsFile=7; %(g) too many false alarms
+date='181017_B6';arrayNumber=10;electrodeNumber=20;finalCurrentValsFile=7; %(g) many false alarms
+date='181017_B7';arrayNumber=10;electrodeNumber=37;finalCurrentValsFile=7; %(g) 
+date='181017_B8';arrayNumber=10;electrodeNumber=57;finalCurrentValsFile=7; %(g) 
+date='181017_B9';arrayNumber=10;electrodeNumber=46;finalCurrentValsFile=7; %(g) 
+date='181017_B10';arrayNumber=10;electrodeNumber=51;finalCurrentValsFile=7; %(g) 
+date='181017_B11';arrayNumber=10;electrodeNumber=20;finalCurrentValsFile=7; %(g) 
+date='181017_B12';arrayNumber=10;electrodeNumber=37;finalCurrentValsFile=7; %(g) 
+date='181017_B13';arrayNumber=13;electrodeNumber=32;finalCurrentValsFile=7; %(m-g) 
+date='181017_B14';arrayNumber=13;electrodeNumber=3;finalCurrentValsFile=7; %(g) 
+date='181017_B15';arrayNumber=10;electrodeNumber=46;finalCurrentValsFile=7; %(g) 
+date='181017_B16';arrayNumber=11;electrodeNumber=21;finalCurrentValsFile=7; %(g) 
+date='181017_B22';arrayNumber=15;electrodeNumber=49;finalCurrentValsFile=7; %(g) 
+date='181017_B23';arrayNumber=13;electrodeNumber=22;finalCurrentValsFile=7; %(m-g) 
+date='181017_B24';arrayNumber=13;electrodeNumber=12;finalCurrentValsFile=7; %(g) 
+date='181017_B25';arrayNumber=13;electrodeNumber=13;finalCurrentValsFile=7; %(m-g) 
+date='181017_B29';arrayNumber=10;electrodeNumber=29;finalCurrentValsFile=7; %(g) 
+date='181017_B30';arrayNumber=10;electrodeNumber=24;finalCurrentValsFile=7; %(g) 
+date='181017_B31';arrayNumber=10;electrodeNumber=44;finalCurrentValsFile=7; %(g) 
+date='181017_B32';arrayNumber=10;electrodeNumber=47;finalCurrentValsFile=7; %(g) 
+useFinalCurrentVals=1;
+
 copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
 load([rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'])
 microstimAllHitTrials=intersect(find(allCurrentLevel>0),find(performance==1));
@@ -507,7 +608,7 @@ for Weibull=0:1% set to 1 to get the Weibull fit, 0 for a sigmoid fit
     yLimits=get(gca,'ylim');
     plot([threshold threshold],yLimits,'r:')
     plot([theta theta],yLimits,'k:')
-    text(threshold-20,yLimits(2)-0.05,['threshold = ',num2str(round(threshold)),' uA'],'FontSize',12,'Color','k');
+    text(threshold-10,yLimits(2)-0.05,['threshold = ',num2str(round(threshold)),' uA'],'FontSize',12,'Color','k');
     ylabel('proportion of trials');
     xlabel('current amplitude (uA)');
     if Weibull==1
