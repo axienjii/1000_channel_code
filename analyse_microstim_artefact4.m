@@ -144,7 +144,7 @@ if processRaw==1
         if ~exist('goodArrays8to16','var')
             load('D:\data\270917_B16\270917_B16_data\currentThresholdChs2.mat')
         end
-        for uniqueElectrode=199%1:size(goodArrays8to16,1)
+        for uniqueElectrode=77%1:size(goodArrays8to16,1)
             array=goodArrays8to16(uniqueElectrode,7);
             arrayColInd=find(arrays==array);
             electrode=goodArrays8to16(uniqueElectrode,8);

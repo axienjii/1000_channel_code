@@ -168,6 +168,242 @@ if analyseConds==1
             electrodePairs=[1 2;3 4];
             currentThresholdChs=12;
             visualOnly=0;
+        case '191017_B33'
+            setElectrodes=[30 18 12 29];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[10 11 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=13;
+            visualOnly=0;
+        case '191017_B35'
+            setElectrodes=[42 55 13 45];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[13 11 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=14;
+            visualOnly=0;
+        case '191017_B37'
+            setElectrodes=[42 55 13 45];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[13 11 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=15;
+            visualOnly=0;
+        case '191017_B39'
+            setElectrodes=[3 22 34 42];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[13 11 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=16;
+            visualOnly=0;
+        case '191017_B41'
+            setElectrodes=[45 18 56 29];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[10 11 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=17;
+            visualOnly=0;
+        case '201017_B28'
+            setElectrodes=[26 60 48 35];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=19;
+            visualOnly=0;
+        case '201017_B30'
+            setElectrodes=[27 51 11 43];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=20;
+            visualOnly=0;
+        case '231017_B11'
+            setElectrodes=[25 35 45 37];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 8 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=21;
+            visualOnly=0;
+        case '231017_B39'
+            setElectrodes=[52 52 48 47];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=22;
+            visualOnly=0;
+        case '231017_B43'
+            setElectrodes=[18 47 43 44];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 8 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=24;
+            visualOnly=0;
+        case '231017_B42'
+            setElectrodes=[12 23 45 50];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=22;
+            visualOnly=0;
+        case '231017_B45'
+            setElectrodes=[10 55 19 30];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 8 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=25;
+            visualOnly=0;
+        case '231017_B49'
+            setElectrodes=[35 22 40 41];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=26;
+            visualOnly=0;
+        case '241017_B17'
+            setElectrodes=[46 19 44 18];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 8 16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=28;
+            visualOnly=0;
+        case '241017_B46'
+            setElectrodes=[28 53 62 49];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=29;
+            visualOnly=0;
+        case '241017_B49'
+            setElectrodes=[43 55 55 50];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[13 13 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=30;
+            visualOnly=0;
+        case '241017_B51'
+            setElectrodes=[27 50 15 58];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=31;
+            visualOnly=0;
+        case '241017_B54'
+            setElectrodes=[38 55 44 27];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 15 8 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=32;
+            visualOnly=0;
+        case '241017_B56'
+            setElectrodes=[41 23 38 35];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=33;
+            visualOnly=0;
+        case '241017_B58'
+            setElectrodes=[39 62 40 13];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 15 16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=34;
+            visualOnly=0;
+        case '241017_B59'
+            setElectrodes=[28 53 62 49;27 50 15 58;41 23 38 35];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13;12 13 15 13;12 12 16 12];
+            setElectrodes=[28 53 62 49];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setElectrodes=[27 50 15 58];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setElectrodes=[41 23 38 35];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=34;
+            visualOnly=0;
+        case '241017_B60'
+            setElectrodes=[28 53 62 49];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setElectrodes=[27 50 15 58];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setElectrodes=[41 23 38 35];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=34;
+            visualOnly=0;
+        case '251017_B19'
+            setElectrodes=[28 53 62 49];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setElectrodes=[27 50 15 34];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+%             setElectrodes=[41 23 38 35];%first row: set 1, LRTB; second row: set 2, LRTB
+%             setArrays=[12 12 16 12];
+%             setElectrodes=[38 62 15 49];%first row: set 1, LRTB; second row: set 2, LRTB
+%             setArrays=[16 15 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=35;
+            visualOnly=0;
+        case '251017_B51'
+            setElectrodes=[29 38 63 40];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 10];
+            setElectrodes=[46 46 40 61];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 15 8 12];
+            setElectrodes=[50 55 63 44];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 11 14 12];%replaced second electrode (e27 on a8) with that from set 5
+            setElectrodes=[37 20 32 51];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[10 10 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=36;
+            visualOnly=0;
+        case '251017_B52'
+            setElectrodes=[29 38 63 40];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 10];
+            setElectrodes=[46 46 40 61];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 15 8 12];
+            setElectrodes=[50 55 63 44];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 11 14 12];%replaced second electrode (e27 on a8) with that from set 5
+            setElectrodes=[37 20 32 51];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[10 10 13 10];
+            setElectrodes=[28 53 62 49];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setElectrodes=[27 50 15 34];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setElectrodes=[41 23 38 35];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 16 12];
+            setElectrodes=[38 62 15 49];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 15 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=36;
+            visualOnly=0;
             
             %visual task only:
         case '091017_B7'
@@ -242,6 +478,195 @@ if analyseConds==1
             electrodePairs=[1 2;3 4];
             currentThresholdChs=12;
             visualOnly=1;
+        case '191017_B29'
+            setElectrodes=[30 18 12 29];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[10 11 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=13;
+            visualOnly=1;
+        case '191017_B34'
+            setElectrodes=[42 55 13 45];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[13 11 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=14;
+            visualOnly=1;
+        case '191017_B36'
+            setElectrodes=[42 55 13 45];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[13 11 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=15;
+            visualOnly=1;
+        case '191017_B38'
+            setElectrodes=[3 22 34 42];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[13 11 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=16;
+            visualOnly=1;
+        case '191017_B40'
+            setElectrodes=[45 18 56 29];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[10 11 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=17;
+            visualOnly=1;
+        case '201017_B27'
+            setElectrodes=[26 60 48 35];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=19;
+            visualOnly=1;
+        case '201017_B29'
+            setElectrodes=[27 51 11 43];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=20;
+            visualOnly=1;
+        case '231017_B10'
+            setElectrodes=[25 35 45 37];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 8 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=21;
+            visualOnly=1;
+        case '231017_B38'
+            setElectrodes=[52 52 48 47];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=22;
+            visualOnly=1;
+        case '231017_B40'
+            setElectrodes=[18 47 43 44];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 8 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=23;
+            visualOnly=1;
+        case '231017_B41'
+            setElectrodes=[12 23 45 50];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=24;
+            visualOnly=1;
+        case '231017_B44'
+            setElectrodes=[10 55 19 30];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 8 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=25;
+            visualOnly=1;
+        case '231017_B48'
+            setElectrodes=[35 22 40 41];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=26;
+            visualOnly=1;
+        case '241017_B15'
+            setElectrodes=[46 19 44 18];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 8 16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=28;
+            visualOnly=1;
+        case '241017_B44'
+            setElectrodes=[28 53 62 49];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=29;
+            visualOnly=1;
+        case '241017_B48'
+            setElectrodes=[43 55 55 50];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[13 13 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=30;
+            visualOnly=1;
+        case '241017_B50'
+            setElectrodes=[27 50 15 58];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=31;
+            visualOnly=1;
+        case '241017_B53'
+            setElectrodes=[38 55 44 27];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 15 8 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=32;
+            visualOnly=1;
+        case '241017_B55'
+            setElectrodes=[41 23 38 35];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=33;
+            visualOnly=1;
+        case '241017_B57'
+            setElectrodes=[39 62 40 13];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 15 16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=34;
+            visualOnly=1;
+        case '251017_B15'
+            setElectrodes=[28 53 62 49];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+            setElectrodes=[27 50 15 34];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 13];
+%             setElectrodes=[41 23 38 35];%first row: set 1, LRTB; second row: set 2, LRTB
+%             setArrays=[12 12 16 12];
+%             setElectrodes=[38 62 15 49];%first row: set 1, LRTB; second row: set 2, LRTB
+%             setArrays=[16 15 15 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=35;
+            visualOnly=1;
+        case '251017_B48'
+            setElectrodes=[29 38 63 40];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 15 10];
+            setElectrodes=[46 46 40 61];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 15 8 12];
+            setElectrodes=[50 55 63 44];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 11 14 12];%replaced second electrode (e27 on a8) with that from set 5
+            setElectrodes=[37 20 32 51];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[10 10 13 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;3 4];
+            currentThresholdChs=36;
+            visualOnly=1;
+            
     end
 end
 load([dataDir,'\currentThresholdChs',num2str(currentThresholdChs),'.mat']);
