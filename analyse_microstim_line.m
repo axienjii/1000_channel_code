@@ -3,6 +3,7 @@ function analyse_microstim_line(date,allInstanceInd)
 %Written by Xing, calculates behavioural performance during a
 %microstimulation/visual 4-phosphene ('line') task.
 
+interleaved=0;%set interleaved to 0, if trigger pulse was sent using microB. set interleaved to 1, if stimulation was sent by calling stimulator.play function
 localDisk=1;
 if localDisk==1
     rootdir='D:\data\';
@@ -98,7 +99,650 @@ if analyseConds==1
             numTargets=2;
             electrodePairs=[1 2 3 4 5;1 2 3 4 5];
             currentThresholdChs=53;
-            visualOnly=0;             
+            visualOnly=0;    
+        case '141217_B4'
+            setElectrodes=[2 57 47 61 53;22 27 13 21 61];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 13 13 13;16 16 14 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=54;
+            visualOnly=0;   
+            interleaved=1;   
+        case '141217_B7'
+            setElectrodes=[52 28 34 35 55;45 30 28 23 37];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 13 13 13;8 16 14 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=54;
+            visualOnly=0;    
+            interleaved=1; 
+        case '141217_B9'
+            setElectrodes=[40 7 43 48 55;38 47 39 35 27];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 8 15 15;16 16 14 12 9];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=54;
+            visualOnly=0;     
+            interleaved=1; 
+        case '151217_B5'
+            setElectrodes=[40 50 12 44 26;40 64 22 19 62];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 12 9 9;16 16 16 8 15];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=55;
+            visualOnly=0;   
+            interleaved=1;   
+        case '151217_B7'
+            setElectrodes=[7 64 61 58 2;50 61 21 27 46];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 16 14 12;16 16 16 8 15];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=55;
+            visualOnly=0;    
+            interleaved=1; 
+        case '151217_B9'
+            setElectrodes=[40 21 13 20 61;39 47 16 32 49];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[8 16 14 12 12;12 14 14 14 15];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=55;
+            visualOnly=0;   
+            interleaved=1;  
+        case '151217_B11'
+            setElectrodes=[50 36 28 35 55;63 48 26 40 35];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 12 13 11;15 13 13 10 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=55;
+            visualOnly=0;    
+            interleaved=1; 
+        case '181217_B7'
+            setElectrodes=[40 50 12 44 26;40 64 22 19 62];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 12 9 9;16 16 16 8 15];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=56;
+            visualOnly=0;   
+            interleaved=1;   
+        case '181217_B8'
+            setElectrodes=[7 64 61 58 2;50 61 21 27 46];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 16 14 12;16 16 16 8 15];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=56;
+            visualOnly=0;    
+            interleaved=1; 
+        case '181217_B9'
+            setElectrodes=[40 21 13 20 61;39 47 16 32 49];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[8 16 14 12 12;12 14 14 14 15];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=56;
+            visualOnly=0;   
+            interleaved=1;  
+        case '181217_B10'
+            setElectrodes=[50 36 28 35 55;63 48 26 40 35];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 12 13 11;15 13 13 10 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=56;
+            visualOnly=0;    
+            interleaved=1; 
+        case '181217_B12'
+            setElectrodes=[45 44 50 15 7;44 19 27 32 28];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[8 8 8 15 15;8 8 8 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=56;
+            visualOnly=0;    
+            interleaved=1; 
+        case '191217_B10'
+            setElectrodes=[33 5 23 29 56;37 39 33 64 9];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 12 12 13;16 12 12 9 9];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=57;
+            visualOnly=0;    
+            interleaved=1; 
+        case '191217_B12'
+            setElectrodes=[59 29 24 31 38;15 12 15 29 58];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[14 14 12 13 13;16 16 14 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=57;
+            visualOnly=0;    
+            interleaved=1; 
+        case '191217_B14'
+            setElectrodes=[10 28 47 34 13;56 51 39 43 36];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 13 13 13;13 13 10 10 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=57;
+            visualOnly=0;    
+            interleaved=1; 
+        case '191217_B16'
+            setElectrodes=[27 33 49 51 55;49 31 52 46 51];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 13 13 11;15 13 13 10 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=57;
+            visualOnly=0;    
+            interleaved=1; 
+        case '191217_B18'
+            setElectrodes=[46 32 15 22 3;32 53 47 58 59];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[10 10 10 10 11;13 13 10 10 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=57;
+            visualOnly=0;    
+            interleaved=1; 
+        case '201217_B4'
+            setElectrodes=[40 44 12 28 31;63 61 47 58 43];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14 14 14 14;16 16 14 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '201217_B6'
+            setElectrodes=[39 45 47 54 32;15 53 12 29 59];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14 14 14 14;16 14 14 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '201217_B8'
+            setElectrodes=[17 58 13 20 30;22 63 13 21 44];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[9 14 14 14 14;16 14 14 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '201217_B10'
+            setElectrodes=[39 63 30 40 63;50 27 32 29 33];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 16 15 15;8 8 14 12 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '201217_B12'
+            setElectrodes=[21 29 48 22 38;20 63 22 20 52];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 13 13 13;16 14 12 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B10'
+            setElectrodes=[40 31;63 43];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14;16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B13'
+            setElectrodes=[40 44 12 28 31;63 61 47 58 43];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14 14 14 14;16 16 14 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1;
+        case '211217_B6'
+            setElectrodes=[39 32;15 59];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14;16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B8'
+            setElectrodes=[39 45 47 54 32;15 53 12 29 59];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14 14 14 14;16 14 14 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B14'
+            setElectrodes=[17 30;22 44];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[9 14;16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B16'
+            setElectrodes=[17 58 13 20 30;22 63 13 21 44];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[9 14 14 14 14;16 14 14 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B18'
+            setElectrodes=[39 63;50 33];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 15;8 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B20'
+            setElectrodes=[39 63 30 40 63;50 27 32 29 33];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 16 15 15;8 8 14 12 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B22'
+            setElectrodes=[21 38;20 52];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13;16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B24'
+            setElectrodes=[21 29 48 22 38;20 63 22 20 52];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 13 13 13;16 14 12 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B25'
+            setElectrodes=[21 29 48 22 38;20 63 22 20 52];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 13 13 13;16 14 12 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B26'
+            setElectrodes=[39 63 30 40 63;50 27 32 29 33];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 16 15 15;8 8 14 12 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B27'
+            setElectrodes=[17 58 13 20 30;22 63 13 21 44];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[9 14 14 14 14;16 14 14 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;    
+            interleaved=1; 
+        case '211217_B28'
+            setElectrodes=[39 45 47 54 32;15 53 12 29 59];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14 14 14 14;16 14 14 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;
+            interleaved=1;
+        case '211217_B29'
+            setElectrodes=[40 44 12 28 31;63 61 47 58 43];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14 14 14 14;16 16 14 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=0;
+            interleaved=1;
+        case '221217_B8'
+            setElectrodes=[{[]} {[]} {[33 5 23 29 56]} {[37 39 33 64 9]}];%221217_B & B
+            setArrays=[{[]} {[]} {[12 12 12 12 13]} {[16 12 12 9 9]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=60;
+            visualOnly=0;
+            interleaved=1;
+        case '221217_B12'
+            setElectrodes=[{[]} {[]} {[59 29 24 31 38]} {[15 12 15 29 58]}];%221217_B & B
+            setArrays=[{[]} {[]} {[14 14 12 13 13]} {[16 16 14 14 12]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=60;
+            visualOnly=0;
+            interleaved=1;
+        case '221217_B16'
+            setElectrodes=[{[]} {[]} {[10 28 47 34 13]} {[56 51 39 43 36]}];%221217_B & B
+            setArrays=[{[]} {[]} {[12 12 13 13 13]} {[13 13 10 10 10]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=60;
+            visualOnly=0;
+            interleaved=1;
+        case '221217_B20'
+            setElectrodes=[{[]} {[]} {[27 33 49 51 55]} {[49 31 52 46 51]}];%221217_B & B
+            setArrays=[{[]} {[]} {[12 13 13 13 11]} {[15 13 13 10 10]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=60;
+            visualOnly=0;
+            interleaved=1;
+        case '221217_B25'
+            setElectrodes=[{[]} {[]} {[46 32 15 22 3]} {[32 53 47 58 59]}];%221217_B & B
+            setArrays=[{[]} {[]} {[10 10 10 10 11]} {[13 13 10 10 10]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=60;
+            visualOnly=0;
+            interleaved=1;
+        case '221217_B9'
+            setElectrodes=[{[]} {[]} {[33 5 23 29 56]} {[37 39 33 64 9]}];%221217_B & B
+            setArrays=[{[]} {[]} {[12 12 12 12 13]} {[16 12 12 9 9]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=60;
+            visualOnly=0;
+            interleaved=1;
+        case '221217_B13'
+            setElectrodes=[{[]} {[]} {[59 29 24 31 38]} {[15 12 15 29 58]}];%221217_B & B
+            setArrays=[{[]} {[]} {[14 14 12 13 13]} {[16 16 14 14 12]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=60;
+            visualOnly=0;
+            interleaved=1;
+        case '221217_B17'
+            setElectrodes=[{[]} {[]} {[10 28 47 34 13]} {[56 51 39 43 36]}];%221217_B & B
+            setArrays=[{[]} {[]} {[12 12 13 13 13]} {[13 13 10 10 10]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=60;
+            visualOnly=0;
+            interleaved=1;
+        case '221217_B22'
+            setElectrodes=[{[]} {[]} {[27 33 49 51 55]} {[49 31 52 46 51]}];%221217_B & B
+            setArrays=[{[]} {[]} {[12 13 13 13 11]} {[15 13 13 10 10]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=60;
+            visualOnly=0;
+            interleaved=1;
+        case '221217_B26'
+            setElectrodes=[{[]} {[]} {[46 32 15 22 3]} {[32 53 47 58 59]}];%221217_B & B
+            setArrays=[{[]} {[]} {[10 10 10 10 11]} {[13 13 10 10 10]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=60;
+            visualOnly=0;
+            interleaved=1;
+        case '221217_B27'
+            setElectrodes=[{[]} {[]} {[33 5 23 29 56]} {[37 39 33 64 9]}];%221217_B27 (not interleaved)
+            setArrays=[{[]} {[]} {[12 12 12 12 13]} {[16 12 12 9 9]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=60;
+            visualOnly=0;
+            interleaved=1;
+        case '030118_B6';
+            setElectrodes=[{[]} {[]} {[40 64 22 19 62]} {[40 50 12 44 26]}];%030118_B & B?
+            setArrays=[{[]} {[]} {[16 16 16 8 15]} {[16 16 12 9 9]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=61;
+            visualOnly=0;
+            interleaved=1;
+        case '030118_B11';
+            setElectrodes=[{[]} {[]} {[50 61 21 27 46]} {[7 64 61 58 2]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[16 16 16 8 15]} {[16 16 16 14 12]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=61;
+            visualOnly=0;
+            interleaved=1;
+        case '030118_B15';
+            setElectrodes=[{[]} {[]} {[39 47 16 32 49]} {[40 21 13 20 61]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[12 14 14 14 15]} {[8 16 14 12 12]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=61;
+            visualOnly=0;
+            interleaved=1;
+        case '030118_B20';
+            setElectrodes=[{[]} {[]} {[63 48 26 40 35]} {[50 36 28 35 55]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[15 13 13 10 10]} {[12 12 12 13 11]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=61;
+            visualOnly=0;
+            interleaved=1;
+        case '030118_B24';
+            setElectrodes=[{[]} {[]} {[45 44 50 15 7]} {[44 19 27 32 28]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[8 8 8 15 15]} {[8 8 8 14 12]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=61;
+            visualOnly=0;
+            interleaved=1;
+        case '030118_B9';
+            setElectrodes=[{[]} {[]} {[40 64 22 19 62]} {[40 50 12 44 26]}];%030118_B & B?
+            setArrays=[{[]} {[]} {[16 16 16 8 15]} {[16 16 12 9 9]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=61;
+            visualOnly=0;
+            interleaved=1;
+        case '030118_B13';
+            setElectrodes=[{[]} {[]} {[50 61 21 27 46]} {[7 64 61 58 2]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[16 16 16 8 15]} {[16 16 16 14 12]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=61;
+            visualOnly=0;
+            interleaved=1;
+        case '030118_B17';
+            setElectrodes=[{[]} {[]} {[39 47 16 32 49]} {[40 21 13 20 61]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[12 14 14 14 15]} {[8 16 14 12 12]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=61;
+            visualOnly=0;
+            interleaved=1;
+        case '030118_B22';
+            setElectrodes=[{[]} {[]} {[63 48 26 40 35]} {[50 36 28 35 55]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[15 13 13 10 10]} {[12 12 12 13 11]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=61;
+            visualOnly=0;
+            interleaved=1;
+        case '030118_B26';
+            setElectrodes=[{[]} {[]} {[45 44 50 15 7]} {[44 19 27 32 28]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[8 8 8 15 15]} {[8 8 8 14 12]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=61;
+            visualOnly=0;
+            interleaved=1;
+        case '040118_B5';
+            setElectrodes=[{[]} {[]} {[2 57 47 61 53]} {[22 27 13 21 61]}];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[{[]} {[]} {[12 12 13 13 13]} {[16 16 14 12 12]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=0;
+            interleaved=1;
+        case '040118_B9';
+            setElectrodes=[{[]} {[]} {[52 28 34 35 55]} {[45 30 28 23 37]}];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[{[]} {[]} {[12 12 13 13 13]} {[8 16 14 12 12]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=0;
+            interleaved=1;
+        case '040118_B13';
+            setElectrodes=[{[]} {[]} {[40 7 43 48 55]} {[38 47 39 35 27]}];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[{[]} {[]} {[16 16 8 15 15]} {[16 16 14 12 9]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=0;
+            interleaved=1;
+        case '040118_B17';
+            setElectrodes=[{[]} {[]} {[40 47 56 24 21]} {[22 52 38 29 57]}];%040118_B & B?
+            setArrays=[{[]} {[]} {[10 10 10 10 11]} {[13 13 10 10 10]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=0;
+            interleaved=1;
+        case '040118_B21';
+            setElectrodes=[{[]} {[]} {[43 62 21 20 18]} {[38 55 56 62 34]}];%040118_B & B?
+            setArrays=[{[]} {[]} {[10 10 10 10 11]} {[13 10 10 10 11]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=0;
+            interleaved=1;
+        case '040118_B7';
+            setElectrodes=[{[]} {[]} {[2 57 47 61 53]} {[22 27 13 21 61]}];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[{[]} {[]} {[12 12 13 13 13]} {[16 16 14 12 12]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=0;
+            interleaved=1;
+        case '040118_B11';
+            setElectrodes=[{[]} {[]} {[52 28 34 35 55]} {[45 30 28 23 37]}];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[{[]} {[]} {[12 12 13 13 13]} {[8 16 14 12 12]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=0;
+            interleaved=1;
+        case '040118_B15';
+            setElectrodes=[{[]} {[]} {[40 7 43 48 55]} {[38 47 39 35 27]}];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[{[]} {[]} {[16 16 8 15 15]} {[16 16 14 12 9]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=0;
+            interleaved=1;
+        case '040118_B19';
+            setElectrodes=[{[]} {[]} {[40 47 56 24 21]} {[22 52 38 29 57]}];%040118_B & B?
+            setArrays=[{[]} {[]} {[10 10 10 10 11]} {[13 13 10 10 10]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=0;
+            interleaved=1;
+        case '040118_B23';
+            setElectrodes=[{[]} {[]} {[43 62 21 20 18]} {[38 55 56 62 34]}];%040118_B & B?
+            setArrays=[{[]} {[]} {[10 10 10 10 11]} {[13 10 10 10 11]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=0;
+            interleaved=1;
             
             %visual task only:
         case '051217_B7'
@@ -140,7 +784,561 @@ if analyseConds==1
             numTargets=2;
             electrodePairs=[1 2 3 4 5;1 2 3 4 5];
             currentThresholdChs=53;
-            visualOnly=1;               
+            visualOnly=1; 
+        case '141217_B2'
+            setElectrodes=[2 57 47 61 53;22 27 13 21 61];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 13 13 13;16 16 14 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=54;
+            visualOnly=1;    
+        case '141217_B6'
+            setElectrodes=[52 28 34 35 55;45 30 28 23 37];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 13 13 13;8 16 14 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=54;
+            visualOnly=1;   
+        case '141217_B8'
+            setElectrodes=[40 7 43 48 55;38 47 39 35 27];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 8 15 15;16 16 14 12 9];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=54;
+            visualOnly=1;   
+        case '151217_B4'
+            setElectrodes=[40 50 12 44 26;40 64 22 19 62];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 12 9 9;16 16 16 8 15];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=55;
+            visualOnly=1;   
+        case '151217_B6'
+            setElectrodes=[7 64 61 58 2;50 61 21 27 46];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 16 14 12;16 16 16 8 15];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=55;
+            visualOnly=1;  
+        case '151217_B8'
+            setElectrodes=[40 21 13 20 61;39 47 16 32 49];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[8 16 14 12 12;12 14 14 14 15];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=55;
+            visualOnly=1;  
+        case '151217_B10'
+            setElectrodes=[50 36 28 35 55;63 48 26 40 35];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 12 13 11;15 13 13 10 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=55;
+            visualOnly=1;  
+        case '181217_B3'
+            setElectrodes=[40 50 12 44 26;40 64 22 19 62];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 12 9 9;16 16 16 8 15];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=56;
+            visualOnly=1;   
+            interleaved=1;   
+        case '181217_B11'
+            setElectrodes=[45 44 50 15 7;44 19 27 32 28];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[8 8 8 15 15;8 8 8 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=56;
+            visualOnly=1;    
+            interleaved=1; 
+        case '191217_B4'
+            setElectrodes=[33 5 23 29 56;37 39 33 64 9];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 12 12 13;16 12 12 9 9];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=57;
+            visualOnly=1;    
+            interleaved=1; 
+        case '191217_B11'
+            setElectrodes=[59 29 24 31 38;15 12 15 29 58];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[14 14 12 13 13;16 16 14 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=57;
+            visualOnly=1;    
+            interleaved=1; 
+        case '191217_B13'
+            setElectrodes=[10 28 47 34 13;56 51 39 43 36];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 13 13 13;13 13 10 10 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=57;
+            visualOnly=1;    
+            interleaved=1; 
+        case '191217_B15'
+            setElectrodes=[27 33 49 51 55;49 31 52 46 51];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13 13 13 11;15 13 13 10 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=57;
+            visualOnly=1;    
+            interleaved=1; 
+        case '191217_B17'
+            setElectrodes=[46 32 15 22 3;32 53 47 58 59];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[10 10 10 10 11;13 13 10 10 10];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=57;
+            visualOnly=1;    
+            interleaved=1; 
+        case '201217_B2'
+            setElectrodes=[40 44 12 28 31;63 61 47 58 43];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14 14 14 14;16 16 14 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '201217_B5'
+            setElectrodes=[39 45 47 54 32;15 53 12 29 59];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14 14 14 14;16 14 14 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '201217_B7'
+            setElectrodes=[17 58 13 20 30;22 63 13 21 44];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[9 14 14 14 14;16 14 14 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '201217_B9'
+            setElectrodes=[39 63 30 40 63;50 27 32 29 33];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 16 15 15;8 8 14 12 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '201217_B11'
+            setElectrodes=[21 29 48 22 38;20 63 22 20 52];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 13 13 13;16 14 12 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1;  
+        case '211217_B9'
+            setElectrodes=[40 31;63 43];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14;16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '211217_B12'
+            setElectrodes=[40 44 12 28 31;63 61 47 58 43];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14 14 14 14;16 16 14 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1;
+        case '211217_B3'
+            setElectrodes=[39 32;15 59];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14;16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '211217_B7'
+            setElectrodes=[39 45 47 54 32;15 53 12 29 59];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 14 14 14 14;16 14 14 14 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '211217_B11'
+            setElectrodes=[17 30;22 44];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[9 14;16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '211217_B15'
+            setElectrodes=[17 58 13 20 30;22 63 13 21 44];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[9 14 14 14 14;16 14 14 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '211217_B17'
+            setElectrodes=[39 63;50 33];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 15;8 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '211217_B19'
+            setElectrodes=[39 63 30 40 63;50 27 32 29 33];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[16 16 16 15 15;8 8 14 12 13];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '211217_B21'
+            setElectrodes=[21 38;20 52];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 13;16 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '211217_B23'
+            setElectrodes=[21 29 48 22 38;20 63 22 20 52];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[12 12 13 13 13;16 14 12 12 12];
+            setInd=1;
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=58;
+            visualOnly=1;    
+            interleaved=1; 
+        case '221217_B2'
+            setElectrodes=[{[]} {[]} {[33 5 23 29 56]} {[37 39 33 64 9]}];%221217_B & B
+            setArrays=[{[]} {[]} {[12 12 12 12 13]} {[16 12 12 9 9]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=60;
+            visualOnly=1;
+            interleaved=1;
+        case '221217_B10'
+            setElectrodes=[{[]} {[]} {[59 29 24 31 38]} {[15 12 15 29 58]}];%221217_B & B
+            setArrays=[{[]} {[]} {[14 14 12 13 13]} {[16 16 14 14 12]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=60;
+            visualOnly=1;
+            interleaved=1;
+        case '221217_B14'
+            setElectrodes=[{[]} {[]} {[10 28 47 34 13]} {[56 51 39 43 36]}];%221217_B & B
+            setArrays=[{[]} {[]} {[12 12 13 13 13]} {[13 13 10 10 10]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=60;
+            visualOnly=1;
+            interleaved=1;
+        case '221217_B18'
+            setElectrodes=[{[]} {[]} {[27 33 49 51 55]} {[49 31 52 46 51]}];%221217_B & B
+            setArrays=[{[]} {[]} {[12 13 13 13 11]} {[15 13 13 10 10]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=60;
+            visualOnly=1;
+            interleaved=1;
+        case '221217_B23'
+            setElectrodes=[{[]} {[]} {[46 32 15 22 3]} {[32 53 47 58 59]}];%221217_B & B
+            setArrays=[{[]} {[]} {[10 10 10 10 11]} {[13 13 10 10 10]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1 2;1 2];
+            currentThresholdChs=60;
+            visualOnly=1;
+            interleaved=1;
+        case '221217_B3'
+            setElectrodes=[{[]} {[]} {[33 5 23 29 56]} {[37 39 33 64 9]}];%221217_B & B
+            setArrays=[{[]} {[]} {[12 12 12 12 13]} {[16 12 12 9 9]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=60;
+            visualOnly=1;
+            interleaved=1;
+        case '221217_B11'
+            setElectrodes=[{[]} {[]} {[59 29 24 31 38]} {[15 12 15 29 58]}];%221217_B & B
+            setArrays=[{[]} {[]} {[14 14 12 13 13]} {[16 16 14 14 12]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=60;
+            visualOnly=1;
+            interleaved=1;
+        case '221217_B15'
+            setElectrodes=[{[]} {[]} {[10 28 47 34 13]} {[56 51 39 43 36]}];%221217_B & B
+            setArrays=[{[]} {[]} {[12 12 13 13 13]} {[13 13 10 10 10]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=60;
+            visualOnly=1;
+            interleaved=1;
+        case '221217_B19'
+            setElectrodes=[{[]} {[]} {[27 33 49 51 55]} {[49 31 52 46 51]}];%221217_B & B
+            setArrays=[{[]} {[]} {[12 13 13 13 11]} {[15 13 13 10 10]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=60;
+            visualOnly=1;
+            interleaved=1;
+        case '221217_B24'
+            setElectrodes=[{[]} {[]} {[46 32 15 22 3]} {[32 53 47 58 59]}];%221217_B & B
+            setArrays=[{[]} {[]} {[10 10 10 10 11]} {[13 13 10 10 10]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=60;
+            visualOnly=1;
+            interleaved=1;
+        case '030118_B4';
+            setElectrodes=[{[]} {[]} {[40 64 22 19 62]} {[40 50 12 44 26]}];%030118_B & B?
+            setArrays=[{[]} {[]} {[16 16 16 8 15]} {[16 16 12 9 9]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=61;
+            visualOnly=1;
+            interleaved=1;
+        case '030118_B10';
+            setElectrodes=[{[]} {[]} {[50 61 21 27 46]} {[7 64 61 58 2]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[16 16 16 8 15]} {[16 16 16 14 12]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=61;
+            visualOnly=1;
+            interleaved=1;
+        case '030118_B14';
+            setElectrodes=[{[]} {[]} {[39 47 16 32 49]} {[40 21 13 20 61]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[12 14 14 14 15]} {[8 16 14 12 12]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=61;
+            visualOnly=1;
+            interleaved=1;
+        case '030118_B19';
+            setElectrodes=[{[]} {[]} {[63 48 26 40 35]} {[50 36 28 35 55]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[15 13 13 10 10]} {[12 12 12 13 11]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=61;
+            visualOnly=1;
+            interleaved=1;
+        case '030118_B23';
+            setElectrodes=[{[]} {[]} {[45 44 50 15 7]} {[44 19 27 32 28]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[8 8 8 15 15]} {[8 8 8 14 12]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1 2 3 4 5;1 2 3 4 5];
+            currentThresholdChs=61;
+            visualOnly=1;
+            interleaved=1;
+        case '030118_B8';
+            setElectrodes=[{[]} {[]} {[40 64 22 19 62]} {[40 50 12 44 26]}];%030118_B & B?
+            setArrays=[{[]} {[]} {[16 16 16 8 15]} {[16 16 12 9 9]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=61;
+            visualOnly=1;
+            interleaved=1;
+        case '030118_B12';
+            setElectrodes=[{[]} {[]} {[50 61 21 27 46]} {[7 64 61 58 2]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[16 16 16 8 15]} {[16 16 16 14 12]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=61;
+            visualOnly=1;
+            interleaved=1;
+        case '030118_B16';
+            setElectrodes=[{[]} {[]} {[39 47 16 32 49]} {[40 21 13 20 61]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[12 14 14 14 15]} {[8 16 14 12 12]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=61;
+            visualOnly=1;
+            interleaved=1;
+        case '030118_B21';
+            setElectrodes=[{[]} {[]} {[63 48 26 40 35]} {[50 36 28 35 55]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[15 13 13 10 10]} {[12 12 12 13 11]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=61;
+            visualOnly=1;
+            interleaved=1;
+        case '030118_B25';
+            setElectrodes=[{[]} {[]} {[45 44 50 15 7]} {[44 19 27 32 28]}];%0118_B & B?
+            setArrays=[{[]} {[]} {[8 8 8 15 15]} {[8 8 8 14 12]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=61;
+            visualOnly=1;
+            interleaved=1;
+        case '040118_B4';
+            setElectrodes=[{[]} {[]} {[2 57 47 61 53]} {[22 27 13 21 61]}];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[{[]} {[]} {[12 12 13 13 13]} {[16 16 14 12 12]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=1;
+            interleaved=1;
+        case '040118_B8';
+            setElectrodes=[{[]} {[]} {[52 28 34 35 55]} {[45 30 28 23 37]}];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[{[]} {[]} {[12 12 13 13 13]} {[8 16 14 12 12]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=1;
+            interleaved=1;
+        case '040118_B12';
+            setElectrodes=[{[]} {[]} {[40 7 43 48 55]} {[38 47 39 35 27]}];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[{[]} {[]} {[16 16 8 15 15]} {[16 16 14 12 9]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=1;
+            interleaved=1;
+        case '040118_B16';
+            setElectrodes=[{[]} {[]} {[40 47 56 24 21]} {[22 52 38 29 57]}];%040118_B & B?
+            setArrays=[{[]} {[]} {[10 10 10 10 11]} {[13 13 10 10 10]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=1;
+            interleaved=1;
+        case '040118_B20';
+            setElectrodes=[{[]} {[]} {[43 62 21 20 18]} {[38 55 56 62 34]}];%040118_B & B?
+            setArrays=[{[]} {[]} {[10 10 10 10 11]} {[13 10 10 10 11]}];
+            setElectrodes=[setElectrodes{3};setElectrodes{4}];
+            setArrays=[setArrays{3};setArrays{4}];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=1;
+            interleaved=1;
+        case '040118_B6';
+            setElectrodes=[{[]} {[]} {[2 57 47 61 53]} {[22 27 13 21 61]}];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[{[]} {[]} {[12 12 13 13 13]} {[16 16 14 12 12]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=1;
+            interleaved=1;
+        case '040118_B10';
+            setElectrodes=[{[]} {[]} {[52 28 34 35 55]} {[45 30 28 23 37]}];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[{[]} {[]} {[12 12 13 13 13]} {[8 16 14 12 12]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=1;
+            interleaved=1;
+        case '040118_B14';
+            setElectrodes=[{[]} {[]} {[40 7 43 48 55]} {[38 47 39 35 27]}];%first row: set 1, LRTB; second row: set 2, LRTB
+            setArrays=[{[]} {[]} {[16 16 8 15 15]} {[16 16 14 12 9]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=1;
+            interleaved=1;
+        case '040118_B18';
+            setElectrodes=[{[]} {[]} {[40 47 56 24 21]} {[22 52 38 29 57]}];%040118_B & B?
+            setArrays=[{[]} {[]} {[10 10 10 10 11]} {[13 13 10 10 10]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=1;
+            interleaved=1;
+        case '040118_B22';
+            setElectrodes=[{[]} {[]} {[43 62 21 20 18]} {[38 55 56 62 34]}];%040118_B & B?
+            setArrays=[{[]} {[]} {[10 10 10 10 11]} {[13 10 10 10 11]}];
+            setElectrodes=[setElectrodes{3}(1) setElectrodes{3}(end);setElectrodes{4}(1) setElectrodes{4}(end)];
+            setArrays=[setArrays{3}(1) setArrays{3}(end);setArrays{4}(1) setArrays{4}(end)];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=62;
+            visualOnly=1;
+            interleaved=1;
     end
 end
 load([dataDir,'\currentThresholdChs',num2str(currentThresholdChs),'.mat']);
@@ -207,7 +1405,11 @@ if processRaw==1
                     perfNEV(trialNo)=-1;
                 end
                 if visualOnly==0
-                    if length(find(trialEncodes==2^MicroB))>=1
+                    if interleaved==0%stimulation sent using trigger pulse from dasbit(microB,1)
+                        if length(find(trialEncodes==2^MicroB))>=1
+                            microstimTrialNEV(trialNo)=1;
+                        end
+                    elseif interleaved==1%stimulation sent using sitmulator.play function
                         microstimTrialNEV(trialNo)=1;
                     end
                 elseif visualOnly==1

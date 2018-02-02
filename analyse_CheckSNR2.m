@@ -64,6 +64,9 @@ switch(date)
     case '201017_B32'
         whichDir=1;
         best=1;
+    case '260118_B10'
+        whichDir=2;
+        best=1;
 end
 if whichDir==1%local copy available
     topDir='D:\data';
@@ -100,8 +103,14 @@ for instanceCount=1:length(allInstanceInd)
     preStimDur=300/1000;%length of pre-stimulus-onset period, in s
     postStimDur=300/1000;%length of post-stimulus-offset period, in s
     for trialInd=1:length(timeStimOns)
-        if size(NS.Data,2)>=timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1
-            trialData{trialInd}=NS.Data(:,timeStimOns(trialInd)-sampFreq*preStimDur:timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
+        if strcmp(class(NS.Data),'cell')
+            if size(NS.Data{2},2)>=timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1
+                trialData{trialInd}=NS.Data{2}(:,timeStimOns(trialInd)-sampFreq*preStimDur:timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
+            end
+        elseif strcmp(class(NS.Data),'double')
+            if size(NS.Data,2)>=timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1
+                trialData{trialInd}=NS.Data(:,timeStimOns(trialInd)-sampFreq*preStimDur:timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
+            end
         end
     end
     channelData={};
