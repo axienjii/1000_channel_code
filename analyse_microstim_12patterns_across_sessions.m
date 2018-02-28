@@ -1,11 +1,13 @@
 function analyse_microstim_12patterns_across_sessions(date)
 %22/12/17
 %Written by Xing, calculates behavioural performance during a
-%microstimulation/visual line orientation task, for lines composed of 5 phosphenes.
-%Sets of electrodes have been presented before, and are hence not novel.
-%Calculates mean performance across sets of electrodes, for the first few
-%trials.
-%Only includes recordings where interleaved microstimulation used.
+%microstimulation/visual line orientation task, with 12 possible
+%stimulation conditions.
+%Output is saved in .mat file, 220118_2phosphene_cortical_coords_perf.mat,
+%which is combined with 040118_2phosphene_cortical_coords_perf.mat (from
+%analyse_microstim_2phosphene_RFs_across_sessions)
+%and further processed by the function
+%analyse_2phosphene_correlation_cortical_distance.m. 
 allInstanceInd=1;
 
 saveFullMUA=1;
@@ -812,6 +814,8 @@ for calculateVisual=[0 1]
                             corticalDistance{setNo}(stimPatternInd,targetCondInd)=sqrt((real(w(1))-real(w(2)))^2+(imag(w(1))-imag(w(2)))^2);
                             currentDifference{setNo}(stimPatternInd,targetCondInd)=abs(diff(currentAmp));
                             currentMean{setNo}(stimPatternInd,targetCondInd)=mean(currentAmp(:));
+                            currentMin{setNo}(stimPatternInd,targetCondInd)=min(currentAmp(:));
+                            currentMax{setNo}(stimPatternInd,targetCondInd)=max(currentAmp(:));
                         end
                     end
                 end
@@ -877,7 +881,7 @@ for calculateVisual=[0 1]
                 end
             end
         end
-        save('D:\data\220118_2phosphene_current_perf.mat','currentDifference','currentMean','numTrialsCondMicrostimTarget','meanPerfMicrostimCondTarget');
+        save('D:\data\220118_2phosphene_current_perf.mat','currentDifference','currentMean','currentMin','currentMax','numTrialsCondMicrostimTarget','meanPerfMicrostimCondTarget');
 
         figure;
         meanAllSetsPerfMicro=mean(allSetsPerfMicro,1);

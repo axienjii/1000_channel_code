@@ -10,10 +10,10 @@ if localDisk==1
 elseif localDisk==0
     rootdir='X:\best\';
 end
-matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
-dataDir=['D:\data\',date,'\',date,'_data'];
+matFile=[rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'];
+dataDir=[rootdir,date,'\',date,'_data'];
 if ~exist('dataDir','dir')
-    copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);    
+    copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);    
 end
 load(matFile);
 maxNumTrials=size(TRLMAT,1);
@@ -743,6 +743,182 @@ if analyseConds==1
             currentThresholdChs=62;
             visualOnly=0;
             interleaved=1;
+        case '160218_B4';
+            setElectrodes=[40 64 22 19 62;40 50 12 44 26];%151217_B4 & B5
+            setArrays=[16 16 16 8 15;16 16 12 9 9];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=76;
+            visualOnly=0;
+            interleaved=1;
+        case '160218_B5';
+            setElectrodes=[39 47 16 32 49;40 21 13 20 61];%151217_B8 & B9?
+            setArrays=[12 14 14 14 15;8 16 14 12 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=76;
+            visualOnly=0;
+            interleaved=1;
+        case '190218_B4';
+            setElectrodes=[2 57 47 61 53;22 27 13 21 61];%151217_B8 & B9?
+            setArrays=[12 12 13 13 13;16 16 14 12 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=77;
+            visualOnly=0;
+            interleaved=1;
+        case '190218_B6';
+            setElectrodes=[52 28 34 35 55;45 30 28 23 37];%151217_B8 & B9?
+            setArrays=[12 12 13 13 13;8 16 14 12 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=77;
+            visualOnly=0;
+            interleaved=1;
+        case '190218_B8';
+            setElectrodes=[40 7 43 48 55;38 47 39 35 27];%151217_B8 & B9?
+            setArrays=[16 16 8 15 15;16 16 14 12 9];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=77;
+            visualOnly=0;
+            interleaved=1;
+        case '190218_B10';
+            setElectrodes=[50 61 21 27 46;7 64 61 58 2];%151217_B8 & B9?
+            setArrays=[16 16 16 8 15;16 16 16 14 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=77;
+            visualOnly=0;
+            interleaved=1;
+        case '200218_B5';
+            setElectrodes=[50 36 28 35 55;63 48 26 40 35];%151217_B8 & B9?
+            setArrays=[12 12 12 13 11;15 13 13 10 10];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=78;
+            visualOnly=0;
+            interleaved=1;
+        case '200218_B7';
+            setElectrodes=[45 44 50 15 7;44 19 27 32 28];%151217_B8 & B9?
+            setArrays=[8 8 8 15 15;8 8 8 14 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=78;
+            visualOnly=0;
+            interleaved=1;
+        case '200218_B9';
+            setElectrodes=[33 5 23 29 56;37 39 33 64 9];%151217_B8 & B9?
+            setArrays=[12 12 12 12 13;16 12 12 9 9];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=78;
+            visualOnly=0;
+            interleaved=1;
+        case '200218_B11';
+            setElectrodes=[59 29 24 31 38;15 12 15 29 58];%151217_B8 & B9?
+            setArrays=[14 14 12 13 13;16 16 14 14 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=78;
+            visualOnly=0;
+            interleaved=1;
+        case '210218_B4';
+            setElectrodes=[10 28 47 34 13;56 51 39 43 36];%151217_B8 & B9?
+            setArrays=[12 12 13 13 13;13 13 10 10 10];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=79;
+            visualOnly=0;
+            interleaved=1;
+        case '210218_B6';
+            setElectrodes=[27 33 49 51 55;49 31 52 46 51];%151217_B8 & B9?
+            setArrays=[12 13 13 13 11;15 13 13 10 10];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=79;
+            visualOnly=0;
+            interleaved=1;
+        case '210218_B8';
+            setElectrodes=[46 32 15 22 3;32 53 47 58 59];%151217_B8 & B9?
+            setArrays=[10 10 10 10 11;13 13 10 10 10];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=79;
+            visualOnly=0;
+            interleaved=1;
+        case '210218_B10';
+            setElectrodes=[40 44 12 28 31;63 61 47 58 4];%151217_B8 & B9?
+            setArrays=[12 14 14 14 14;16 16 14 14 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=79;
+            visualOnly=0;
+            interleaved=1;
+        case '220218_B4';
+            setElectrodes=[39 45 47 54 32;15 53 12 29 59];%151217_B8 & B9?
+            setArrays=[12 14 14 14 14;16 14 14 14 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=80;
+            visualOnly=0;
+            interleaved=1;
+        case '220218_B6';
+            setElectrodes=[17 58 13 20 30;22 63 13 21 44];%151217_B8 & B9?
+            setArrays=[9 14 14 14 14;16 14 14 12 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=80;
+            visualOnly=0;
+            interleaved=1;
+        case '220218_B8';
+            setElectrodes=[39 63 30 40 63;50 27 32 29 33];%151217_B8 & B9?
+            setArrays=[16 16 16 15 15;8 8 14 12 13];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=80;
+            visualOnly=0;
+            interleaved=1;
+        case '220218_B10';
+            setElectrodes=[21 29 48 22 38;20 63 22 20 52];%151217_B8 & B9?
+            setArrays=[12 12 13 13 13;16 14 12 12 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=80;
+            visualOnly=0;
+            interleaved=1;
+        case '230218_B5';
+            setElectrodes=[40 47 56 24 21;22 52 38 29 57];%151217_B8 & B9?
+            setArrays=[10 10 10 10 11;13 13 10 10 10];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=82;
+            visualOnly=0;
+            interleaved=1;
+        case '230218_B7';
+            setElectrodes=[43 62 21 20 18;38 55 56 62 34];%151217_B8 & B9?
+            setArrays=[10 10 10 10 11;13 10 10 10 11];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=82;
+            visualOnly=0;
+            interleaved=1;
+        case '260218_B8';
+            setElectrodes=[41 13 22 23 12;35 34 48 47 1];%151217_B8 & B9?
+            setArrays=[12 12 12 12 13;16 12 9 9 9];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=83;
+            visualOnly=0;
+            interleaved=1;
+        case '260218_B10';
+            setElectrodes=[34 42 26 58 60;57 43 40 6 1];%151217_B8 & B9?
+            setArrays=[12 12 12 13 13;16 16 14 12 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=83;
+            visualOnly=0;
+            interleaved=1;
             
             %visual task only:
         case '051217_B7'
@@ -1339,6 +1515,166 @@ if analyseConds==1
             currentThresholdChs=62;
             visualOnly=1;
             interleaved=1;
+        case '190218_B3';
+            setElectrodes=[2 57 47 61 53;22 27 13 21 61];%151217_B8 & B9?
+            setArrays=[12 12 13 13 13;16 16 14 12 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=77;
+            visualOnly=1;
+            interleaved=1;
+        case '190218_B5';
+            setElectrodes=[52 28 34 35 55;45 30 28 23 37];%151217_B8 & B9?
+            setArrays=[12 12 13 13 13;8 16 14 12 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=77;
+            visualOnly=1;
+            interleaved=1;
+        case '190218_B7';
+            setElectrodes=[40 7 43 48 55;38 47 39 35 27];%151217_B8 & B9?
+            setArrays=[16 16 8 15 15;16 16 14 12 9];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=77;
+            visualOnly=1;
+            interleaved=1;
+        case '190218_B9';
+            setElectrodes=[50 61 21 27 46;7 64 61 58 2];%151217_B8 & B9?
+            setArrays=[16 16 16 8 15;16 16 16 14 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=77;
+            visualOnly=1;
+            interleaved=1;
+        case '200218_B4';
+            setElectrodes=[50 36 28 35 55;63 48 26 40 35];%151217_B8 & B9?
+            setArrays=[12 12 12 13 11;15 13 13 10 10];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=78;
+            visualOnly=1;
+            interleaved=1;
+        case '200218_B6';
+            setElectrodes=[45 44 50 15 7;44 19 27 32 28];%151217_B8 & B9?
+            setArrays=[8 8 8 15 15;8 8 8 14 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=78;
+            visualOnly=1;
+            interleaved=1;
+        case '200218_B8';
+            setElectrodes=[33 5 23 29 56;37 39 33 64 9];%151217_B8 & B9?
+            setArrays=[12 12 12 12 13;16 12 12 9 9];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=78;
+            visualOnly=1;
+            interleaved=1;
+        case '200218_B10';
+            setElectrodes=[59 29 24 31 38;15 12 15 29 58];%151217_B8 & B9?
+            setArrays=[14 14 12 13 13;16 16 14 14 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=78;
+            visualOnly=1;
+            interleaved=1;
+        case '210218_B3';
+            setElectrodes=[10 28 47 34 13;56 51 39 43 36];%151217_B8 & B9?
+            setArrays=[12 12 13 13 13;13 13 10 10 10];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=79;
+            visualOnly=1;
+            interleaved=1;
+        case '210218_B5';
+            setElectrodes=[27 33 49 51 55;49 31 52 46 51];%151217_B8 & B9?
+            setArrays=[12 13 13 13 11;15 13 13 10 10];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=79;
+            visualOnly=1;
+            interleaved=1;
+        case '210218_B7';
+            setElectrodes=[46 32 15 22 3;32 53 47 58 59];%151217_B8 & B9?
+            setArrays=[10 10 10 10 11;13 13 10 10 10];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=79;
+            visualOnly=1;
+            interleaved=1;
+        case '210218_B9';
+            setElectrodes=[40 44 12 28 31;63 61 47 58 4];%151217_B8 & B9?
+            setArrays=[12 14 14 14 14;16 16 14 14 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=79;
+            visualOnly=1;
+            interleaved=1;
+        case '220218_B3';
+            setElectrodes=[39 45 47 54 32;15 53 12 29 59];%151217_B8 & B9?
+            setArrays=[12 14 14 14 14;16 14 14 14 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=80;
+            visualOnly=1;
+            interleaved=1;
+        case '220218_B5';
+            setElectrodes=[17 58 13 20 30;22 63 13 21 44];%151217_B8 & B9?
+            setArrays=[9 14 14 14 14;16 14 14 12 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=80;
+            visualOnly=1;
+            interleaved=1;
+        case '220218_B7';
+            setElectrodes=[39 63 30 40 63;50 27 32 29 33];%151217_B8 & B9?
+            setArrays=[16 16 16 15 15;8 8 14 12 13];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=80;
+            visualOnly=1;
+            interleaved=1;
+        case '220218_B9';
+            setElectrodes=[21 29 48 22 38;20 63 22 20 52];%151217_B8 & B9?
+            setArrays=[12 12 13 13 13;16 14 12 12 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=80;
+            visualOnly=1;
+            interleaved=1;
+        case '230218_B4';
+            setElectrodes=[40 47 56 24 21;22 52 38 29 57];%151217_B8 & B9?
+            setArrays=[10 10 10 10 11;13 13 10 10 10];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=82;
+            visualOnly=1;
+            interleaved=1;
+        case '230218_B6';
+            setElectrodes=[43 62 21 20 18;38 55 56 62 34];%151217_B8 & B9?
+            setArrays=[10 10 10 10 11;13 10 10 10 11];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=82;
+            visualOnly=1;
+            interleaved=1;
+        case '260218_B5';
+            setElectrodes=[41 13 22 23 12;35 34 48 47 1];%151217_B8 & B9?
+            setArrays=[12 12 12 12 13;16 12 9 9 9];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=83;
+            visualOnly=1;
+            interleaved=1;
+        case '260218_B9';
+            setElectrodes=[34 42 26 58 60;57 43 40 6 1];%151217_B8 & B9?
+            setArrays=[12 12 12 13 13;16 16 14 12 12];
+            numTargets=2;
+            electrodePairs=[1:size(setElectrodes,2);1:size(setElectrodes,2)];
+            currentThresholdChs=83;
+            visualOnly=1;
+            interleaved=1;
     end
 end
 load([dataDir,'\currentThresholdChs',num2str(currentThresholdChs),'.mat']);
@@ -1348,7 +1684,7 @@ if processRaw==1
     for instanceCount=1%:length(allInstanceInd)
         instanceInd=allInstanceInd(instanceCount);
         instanceName=['instance',num2str(instanceInd)];
-        instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+        instanceNEVFileName=[rootdir,date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);        
         
         %read in eye data:

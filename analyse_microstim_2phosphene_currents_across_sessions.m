@@ -845,8 +845,10 @@ for calculateVisual=[0 1]
                             currentAmp(electrodeSequence)=goodCurrentThresholds(electrodeInd(electrodeSequence));
                         end
                         corticalDistance{setNo}(targetCondInd)=sqrt((real(w(1))-real(w(2)))^2+(imag(w(1))-imag(w(2)))^2);
-                        currentDifference{setNo}(stimPatternInd,targetCondInd)=abs(diff(currentAmp));
-                        currentMean{setNo}(stimPatternInd,targetCondInd)=mean(currentAmp(:));
+                        currentDifference{setNo}(targetCondInd)=abs(diff(currentAmp));
+                        currentMean{setNo}(targetCondInd)=mean(currentAmp(:));
+                        currentMin{setNo}(targetCondInd)=min(currentAmp(:));
+                        currentMax{setNo}(targetCondInd)=max(currentAmp(:));
                     end
                 end
                 initialPerfTrials=10;%first set of trials are the most important
@@ -890,10 +892,10 @@ for calculateVisual=[0 1]
 
         figure;
         hold on
-        for setNo=1:22
+        for setNo=[1:17 19:26 28:46]
             for stimPatternInd=1:2
                 for targetCondInd=1:2
-                    plot(currentDifference{setNo}(stimPatternInd,targetCondInd),meanPerfMicrostimCondTarget{setNo}(stimPatternInd,targetCondInd),'ko');
+                    plot(currentDifference{setNo}(targetCondInd),meanPerfMicrostimCondTarget{setNo}(targetCondInd),'ko');
                 end
             end
         end
@@ -901,16 +903,16 @@ for calculateVisual=[0 1]
         %presented:
         figure;
         hold on
-        for setNo=1:22
+        for setNo=[1:17 19:26 28:46]
             for stimPatternInd=1:2
                 for targetCondInd=1:2
-                    if numTrialsCondMicrostimTarget{setNo}(stimPatternInd,targetCondInd)>=initialPerfTrials
-                        plot(currentDifference{setNo}(stimPatternInd,targetCondInd),meanPerfMicrostimCondTarget{setNo}(stimPatternInd,targetCondInd),'ko');
+                    if numTrialsCondMicrostimTarget{setNo}(targetCondInd)>=initialPerfTrials
+                        plot(currentDifference{setNo}(targetCondInd),meanPerfMicrostimCondTarget{setNo}(targetCondInd),'ko');
                     end
                 end
             end
         end
-        save('D:\data\040118_2phosphene_current_perf.mat','currentDifference','currentMean','numTrialsCondMicrostimTarget','meanPerfMicrostimCondTarget');
+        save('D:\data\040118_2phosphene_current_perf.mat','currentDifference','currentMean','currentMin','currentMax','numTrialsCondMicrostimTarget','meanPerfMicrostimCondTarget');
 
     end
     if calculateVisual==1

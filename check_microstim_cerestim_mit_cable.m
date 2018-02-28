@@ -11597,3 +11597,321 @@ for i=1:length(stimOnset)
     end
 end
 (cursor_info.Position(1) - cursor_info2.Position(1))/30000
+
+%Used runstim_microstim_test_waveform.m to send pulses. 
+%Microstimulation sent on 1 electrode (electrode 1, i.e. bank A), to test whether signal is sent
+%correctly via banks of Cerestim 65494 (previously named 14294).
+%Simultaneously recorded sync pulses from CereStims on
+%analog inputs, and copy of trigger pulse on analog input 14. 
+%Number of pulses was 32, at 300 Hz.
+%Used stimulator.manual to initiate stimulation. 
+date='190218_test_microstim_waveform1';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data{2};
+figure;hold on
+% plot(NSch(14,:),'m');%plot signal on analog input 14, indicates timing of dasbit for trigger
+% plot(NSch(1,:),'y');%plot signal on analog input 1, which shows sync pulse from CereStim 14295 (array 8)
+% plot(NSch(6,:),'y');%plot signal on analog input 1, which shows sync pulse from CereStim 14172 (array 9)
+% plot(NSch(7,:),'c');%plot signal on analog input 7, which shows sync pulse from CereStim 14173 (array 10)
+% plot(NSch(8,:),'r');%plot signal on analog input 9, which shows sync pulse from CereStim 14174 (array 11)
+% plot(NSch(9,:),'r');%plot signal on analog input 9, which shows sync pulse from CereStim 14175 (array 12)
+% plot(NSch(10,:),'g');%plot signal on analog input 10, which shows sync pulse from CereStim 14176 (array 13)
+% plot(NSch(11,:),'r');%plot signal on analog input 11, which shows sync pulse from CereStim 65494 (array 14)
+plot(NSch(12,:),'r');%plot signal on analog input 12, which shows sync pulse from CereStim 14293 (array 15)
+% plot(NSch(13,:),'b');%plot signal on analog input 13, which shows sync pulse from CereStim 14138 (array 16)
+plot(NSch(15,:),'b');
+ylimits=get(gca,'ylim');
+microB=6;
+microBTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^microB);
+for i=1:length(microBTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i))],ylimits,'r:');
+end
+stimParamTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^1);
+for i=1:length(stimParamTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(stimParamTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(stimParamTimestamps(i))],ylimits,'b:');
+end
+stimOnset=diff(NSch(12,:)>1000);
+stimOnset=find(stimOnset==1);
+triggerOnset=diff(NSch(14,:)>1000);
+triggerTimes=find(triggerOnset==1);
+delayDuration=[];
+for i=1:length(stimOnset)
+    plot([stimOnset(i) stimOnset(i)],ylimits,'g:');
+    temp=find(triggerTimes<stimOnset(i));
+    if ~isempty(temp)
+        triggerOnset(i)=triggerTimes(temp(end));
+        plot([triggerOnset(i) triggerOnset(i)],ylimits,'k:');
+        delayDuration(i)=double(stimOnset(i)-triggerOnset(i))/30000;
+    end
+end
+(cursor_info.Position(1) - cursor_info2.Position(1))/30000
+
+%Used runstim_microstim_test_waveform.m to send pulses. 
+%Microstimulation sent on 1 electrode (electrode 23, i.e. 23rd electrode on bank A), to test whether signal is sent
+%correctly via banks of Cerestim 65494 (previously named 14294).
+%Simultaneously recorded sync pulses from CereStims on
+%analog inputs, and copy of trigger pulse on analog input 14. 
+%Number of pulses was 32, at 300 Hz.
+%Used stimulator.manual to initiate stimulation. 
+date='190218_test_microstim_waveform2';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data{2};
+figure;hold on
+% plot(NSch(14,:),'m');%plot signal on analog input 14, indicates timing of dasbit for trigger
+% plot(NSch(1,:),'y');%plot signal on analog input 1, which shows sync pulse from CereStim 14295 (array 8)
+% plot(NSch(6,:),'y');%plot signal on analog input 1, which shows sync pulse from CereStim 14172 (array 9)
+% plot(NSch(7,:),'c');%plot signal on analog input 7, which shows sync pulse from CereStim 14173 (array 10)
+% plot(NSch(8,:),'r');%plot signal on analog input 9, which shows sync pulse from CereStim 14174 (array 11)
+% plot(NSch(9,:),'r');%plot signal on analog input 9, which shows sync pulse from CereStim 14175 (array 12)
+% plot(NSch(10,:),'g');%plot signal on analog input 10, which shows sync pulse from CereStim 14176 (array 13)
+% plot(NSch(11,:),'r');%plot signal on analog input 11, which shows sync pulse from CereStim 65494 (array 14)
+plot(NSch(12,:),'r');%plot signal on analog input 12, which shows sync pulse from CereStim 14293 (array 15)
+% plot(NSch(13,:),'b');%plot signal on analog input 13, which shows sync pulse from CereStim 14138 (array 16)
+plot(NSch(15,:),'b');
+ylimits=get(gca,'ylim');
+microB=6;
+microBTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^microB);
+for i=1:length(microBTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i))],ylimits,'r:');
+end
+stimParamTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^1);
+for i=1:length(stimParamTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(stimParamTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(stimParamTimestamps(i))],ylimits,'b:');
+end
+stimOnset=diff(NSch(12,:)>1000);
+stimOnset=find(stimOnset==1);
+triggerOnset=diff(NSch(14,:)>1000);
+triggerTimes=find(triggerOnset==1);
+delayDuration=[];
+for i=1:length(stimOnset)
+    plot([stimOnset(i) stimOnset(i)],ylimits,'g:');
+    temp=find(triggerTimes<stimOnset(i));
+    if ~isempty(temp)
+        triggerOnset(i)=triggerTimes(temp(end));
+        plot([triggerOnset(i) triggerOnset(i)],ylimits,'k:');
+        delayDuration(i)=double(stimOnset(i)-triggerOnset(i))/30000;
+    end
+end
+(cursor_info.Position(1) - cursor_info2.Position(1))/30000
+
+%Used runstim_microstim_test_waveform.m to send pulses. 
+%Microstimulation sent on 1 electrode (electrode 55, i.e. 23rd electrode on bank B), to test whether signal is sent
+%correctly via banks of Cerestim 65494 (previously named 14294).
+%Simultaneously recorded sync pulses from CereStims on
+%analog inputs, and copy of trigger pulse on analog input 14. 
+%Number of pulses was 32, at 300 Hz.
+%Used stimulator.manual to initiate stimulation. 
+date='190218_test_microstim_waveform3';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data{2};
+figure;hold on
+% plot(NSch(14,:),'m');%plot signal on analog input 14, indicates timing of dasbit for trigger
+% plot(NSch(1,:),'y');%plot signal on analog input 1, which shows sync pulse from CereStim 14295 (array 8)
+% plot(NSch(6,:),'y');%plot signal on analog input 1, which shows sync pulse from CereStim 14172 (array 9)
+% plot(NSch(7,:),'c');%plot signal on analog input 7, which shows sync pulse from CereStim 14173 (array 10)
+% plot(NSch(8,:),'r');%plot signal on analog input 9, which shows sync pulse from CereStim 14174 (array 11)
+% plot(NSch(9,:),'r');%plot signal on analog input 9, which shows sync pulse from CereStim 14175 (array 12)
+% plot(NSch(10,:),'g');%plot signal on analog input 10, which shows sync pulse from CereStim 14176 (array 13)
+% plot(NSch(11,:),'r');%plot signal on analog input 11, which shows sync pulse from CereStim 65494 (array 14)
+plot(NSch(12,:),'r');%plot signal on analog input 12, which shows sync pulse from CereStim 14293 (array 15)
+% plot(NSch(13,:),'b');%plot signal on analog input 13, which shows sync pulse from CereStim 14138 (array 16)
+plot(NSch(15,:),'b');
+ylimits=get(gca,'ylim');
+microB=6;
+microBTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^microB);
+for i=1:length(microBTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i))],ylimits,'r:');
+end
+stimParamTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^1);
+for i=1:length(stimParamTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(stimParamTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(stimParamTimestamps(i))],ylimits,'b:');
+end
+stimOnset=diff(NSch(12,:)>1000);
+stimOnset=find(stimOnset==1);
+triggerOnset=diff(NSch(14,:)>1000);
+triggerTimes=find(triggerOnset==1);
+delayDuration=[];
+for i=1:length(stimOnset)
+    plot([stimOnset(i) stimOnset(i)],ylimits,'g:');
+    temp=find(triggerTimes<stimOnset(i));
+    if ~isempty(temp)
+        triggerOnset(i)=triggerTimes(temp(end));
+        plot([triggerOnset(i) triggerOnset(i)],ylimits,'k:');
+        delayDuration(i)=double(stimOnset(i)-triggerOnset(i))/30000;
+    end
+end
+(cursor_info.Position(1) - cursor_info2.Position(1))/30000
+
+%Used runstim_microstim_test_waveform.m to send pulses. 
+%Microstimulation sent on 1 electrode (electrode 33, i.e. 1st electrode on bank B), to test whether signal is sent
+%correctly via banks of Cerestim 65494 (previously named 14294).
+%Simultaneously recorded sync pulses from CereStims on
+%analog inputs, and copy of trigger pulse on analog input 14. 
+%Number of pulses was 32, at 300 Hz.
+%Used stimulator.manual to initiate stimulation. 
+date='190218_test_microstim_waveform4';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data{2};
+figure;hold on
+% plot(NSch(14,:),'m');%plot signal on analog input 14, indicates timing of dasbit for trigger
+% plot(NSch(1,:),'y');%plot signal on analog input 1, which shows sync pulse from CereStim 14295 (array 8)
+% plot(NSch(6,:),'y');%plot signal on analog input 1, which shows sync pulse from CereStim 14172 (array 9)
+% plot(NSch(7,:),'c');%plot signal on analog input 7, which shows sync pulse from CereStim 14173 (array 10)
+% plot(NSch(8,:),'r');%plot signal on analog input 9, which shows sync pulse from CereStim 14174 (array 11)
+% plot(NSch(9,:),'r');%plot signal on analog input 9, which shows sync pulse from CereStim 14175 (array 12)
+% plot(NSch(10,:),'g');%plot signal on analog input 10, which shows sync pulse from CereStim 14176 (array 13)
+% plot(NSch(11,:),'r');%plot signal on analog input 11, which shows sync pulse from CereStim 65494 (array 14)
+plot(NSch(12,:),'r');%plot signal on analog input 12, which shows sync pulse from CereStim 14293 (array 15)
+% plot(NSch(13,:),'b');%plot signal on analog input 13, which shows sync pulse from CereStim 14138 (array 16)
+plot(NSch(15,:),'b');
+ylimits=get(gca,'ylim');
+microB=6;
+microBTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^microB);
+for i=1:length(microBTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i))],ylimits,'r:');
+end
+stimParamTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^1);
+for i=1:length(stimParamTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(stimParamTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(stimParamTimestamps(i))],ylimits,'b:');
+end
+stimOnset=diff(NSch(12,:)>1000);
+stimOnset=find(stimOnset==1);
+triggerOnset=diff(NSch(14,:)>1000);
+triggerTimes=find(triggerOnset==1);
+delayDuration=[];
+for i=1:length(stimOnset)
+    plot([stimOnset(i) stimOnset(i)],ylimits,'g:');
+    temp=find(triggerTimes<stimOnset(i));
+    if ~isempty(temp)
+        triggerOnset(i)=triggerTimes(temp(end));
+        plot([triggerOnset(i) triggerOnset(i)],ylimits,'k:');
+        delayDuration(i)=double(stimOnset(i)-triggerOnset(i))/30000;
+    end
+end
+(cursor_info.Position(1) - cursor_info2.Position(1))/30000
+
+%Used runstim_microstim_test_waveform.m to send pulses. 
+%Microstimulation sent on 1 electrode (electrode 65, i.e. 1st electrode on bank C), to test whether signal is sent
+%correctly via banks of Cerestim 65494 (previously named 14294).
+%Simultaneously recorded sync pulses from CereStims on
+%analog inputs, and copy of trigger pulse on analog input 14. 
+%Number of pulses was 32, at 300 Hz.
+%Used stimulator.manual to initiate stimulation. 
+date='190218_test_microstim_waveform5';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data{2};
+figure;hold on
+% plot(NSch(14,:),'m');%plot signal on analog input 14, indicates timing of dasbit for trigger
+% plot(NSch(1,:),'y');%plot signal on analog input 1, which shows sync pulse from CereStim 14295 (array 8)
+% plot(NSch(6,:),'y');%plot signal on analog input 1, which shows sync pulse from CereStim 14172 (array 9)
+% plot(NSch(7,:),'c');%plot signal on analog input 7, which shows sync pulse from CereStim 14173 (array 10)
+% plot(NSch(8,:),'r');%plot signal on analog input 9, which shows sync pulse from CereStim 14174 (array 11)
+% plot(NSch(9,:),'r');%plot signal on analog input 9, which shows sync pulse from CereStim 14175 (array 12)
+% plot(NSch(10,:),'g');%plot signal on analog input 10, which shows sync pulse from CereStim 14176 (array 13)
+% plot(NSch(11,:),'r');%plot signal on analog input 11, which shows sync pulse from CereStim 65494 (array 14)
+plot(NSch(12,:),'r');%plot signal on analog input 12, which shows sync pulse from CereStim 14293 (array 15)
+% plot(NSch(13,:),'b');%plot signal on analog input 13, which shows sync pulse from CereStim 14138 (array 16)
+plot(NSch(15,:),'b');
+ylimits=get(gca,'ylim');
+microB=6;
+microBTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^microB);
+for i=1:length(microBTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i))],ylimits,'r:');
+end
+stimParamTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^1);
+for i=1:length(stimParamTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(stimParamTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(stimParamTimestamps(i))],ylimits,'b:');
+end
+stimOnset=diff(NSch(12,:)>1000);
+stimOnset=find(stimOnset==1);
+triggerOnset=diff(NSch(14,:)>1000);
+triggerTimes=find(triggerOnset==1);
+delayDuration=[];
+for i=1:length(stimOnset)
+    plot([stimOnset(i) stimOnset(i)],ylimits,'g:');
+    temp=find(triggerTimes<stimOnset(i));
+    if ~isempty(temp)
+        triggerOnset(i)=triggerTimes(temp(end));
+        plot([triggerOnset(i) triggerOnset(i)],ylimits,'k:');
+        delayDuration(i)=double(stimOnset(i)-triggerOnset(i))/30000;
+    end
+end
+(cursor_info.Position(1) - cursor_info2.Position(1))/30000
+
+%Used runstim_microstim_test_waveform.m to send pulses. 
+%Microstimulation sent on 1 electrode (electrode 87, i.e. 23rd electrode on bank C), to test whether signal is sent
+%correctly via banks of Cerestim 65494 (previously named 14294).
+%Simultaneously recorded sync pulses from CereStims on
+%analog inputs, and copy of trigger pulse on analog input 14. 
+%Number of pulses was 32, at 300 Hz.
+%Used stimulator.manual to initiate stimulation. 
+date='190218_test_microstim_waveform6';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data{2};
+figure;hold on
+% plot(NSch(14,:),'m');%plot signal on analog input 14, indicates timing of dasbit for trigger
+% plot(NSch(1,:),'y');%plot signal on analog input 1, which shows sync pulse from CereStim 14295 (array 8)
+% plot(NSch(6,:),'y');%plot signal on analog input 1, which shows sync pulse from CereStim 14172 (array 9)
+% plot(NSch(7,:),'c');%plot signal on analog input 7, which shows sync pulse from CereStim 14173 (array 10)
+% plot(NSch(8,:),'r');%plot signal on analog input 9, which shows sync pulse from CereStim 14174 (array 11)
+% plot(NSch(9,:),'r');%plot signal on analog input 9, which shows sync pulse from CereStim 14175 (array 12)
+% plot(NSch(10,:),'g');%plot signal on analog input 10, which shows sync pulse from CereStim 14176 (array 13)
+% plot(NSch(11,:),'r');%plot signal on analog input 11, which shows sync pulse from CereStim 65494 (array 14)
+plot(NSch(12,:),'r');%plot signal on analog input 12, which shows sync pulse from CereStim 14293 (array 15)
+% plot(NSch(13,:),'b');%plot signal on analog input 13, which shows sync pulse from CereStim 14138 (array 16)
+plot(NSch(15,:),'b');
+ylimits=get(gca,'ylim');
+microB=6;
+microBTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^microB);
+for i=1:length(microBTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(microBTimestamps(i))],ylimits,'r:');
+end
+stimParamTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^1);
+for i=1:length(stimParamTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(stimParamTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(stimParamTimestamps(i))],ylimits,'b:');
+end
+stimOnset=diff(NSch(12,:)>1000);
+stimOnset=find(stimOnset==1);
+triggerOnset=diff(NSch(14,:)>1000);
+triggerTimes=find(triggerOnset==1);
+delayDuration=[];
+for i=1:length(stimOnset)
+    plot([stimOnset(i) stimOnset(i)],ylimits,'g:');
+    temp=find(triggerTimes<stimOnset(i));
+    if ~isempty(temp)
+        triggerOnset(i)=triggerTimes(temp(end));
+        plot([triggerOnset(i) triggerOnset(i)],ylimits,'k:');
+        delayDuration(i)=double(stimOnset(i)-triggerOnset(i))/30000;
+    end
+end
+(cursor_info.Position(1) - cursor_info2.Position(1))/30000

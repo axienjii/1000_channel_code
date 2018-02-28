@@ -5,9 +5,10 @@ function analyse_microstim_2phosphene_RFs_across_sessions(date)
 %as distance of separation between pair of electrodes on the cortex. 
 %Converts RF locations into cortical coordinates, using function 
 %calculate_cortical_coords_from_RFs.m.
-%Output is saved in .mat files, 220118_2phosphene_cortical_coords_perf.mat
-%and 040118_2phosphene_cortical_coords_perf.mat, which is further processed
-%by the function analyse_2phosphene_correlation_cortical_distance.m.
+%Output is saved in .mat file, 040118_2phosphene_cortical_coords_perf.mat,
+%which is combined with 220118_2phosphene_cortical_coords_perf.mat
+%and further processed by the function
+%analyse_2phosphene_correlation_cortical_distance.m. 
 allInstanceInd=1;
 
 saveFullMUA=1;
