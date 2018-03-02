@@ -165,7 +165,6 @@ for calculateVisual=[0 1]
                     electrodePairs=[1 2 3;1 2 3];
                     currentThresholdChs=45;
                     visualOnly=0;
-            localDisk=1;
                 case 15
                     date='041217_B24';
                     setElectrodes=[40 63 52;52 63 40];%first row: set 1, LRTB; second row: set 2, LRTB
@@ -175,7 +174,6 @@ for calculateVisual=[0 1]
                     electrodePairs=[1 2 3;1 2 3];
                     currentThresholdChs=45;
                     visualOnly=0;
-            localDisk=1;
                 case 16
                     date='041217_B33';
                     setElectrodes=[30 21 10;10 21 30];%first row: set 1, LRTB; second row: set 2, LRTB
@@ -185,7 +183,6 @@ for calculateVisual=[0 1]
                     electrodePairs=[1 2 3;1 2 3];
                     currentThresholdChs=47;
                     visualOnly=0;
-            localDisk=1;
                 case 17
                     date='041217_B35';
                     setElectrodes=[22 54 57;57 54 22];%first row: set 1, LRTB; second row: set 2, LRTB
@@ -195,7 +192,6 @@ for calculateVisual=[0 1]
                     electrodePairs=[1 2 3;1 2 3];
                     currentThresholdChs=47;
                     visualOnly=0;
-            localDisk=1;
             end
         elseif calculateVisual==1  
             localDisk=0;
@@ -327,7 +323,6 @@ for calculateVisual=[0 1]
                     electrodePairs=[1 2 3;1 2 3];
                     currentThresholdChs=45;
                     visualOnly=1;
-            localDisk=1;
                 case 15
                     date='041217_B23';
                     setElectrodes=[40 63 52;52 63 40];%first row: set 1, LRTB; second row: set 2, LRTB
@@ -337,7 +332,6 @@ for calculateVisual=[0 1]
                     electrodePairs=[1 2 3;1 2 3];
                     currentThresholdChs=45;
                     visualOnly=1;
-            localDisk=1;
                 case 16
                     date='041217_B32';
                     setElectrodes=[30 21 10;10 21 30];%first row: set 1, LRTB; second row: set 2, LRTB
@@ -347,7 +341,6 @@ for calculateVisual=[0 1]
                     electrodePairs=[1 2 3;1 2 3];
                     currentThresholdChs=47;
                     visualOnly=1;
-            localDisk=1;
                 case 17
                     date='041217_B34';
                     setElectrodes=[22 54 57;57 54 22];%first row: set 1, LRTB; second row: set 2, LRTB
@@ -357,7 +350,6 @@ for calculateVisual=[0 1]
                     electrodePairs=[1 2 3;1 2 3];
                     currentThresholdChs=47;
                     visualOnly=1;
-            localDisk=1;
             end
         end
         

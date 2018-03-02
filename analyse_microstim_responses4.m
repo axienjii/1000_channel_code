@@ -457,7 +457,7 @@ end
 % date='210218_B2';
 % electrodeNums=[3 27 40 13 33 63];
 % arrayNums=[11 12 12 13 13 16];
-% date='220218_B1';
+date='220218_B1';
 % electrodeNums=[39 45 47 54 32 15 53 12 29 59 17 58 13 20 30 22 63 13 21 44 39 63 30 40 63 50 27 32 29 33 21 29 48 22 38 20 63 22 20 52];
 % arrayNums=[12 14 14 14 14 16 14 14 14 12 9 14 14 14 14 16 14 14 12 12 16 16 16 15 15 8 8 14 12 13 12 12 13 13 13 16 14 12 12 12];
 % date='220218_B2';
@@ -523,25 +523,25 @@ end
 % date='270218_B3';
 % electrodeNums=[39 38 39 45 47];
 % arrayNums=[16 16 16 16 16];
-date='270218_B5';
-electrodeNums=46;
-arrayNums=16;
+% date='270218_B5';
+% electrodeNums=46;
+% arrayNums=16;
 % date='270218_B6';
 % electrodeNums=39;
 % arrayNums=16;
 % date='270218_B7';
 % electrodeNums=[30 40 46 47];
 % arrayNums=[16 16 16 16];
-date='280218_B2';
-electrodeNums=[61 62 53 59 63 57 58 10 22 60 1 52 9 11];
-arrayNums=8*ones(1,length(electrodeNums));
+% date='280218_B2';
+% electrodeNums=[61 62 53 59 63 57 58 10 22 60 1 52 9 11];
+% arrayNums=8*ones(1,length(electrodeNums));
 % date='280218_B3';
 % electrodeNums=[5 38 8 28 13 56 36 45 21 25];
 % arrayNums=9*ones(1,length(electrodeNums));
-% date='280218_B3';
+% date='280218_B4';
 % electrodeNums=[15 50 49 4];
 % arrayNums=[10*ones(1,4)];
-% date='010318_B';
+% date='010318_B1';
 % electrodeNums=[4 64 5 25 1 9 60 17 41 25 8 6 16 61 32 48 64 60 62 8 64 31 7 63 16 15 9 17 56 32 19 27 20 18 57 14 28 46 24 10 54 30 36 60 7 48 49 24 64 6 4 1 41 8 29 28 5 37 7 61 58 40 38 44 63 39 30 15 57 35 43 46 47 50 64 22 28 56 16 23 13 19 24 32 53 59 48 11 4 6 2 60 31 62 55 36 9 3 5 10 25 34];
 % arrayNums=[10*ones(1,9) 11*ones(1,10) 12*ones(1,11) 13*ones(1,13) 14*ones(1,7) 15*ones(1,8) 16*ones(1,44)];
 
@@ -620,7 +620,7 @@ for uniqueElectrode=1:length(electrodeNums)
             pathname=fullfile('D:\data',date,['array',num2str(array),'_electrode',num2str(electrode),'_current_amplitudes_sigmoid']);
         end
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        print(pathname,'-dtiff');
+%         print(pathname,'-dtiff');
         thresholds(uniqueElectrode,Weibull+1)=threshold;
         thresholds(uniqueElectrode,Weibull+2)=electrode;
         thresholds(uniqueElectrode,Weibull+3)=array;

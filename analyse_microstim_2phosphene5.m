@@ -958,3 +958,25 @@ print(pathname,'-dtiff');
 perfMat=['D:\data\performance_',num2str(initialPerfTrials),'trials.mat'];
 save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
 pause=1;
+
+significantByThisTrialMicro=0;
+for trialInd=1:length(meanAllSetsPerfMicroBin)
+    x=sum(meanAllSetsPerfMicroBin(1:trialInd))*size(allSetsPerfMicroBin,1);
+    %         (0.8+0.5+0.6+0.85)*25
+    Y = binopdf(x,size(allSetsPerfMicroBin,1)*trialInd,0.5)
+    if Y<0.05
+        significantByThisTrialMicro(trialInd)=1;
+    end
+end
+significantByThisTrialMicro
+
+significantByThisTrialVisual=0;
+for trialInd=1:length(meanAllSetsPerfVisualBin)
+    x=sum(meanAllSetsPerfVisualBin(1:trialInd))*size(allSetsPerfVisualBin,1);
+    %         (0.8+0.5+0.6+0.85)*25
+    Y = binopdf(x,size(allSetsPerfVisualBin,1)*trialInd,0.5)
+    if Y<0.05
+        significantByThisTrialVisual(trialInd)=1;
+    end
+end
+significantByThisTrialVisual

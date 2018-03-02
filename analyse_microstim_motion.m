@@ -5,16 +5,16 @@ function analyse_microstim_motion(date,allInstanceInd)
 %Sends 3 encodes for microB (two for the 'fake' stimulation triggers, and 1
 %for the real stimulation trigger).
 
-localDisk=1;
+localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
     rootdir='X:\best\';
 end
-matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
-dataDir=['D:\data\',date,'\',date,'_data'];
+matFile=[rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'];
+dataDir=[rootdir,date,'\',date,'_data'];
 if ~exist('dataDir','dir')
-    copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);    
+    copyfile(['Z:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);    
 end
 load(matFile);
 maxNumTrials=size(TRLMAT,1);
@@ -810,7 +810,7 @@ if processRaw==1
     for instanceCount=1%:length(allInstanceInd)
         instanceInd=allInstanceInd(instanceCount);
         instanceName=['instance',num2str(instanceInd)];
-        instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+        instanceNEVFileName=[rootdir,date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);        
         
         %read in eye data:
@@ -1145,7 +1145,7 @@ if processRaw==1
         ylabel('performance'); 
         pathname=fullfile('D:\data',date,['behavioural_performance_RF_locations_',date]);
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        print(pathname,'-dtiff');
+%         print(pathname,'-dtiff');
     end
 end
 pause=1;

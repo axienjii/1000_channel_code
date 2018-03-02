@@ -25,7 +25,7 @@ sampFreq=30000;
 cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
 arrays=8:16;
 
-localDisk=1;
+localDisk=0;
 analyseConds=0;
 for calculateVisual=[0 1]
     for setNo=[1:23]%26
@@ -248,7 +248,7 @@ for calculateVisual=[0 1]
                     visualOnly=0;
             end
         elseif calculateVisual==1
-            localDisk=1;
+            localDisk=0;
             switch(setNo)
                 %visual task only:
                 case 1

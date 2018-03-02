@@ -5,16 +5,16 @@ function analyse_microstim_2phosphene4(date,allInstanceInd)
 %Sends 3 encodes for microB (two for the 'fake' stimulation triggers, and 1
 %for the real stimulation trigger).
 
-localDisk=1;
+localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
     rootdir='X:\best\';
 end
-matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
-dataDir=['D:\data\',date,'\',date,'_data'];
+matFile=[rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'];
+dataDir=[rootdir,date,'\',date,'_data'];
 if ~exist('dataDir','dir')
-    copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);    
+    copyfile(['Z:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);    
 end
 load(matFile);
 maxNumTrials=size(TRLMAT,1);
@@ -811,7 +811,7 @@ if processRaw==1
         perfVisualBin=[];
         perfMicroTrialNo=[];
         perfVisualTrialNo=[];
-        numTrialsPerBin=20;
+        numTrialsPerBin=5;
         for trialRespInd=1:totalRespTrials-numTrialsPerBin
             if length(micro)>=trialRespInd
                 if micro(trialRespInd)==1

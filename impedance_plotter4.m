@@ -9,13 +9,19 @@ function impedance_plotter4
 %Corrected the indexing of RF coordinate data, which was previously incorrect in 
 %impedance_plotter.m
 date='260617';
-date='110717';
-date='170717';
-date='200717';
-date='080817';
-date='200917';
+% date='110717';
+% date='170717';
+% date='200717';
+% date='080817';
+% date='100817';
+% date='180817';
+% date='200917';
 % date='061017';
-date='280218';
+% date='091017';
+% date='131017';
+% date='201017';
+% date='020218';
+% date='280218';
 colind = hsv(16);
 colindImp = hsv(1000);%colour-code impedances
 
@@ -26,7 +32,11 @@ allElectrode=[];
 allImpedance=[];
 for instanceInd=1:8
     instanceName=['instance',num2str(instanceInd)];
-    instanceImpFileName=['C:\Users\User\Documents\impedance_values\',date,'\impedance_',instanceName,'_',date];%impedance values, hand-tightening
+    if strcmp(date,'260617')
+        instanceImpFileName=['C:\Users\User\Documents\impedance_values\',date,'\impedance_',instanceName,'_',date,'_tw'];%impedance values, hand-tightening
+    else
+        instanceImpFileName=['C:\Users\User\Documents\impedance_values\',date,'\impedance_',instanceName,'_',date];%impedance values, hand-tightening
+    end
     fileID = fopen(instanceImpFileName,'r');
     [A,count] = fscanf(fileID,'%c',inf);
     indStart=regexp(A,'elec');
@@ -104,6 +114,30 @@ switch(date)
         xLabelsConds={'200717 HT','080817 HT'};
         titleText='red: 200717; blue: 080817';
         
+    case('100817')
+        load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsNew=impedanceAllChannels;
+        previousDate='080817';
+        load(['C:\Users\User\Documents\impedance_values\',previousDate,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsPrevious=impedanceAllChannels;
+        %column 1: impedance
+        %column 2: array number
+        %column 3: electrode number (out of 1024)
+        xLabelsConds={'080817 HT','100817 HT'};
+        titleText=['red: ',previousDate,'; blue: ',date];
+        
+    case('180817')
+        load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsNew=impedanceAllChannels;
+        previousDate='100817';
+        load(['C:\Users\User\Documents\impedance_values\',previousDate,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsPrevious=impedanceAllChannels;
+        %column 1: impedance
+        %column 2: array number
+        %column 3: electrode number (out of 1024)
+        xLabelsConds={[previousDate,' HT'],[date,' HT']};
+        titleText=['red: ',previousDate,'; blue: ',date];
+        
     case('200917')
         load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
         impedanceAllChannelsNew=impedanceAllChannels;
@@ -120,6 +154,54 @@ switch(date)
         load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
         impedanceAllChannelsNew=impedanceAllChannels;
         previousDate='200917';
+        load(['C:\Users\User\Documents\impedance_values\',previousDate,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsPrevious=impedanceAllChannels;
+        %column 1: impedance
+        %column 2: array number
+        %column 3: electrode number (out of 1024)
+        xLabelsConds={[previousDate,' HT'],[date,' HT']};
+        titleText=['red: ',previousDate,'; blue: ',date];
+        
+    case('091017')
+        load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsNew=impedanceAllChannels;
+        previousDate='061017';
+        load(['C:\Users\User\Documents\impedance_values\',previousDate,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsPrevious=impedanceAllChannels;
+        %column 1: impedance
+        %column 2: array number
+        %column 3: electrode number (out of 1024)
+        xLabelsConds={[previousDate,' HT'],[date,' HT']};
+        titleText=['red: ',previousDate,'; blue: ',date];
+        
+    case('131017')
+        load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsNew=impedanceAllChannels;
+        previousDate='091017';
+        load(['C:\Users\User\Documents\impedance_values\',previousDate,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsPrevious=impedanceAllChannels;
+        %column 1: impedance
+        %column 2: array number
+        %column 3: electrode number (out of 1024)
+        xLabelsConds={[previousDate,' HT'],[date,' HT']};
+        titleText=['red: ',previousDate,'; blue: ',date];
+        
+    case('201017')
+        load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsNew=impedanceAllChannels;
+        previousDate='131017';
+        load(['C:\Users\User\Documents\impedance_values\',previousDate,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsPrevious=impedanceAllChannels;
+        %column 1: impedance
+        %column 2: array number
+        %column 3: electrode number (out of 1024)
+        xLabelsConds={[previousDate,' HT'],[date,' HT']};
+        titleText=['red: ',previousDate,'; blue: ',date];
+        
+    case('020218')
+        load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsNew=impedanceAllChannels;
+        previousDate='201017';
         load(['C:\Users\User\Documents\impedance_values\',previousDate,'\impedanceAllChannels.mat'],'impedanceAllChannels');
         impedanceAllChannelsPrevious=impedanceAllChannels;
         %column 1: impedance
