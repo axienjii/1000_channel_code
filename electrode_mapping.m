@@ -3,7 +3,7 @@ function [channelNum,arrayNum,area]=electrode_mapping(instanceInd,channelInd)
 %Assigns channels to correct array and location on array, depending on
 %the instance number and their order in the raw data file.
 if instanceInd<5
-    channelOrder=[33:128 1:32];%BCDA
+    channelOrder=[97:128 1:96];%DABC
     if channelInd<=32||channelInd>96
         arrayOrder=1;
     else

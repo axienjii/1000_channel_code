@@ -1745,7 +1745,7 @@ if processRaw==1
                         if length(find(trialEncodes==2^MicroB))>=1
                             microstimTrialNEV(trialNo)=1;
                         end
-                    elseif interleaved==1%stimulation sent using sitmulator.play function
+                    elseif interleaved==1%stimulation sent using stimulator.play function
                         microstimTrialNEV(trialNo)=1;
                     end
                 elseif visualOnly==1

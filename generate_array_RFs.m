@@ -53,9 +53,9 @@ save('D:\data\best_260617-280617\RFs_instance4_array8.mat','channelRFs','meanCha
 
 %Arrays 9 to 16 (instances 5 to 8):
 load('D:\data\best_260617-280617\RFs_instance5.mat')
-channelRFs=channelRFs([65:97 33:64],:);
-meanChannelSNR=meanChannelSNR([65:97 33:64],:);
-RFs=RFs([65:97 33:64]);
+channelRFs=channelRFs([65:96 33:64],:);
+meanChannelSNR=meanChannelSNR([65:96 33:64],:);
+RFs=RFs([65:96 33:64]);
 save('D:\data\best_260617-280617\RFs_instance5_array9.mat','channelRFs','meanChannelSNR','RFs')
 
 load('D:\data\best_260617-280617\RFs_instance5.mat')
@@ -65,9 +65,9 @@ RFs=RFs([1:32 97:128]);
 save('D:\data\best_260617-280617\RFs_instance5_array10.mat','channelRFs','meanChannelSNR','RFs')
 
 load('D:\data\best_260617-280617\RFs_instance6.mat')
-channelRFs=channelRFs([65:97 33:64],:);
-meanChannelSNR=meanChannelSNR([65:97 33:64],:);
-RFs=RFs([65:97 33:64]);
+channelRFs=channelRFs([65:96 33:64],:);
+meanChannelSNR=meanChannelSNR([65:96 33:64],:);
+RFs=RFs([65:96 33:64]);
 save('D:\data\best_260617-280617\RFs_instance6_array11.mat','channelRFs','meanChannelSNR','RFs')
 
 load('D:\data\best_260617-280617\RFs_instance6.mat')
@@ -77,9 +77,9 @@ RFs=RFs([1:32 97:128]);
 save('D:\data\best_260617-280617\RFs_instance6_array12.mat','channelRFs','meanChannelSNR','RFs')
 
 load('D:\data\best_260617-280617\RFs_instance7.mat')
-channelRFs=channelRFs([65:97 33:64],:);
-meanChannelSNR=meanChannelSNR([65:97 33:64],:);
-RFs=RFs([65:97 33:64]);
+channelRFs=channelRFs([65:96 33:64],:);
+meanChannelSNR=meanChannelSNR([65:96 33:64],:);
+RFs=RFs([65:96 33:64]);
 save('D:\data\best_260617-280617\RFs_instance7_array13.mat','channelRFs','meanChannelSNR','RFs')
 
 load('D:\data\best_260617-280617\RFs_instance7.mat')
@@ -89,9 +89,9 @@ RFs=RFs([1:32 97:128]);
 save('D:\data\best_260617-280617\RFs_instance7_array14.mat','channelRFs','meanChannelSNR','RFs')
 
 load('D:\data\best_260617-280617\RFs_instance8.mat')
-channelRFs=channelRFs([65:97 33:64],:);
-meanChannelSNR=meanChannelSNR([65:97 33:64],:);
-RFs=RFs([65:97 33:64]);
+channelRFs=channelRFs([65:96 33:64],:);
+meanChannelSNR=meanChannelSNR([65:96 33:64],:);
+RFs=RFs([65:96 33:64]);
 save('D:\data\best_260617-280617\RFs_instance8_array15.mat','channelRFs','meanChannelSNR','RFs')
 
 load('D:\data\best_260617-280617\RFs_instance8.mat')

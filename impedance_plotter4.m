@@ -8,7 +8,7 @@ function impedance_plotter4
 %recording).
 %Corrected the indexing of RF coordinate data, which was previously incorrect in 
 %impedance_plotter.m
-date='260617';
+% date='260617';
 % date='110717';
 % date='170717';
 % date='200717';
@@ -21,7 +21,7 @@ date='260617';
 % date='131017';
 % date='201017';
 % date='020218';
-% date='280218';
+date='280218';
 colind = hsv(16);
 colindImp = hsv(1000);%colour-code impedances
 
@@ -289,7 +289,7 @@ a=find(sortImpedanceAllChannels(:,5)>25);
 b=find(sortImpedanceAllChannels(:,5)<40);
 goodLocationInd=intersect(a,b);
 goodLocationImpedances=sortImpedanceAllChannels(goodLocationInd,:);
-save(['C:\Users\User\Documents\impedance_values\',date,'\goodLocationImpedances.mat'],'goodLocationImpedances')
+% save(['C:\Users\User\Documents\impedance_values\',date,'\goodLocationImpedances.mat'],'goodLocationImpedances')
 
 %candidate channels for simultaneous stimulation and recording:
 % instance 7, array 13, electrode 34: RF x, RF y, size (pix), size (dva):
@@ -320,7 +320,7 @@ save(['C:\Users\User\Documents\impedance_values\',date,'\goodLocationImpedances.
 %record from 30, 31, 32
 
 figure;hold on
-impThreshold=100;
+impThreshold=10000;
 goodChImps=[];
 goodChV1SimRec=[];%candidate V1 channels for simultaneous microstimulation and recording 
 for candidateInd=1:size(sortImpedanceAllChannels,1)
@@ -348,7 +348,7 @@ for candidateInd=1:size(sortImpedanceAllChannels,1)
     chInfo(candidateInd,8)=channel;
     if chInfo(candidateInd,1)>0&&chInfo(candidateInd,2)<0%RF coordinates are in correct quadrant
         if chInfo(candidateInd,6)<impThreshold%impedance is below cutoff, e.g. 100 kOhms
-            impCol=chInfo(candidateInd,6)*0.9/100+0.05;
+            impCol=chInfo(candidateInd,6)*0.9/impThreshold+0.05;
             goodChImps=[goodChImps;chInfo(candidateInd,:)];
             if array~=2&&array~=3
 %                 plot(chInfo(candidateInd,1),chInfo(candidateInd,2),'MarkerEdgeColor',colind(array,:),'Marker','x');
@@ -390,7 +390,7 @@ ylim([-200 0]);
 title('low-high impedance: dark-light; V1: red; V4: blue');
 pathname=fullfile('C:\Users\User\Documents\impedance_values\',date,['RFs_channels_impedance_below_',num2str(impThreshold),'kOhms_vals']);
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-print(pathname,'-dtiff','-r300');
+% print(pathname,'-dtiff','-r300');
     
 %Note: the following RFs may be incorrect:
 %candidate channels for stimulation:
@@ -453,6 +453,26 @@ plot(array15(:,1),array15(:,2),'x','Color',colind(15,:));
 array16=chInfo(chInfo(:,7)==16,:);
 plot(array16(:,1),array16(:,2),'x','Color',colind(16,:));
 %some channels with low impedance on array 16
+
+% array1=chInfo(chInfo(:,7)==1,:);
+% array2=chInfo(chInfo(:,7)==2,:);
+% array3=chInfo(chInfo(:,7)==3,:);
+% array4=chInfo(chInfo(:,7)==4,:);
+% array5=chInfo(chInfo(:,7)==5,:);
+% array6=chInfo(chInfo(:,7)==6,:);
+% array7=chInfo(chInfo(:,7)==7,:);
+% array8=chInfo(chInfo(:,7)==8,:);
+% array9=chInfo(chInfo(:,7)==9,:);
+% array10=chInfo(chInfo(:,7)==10,:);
+% array11=chInfo(chInfo(:,7)==11,:);
+% array12=chInfo(chInfo(:,7)==12,:);
+% array13=chInfo(chInfo(:,7)==13,:);
+% array14=chInfo(chInfo(:,7)==14,:);
+% array15=chInfo(chInfo(:,7)==15,:);
+% array16=chInfo(chInfo(:,7)==16,:);
+% for arrayInd=1:16
+%    save(['C:\Users\User\Documents\impedance_values\280218\max10000kohms_array',num2str(arrayInd),'.mat'],['array',num2str(arrayInd)]); 
+% end
 
 for arrayInd=8:16
    save(['C:\Users\User\Documents\impedance_values\280218\array',num2str(arrayInd),'.mat'],['array',num2str(arrayInd)]); 
