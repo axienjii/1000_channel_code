@@ -26,10 +26,11 @@ sampFreq=30000;
 
 cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
 arrays=8:16;
-
+allSetsPerfMicroBin=[];
+allSetsPerfVisualBin=[];
 analyseConds=0;
 for calculateVisual=[0 1]
-    for setNo=1:24%edit
+    for setNo=[1:6 9 17:24 26 28:29]%1:29%[1:11 13:26 28:29]%1:24 for 10 electrodes per letter; subsequent sessions use 15 electrodes per letter
         perfNEV=[];
         timeInd=[];
         encodeInd=[];
@@ -248,7 +249,6 @@ for calculateVisual=[0 1]
                     electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
                     currentThresholdChs=124;
                     visualOnly=0;
-                    localDisk=1;
                 case 24
                     date='090518_B6';
                     setElectrodes=[{[28 49 62 63 7 8 61 20 35 55]} {[63 5 56 35 36 55 55 48 22 62]}];%010518_B & B
@@ -257,6 +257,69 @@ for calculateVisual=[0 1]
                     numTargets=2;
                     electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
                     currentThresholdChs=124;
+                    visualOnly=0;
+                case 25
+                    date='290518_B7';%15 electrodes per letter
+                    setElectrodes=[{[4 36 27 46 4 31 64 30 26 31 26 1 34 9 42]} {[61 28 40 58 5 2 56 34 9 42 40 10 30 4 28]}];%280518_B & B?
+                    setArrays=[{[16 16 8 15 15 14 12 12 12 10 9 10 10 10 10]} {[16 16 14 14 12 12 9 10 10 10 10 13 13 15 15]}];
+                    setInd=69;
+                    numTargets=2;
+                    electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    currentThresholdChs=127;
+                    visualOnly=0;
+%                 case 25
+%                     date='300518_B1';
+%                     setElectrodes=[{[4 36 27 46 4 31 64 30 26 31 26 1 34 9 42]} {[61 28 40 58 5 2 56 34 9 42 40 10 30 4 28]}];%280518_B & B?
+%                     setArrays=[{[16 16 8 15 15 14 12 12 12 10 9 10 10 10 10]} {[16 16 14 14 12 12 9 10 10 10 10 13 13 15 15]}];
+%                     setInd=69;
+%                     numTargets=2;
+%                     electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+%                     currentThresholdChs=127;
+%                     visualOnly=0;
+                case 26
+                    date='040618_B10';
+                    setElectrodes=[{[56 61 29 13 27 27 29 4 32 20 46 36 17 9 34]} {[1 56 36 4 36 21 30 33 42 4 43 10 30 4 28]}];%280518_B & B?
+                    setArrays=[{[9 12 14 14 16 8 15 15 13 13 10 10 10 10 10]} {[10 9 12 14 16 14 12 13 10 10 10 13 13 15 15]}];
+                    setInd=69;
+                    numTargets=2;
+                    electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    currentThresholdChs=128;
+                    visualOnly=0;
+%                 case 26
+%                     date='140618_B4';
+%                     setElectrodes=[{[56 61 29 13 27 27 29 4 32 20 46 36 17 9 34]} {[1 56 36 4 36 21 30 33 42 4 43 10 30 4 28]}];%280518_B & B?
+%                     setArrays=[{[9 12 14 14 16 8 15 15 13 13 10 10 10 10 10]} {[10 9 12 14 16 14 12 13 10 10 10 13 13 15 15]}];
+%                     setInd=69;
+%                     numTargets=2;
+%                     electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+%                     currentThresholdChs=129;
+%                     visualOnly=0;
+                case 27
+                    date='140618_B5';
+                    setElectrodes=[{[17 46 32 55 11 19 32 63 33 31 27 28 48 33 8]} {[1 48 9 8 17 9 45 44 31 34 9 41 29 32 27]}];%280518_B & B?
+                    setArrays=[{[12 16 16 16 8 8 14 12 13 10 9 9 9 12 12]} {[9 9 12 12 12 16 14 12 10 10 10 13 12 14 8]}];
+                    setInd=70;
+                    numTargets=2;
+                    electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    currentThresholdChs=129;
+                    visualOnly=0;
+                case 28
+                    date='140618_B7';
+                    setElectrodes=[{[40 6 56 52 50 48 30 1 28 23 50 3 52 28 47]} {[6 16 19 7 6 15 42 60 52 25 33 47 46 8 48]}];%280518_B & B?
+                    setArrays=[{[16 16 16 8 8 15 16 8 14 12 12 12 12 12 13]} {[16 16 16 14 14 12 12 12 12 12 13 13 15 15 15]}];
+                    setInd=70;
+                    numTargets=2;
+                    electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    currentThresholdChs=129;
+                    visualOnly=0;
+                case 29%setInd 71
+                    date='180618_B7';
+                    setElectrodes=[{[48 22 44 15 63 19 30 63 4 61 37 14 41 58 30]} {[48 15 36 53 4 29 20 10 37 28 41 5 37 55 15]}];%280518_B & B?
+                    setArrays=[{[16 8 8 15 15 8 14 12 12 12 12 13 13 13 13]} {[16 16 16 14 14 14 12 12 12 12 13 15 15 15 15]}];
+                    setInd=71;
+                    numTargets=2;
+                    electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    currentThresholdChs=130;
                     visualOnly=0;
                     localDisk=1;
             end
@@ -471,7 +534,6 @@ for calculateVisual=[0 1]
                     electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
                     currentThresholdChs=124;
                     visualOnly=1;
-                    localDisk=1;
                 case 24
                     date='090518_B4';
                     setElectrodes=[{[28 49 62 63 7 8 61 20 35 55]} {[63 5 56 35 36 55 55 48 22 62]}];%010518_B & B
@@ -480,6 +542,87 @@ for calculateVisual=[0 1]
                     numTargets=2;
                     electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
                     currentThresholdChs=124;
+                    visualOnly=1;
+                case 25
+                    date='290518_B5';%15 electrodes per letter, coloured dots
+                    setElectrodes=[{[4 36 27 46 4 31 64 30 26 31 26 1 34 9 42]} {[61 28 40 58 5 2 56 34 9 42 40 10 30 4 28]}];%280518_B & B?
+                    setArrays=[{[16 16 8 15 15 14 12 12 12 10 9 10 10 10 10]} {[16 16 14 14 12 12 9 10 10 10 10 13 13 15 15]}];
+                    setInd=69;
+                    numTargets=2;
+                    electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    currentThresholdChs=127;
+                    visualOnly=1;
+                    %         case 26
+                    %                     date='040618_B6';%coloured dots
+                    %             setElectrodes=[{[56 61 29 13 27 27 29 4 32 20 46 36 17 9 34]} {[1 56 36 4 36 21 30 33 42 4 43 10 30 4 28]}];%280518_B & B?
+                    %             setArrays=[{[9 12 14 14 16 8 15 15 13 13 10 10 10 10 10]} {[10 9 12 14 16 14 12 13 10 10 10 13 13 15 15]}];
+                    %             setInd=69;
+                    %             numTargets=2;
+                    %             electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    %             currentThresholdChs=127;
+                    %             visualOnly=1;
+                case 26
+                    date='040618_B7';%black dots
+                    setElectrodes=[{[56 61 29 13 27 27 29 4 32 20 46 36 17 9 34]} {[1 56 36 4 36 21 30 33 42 4 43 10 30 4 28]}];%280518_B & B?
+                    setArrays=[{[9 12 14 14 16 8 15 15 13 13 10 10 10 10 10]} {[10 9 12 14 16 14 12 13 10 10 10 13 13 15 15]}];
+                    setInd=69;
+                    numTargets=2;
+                    electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    currentThresholdChs=127;
+                    visualOnly=1;
+                    %                 case 27
+                    %                     date='070618_B4';%coloured dots
+                    %             setElectrodes=[{[40 6 56 52 50 48 30 1 28 23 50 3 52 28 47]} {[6 16 19 7 6 15 42 60 52 25 33 47 46 8 48]}];%280518_B & B?
+                    %             setArrays=[{[16 16 16 8 8 15 16 8 14 12 12 12 12 12 13]} {[16 16 16 14 14 12 12 12 12 12 13 13 15 15 15]}];
+                    %             setInd=70;
+                    %             numTargets=2;
+                    %             electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    %             currentThresholdChs=128;
+                    %             visualOnly=1;
+                case 27
+                    date='070618_B7';%black dots
+                    setElectrodes=[{[40 6 56 52 50 48 30 1 28 23 50 3 52 28 47]} {[6 16 19 7 6 15 42 60 52 25 33 47 46 8 48]}];%280518_B & B?
+                    setArrays=[{[16 16 16 8 8 15 16 8 14 12 12 12 12 12 13]} {[16 16 16 14 14 12 12 12 12 12 13 13 15 15 15]}];
+                    setInd=70;
+                    numTargets=2;
+                    electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    currentThresholdChs=128;
+                    visualOnly=1;
+                    %         case 28
+                    %                     date='070618_B5';%coloured dots
+                    %             setElectrodes=[{[17 46 32 55 11 19 32 63 33 31 27 28 48 33 8]} {[1 48 9 8 17 9 45 44 31 34 9 41 29 32 27]}];%280518_B & B?
+                    %             setArrays=[{[12 16 16 16 8 8 14 12 13 10 9 9 9 12 12]} {[9 9 12 12 12 16 14 12 10 10 10 13 12 14 8]}];
+                    %             setInd=70;
+                    %             numTargets=2;
+                    %             electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    %             currentThresholdChs=128;
+                    %             visualOnly=1;
+                case 28
+                    date='070618_B6';%black dots
+                    setElectrodes=[{[17 46 32 55 11 19 32 63 33 31 27 28 48 33 8]} {[1 48 9 8 17 9 45 44 31 34 9 41 29 32 27]}];%280518_B & B?
+                    setArrays=[{[12 16 16 16 8 8 14 12 13 10 9 9 9 12 12]} {[9 9 12 12 12 16 14 12 10 10 10 13 12 14 8]}];
+                    setInd=70;
+                    numTargets=2;
+                    electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    currentThresholdChs=128;
+                    visualOnly=1;
+%                 case 29%setInd 71
+%                     date='180618_B3';%coloured dots
+%                     setElectrodes=[{[48 22 44 15 63 19 30 63 4 61 37 14 41 58 30]} {[48 15 36 53 4 29 20 10 37 28 41 5 37 55 15]}];%280518_B & B?
+%                     setArrays=[{[16 8 8 15 15 8 14 12 12 12 12 13 13 13 13]} {[16 16 16 14 14 14 12 12 12 12 13 15 15 15 15]}];
+%                     setInd=71;
+%                     numTargets=2;
+%                     electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+%                     currentThresholdChs=130;
+%                     visualOnly=1;
+                case 29
+                    date='180618_B5';%black dots
+                    setElectrodes=[{[48 22 44 15 63 19 30 63 4 61 37 14 41 58 30]} {[48 15 36 53 4 29 20 10 37 28 41 5 37 55 15]}];%280518_B & B?
+                    setArrays=[{[16 8 8 15 15 8 14 12 12 12 12 13 13 13 13]} {[16 16 16 14 14 14 12 12 12 12 13 15 15 15 15]}];
+                    setInd=71;
+                    numTargets=2;
+                    electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+                    currentThresholdChs=130;
                     visualOnly=1;
                     localDisk=1;
             end
@@ -628,18 +771,18 @@ for calculateVisual=[0 1]
                         end
                     end
                 end
-                initialPerfTrials=30;%first set of trials are the most important
+                initialPerfTrials=100;%first set of trials are the most important
                 if calculateVisual==0
                     perfMicroBin=perfMicroBin(1:initialPerfTrials);
                     if ~isempty(perfMicroBin)
-                        allSetsPerfMicroBin(setNo,:)=perfMicroBin;
+                        allSetsPerfMicroBin=[allSetsPerfMicroBin;perfMicroBin];
                         save(['D:\microPerf_',date,'.mat'],'perfMicroBin');
                     end
                 elseif calculateVisual==1
                     perfVisualBin=perfVisualBin(1:initialPerfTrials);
                     %perfVisualBin=perfVisualBin(end-initialPerfTrials+1:end);
                     if ~isempty(perfVisualBin)
-                        allSetsPerfVisualBin(setNo,:)=perfVisualBin;
+                        allSetsPerfVisualBin=[allSetsPerfVisualBin;perfVisualBin];
                         save(['D:\visualPerf_',date,'.mat'],'perfVisualBin');
                     end
                 end
@@ -835,11 +978,11 @@ for calculateVisual=[0 1]
     end
 end
 title(['performance across the session, on visual (blue) & microstim (red) trials']);
-pathname=fullfile('D:\data\letter_behavioural_performance_all_sets_090518');
+pathname=['D:\data\letter_behavioural_performance_all_sets_',date,'_',num2str(initialPerfTrials),'trials'];
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 print(pathname,'-dtiff');
 
-perfMat=['D:\data\letter_behavioural_performance_all_sets_090518_',num2str(initialPerfTrials),'trials.mat'];
+perfMat=['D:\data\letter_behavioural_performance_all_sets_',date,'_',num2str(initialPerfTrials),'trials.mat'];
 save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
 pause=1;
 

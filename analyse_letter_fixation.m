@@ -1,8 +1,8 @@
-function analyse_fix_cal(date,allInstanceInd)
-%31/1/18
+function analyse_letter_fixation(date,allInstanceInd)
+%24/5/18
 %Written by Xing, analyses eye data from a fixation task, in which
-%fixation was maintained at 1 of 9 possible positions, to calculate the pixels
-%per volt for the eye traces (separately for X and Y). 
+%fixation was maintained at each electrode position, for sets of electrodes
+%that were used to generate phosphene letters.
 
 localDisk=1;
 if localDisk==1
@@ -135,8 +135,8 @@ if processRaw==1
         timestampTrialStimOn=NEV.Data.SerialDigitalIO.TimeStamp(goodStimOnInd);
         posIndXvolt=[];
         posIndYvolt=[];
-        meanPosX=cell(1,9);
-        meanPosY=cell(1,9);
+        meanPosX=cell(1,20);
+        meanPosY=cell(1,20);
         fig1=figure
         fig2=figure
         for trialInd=1:length(goodStimOffInd)
@@ -145,10 +145,10 @@ if processRaw==1
                 trialDataY=NSch{2}(timestampTrialStimOn(trialInd)-timestampCell2:timestampTrialStimOff(trialInd)-timestampCell2);
                 condNo=allCondNo(trialInds(trialInd));
                 figure(fig1)
-                subplot(3,3,condNo)
+                subplot(5,5,condNo)
                 plot(trialDataX);hold on
                 figure(fig2)
-                subplot(3,3,condNo)
+                subplot(5,5,condNo)
                 plot(trialDataY);hold on
                 baselineX=mean(trialDataX);
                 baselineY=mean(trialDataY);
@@ -156,7 +156,14 @@ if processRaw==1
                 meanPosY{condNo}=[meanPosY{condNo};baselineY];
             end
         end
-        for condNoInd=1:9
+        for condNoInd=1:10
+            allMeanPosX(condNoInd)=mean(meanPosX{condNoInd}(:));
+            allMeanPosY(condNoInd)=mean(meanPosY{condNoInd}(:));
+            percentOutliers=80;%
+            allMeanPosXexcludeOutliers(condNoInd)=trimmean(meanPosX{condNoInd}(:),percentOutliers);
+            allMeanPosYexcludeOutliers(condNoInd)=trimmean(meanPosY{condNoInd}(:),percentOutliers);
+        end
+        for condNoInd=11:20
             allMeanPosX(condNoInd)=mean(meanPosX{condNoInd}(:));
             allMeanPosY(condNoInd)=mean(meanPosY{condNoInd}(:));
             percentOutliers=80;%
@@ -167,6 +174,17 @@ if processRaw==1
         scatter(allMeanPosX,allMeanPosY);
         figure;
         scatter(allMeanPosXexcludeOutliers,allMeanPosYexcludeOutliers);
+        figure;
+        scatter(allMeanPosX(1:10),allMeanPosY(1:10));
+        figure;
+        scatter(allMeanPosX(11:20),allMeanPosY(11:20));
+        figure;
+        subplot(1,2,1);
+        scatter(-allMeanPosXexcludeOutliers(1:10),-allMeanPosYexcludeOutliers(1:10));
+        title('letter A');
+        subplot(1,2,2);
+        scatter(-allMeanPosXexcludeOutliers(11:20),-allMeanPosYexcludeOutliers(11:20));
+        title('letter L');
         row1X=mean([allMeanPosXexcludeOutliers(1) allMeanPosXexcludeOutliers(4) allMeanPosXexcludeOutliers(7)])
         row2X=mean([allMeanPosXexcludeOutliers(2) allMeanPosXexcludeOutliers(5) allMeanPosXexcludeOutliers(8)]);
         row3X=mean([allMeanPosXexcludeOutliers(3) allMeanPosXexcludeOutliers(6) allMeanPosXexcludeOutliers(9)]);
@@ -177,7 +195,7 @@ if processRaw==1
         voltsPerDegreeY=mean([col3Y-col2Y col2Y-col1Y])/dvaSampleDist;
         degpervoltx=1/voltsPerDegreeX;
         degpervolty=1/voltsPerDegreeY;
-        save(['D:\data\',date,'\volts_per_dva.mat'],'voltsPerDegreeX','voltsPerDegreeY')
+%         save(['D:\data\',date,'\volts_per_dva.mat'],'voltsPerDegreeX','voltsPerDegreeY')
     end
 end
        

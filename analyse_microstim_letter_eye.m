@@ -2,6 +2,7 @@ function analyse_microstim_letter_eye(date,allInstanceInd)
 %7/3/18
 %Written by Xing, modified from analyse_microstim_letter.m, extracts eye data during a
 %microstimulation/visual 'letter' task.
+%Used on sessoin 220318_B4: analyse_microstim_letter_eye('220318_B4',1)
 
 interleaved=0;%set interleaved to 0, if trigger pulse was sent using microB. set interleaved to 1, if stimulation was sent by calling stimulator.play function
 drummingOn=0;%for sessions after 9/4/18, drumming with only 2 targets was uesd 

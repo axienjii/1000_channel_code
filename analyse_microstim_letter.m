@@ -5,7 +5,7 @@ function analyse_microstim_letter(date,allInstanceInd)
 
 interleaved=0;%set interleaved to 0, if trigger pulse was sent using microB. set interleaved to 1, if stimulation was sent by calling stimulator.play function
 drummingOn=0;%for sessions after 9/4/18, drumming with only 2 targets was uesd 
-localDisk=1;
+localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
@@ -576,7 +576,62 @@ if analyseConds==1
             electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
             currentThresholdChs=124;
             visualOnly=0;
-
+        case '290518_B7'%15 electrodes per letter
+            setElectrodes=[{[4 36 27 46 4 31 64 30 26 31 26 1 34 9 42]} {[61 28 40 58 5 2 56 34 9 42 40 10 30 4 28]}];%280518_B & B?
+            setArrays=[{[16 16 8 15 15 14 12 12 12 10 9 10 10 10 10]} {[16 16 14 14 12 12 9 10 10 10 10 13 13 15 15]}];
+            setInd=69;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=127;
+            visualOnly=0;
+        case '300518_B1'
+            setElectrodes=[{[4 36 27 46 4 31 64 30 26 31 26 1 34 9 42]} {[61 28 40 58 5 2 56 34 9 42 40 10 30 4 28]}];%280518_B & B?
+            setArrays=[{[16 16 8 15 15 14 12 12 12 10 9 10 10 10 10]} {[16 16 14 14 12 12 9 10 10 10 10 13 13 15 15]}];
+            setInd=69;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=127;
+            visualOnly=0;
+        case '040618_B10'
+            setElectrodes=[{[56 61 29 13 27 27 29 4 32 20 46 36 17 9 34]} {[1 56 36 4 36 21 30 33 42 4 43 10 30 4 28]}];%280518_B & B?
+            setArrays=[{[9 12 14 14 16 8 15 15 13 13 10 10 10 10 10]} {[10 9 12 14 16 14 12 13 10 10 10 13 13 15 15]}];
+            setInd=69;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=128;
+            visualOnly=0;
+        case '140618_B4'
+            setElectrodes=[{[56 61 29 13 27 27 29 4 32 20 46 36 17 9 34]} {[1 56 36 4 36 21 30 33 42 4 43 10 30 4 28]}];%280518_B & B?
+            setArrays=[{[9 12 14 14 16 8 15 15 13 13 10 10 10 10 10]} {[10 9 12 14 16 14 12 13 10 10 10 13 13 15 15]}];
+            setInd=69;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=129;
+            visualOnly=0;
+        case '140618_B5'
+            setElectrodes=[{[17 46 32 55 11 19 32 63 33 31 27 28 48 33 8]} {[1 48 9 8 17 9 45 44 31 34 9 41 29 32 27]}];%280518_B & B?
+            setArrays=[{[12 16 16 16 8 8 14 12 13 10 9 9 9 12 12]} {[9 9 12 12 12 16 14 12 10 10 10 13 12 14 8]}];
+            setInd=70;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=129;
+            visualOnly=0;
+        case '140618_B7'
+            setElectrodes=[{[40 6 56 52 50 48 30 1 28 23 50 3 52 28 47]} {[6 16 19 7 6 15 42 60 52 25 33 47 46 8 48]}];%280518_B & B?
+            setArrays=[{[16 16 16 8 8 15 16 8 14 12 12 12 12 12 13]} {[16 16 16 14 14 12 12 12 12 12 13 13 15 15 15]}];
+            setInd=70;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=129;
+            visualOnly=0;
+        case '180618_B7'
+            setElectrodes=[{[48 22 44 15 63 19 30 63 4 61 37 14 41 58 30]} {[48 15 36 53 4 29 20 10 37 28 41 5 37 55 15]}];%280518_B & B?
+            setArrays=[{[16 8 8 15 15 8 14 12 12 12 12 13 13 13 13]} {[16 16 16 14 14 14 12 12 12 12 13 15 15 15 15]}];
+            setInd=71;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=130;
+            visualOnly=0;
             
         %visual task only:
         case '060318_B3'
@@ -1067,7 +1122,79 @@ if analyseConds==1
             electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
             currentThresholdChs=124;
             visualOnly=1;
-            
+        case '290518_B5'%15 electrodes per letter, coloured dots
+            setElectrodes=[{[4 36 27 46 4 31 64 30 26 31 26 1 34 9 42]} {[61 28 40 58 5 2 56 34 9 42 40 10 30 4 28]}];%280518_B & B?
+            setArrays=[{[16 16 8 15 15 14 12 12 12 10 9 10 10 10 10]} {[16 16 14 14 12 12 9 10 10 10 10 13 13 15 15]}];
+            setInd=69;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=127;
+            visualOnly=1;
+        case '040618_B6'%coloured dots
+            setElectrodes=[{[56 61 29 13 27 27 29 4 32 20 46 36 17 9 34]} {[1 56 36 4 36 21 30 33 42 4 43 10 30 4 28]}];%280518_B & B?
+            setArrays=[{[9 12 14 14 16 8 15 15 13 13 10 10 10 10 10]} {[10 9 12 14 16 14 12 13 10 10 10 13 13 15 15]}];
+            setInd=69;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=127;
+            visualOnly=1;
+        case '040618_B7'%black dots
+            setElectrodes=[{[56 61 29 13 27 27 29 4 32 20 46 36 17 9 34]} {[1 56 36 4 36 21 30 33 42 4 43 10 30 4 28]}];%280518_B & B?
+            setArrays=[{[9 12 14 14 16 8 15 15 13 13 10 10 10 10 10]} {[10 9 12 14 16 14 12 13 10 10 10 13 13 15 15]}];
+            setInd=69;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=127;
+            visualOnly=1;
+        case '070618_B4'%coloured dots
+            setElectrodes=[{[40 6 56 52 50 48 30 1 28 23 50 3 52 28 47]} {[6 16 19 7 6 15 42 60 52 25 33 47 46 8 48]}];%280518_B & B?
+            setArrays=[{[16 16 16 8 8 15 16 8 14 12 12 12 12 12 13]} {[16 16 16 14 14 12 12 12 12 12 13 13 15 15 15]}];
+            setInd=70;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=128;
+            visualOnly=1;
+        case '070618_B7'%black dots
+            setElectrodes=[{[40 6 56 52 50 48 30 1 28 23 50 3 52 28 47]} {[6 16 19 7 6 15 42 60 52 25 33 47 46 8 48]}];%280518_B & B?
+            setArrays=[{[16 16 16 8 8 15 16 8 14 12 12 12 12 12 13]} {[16 16 16 14 14 12 12 12 12 12 13 13 15 15 15]}];
+            setInd=70;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=128;
+            visualOnly=1;
+        case '070618_B5'%coloured dots
+            setElectrodes=[{[17 46 32 55 11 19 32 63 33 31 27 28 48 33 8]} {[1 48 9 8 17 9 45 44 31 34 9 41 29 32 27]}];%280518_B & B?
+            setArrays=[{[12 16 16 16 8 8 14 12 13 10 9 9 9 12 12]} {[9 9 12 12 12 16 14 12 10 10 10 13 12 14 8]}];
+            setInd=70;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=128;
+            visualOnly=1;
+        case '070618_B6'%black dots
+            setElectrodes=[{[17 46 32 55 11 19 32 63 33 31 27 28 48 33 8]} {[1 48 9 8 17 9 45 44 31 34 9 41 29 32 27]}];%280518_B & B?
+            setArrays=[{[12 16 16 16 8 8 14 12 13 10 9 9 9 12 12]} {[9 9 12 12 12 16 14 12 10 10 10 13 12 14 8]}];
+            setInd=70;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=128;
+            visualOnly=1;
+        case '180618_B3'%coloured dots
+            setElectrodes=[{[48 22 44 15 63 19 30 63 4 61 37 14 41 58 30]} {[48 15 36 53 4 29 20 10 37 28 41 5 37 55 15]}];%280518_B & B?
+            setArrays=[{[16 8 8 15 15 8 14 12 12 12 12 13 13 13 13]} {[16 16 16 14 14 14 12 12 12 12 13 15 15 15 15]}];
+            setInd=71;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=130;
+            visualOnly=1;
+        case '180618_B5'%black dots
+            setElectrodes=[{[48 22 44 15 63 19 30 63 4 61 37 14 41 58 30]} {[48 15 36 53 4 29 20 10 37 28 41 5 37 55 15]}];%280518_B & B?
+            setArrays=[{[16 8 8 15 15 8 14 12 12 12 12 13 13 13 13]} {[16 16 16 14 14 14 12 12 12 12 13 15 15 15 15]}];
+            setInd=71;
+            numTargets=2;
+            electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2})];
+            currentThresholdChs=130;
+            visualOnly=1;
+
     end
 end
 load([dataDir,'\currentThresholdChs',num2str(currentThresholdChs),'.mat']);
@@ -1138,7 +1265,7 @@ if processRaw==1
                         if length(find(trialEncodes==2^MicroB))>=1
                             microstimTrialNEV(trialNo)=1;
                         end
-                    elseif interleaved==1%stimulation sent using sitmulator.play function
+                    elseif interleaved==1%stimulation sent using stimulator.play function
                         microstimTrialNEV(trialNo)=1;
                     end
                 elseif visualOnly==1
@@ -1267,10 +1394,10 @@ if processRaw==1
                     total(setNo)=total(setNo)+uniqueResponsesTally{setNo}(responseInd);
                 end
                 if visualOnly==1
-                    uniqueResponsesTally{setNo}(setNo)=length(corrIndsV{setNo});%tally number of correct trials
+                    uniqueResponsesTally{setNo}(responseInd)=length(corrIndsV{setNo});%tally number of correct trials
                     total(setNo)=total(setNo)+length(corrIndsV{setNo});
                 elseif visualOnly==0
-                    uniqueResponsesTally{setNo}(setNo)=length(corrIndsM{setNo});%tally number of correct trials
+                    uniqueResponsesTally{setNo}(responseInd)=length(corrIndsM{setNo});%tally number of correct trials
                     total(setNo)=total(setNo)+length(corrIndsM{setNo});
                 end
 %                 correctResponsesV{setNo}=behavResponse(corrIndsV{setNo});
