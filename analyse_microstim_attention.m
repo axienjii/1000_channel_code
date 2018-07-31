@@ -1,4 +1,4 @@
-function analyse_microstim_attention(date,allInstanceInd)
+function analyse_microstim_attention(date,allInstanceInd,analyseEyeData)
 %16/7/18
 %Written by Xing, modified from analyse_microstim_letter.m, calculates behavioural performance during a
 %microstimulation/visual attention task, in which monkey atends to one visual hemifield or the other.
@@ -72,7 +72,39 @@ if analyseConds==1
             numTargets=[];
             electrodePairs=[];
             currentThresholdChs=133;
-            visualOnly=1;            
+            visualOnly=1;  
+            syncPulseCh=136;%analog input 8, records sync pulse from array 11
+            syncPulseThreshold=1000;
+        case '130718_B3'
+            setElectrodes=34;%0118_B & B?
+            setArrays=11;
+            setInd=[];
+            numTargets=[];
+            electrodePairs=[];
+            currentThresholdChs=133;
+            visualOnly=1;  
+            syncPulseCh=136;%analog input 8, records sync pulse from array 11
+            syncPulseThreshold=1000;
+        case '240718_B13'
+            setElectrodes=20;%0118_B & B?
+            setArrays=16;
+            setInd=[];
+            numTargets=[];
+            electrodePairs=[];
+            currentThresholdChs=134;
+            visualOnly=1;  
+            syncPulseCh=141;%analog input 8, records sync pulse from array 16   
+            syncPulseThreshold=24000;    
+        case '310718_B1'
+            setElectrodes=20;%0118_B & B?
+            setArrays=16;
+            setInd=[];
+            numTargets=[];
+            electrodePairs=[];
+            currentThresholdChs=134;
+            visualOnly=1;  
+            syncPulseCh=141;%analog input 8, records sync pulse from array 16   
+            syncPulseThreshold=1000;       
 
         %visual task only:
     end
@@ -217,7 +249,13 @@ if processRaw==1
             blockTrialsInd=find(allBlockNo==goodBlockInd);
             responseBlockInd=intersect(responseTrialsInd,blockTrialsInd);%trials were behavioural response made, for a given block
             
+            goodCurrentLevel=mode(allCurrentLevel);
+            goodCurrentLevelTrials=find(allCurrentLevel==goodCurrentLevel);%exclude trials where a different current level was used
+            nonDrummingTrials=find(allDrummingTrials==0);%exclude trials where drumming was used
+            
             attendMicroResponseBlockInd{blockInd}=intersect(responseBlockInd,microTarget);%attend-microstim condition during that block, where behavioural response was made
+            attendMicroResponseBlockInd{blockInd}=intersect(attendMicroResponseBlockInd{blockInd},goodCurrentLevelTrials);%attend-microstim condition during that block, where behavioural response was made
+            attendMicroResponseBlockInd{blockInd}=intersect(attendMicroResponseBlockInd{blockInd},nonDrummingTrials);%attend-microstim condition during that block, where behavioural response was made
             correctIndCondM=intersect(correctTrialsInd,attendMicroResponseBlockInd{blockInd});
             if length(correctIndCondM)>trialsDesiredInitialBlock%exclude first 20 distractor-free trials (and incorrect trials), and identify trial number 21
                 firstNotInitialTrialM=correctIndCondM(trialsDesiredInitialBlock+1);
@@ -227,6 +265,8 @@ if processRaw==1
             notInitialTrialsCorrectM{blockInd}=intersect(notInitialTrialsM{blockInd},correctIndCondM);%only correct trials after the first distractor-free trials
             
             attendVisualResponseBlockInd{blockInd}=intersect(responseBlockInd,visualTarget);%attend-visual condition during that block, where behavioural response was made
+            attendVisualResponseBlockInd{blockInd}=intersect(attendVisualResponseBlockInd{blockInd},goodCurrentLevelTrials);%attend-visual condition during that block, where behavioural response was made
+            attendVisualResponseBlockInd{blockInd}=intersect(attendVisualResponseBlockInd{blockInd},nonDrummingTrials);%attend-visual condition during that block, where behavioural response was made
             correctIndCondV=intersect(correctTrialsInd,attendVisualResponseBlockInd{blockInd});
             if length(correctIndCondV)>trialsDesiredInitialBlock%exclude first 20 distractor-free trials (and incorrect trials), and identify trial number 21
                 firstNotInitialTrialV=correctIndCondV(trialsDesiredInitialBlock+1);
@@ -250,7 +290,6 @@ if processRaw==1
         save(matFileName,'targetOns','distractorOns','visualTarget','microTarget','distractorFirst','targetFirst','attendMicroTrialsIndFirst','attendMicroTrialsIndSecond','attendVisualTrialsIndFirst','attendVisualTrialsIndSecond','correctTrialsInd','incorrectTrialsInd','responseTrialsInd','attendMicroResponseBlockInd','notInitialTrialsM','notInitialTrialsCorrectM','attendVisualResponseBlockInd','notInitialTrialsV','notInitialTrialsCorrectV','attendMicroFirstNotInitial','attendMicroSecondNotInitial','attendMicroFirstNotInitialC','attendMicroSecondNotInitialC','attendVisualFirstNotInitial' ,'attendVisualSecondNotInitial' ,'attendVisualFirstNotInitialC','attendVisualSecondNotInitialC');
         
         %detect periods of stimulation using sync pulse:
-        syncPulseCh=136;%analog input 8, records sync pulse from array 11
         syncPulseMat=[rootdir,date,'\instance1_NSch_sync_pulse.mat'];%always recorded on instance 1
         if exist(syncPulseMat,'file')
             load(syncPulseMat,'NSchSync');
@@ -275,7 +314,6 @@ if processRaw==1
 %                 length(temp)
 %             end
         end
-        syncPulseThreshold=1000;
         belowThresholdInd=find(NSchSync<syncPulseThreshold);
         aboveThresholdInd=find(NSchSync>=syncPulseThreshold);
         binaryNSchSync=NSchSync;
@@ -290,26 +328,37 @@ if processRaw==1
         end
         %read in neuronal data, only for V4:
         if instanceInd==1
-            if strcmp(date,'130718_B1')
+            if strcmp(date,'130718_B1')||strcmp(date,'240718_B13')||strcmp(date,'310718_B1')
                 neuronalChsV4=33:96;
             elseif strcmp(date,'130718_B3')
-                neuronalChsV4=53:96;
+                neuronalChsV4=33:96;
             end
         elseif instanceInd==2
             neuronalChsV4=[1:32 97:128];
         end
+%         analyseEyeData=0;%extract eye channel data, from instance 1
+        if analyseEyeData==1&&instanceInd==1
+            neuronalChsV4=eyeChannels;
+            load(eyeDataMat,'NSch');
+            NSchOriginal=NSch;
+        end
         for neuronalChInd=1:length(neuronalChsV4)%analog input 8, records sync pulse from array 11
-            neuronalCh=neuronalChsV4(neuronalChInd);
-            neuronalMat=[rootdir,date,'\',instanceName,'_NSch',num2str(neuronalCh),'.mat'];
-            if exist(neuronalMat,'file')
-                load(neuronalMat,'NSch');
+            if analyseEyeData==1&&instanceInd==1
+                neuronalCh=eyeChannels(neuronalChInd);
+                NSch=NSchOriginal{neuronalChInd};
             else
-                if recordedRaw==1
-                    readChannel=['c:',num2str(neuronalCh),':',num2str(neuronalCh)];
-                    NSchOriginal=openNSx(instanceNS6FileName,readChannel);
-                    NSch=NSchOriginal.Data;
+                neuronalCh=neuronalChsV4(neuronalChInd);
+                neuronalMat=[rootdir,date,'\',instanceName,'_NSch',num2str(neuronalCh),'.mat'];
+                if exist(neuronalMat,'file')
+                    load(neuronalMat,'NSch');
+                else
+                    if recordedRaw==1
+                        readChannel=['c:',num2str(neuronalCh),':',num2str(neuronalCh)];
+                        NSchOriginal=openNSx(instanceNS6FileName,readChannel);
+                        NSch=NSchOriginal.Data;
+                    end
+                    save(neuronalMat,'NSch');
                 end
-                save(neuronalMat,'NSch');
             end
             for blockInd=1:length(goodBlocks)
                 for includeIncorrect=1:2%1: include all trials; 2: exclude incorrect trials
@@ -358,9 +407,17 @@ if processRaw==1
                     for trialInd=1:length(onCrossingIndTS_AMF)
                         if onCrossingIndTS_AMF(trialInd)~=0
                             AMF(trialInd,:)=NSch(onCrossingIndTS_AMF(trialInd)-preStimDur*sampFreq:onCrossingIndTS_AMF(trialInd)-preStimDur*sampFreq+25989);
+%                             AMF(trialInd,:)=NSch(onCrossingIndTS_AMF(trialInd):onCrossingIndTS_AMF(trialInd)-preStimDur*sampFreq+25989);
+                            syncCheck(trialInd,:)=NSchSync(onCrossingIndTS_AMF(trialInd)-preStimDur*sampFreq:onCrossingIndTS_AMF(trialInd)-preStimDur*sampFreq+25989);
+%                             syncCheck(trialInd,:)=NSchSync(onCrossingIndTS_AMF(trialInd):onCrossingIndTS_AMF(trialInd)-preStimDur*sampFreq+25989);
                             %                     AMF(trialInd,:,neuronalCh)=NSch(onCrossingIndTS_AMF(trialInd)-preStimDur*sampFreq:offCrossingIndTS_AMF(trialInd)+postStimDur*sampFreq);
                         end
                     end
+%                     figure;
+%                     plot(AMF(1,:));hold on;plot(syncCheck(1,:));
+%                     ax = gca;
+%                     ylims=get(ax,'ylim');
+%                     line([onCrossingIndTS_AMF(1) onCrossingIndTS_AMF(1)],[ylims(1) ylims(2)]);
                     for trialInd=1:length(onCrossingIndTS_AVF)
                         if onCrossingIndTS_AVF(trialInd)~=0
                             AVF(trialInd,:)=NSch(onCrossingIndTS_AVF(trialInd)-preStimDur*sampFreq:onCrossingIndTS_AVF(trialInd)-preStimDur*sampFreq+25989);
