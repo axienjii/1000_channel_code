@@ -1,9 +1,14 @@
-function analyse_microstim_saccade13(date,allInstanceInd)
-%09/7/17
-%Written by Xing, uses serial port data to identify trial number. Analyses
-%data for runstim_microstim_saccade_catch10.m, with an arbitrarily large
-%target window and random selsection of electrodes which microstimulation
-%was delivered (out of 201 electrodes on arrays 8 to 16).
+function analyse_microstim_saccade14_letter(date,allInstanceInd)
+%%23/5/18
+%Written by Xing, modified from analyse_microstim_letter_eye2.m, extracts eye data during a
+%saccade task during microstimulation of individual electrodes 
+%(runstim_microstim_saccade_endpoints_letter.m). The electrodes
+%on which stimulation is delivered are those used during a letter recognition task. 
+%The goal is the check whether the saccade endpoints correspond roughly to 
+%the expected phosphene locations, based on RF mapping. Uses a target
+%window that is centered on the letter, and fairly large (to cover a region
+%that is slightly larger than the entire letter. 50% catch trials.
+%Uses serial port data to identify trial number. 
 %Can run analyses on raw data files in which neuronal data was also saved,
 %unlike analyse_microstim_saccade9, which only analyses files without neuronal
 %data.
@@ -12,7 +17,14 @@ function analyse_microstim_saccade13(date,allInstanceInd)
 %time points corresponding to peak velocities.
 %Also generates data for Feng, to create movie of eye movements.
 
-matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
+localDisk=1;
+if localDisk==1
+    rootdir='D:\data\';
+elseif localDisk==0
+    rootdir='X:\best\';
+end
+dataDir=[rootdir,date,'\',date(1:6),'_data'];
+matFile=[dataDir,'\microstim_saccade_',date,'.mat'];
 load(matFile);
 maxNumTrials=size(TRLMAT,1);
 if maxNumTrials<=length(performance)
@@ -52,14 +64,26 @@ postStimDur=400/1000;%length of post-stimulus-offset period, in s
 sampFreq=30000;
 minCrossingTime=0;
 switch date
-    case '070917_B13'
-        minCrossingTime=300/1000;
-    case '110917_B1'
-        minCrossingTime=300/1000;
-    case '110917_B2'
-        minCrossingTime=300/1000;
-    case '110917_B3'
+    case '180518_B2'
         minCrossingTime=preStimDur-0.166;
+        electrodeNums=[50 58 55 53 30 10 49 46 24 38 42 28 1 27 5 44 29 13 20 1 8 28 49 32 53 55 46 4 60 56];%170518_B & B?
+        arrayNums=[12 14 14 16 16 8 10 15 13 10 10 10 10 9 9 12 14 14 16 8 15 15 15 13 13 10 10 10 10 9];
+        currentThresholdChs=126;
+    case '230518_B5'
+        minCrossingTime=preStimDur-0.166;
+        electrodeNums=[60 34 50 37 4 1 16 15 51 52 63 5 56 35 36 55 55 48 22 62];%010518_B & B
+        arrayNums=[10 10 13 15 15 15 11 10 11 13 15 15 13 13 13 10 11 11 11 11];
+        currentThresholdChs=126;
+    case '230518_B6'
+        minCrossingTime=preStimDur-0.166;
+        electrodeNums=[60 34 50 37 4 1 16 15 51 52 63 5 56 35 36 55 55 48 22 62];%010518_B & B
+        arrayNums=[10 10 13 15 15 15 11 10 11 13 15 15 13 13 13 10 11 11 11 11];
+        currentThresholdChs=126;
+    case '230518_B15'
+        minCrossingTime=preStimDur-0.166;
+        electrodeNums=[60 34 50 37 4 1 16 15 51 52 63 5 56 35 36 55 55 48 22 62];%010518_B & B
+        arrayNums=[10 10 13 15 15 15 11 10 11 13 15 15 13 13 13 10 11 11 11 11];
+        currentThresholdChs=126;
 end
 
 cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
@@ -120,11 +144,17 @@ if processRaw==1
             end
         end
                 
-        microstimTrialsInd=find(allCurrentLevel>0);
-        correctTrialsInd=find(performance==1);
-        correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
-        fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
-
+        if visualOnly==0
+            microstimTrialsInd=find(allCurrentLevel>0);
+            correctTrialsInd=find(performance==1);
+            correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
+            fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
+        elseif visualOnly==1%note that in this code, trials with visually presented stimuli are read into the variable 'microstimTrialsInd'
+            microstimTrialsInd=find(cell2mat(allElectrodeNum)>0);
+            correctTrialsInd=find(performance==1);
+            correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
+            fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
+        end
         figInd1=figure;hold on
         figInd2=figure;hold on
         figInd3=figure;hold on
@@ -139,16 +169,19 @@ if processRaw==1
         timePeakVelocityXYSecsAllTrials=[];
         arrayAllTrials=[];
         if ~exist('goodArrays8to16','var')
-            load('D:\data\270917_B16\270917_B16_data\currentThresholdChs2.mat')
+            load([dataDir,'\currentThresholdChs',num2str(currentThresholdChs),'.mat']);
         end
-        for uniqueElectrode=118%1:size(goodArrays8to16,1)%53
+        for uniqueElectrode=1:15%16:30%1:15%length(electrodeNums)
             figInd9(uniqueElectrode)=figure;hold on
-            array=goodArrays8to16(uniqueElectrode,7);
+            array=arrayNums(uniqueElectrode);
             arrayColInd=find(arrays==array);
-            electrode=goodArrays8to16(uniqueElectrode,8);
-            impedance=goodArrays8to16(uniqueElectrode,6);
-            RFx=goodArrays8to16(uniqueElectrode,1);
-            RFy=goodArrays8to16(uniqueElectrode,2);
+            electrode=electrodeNums(uniqueElectrode);
+            electrodeIndTemp1=find(goodArrays8to16(:,8)==electrode);
+            electrodeIndTemp2=find(goodArrays8to16(:,7)==array);
+            electrodeInd=intersect(electrodeIndTemp1,electrodeIndTemp2);
+            impedance=goodArrays8to16(electrodeInd,6);
+            RFx=goodArrays8to16(electrodeInd,1);
+            RFy=goodArrays8to16(electrodeInd,2);
             if RFy<-500
                 RFy=NaN;
             end
@@ -159,8 +192,10 @@ if processRaw==1
             matchTrials=intersect(matchTrials,correctMicrostimTrialsInd);%identify subset of trials where performance was correct
         
             trialDataXY={};
-            degPerVoltXFinal=0.0024;
-            degPerVoltYFinal=0.0022;
+%             degPerVoltXFinal=0.0024;
+%             degPerVoltYFinal=0.0022;
+            degPerVoltXFinal=0.0073;%as measured in 240518_B2
+            degPerVoltYFinal=0.0069;
             flankingSamples=(30000/50)/2;%50-ms period before reward delivery
             saccadeEndTrials=[];
             electrodeTrials=[];
@@ -283,17 +318,21 @@ if processRaw==1
 %                     catch ME
 %                     end
 %                 end
-                cleanUp=0;%remove datapoints that are too close to fixation?
-                if posIndX<5&&posIndY<5&&cleanUp==1
-                    manualCheck=1;
-                    posIndX=NaN;
-                    posIndY=NaN;
+                cleanUp=1;%remove datapoints that are too close to fixation?
+                if cleanUp==1
+                    if posIndX<5||posIndY<5
+                        manualCheck=1;
+                        posIndX=NaN;
+                        posIndY=NaN;
+                    end
                 end
-                cleanUp2=0;%remove datapoints that are too far away?
-                if posIndX>1000&&posIndY>1000&&cleanUp2==1
-                    manualCheck=1;
-                    posIndX=NaN;
-                    posIndY=NaN;
+                cleanUp2=1;%remove datapoints that are too far away?
+                if cleanUp2==1
+                    if posIndX>200||posIndY>200
+                        manualCheck=1;
+                        posIndX=NaN;
+                        posIndY=NaN;
+                    end
                 end
                 posIndXTrials(trialCounter)=posIndX;
                 posIndYTrials(trialCounter)=posIndY;
@@ -319,14 +358,14 @@ if processRaw==1
                 
                 figure(figInd4)    
                 plot(posIndX,-posIndY,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',10);
-                impCol=impedance*0.9/100+0.05;
+                impCol=impedance*0.9/150+0.05;
                 text(posIndX-0.05,-posIndY,num2str(electrode),'FontSize',6,'Color',[impCol impCol 1]);
                 
                 figure(figInd9(uniqueElectrode))%plot the saccade end points for an individual electrode, with the mean 
 %                 subplot(11,10,uniqueElectrode);
                 hold on
                 plot(posIndX,-posIndY,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',10);
-                impCol=impedance*0.9/100+0.05;
+                impCol=impedance*0.9/150+0.05;
                 text(posIndX-0.05,-posIndY,num2str(electrode),'FontSize',6,'Color',[impCol impCol 1]);
                 
 %                 close(figHistogram);

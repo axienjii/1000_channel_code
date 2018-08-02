@@ -1,18 +1,23 @@
-function analyse_microstim_saccade13(date,allInstanceInd)
-%09/7/17
-%Written by Xing, uses serial port data to identify trial number. Analyses
-%data for runstim_microstim_saccade_catch10.m, with an arbitrarily large
-%target window and random selsection of electrodes which microstimulation
-%was delivered (out of 201 electrodes on arrays 8 to 16).
-%Can run analyses on raw data files in which neuronal data was also saved,
-%unlike analyse_microstim_saccade9, which only analyses files without neuronal
-%data.
+function analyse_microstim_saccade_RF(date,allInstanceInd)
+%29/1/18
+%Written by Xing, analyses
+%data for runstim_microstim_RF_vs_saccade.m, with an arbitrarily large
+%target window and a selsection of 9 electrodes which microstimulation
+%was delivered (1 electrode per array, for arrays 8 to 16).
 %Finds saccade end point using function calculateSaccadeEndpoint2,
 %which calculates velocity of eye movements in dva per s, and identifies
 %time points corresponding to peak velocities.
-%Also generates data for Feng, to create movie of eye movements.
-
+localDisk=1;
+if localDisk==1
+    rootdir='D:\data\';
+elseif localDisk==0
+    rootdir='X:\best\';
+end
 matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
+dataDir=[rootdir,date,'\',date,'_data'];
+if ~exist('dataDir','dir')
+    copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
+end
 load(matFile);
 maxNumTrials=size(TRLMAT,1);
 if maxNumTrials<=length(performance)
@@ -141,14 +146,20 @@ if processRaw==1
         if ~exist('goodArrays8to16','var')
             load('D:\data\270917_B16\270917_B16_data\currentThresholdChs2.mat')
         end
-        for uniqueElectrode=118%1:size(goodArrays8to16,1)%53
+        electrodeNums=[27 17 43 18 24 12 30 63 57];
+        arrayNums=8:16;
+
+        for uniqueElectrode=1:length(electrodeNums)
             figInd9(uniqueElectrode)=figure;hold on
-            array=goodArrays8to16(uniqueElectrode,7);
+            array=arrayNums(uniqueElectrode);
             arrayColInd=find(arrays==array);
-            electrode=goodArrays8to16(uniqueElectrode,8);
+            electrode=electrodeNums(uniqueElectrode);
             impedance=goodArrays8to16(uniqueElectrode,6);
-            RFx=goodArrays8to16(uniqueElectrode,1);
-            RFy=goodArrays8to16(uniqueElectrode,2);
+            electrodeIndtemp1=find(goodArrays8to16(:,8)==electrode);%matching channel number
+            electrodeIndtemp2=find(goodArrays8to16(:,7)==array);%matching array number
+            electrodeInd=intersect(electrodeIndtemp1,electrodeIndtemp2);%channel number
+            RFx=goodArrays8to16(electrodeInd,1);
+            RFy=goodArrays8to16(electrodeInd,2);
             if RFy<-500
                 RFy=NaN;
             end
@@ -159,8 +170,9 @@ if processRaw==1
             matchTrials=intersect(matchTrials,correctMicrostimTrialsInd);%identify subset of trials where performance was correct
         
             trialDataXY={};
-            degPerVoltXFinal=0.0024;
-            degPerVoltYFinal=0.0022;
+            load('D:\data\310118_B1\volts_per_dva.mat')
+            degPerVoltXFinal=1/voltsPerDegreeX;%0.0027
+            degPerVoltYFinal=1/voltsPerDegreeY;%0.0025
             flankingSamples=(30000/50)/2;%50-ms period before reward delivery
             saccadeEndTrials=[];
             electrodeTrials=[];
@@ -182,14 +194,14 @@ if processRaw==1
                 timeMicrostimInd=temp(end);%index in NEV file corresponding to end of microstim train
                 timeMicrostim=NEV.Data.SerialDigitalIO.TimeStamp(timeMicrostimInd);%timestamp in NEV file corresponding to reward delivery
                 timeMicrostimToReward=timeMicrostim:timeReward;%timestamps from 150 ms before end of microstimulation to reward delivery (because eyeanalysis_baseline_correct requires at least 150 ms of eye fixation time)
-                trialDataX{trialCounter}=NSch{1}(timeMicrostimToReward);
-                trialDataY{trialCounter}=NSch{2}(timeMicrostimToReward);
+                trialDataX{trialCounter}=NSch{1,1}{1,2}(timeMicrostimToReward);
+                trialDataY{trialCounter}=NSch{1,2}{1,2}(timeMicrostimToReward);
                 timeSmooth=timeMicrostim-preStimDur*sampFreq:timeReward;%timestamps from 150 ms before end of microstimulation to reward delivery (because eyeanalysis_baseline_correct requires at least 150 ms of eye fixation time)
-                trialDataXSmooth{trialCounter}=double(NSch{1}(timeSmooth));
-                trialDataYSmooth{trialCounter}=double(NSch{2}(timeSmooth));
+                trialDataXSmooth{trialCounter}=double(NSch{1,1}{1,2}(timeSmooth));
+                trialDataYSmooth{trialCounter}=double(NSch{1,2}{1,2}(timeSmooth));
                 timeSmoothFix=timeMicrostim-(166.7+allFixT(trialNo))*sampFreq/1000:timeReward;%timestamps from acquisition of fixation to reward delivery 
-                trialDataXSmoothFix{trialCounter}=double(NSch{1}(timeSmoothFix));
-                trialDataYSmoothFix{trialCounter}=double(NSch{2}(timeSmoothFix));
+                trialDataXSmoothFix{trialCounter}=double(NSch{1,1}{1,2}(timeSmoothFix));
+                trialDataYSmoothFix{trialCounter}=double(NSch{1,2}{1,2}(timeSmoothFix));
                 startMicrostim(trialCounter)=allFixT(trialNo)*sampFreq/1000;
                 endMicrostim(trialCounter)=(166.7+allFixT(trialNo))*sampFreq/1000;
 %                 figure;
@@ -283,14 +295,16 @@ if processRaw==1
 %                     catch ME
 %                     end
 %                 end
-                cleanUp=0;%remove datapoints that are too close to fixation?
-                if posIndX<5&&posIndY<5&&cleanUp==1
-                    manualCheck=1;
-                    posIndX=NaN;
-                    posIndY=NaN;
+                cleanUp=1;%remove datapoints that are too close to fixation?
+                if cleanUp==1
+                    if posIndX<0||posIndY<0
+                        manualCheck=1;
+                        posIndX=NaN;
+                        posIndY=NaN;
+                    end
                 end
-                cleanUp2=0;%remove datapoints that are too far away?
-                if posIndX>1000&&posIndY>1000&&cleanUp2==1
+                cleanUp2=1;%remove datapoints that are too far away?
+                if posIndX>200||posIndY>200&&cleanUp2==1
                     manualCheck=1;
                     posIndX=NaN;
                     posIndY=NaN;

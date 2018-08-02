@@ -51,8 +51,12 @@ else
   Perf = LumSigmoid(CurrentVals, x(1), x(2), x(3), x(4));
 end
 ind50=find(Perf<=0.5);
-ind50=ind50(end);
-threshold50=CurrentVals(ind50);
+if isempty(ind50)
+    threshold50=CurrentVals(1);
+else
+    ind50=ind50(end);
+    threshold50=CurrentVals(ind50);
+end
 Slope=x(3);
 Theta=x(4);
 figure('Name','Psychometric function')

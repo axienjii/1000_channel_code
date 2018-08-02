@@ -1,4 +1,4 @@
-function analyse_microstim_saccade13(date,allInstanceInd)
+function analyse_microstim_saccade14(date,allInstanceInd)
 %09/7/17
 %Written by Xing, uses serial port data to identify trial number. Analyses
 %data for runstim_microstim_saccade_catch10.m, with an arbitrarily large
@@ -139,9 +139,11 @@ if processRaw==1
         timePeakVelocityXYSecsAllTrials=[];
         arrayAllTrials=[];
         if ~exist('goodArrays8to16','var')
-            load('D:\data\270917_B16\270917_B16_data\currentThresholdChs2.mat')
+            load(['X:\best\',date,'\',date,'_data\currentThresholdChs84.mat'])
+            goodArrays8to16=goodArrays8to16New;
+            goodCurrentThresholds=goodCurrentThresholdsNew;
         end
-        for uniqueElectrode=118%1:size(goodArrays8to16,1)%53
+        for uniqueElectrode=79:81%1:size(goodArrays8to16,1)%53
             figInd9(uniqueElectrode)=figure;hold on
             array=goodArrays8to16(uniqueElectrode,7);
             arrayColInd=find(arrays==array);
@@ -319,14 +321,14 @@ if processRaw==1
                 
                 figure(figInd4)    
                 plot(posIndX,-posIndY,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',10);
-                impCol=impedance*0.9/100+0.05;
+                impCol=impedance*0.9/150+0.05;
                 text(posIndX-0.05,-posIndY,num2str(electrode),'FontSize',6,'Color',[impCol impCol 1]);
                 
                 figure(figInd9(uniqueElectrode))%plot the saccade end points for an individual electrode, with the mean 
 %                 subplot(11,10,uniqueElectrode);
                 hold on
                 plot(posIndX,-posIndY,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',10);
-                impCol=impedance*0.9/100+0.05;
+                impCol=impedance*0.9/150+0.05;
                 text(posIndX-0.05,-posIndY,num2str(electrode),'FontSize',6,'Color',[impCol impCol 1]);
                 
 %                 close(figHistogram);
