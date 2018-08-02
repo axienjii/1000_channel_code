@@ -12,9 +12,11 @@ end
 switch(date)
     case '240718_B13'
         goodBlocks=[1 2];
+    case '310718_B1'
+        goodBlocks=1;
 end
 eyeChannels=131;%[130 131];
-extractSaccadeTimes=0;
+extractSaccadeTimes=1;
 if extractSaccadeTimes==1
     for neuronalChInd=1:length(eyeChannels)
         neuronalCh=eyeChannels(neuronalChInd);
