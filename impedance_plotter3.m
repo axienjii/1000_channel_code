@@ -14,7 +14,7 @@ date='170717';
 date='200717';
 date='080817';
 date='200917';
-% date='061017';
+date='061017';
 colind = hsv(16);
 colindImp = hsv(1000);%colour-code impedances
 
@@ -45,6 +45,10 @@ for instanceInd=1:8
     allImpedance=[allImpedance impedance];
 end
 impedanceAllChannels=[allImpedance' allArray' allElectrode'];
+if strcmp(date,'061017')
+    impedanceAllChannels(385:512,2)=[ones(1,32)*7 ones(1,64)*8 ones(1,32)*7];
+    impedanceAllChannels(385:512,3)=[417:512 385:416];
+end
 save(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
 
 switch(date)
@@ -311,7 +315,7 @@ print(pathname,'-dtiff','-r300');
     120.948840957758,-130.685637209769,104.447223178057,4.03893346035232,8.28530816496006,29,10,59;
     126.224705050819,-96.3022802669606,125.985208239135,4.87179895820726,27.5326674055054,33,10,56]
 
-load(['Y:\Xing\',date,'_data\currentThresholdChs.mat']);
+load(['Y:\Xing\',date,'_data\currentThresholdChs5.mat']);
 for electrodeInd=1:size(goodArrays8to16,1)
     array=goodArrays8to16(electrodeInd,7);
     electrode=goodArrays8to16(electrodeInd,8);
