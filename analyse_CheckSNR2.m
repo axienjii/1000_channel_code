@@ -95,11 +95,15 @@ if copyRemotely==1
     end
 end
 stimDur=400/1000;%in seconds
+<<<<<<< HEAD
+allInstanceInd=5:8;
+=======
 preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=300/1000;%length of post-stimulus-offset period, in s
 downsampleFreq=30;
 allInstanceInd=1:8;
 allSNR=[];
+>>>>>>> c02ece80a0798db605a602022aabee5348c6debc
 for instanceCount=1:length(allInstanceInd)
     instanceInd=allInstanceInd(instanceCount);
     instanceName=['instance',num2str(instanceInd)];
