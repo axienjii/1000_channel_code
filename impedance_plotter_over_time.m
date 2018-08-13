@@ -6,8 +6,8 @@ colindImp = hsv(1000);%colour-code impedances
 impedanceAllChannelsSessions=[];
 figure
 hold on
-dates=[{'260617'} {'110717'} {'170717'} {'200717'} {'080817'} {'100817'} {'180817'} {'200917'} {'061017'} {'091017'} {'131017'} {'201017'} {'020218'} {'280218'}];
-for dateInd=1:14
+dates=[{'260617'} {'110717'} {'170717'} {'200717'} {'080817'} {'100817'} {'180817'} {'200917'} {'061017'} {'091017'} {'131017'} {'201017'} {'020218'} {'280218'} {'080618'} {'070818'}];
+for dateInd=1:16
     switch(dateInd)
         case 1
             date='260617';
@@ -37,6 +37,10 @@ for dateInd=1:14
             date='020218';
         case 14
             date='280218';
+        case 15
+            date='080618';
+        case 16
+            date='070818';
     end
     load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat']);
     impedanceAllChannelsSessions=[impedanceAllChannelsSessions impedanceAllChannels(:,1)];
@@ -58,4 +62,4 @@ plot([surgery surgery],[0 1500],'r');
 ylim([0 1500])
 lines = findobj(gcf, 'type', 'line', 'Tag', 'Median');
 set(lines, 'Color', 'r','LineWidth',5);
-
+pause

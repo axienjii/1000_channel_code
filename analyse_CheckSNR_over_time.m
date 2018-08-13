@@ -1,9 +1,8 @@
-function analyse_CheckSNR2(date)
-%26/9/17
-%Written by Xing. Extracts MUA data from raw .NS6 file, during presentation
+function analyse_CheckSNR_over_time(date)
+%13/8/18
+%Written by Xing. Loads MUA and SNR data from .mat file, during presentation
 %of fullscreen flashing checkerboard stimuli to analyse signals for
-%visually evoked responses. Calculates SNR, saves to file. Works with data
-%on local disk or on server, depending on the date.
+%visually evoked responses. Plots measurements of SNR across time, for each channel.
 % date='240717_B2';
 switch(date)
     case '040717_B2'

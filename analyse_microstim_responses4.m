@@ -1089,9 +1089,18 @@ end
 % date='240718_B5';
 % electrodeNums=[20];
 % arrayNums=[16];
-date='240718_B6';
-electrodeNums=[20];
-arrayNums=[16];
+% date='240718_B6';
+% electrodeNums=[20];
+% arrayNums=[16];
+% date='070818_B6';
+% electrodeNums=[34];
+% arrayNums=[12];
+% date='070818_B7';
+% electrodeNums=[62];
+% arrayNums=[15];
+date='070818_B9';
+electrodeNums=[4];
+arrayNums=[15];
 
 finalCurrentValsFile=7;
 % copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
