@@ -8,11 +8,7 @@ stimDur=stimDurms/1000;%in seconds
 date='070818_B2';
 processRaw=1;
 if processRaw==1
-<<<<<<< HEAD
-    for instanceInd=5:8
-=======
     for instanceInd=1:4
->>>>>>> d3c9949e0e4dd06f3f12ba31d4107399afabcdcd
         instanceName=['instance',num2str(instanceInd)];
         instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);
