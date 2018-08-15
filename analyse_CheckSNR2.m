@@ -5,6 +5,7 @@ function analyse_CheckSNR2(date)
 %visually evoked responses. Calculates SNR, saves to file. Works with data
 %on local disk or on server, depending on the date.
 % date='240717_B2';
+best=1;
 switch(date)
     case '040717_B2'
         whichDir=2;
@@ -20,40 +21,41 @@ switch(date)
         whichDir=1;
         best=1;
     case '200717_B7'
+        whichDir=2;
+        best=1;
+    case '210717_B4'%forgot to turn off impedance mode on CerePlex Ms connected to instance 1
         whichDir=1;
         best=1;
-    case '210717_B4'
-        whichDir=1;
-        best=1;
-    case '240717_B2'
+    case '240717_B2'%strange noise on most instances
         whichDir=1;
         best=1;
     case '250717_B2'
-        whichDir=1;
+        whichDir=2;
         best=1;
     case '260717_B3'
-        whichDir=1;
+        whichDir=2;
         best=1;
     case '080817_B7'
-        whichDir=1;
+        whichDir=2;
         best=1;
     case '090817_B8'
-        whichDir=1;
+        whichDir=2;
         best=1;
     case '100817_B2'
-        whichDir=1;
+        whichDir=2;
         best=1;
     case '180817_B10'
-        whichDir=1;
+        whichDir=2;
         best=1;
     case '230817_B20'
-        whichDir=1;
+        whichDir=2;
     case '240817_B39'
-        whichDir=1;
+        whichDir=2;
     case '290817_B48'
-        whichDir=1;
+        whichDir=2;
+        best=1;
     case '200917_B2'
-        whichDir=1;
+        whichDir=2;
         best=1;
     case '061017_B6'
         whichDir=1;
@@ -104,11 +106,10 @@ if copyRemotely==1
     end
 end
 stimDur=400/1000;%in seconds
-allInstanceInd=5:8;
+allInstanceInd=1:4;
 preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=300/1000;%length of post-stimulus-offset period, in s
 downsampleFreq=30;
-allInstanceInd=1:8;
 allSNR=[];
 for instanceCount=1:length(allInstanceInd)
     instanceInd=allInstanceInd(instanceCount);
@@ -127,8 +128,8 @@ for instanceCount=1:length(allInstanceInd)
         trialData={};
         for trialInd=1:length(timeStimOns)
             if strcmp(class(NS.Data),'cell')
-                if size(NS.Data{2},2)>=timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1
-                    trialData{trialInd}=NS.Data{2}(:,timeStimOns(trialInd)-sampFreq*preStimDur:timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
+                if size(NS.Data{end},2)>=timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1
+                    trialData{trialInd}=NS.Data{end}(:,timeStimOns(trialInd)-sampFreq*preStimDur:timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
                 end
             elseif strcmp(class(NS.Data),'double')
                 if size(NS.Data,2)>=timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1

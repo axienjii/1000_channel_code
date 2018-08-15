@@ -39,7 +39,7 @@ length(goodInd)/1024
 
 %all good channels, colour-coded by eccentricity
 plotMtLAtP=1;%1: medial-lateral; 2: anterior-posterior
-for arrayOfInterest=5
+for arrayOfInterest=1:16
     switch(date)%x & y co-ordinates of centre-point
         case '060617_B2'
             x0 = 70;
@@ -101,7 +101,14 @@ for arrayOfInterest=5
         if channelInd==0
             channelInd=128;
         end
-        [channelNum,arrayNum,area]=electrode_mapping(instanceInd,channelInd);
+        testMattRFMap=1;
+        if testMattRFMap==0
+            [channelNum,arrayNum,area]=electrode_mapping(instanceInd,channelInd);
+        elseif testMattRFMap==1
+            load('D:\data\channel_area_mapping.mat')
+            channelNum=channelNums(channelInd,instanceInd);
+            arrayNum=arrayNums(channelInd,instanceInd);            
+        end
         arrayColumn=mod(channelNum,8);
         if arrayColumn==0
             arrayColumn=8;
