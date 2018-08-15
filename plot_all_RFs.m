@@ -203,6 +203,90 @@ ylim([-170 30]);
 xlim([-50 250]);
 xlim([-25 150]);
 
+%all good channels, colour-coded by mean SNR
+SNRFileName='D:\data\results\allSNR_130818.mat';
+load(SNRFileName,'allSNR');
+goodSessionSNR=allSNR(:,10);%session 201017_B32, with high SNR values
+maxSNR=max(goodSessionSNR);
+logGoodSessionSNR=round(log(goodSessionSNR))+1;%add 1 to create an entry for values of 0
+figure
+hold on
+scatter(0,0,'r','o','filled');%fix spot
+colindSNR=cool(1+ceil(max(logGoodSessionSNR)));%add 1 to create an entry for values of 0
+ind1=1/ceil(max(logGoodSessionSNR));
+arrayNums=[];
+goodArrays=1:16;
+badQuadrant=[];
+for i=1:length(goodInd)
+    channelRow=goodInd(i);
+    instanceInd=ceil(channelRow/128);
+    channelInd=mod(channelRow,128);
+    if channelInd==0
+        channelInd=128;
+    end
+    [channelNum,arrayNum,area]=electrode_mapping(instanceInd,channelInd);
+    arrayCol=find(goodArrays==arrayNum);
+    arrayNums=[arrayNums arrayNum];
+    if strcmp(area,'V1')
+        markerCol='k';%V1
+    else
+        markerCol='b';%V4
+    end
+%     if channelRow>32&&channelRow<=96||channelRow>128&&channelRow<=128+32||channelRow>128*2-32&&channelRow<=128*2%V4 RFs
+%         plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',markerCol,'Marker','o');
+%     else
+%         plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',markerCol,'Marker','x');
+%         %     ellipse(channelRFs1000(goodInd(i),12),channelRFs1000(goodInd(i),13),channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2));
+%     end
+    if channelRFs1000(goodInd(i),1)<0||channelRFs1000(goodInd(i),2)>10
+        if area=='V1'
+            areaNum=1;
+        elseif area=='V4'
+            areaNum=4;
+        end
+        badQuadrant=[badQuadrant;arrayNum channelNum areaNum instanceInd channelInd];
+    end
+    if goodSessionSNR(i)>0
+        if channelRow>32&&channelRow<=96||channelRow>128&&channelRow<=128+32||channelRow>128*2-32&&channelRow<=128*2%V4 RFs
+            plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colindSNR(logGoodSessionSNR(i),:),'Marker','o');
+        else
+            plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colindSNR(logGoodSessionSNR(i),:),'Marker','x');
+            %     ellipse(channelRFs1000(goodInd(i),12),channelRFs1000(goodInd(i),13),channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2));
+        end
+    else%SNR of 0
+        if channelRow>32&&channelRow<=96||channelRow>128&&channelRow<=128+32||channelRow>128*2-32&&channelRow<=128*2%V4 RFs
+            plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',[1 0 0],'Marker','o');
+        else
+            plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',[1 0 0],'Marker','x');
+        end
+    end
+end
+colormap cool
+colorbar('Ticks',[0 ind1 1],'TickLabels',{'0','1',round(maxSNR)})
+arrayNums=unique(arrayNums);
+%draw dotted lines indicating [0,0]
+plot([0 0],[-250 200],'k:')
+plot([-200 300],[0 0],'k:')
+plot([-200 300],[200 -300],'k:')
+ellipse(50,50,0,0,[0.1 0.1 0.1]);
+ellipse(100,100,0,0,[0.1 0.1 0.1]);
+ellipse(150,150,0,0,[0.1 0.1 0.1]);
+ellipse(200,200,0,0,[0.1 0.1 0.1]);
+text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+xlim([leftEdge-50 rightEdge+50]);
+ylim([bottomEdge-50 topEdge+50]);
+axis square
+ax.XTick=[0 sampFreq*preStimDur/downsampleFreq sampFreq*(preStimDur+stimDur)/downsampleFreq];
+ax.XTickLabel={num2str(preStimDur*1000),'0',num2str(stimDurms)};
+titleText=['all good channel RFs, colour-coded by SNR, ',num2str(length(goodInd)),' channels'];
+title(titleText);
+axis equal
+xlim([-20 210]);
+ylim([-160 20]);
+
 %all good channels, colour-coded by eccentricity
 plotMtLAtP=2;%1: medial-lateral; 2: anterior-posterior
 plotV1=1;
