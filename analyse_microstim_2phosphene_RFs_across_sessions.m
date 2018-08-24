@@ -843,8 +843,11 @@ for calculateVisual=[0 1]
                             %mm, for the x- and y-axes, in the variable
                             %'w,' with the x and y values contained in the
                             %real and imaginary parts of w, respectively
+                            eccentricity(electrodeSequence)=sqrt(RFx^2+RFy^2);
                         end
                         corticalDistance{setNo}(targetCondInd)=sqrt((real(w(1))-real(w(2)))^2+(imag(w(1))-imag(w(2)))^2);
+                        eccentricities{setNo}(targetCondInd)=mean(eccentricity);
+                        dvaEccentricities{setNo}(targetCondInd)=mean(eccentricity)/26;%approximately 26 pixels per degree
                     end
                 end
                 initialPerfTrials=10;%first set of trials are the most important
@@ -863,6 +866,7 @@ for calculateVisual=[0 1]
         end
     end
     if calculateVisual==0
+        %cortical distance between electrodes:
         figure;
         hold on
         for setNo=[1:17 19:26 28:46]
@@ -884,7 +888,31 @@ for calculateVisual=[0 1]
         xlabel('cortical distance between electrode pair (mm)');
         ylabel('performance (proportion correct)');
         title('performance with cortical distance for 2-phosphene task');
-        save('D:\data\040118_2phosphene_cortical_coords_perf.mat','corticalDistance','numTrialsCondMicrostimTarget','meanPerfMicrostimCondTarget');
+        
+        %eccentricity:
+        figure;
+        hold on
+        for setNo=[1:17 19:26 28:46]
+            for targetCondInd=1:2
+                plot(dvaEccentricities{setNo}(targetCondInd),meanPerfMicrostimCondTarget{setNo}(targetCondInd),'ko');
+            end
+        end
+        %only include sets where a certain minimum number of trials was
+        %presented:
+        figure;
+        hold on
+        for setNo=[1:17 19:26 28:46]
+            for targetCondInd=1:2
+                if numTrialsCondMicrostimTarget{setNo}(targetCondInd)>=initialPerfTrials
+                    plot(dvaEccentricities{setNo}(targetCondInd),meanPerfMicrostimCondTarget{setNo}(targetCondInd),'ko');
+                end
+            end
+        end
+        xlabel('mean eccentricity');
+        ylabel('performance (proportion correct)');
+        title('performance with eccentricity for 2-phosphene task');
+
+        save('D:\data\040118_2phosphene_cortical_coords_perf.mat','corticalDistance','numTrialsCondMicrostimTarget','meanPerfMicrostimCondTarget','eccentricities');
     end
     if calculateVisual==1
         subplot(1,2,2);

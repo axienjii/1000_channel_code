@@ -67,12 +67,14 @@ if analyseConds==1
             electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2});1:length(setElectrodes{3});1:length(setElectrodes{4})];
             currentThresholdChs=125;
             visualOnly=0;
+            lastControlCond=0;
         case '160518_B3'
             setInds=44:63;
             numTargets=2;
             electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2});1:length(setElectrodes{3});1:length(setElectrodes{4})];
             currentThresholdChs=126;
             visualOnly=0;
+            lastControlCond=1;
             
         %visual task only:
         case '150518_B6'
@@ -81,12 +83,14 @@ if analyseConds==1
             electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2});1:length(setElectrodes{3});1:length(setElectrodes{4})];
             currentThresholdChs=125;
             visualOnly=1;
+            lastControlCond=0;
         case '160518_B1'
             setInds=44:63;
             numTargets=2;
             electrodePairs=[1:length(setElectrodes{1});1:length(setElectrodes{2});1:length(setElectrodes{3});1:length(setElectrodes{4})];
             currentThresholdChs=126;
             visualOnly=1;
+            lastControlCond=1;
     end
 end
 load([dataDir,'\currentThresholdChs',num2str(currentThresholdChs),'.mat']);
@@ -274,6 +278,14 @@ if processRaw==1
                         corrIndsM{setNo}=intersect(condInds{setNo},correctMicrostimTrialsInd);
                         incorrIndsM{setNo}=intersect(condInds{setNo},incorrectMicrostimTrialsInd);
                     end
+                    
+                    perfM(setNo)=length(corrIndsM{setNo})/(length(corrIndsM{setNo})+length(incorrIndsM{setNo}));
+                    corrIndsV{setNo}=intersect(condInds{setNo},correctVisualTrialsInd);
+                    incorrIndsV{setNo}=intersect(condInds{setNo},incorrectVisualTrialsInd);
+                    perfV(setNo)=length(corrIndsV{setNo})/(length(corrIndsV{setNo})+length(incorrIndsV{setNo}));
+                    allPerfM(condNo,setNo)=perfM(setNo);
+                    allPerfV(condNo,setNo)=perfV(setNo);
+
                     if numTargets==4
                         letterLocations=double('LRTB');
                         if setInd==37
@@ -502,6 +514,29 @@ if processRaw==1
                 %            print(pathname,'-dtiff');
                 end            
             end
+            figure;hold on%plot mean performance across electrode sets (excluding control)
+            if visualOnly==0
+                perfPlot=allPerfM(1:length(setInds),:);
+            else
+                perfPlot=allPerfV(1:length(setInds),:);
+            end
+            if lastControlCond==1%for last condition, the electrodes were randomly chosen
+                perfPlot=perfPlot(1:end-1,:);
+            end
+            bar(1,mean(perfPlot(:,3)))
+            errorbar(1,mean(perfPlot(:,3)),std(perfPlot(:,3)))
+            bar(2,mean(perfPlot(:,4)))
+            errorbar(2,mean(perfPlot(:,4)),std(perfPlot(:,4)))
+            ylim([0 1])
+            set(gca,'XTick',[1 2]);
+            set(gca,'XTickLabels',[{'A'} {'L'}]);
+            plot([0 2.5],[0.5 0.5],'k--');
+            xlabel('letter')
+            ylabel('mean performance')
+            title(['performance across ',num2str(size(perfPlot,1)),' sets, error 1 SD'])
+            tempPerf=perfPlot(1:size(perfPlot,1),3:4);
+            tempPerf=tempPerf(:);
+            [p,h,stats]=signrank(tempPerf,0.5)%for 160518_B3, Z=2.70, p=.007. for 150518_B8, Z=4.57, p<.001
             for figCount=1:numFigs
                 figure(figInd(figCount));
                 if labelElectrodes==1
@@ -510,14 +545,14 @@ if processRaw==1
                     pathname=fullfile(rootdir,date,['behavioural_performance_per_condition_',date,'_',num2str(figCount),'_no_labels']);
                 end
                 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-                print(pathname,'-dtiff','-r300');
+%                 print(pathname,'-dtiff','-r300');
             end
-            perfM(setNo)=length(corrIndsM{setNo})/(length(corrIndsM{setNo})+length(incorrIndsM{setNo}));
-            corrIndsV{setNo}=intersect(condInds{setNo},correctVisualTrialsInd);
-            incorrIndsV{setNo}=intersect(condInds{setNo},incorrectVisualTrialsInd);
-            perfV(setNo)=length(corrIndsV{setNo})/(length(corrIndsV{setNo})+length(incorrIndsV{setNo}));
-            allPerfM(condNo,setNo)=perfM(setNo);
-            allPerfV(condNo,setNo)=perfV(setNo);
+%             perfM(setNo)=length(corrIndsM{setNo})/(length(corrIndsM{setNo})+length(incorrIndsM{setNo}));
+%             corrIndsV{setNo}=intersect(condInds{setNo},correctVisualTrialsInd);
+%             incorrIndsV{setNo}=intersect(condInds{setNo},incorrectVisualTrialsInd);
+%             perfV(setNo)=length(corrIndsV{setNo})/(length(corrIndsV{setNo})+length(incorrIndsV{setNo}));
+%             allPerfM(condNo,setNo)=perfM(setNo);
+%             allPerfV(condNo,setNo)=perfV(setNo);
             mean(allPerfM(1:19,3:4))%calculate mean across all conditions where a phosphene letter was presented; exclude last condition in which a control set of electrodes was used
             allPerfM(1:19,5:8)=[0.900000000000000,0.140000000000000,0,0;0.890000000000000,0.0800000000000000,0,0;0.810000000000000,0.950000000000000,0,0;1,0.890000000000000,0,0;0.880000000000000,0.780000000000000,0,0;0.640000000000000,0.930000000000000,0,0;0.800000000000000,0.0600000000000000,0,0;0.0300000000000000,0.590000000000000,0,0;0.0200000000000000,0.870000000000000,0,0;0.920000000000000,0.920000000000000,0.980000000000000,0;0.470000000000000,0.680000000000000,0,0.880000000000000;0.760000000000000,0.860000000000000,0.570000000000000,0;0.580000000000000,0.670000000000000,0,0.830000000000000;0.900000000000000,0.900000000000000,0.820000000000000,0;0.810000000000000,0.850000000000000,0,0;0.950000000000000,0.960000000000000,0.970000000000000,0;1,0.960000000000000,0,0.930000000000000;0.780000000000000,0.630000000000000,0.970000000000000,0;0.960000000000000,1,0,0.980000000000000;0,0,0,0];
             [h p]=ttest(allPerfM(1:19,3),0.5)
@@ -600,7 +635,7 @@ if processRaw==1
         ylabel('performance');
         pathname=fullfile(rootdir,date,['behavioural_performance_RF_locations_',date]);
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        print(pathname,'-dtiff');
+%         print(pathname,'-dtiff');
     end
 end
 pause=1;

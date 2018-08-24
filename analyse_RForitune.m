@@ -1,7 +1,11 @@
 function analyse_RForitune
 %15/8/18
 %Written by Xing, modified from analyse_CheckSNR.m. Extracts MUA data from raw .NS6 file, during presentation
-%of orientation tuning stimuli in runstim_RForitune.m. 
+%of orientation tuning stimuli in runstim_RForitune.m. Fits wrapped
+%Gaussian to data, using function modified from bj_Wrapped_Gauss_strf.m.
+%Write preferred orientations to separate file for each instance, and then
+%call combine_orientation_tuning.m to combine values across instances, for
+%further plotting of orientation-coded RF maps in plot_all_RFs.m.
 date='080618_B3';
 load('X:\best\080618_B3\080618_data\CheckSNR_080618_B3.mat')
 best=1;
@@ -28,7 +32,7 @@ if copyRemotely==1
     end
 end
 stimDur=600/1000;%in seconds
-allInstanceInd=2:8;
+allInstanceInd=4:8;
 preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=300/1000;%length of post-stimulus-offset period, in s
 downsampleFreq=30;
@@ -36,11 +40,11 @@ allSNR=[];
 for instanceCount=1:length(allInstanceInd)
     instanceInd=allInstanceInd(instanceCount);
     instanceName=['instance',num2str(instanceInd)];
-    instanceNEVFileName=fullfile(topDir,date,[instanceName,'.nev']);
-    NEV=openNEV(instanceNEVFileName);
-    instanceNS6FileName=fullfile(topDir,date,[instanceName,'.ns6']);
     readRaw=1;
     if readRaw==1
+        instanceNEVFileName=fullfile(topDir,date,[instanceName,'.nev']);
+        NEV=openNEV(instanceNEVFileName);
+        instanceNS6FileName=fullfile(topDir,date,[instanceName,'.ns6']);
         NS=openNSx(instanceNS6FileName);
         sampFreq=NS.MetaTags.SamplingFreq;
 
@@ -68,7 +72,7 @@ for instanceCount=1:length(allInstanceInd)
                     if find(trialEncodes==2^StimB)
                         trialIndStimOn=find(trialEncodes==2^StimB);
                         indStimOns(trialNo)=encodeInd(trialNo-1)+trialIndStimOn-1;%index of times at which stimulus was presented
-                        timeStimOns(trialNo)=NEV.Data.SerialDigitalIO.TimeStamp(timeIndStimOn(trialNo));%time stamps for stimulus presentation
+                        timeStimOns(trialNo)=NEV.Data.SerialDigitalIO.TimeStamp(indStimOns(trialNo));%time stamps for stimulus presentation
                     else
                         indStimOns(trialNo)=NaN;
                         timeStimOns(trialNo)=NaN;
@@ -184,7 +188,7 @@ for instanceCount=1:length(allInstanceInd)
         
         meanChannelMUAOri=[];
         meanActCondOri=[];
-        allCondsMeanChannelMUAOri=cell(NS.MetaTags.ChannelCount);
+        allCondsMeanChannelMUAOri=cell(NS.MetaTags.ChannelCount,1);
         for channelInd=1:NS.MetaTags.ChannelCount
             figure;hold on
             for oriInd=1:numOriConds
@@ -242,6 +246,8 @@ for instanceCount=1:length(allInstanceInd)
         goodVarAcc=find(allPerc_Var_acc>60);
         goodWidth=find(allWidth>5);
         goodTuningChs=intersect(goodVarAcc,goodWidth);
+        instanceName
+        length(goodTuningChs)
         for figInd=1:6
             figure(figInd)
             set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
@@ -251,5 +257,23 @@ for instanceCount=1:length(allInstanceInd)
         fileName=fullfile(topDir,date,['mean_MUA_',instanceName,'.mat']);
         save(fileName,'allCondsMeanChannelMUAOri','channelSNR','meanActCondOri','goodTuningChs','allPerc_Var_acc','allPrefered_Ori','allWidth','allTuning_Amplitude');
     end    
+    fileName=fullfile(topDir,date,['mean_MUA_',instanceName,'.mat']);
+    load(fileName,'allCondsMeanChannelMUAOri','channelSNR','meanActCondOri','goodTuningChs','allPerc_Var_acc','allPrefered_Ori','allWidth','allTuning_Amplitude');
+    close all
+    for goodCh=1:length(goodTuningChs)   
+        channelInd=goodTuningChs(goodCh);
+        oriActGoodChs=meanActCondOri(channelInd,1:12);
+        STDGoodChs=ones(1,length(oriActGoodChs))*0.1;
+        [Tuning_Amplitude,Width,Perc_Var_acc, Prefered_Ori, Bandwidth, Baseline_FR, pFit]=Wrapped_Gaus_strf(oriActGoodChs,STDGoodChs,goodCh);
+    end
+    for figInd=1:ceil(length(goodTuningChs)/24)
+        figure(figInd)
+        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+        pathname=fullfile(topDir,date,[instanceName,'_fig',num2str(figInd),'_orientation_tuned_chs_only']);
+        print(pathname,'-dtiff');
+    end
+    close all
+    clear NS channelDataMUA
+    
 end
 pause=1;

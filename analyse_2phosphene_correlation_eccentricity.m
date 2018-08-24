@@ -1,13 +1,13 @@
-function analyse_2phosphene_correlation_cortical_distance
-%Written by Xing 23/1/18
+function analyse_2phosphene_correlation_eccentricity
+%Written by Xing 22/8/18
 %Analyse performance on 2-phosphene orientation task as a function of
-%distance between the two electrodes. Converts RF locations into cortical
-%coordinates.
+%mean eccentricity of the RFs on the two electrodes. 
 
 minNumTrials=10;
 %Data from task with 12-patterns of microstimulation:
-load('D:\data\results\220118_2phosphene_cortical_coords_perf.mat')
-corticalDistance1=corticalDistance;
+% load('D:\data\220118_2phosphene_cortical_coords_perf.mat')
+load('D:\data\220118_2phosphene_current_perf.mat')
+corticalDistance1=eccentricities;
 meanPerfMicrostimCondTarget1=meanPerfMicrostimCondTarget;
 numTrialsCondMicrostimTarget1=numTrialsCondMicrostimTarget;
 
@@ -21,14 +21,10 @@ tooFewTrials=find(allNumTrialsCondMicrostimTarget1<minNumTrials);
 allCorticalDistance1(tooFewTrials)=[];
 allMeanPerfMicrostimCondTarget1(tooFewTrials)=[];
 [r1 p1]=corrcoef(allCorticalDistance1,allMeanPerfMicrostimCondTarget1);
-figure;plot(allCorticalDistance1,allMeanPerfMicrostimCondTarget1,'ko');
-xlabel('mean eccentricity');
-ylabel('performance (proportion correct)');
-title(['performance with cortical distance for 2-phosphene task, p=',num2str(p1(1,2))]);
 
 %Data from 2-phosphene and line task, before 12-pattern task:
-load('D:\data\results\040118_2phosphene_cortical_coords_perf.mat')
-corticalDistance2=corticalDistance;
+load('D:\data\040118_2phosphene_cortical_coords_perf.mat')
+corticalDistance2=eccentricities;
 meanPerfMicrostimCondTarget2=meanPerfMicrostimCondTarget;
 numTrialsCondMicrostimTarget2=numTrialsCondMicrostimTarget;
 
@@ -47,10 +43,6 @@ removeNan=[removeNanDist removeNanPerf];
 allCorticalDistance2(removeNan)=[];
 allMeanPerfMicrostimCondTarget2(removeNan)=[];
 [r2 p2]=corrcoef(allCorticalDistance2,allMeanPerfMicrostimCondTarget2);
-figure;plot(allCorticalDistance2,allMeanPerfMicrostimCondTarget2,'ko');
-xlabel('mean eccentricity');
-ylabel('performance (proportion correct)');
-title(['performance with cortical distance for 2-phosphene task, p=',num2str(p2(1,2))]);
 
 %combine datasets:
 corticalDistance=[corticalDistance1 corticalDistance2];
@@ -69,19 +61,20 @@ if ~isempty(removeNan)
     allMeanPerfMicrostimCondTarget(removeNan)=[];
 end
 
-[r p]=corrcoef(allCorticalDistance,allMeanPerfMicrostimCondTarget);
-figure;plot(allCorticalDistance,allMeanPerfMicrostimCondTarget,'ko');
+[r p]=corrcoef(allCorticalDistance,allMeanPerfMicrostimCondTarget)
+figure;plot(allCorticalDistance/26,allMeanPerfMicrostimCondTarget,'ko');
 xlabel('mean eccentricity');
 ylabel('performance (proportion correct)');
-title(['performance with cortical distance for 2-phosphene task, p=',num2str(p(1,2))]);
+title(['performance with eccentricity for 2-phosphene task, p=',num2str(p(1,2))]);
 
 %Carry out analyses using datasets where performance was at least 50%:
 clear all
 minNumTrials=10;
 minPerf=0.4;
 %Data from task with 12-patterns of microstimulation:
-load('D:\data\220118_2phosphene_cortical_coords_perf.mat')
-corticalDistance1=corticalDistance;
+% load('D:\data\220118_2phosphene_cortical_coords_perf.mat')
+load('D:\data\220118_2phosphene_current_perf.mat')
+corticalDistance1=eccentricities;
 meanPerfMicrostimCondTarget1=meanPerfMicrostimCondTarget;
 numTrialsCondMicrostimTarget1=numTrialsCondMicrostimTarget;
 
@@ -101,7 +94,7 @@ allMeanPerfMicrostimCondTarget1(tooLowPerf)=[];
 
 %Data from 2-phosphene and line task, before 12-pattern task:
 load('D:\data\040118_2phosphene_cortical_coords_perf.mat')
-corticalDistance2=corticalDistance;
+corticalDistance2=eccentricities;
 meanPerfMicrostimCondTarget2=meanPerfMicrostimCondTarget;
 numTrialsCondMicrostimTarget2=numTrialsCondMicrostimTarget;
 
@@ -141,4 +134,4 @@ if ~isempty(removeNan)
     allMeanPerfMicrostimCondTarget(removeNan)=[];
 end
 
-[r p]=corrcoef(allCorticalDistance,allMeanPerfMicrostimCondTarget);
+[r p]=corrcoef(allCorticalDistance,allMeanPerfMicrostimCondTarget)

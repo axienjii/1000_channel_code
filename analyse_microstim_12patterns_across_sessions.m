@@ -810,12 +810,15 @@ for calculateVisual=[0 1]
                                 
                                 %identify current level delivered:
                                 currentAmp(electrodeSequence)=goodCurrentThresholds(electrodeInd(electrodeSequence));
+                                eccentricity(electrodeSequence)=sqrt(RFx^2+RFy^2);
                             end
                             corticalDistance{setNo}(stimPatternInd,targetCondInd)=sqrt((real(w(1))-real(w(2)))^2+(imag(w(1))-imag(w(2)))^2);
                             currentDifference{setNo}(stimPatternInd,targetCondInd)=abs(diff(currentAmp));
                             currentMean{setNo}(stimPatternInd,targetCondInd)=mean(currentAmp(:));
                             currentMin{setNo}(stimPatternInd,targetCondInd)=min(currentAmp(:));
                             currentMax{setNo}(stimPatternInd,targetCondInd)=max(currentAmp(:));
+                            eccentricities{setNo}(stimPatternInd,targetCondInd)=mean(eccentricity);
+                            dvaEccentricities{setNo}(stimPatternInd,targetCondInd)=mean(eccentricity)/26;%approximately 26 pixels per degree
                         end
                     end
                 end
@@ -881,7 +884,36 @@ for calculateVisual=[0 1]
                 end
             end
         end
-        save('D:\data\220118_2phosphene_current_perf.mat','currentDifference','currentMean','currentMin','currentMax','numTrialsCondMicrostimTarget','meanPerfMicrostimCondTarget');
+        
+        %eccentricity:
+        figure;
+        hold on
+        for setNo=1:22
+            for stimPatternInd=1:2
+                for targetCondInd=1:2
+                    plot(dvaEccentricities{setNo}(stimPatternInd,targetCondInd),meanPerfMicrostimCondTarget{setNo}(stimPatternInd,targetCondInd),'ko');
+                end
+            end
+        end
+        %only include sets where a certain minimum number of trials was
+        %presented:
+        figure;
+        hold on
+        for setNo=1:22
+            for stimPatternInd=1:2
+                for targetCondInd=1:2
+                    if numTrialsCondMicrostimTarget{setNo}(stimPatternInd,targetCondInd)>=initialPerfTrials
+                        plot(dvaEccentricities{setNo}(stimPatternInd,targetCondInd),meanPerfMicrostimCondTarget{setNo}(stimPatternInd,targetCondInd),'ko');
+                    end
+                end
+            end
+        end
+%         save('D:\data\220118_2phosphene_cortical_coords_perf.mat','corticalDistance','numTrialsCondMicrostimTarget','meanPerfMicrostimCondTarget');
+        xlabel('mean eccentricity');
+        ylabel('performance (proportion correct)');
+        title('performance with eccentricity for 2-phosphene task');
+        
+        save('D:\data\220118_2phosphene_current_perf.mat','currentDifference','currentMean','currentMin','currentMax','numTrialsCondMicrostimTarget','meanPerfMicrostimCondTarget','eccentricities','dvaEccentricities');
 
         figure;
         meanAllSetsPerfMicro=mean(allSetsPerfMicro,1);

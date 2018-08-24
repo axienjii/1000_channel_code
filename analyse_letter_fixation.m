@@ -4,7 +4,7 @@ function analyse_letter_fixation(date,allInstanceInd)
 %fixation was maintained at each electrode position, for sets of electrodes
 %that were used to generate phosphene letters.
 
-localDisk=1;
+localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
@@ -23,7 +23,7 @@ if processRaw==1
     for instanceCount=1%:length(allInstanceInd)
         instanceInd=allInstanceInd(instanceCount);
         instanceName=['instance',num2str(instanceInd)];
-        instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+        instanceNEVFileName=[rootdir,date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);
         
         %read in eye data:
@@ -38,8 +38,8 @@ if processRaw==1
             end
         end
         minFixDur=300/1000;%fixates for at least 300 ms, up to 800 ms
-        instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6']; 
-        eyeDataMat=['D:\data\',date,'\',instanceName,'_NSch_eye_channels.mat'];
+        instanceNS6FileName=[rootdir,date,'\',instanceName,'.ns6']; 
+        eyeDataMat=[rootdir,date,'\',instanceName,'_NSch_eye_channels.mat'];
         if exist(eyeDataMat,'file')
             load(eyeDataMat,'NSch');
         else

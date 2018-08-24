@@ -1464,13 +1464,13 @@ if processRaw==1
                     RFy=goodArrays8to16(electrodeInd,2);
                     plot(RFx,RFy,'o','Color',cols(array-7,:),'MarkerFaceColor',cols(array-7,:));hold on
                     currentThreshold=goodCurrentThresholds(electrodeInd);
-                    if electrodeCount==1
-                        text(RFx-28,RFy,[num2str(electrode),'(',num2str(array),')'],'FontSize',10,'Color','k');
-                        text(RFx-28,RFy-7,[num2str(currentThreshold),' uA'],'FontSize',10,'Color','k');
-                    else
-                        text(RFx+4,RFy,[num2str(electrode),'(',num2str(array),')'],'FontSize',10,'Color','k');
-                        text(RFx+4,RFy-7,[num2str(currentThreshold),' uA'],'FontSize',10,'Color','k');
-                    end
+%                     if electrodeCount==1
+%                         text(RFx-28,RFy,[num2str(electrode),'(',num2str(array),')'],'FontSize',10,'Color','k');
+%                         text(RFx-28,RFy-7,[num2str(currentThreshold),' uA'],'FontSize',10,'Color','k');
+%                     else
+%                         text(RFx+4,RFy,[num2str(electrode),'(',num2str(array),')'],'FontSize',10,'Color','k');
+%                         text(RFx+4,RFy-7,[num2str(currentThreshold),' uA'],'FontSize',10,'Color','k');
+%                     end
                     for electrodePairInd=1:size(electrodePairs,2)-1
                         electrode1=setElectrodes{setNo}(electrodePairInd);
                         array1=setArrays{setNo}(electrodePairInd);
@@ -1624,7 +1624,7 @@ if processRaw==1
         ylabel('performance');
         pathname=fullfile(rootdir,date,['behavioural_performance_RF_locations_',date]);
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        print(pathname,'-dtiff');
+%         print(pathname,'-dtiff');
     end
 end
 pause=1;

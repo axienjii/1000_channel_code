@@ -58,6 +58,7 @@ cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/25
 arrays=8:16;
 
 analyseConds=1;
+analyseConds2=1;
 if analyseConds==1
     switch(date)
         case '031017_B11'
@@ -707,7 +708,7 @@ if processRaw==1
 %             save(eyeDataMat,'NSch');
 %         end       
         
-        %identify trials using encodes sent via serial port: 
+        %identify trials using encodes sent via serial port:
         trialNo=1;
         breakHere=0;
         while breakHere==0
@@ -743,7 +744,7 @@ if processRaw==1
                     end
                 end
                 %analyse individual conditions:
-                if analyseConds==1&&length(allElectrodeNum)>=trialNo
+                if analyseConds2==1&&length(allElectrodeNum)>=trialNo
                     electrode=allElectrodeNum(trialNo);
                     array=allArrayNum(trialNo);
                     electrode2=allElectrodeNum2(trialNo);
@@ -943,6 +944,7 @@ if processRaw==1
 %            else
 %                subplot(2,4,3);
 %            end
+           leftPerfV=0;leftPerfM=0;rightPerfV=0;rightPerfM=0;
            b=bar([leftPerfV leftPerfM;rightPerfV rightPerfM;topPerfV topPerfM;bottomPerfV bottomPerfM],'FaceColor','flat');
            b(1).FaceColor = 'flat';
            b(2).FaceColor = 'flat';
@@ -1013,6 +1015,8 @@ if processRaw==1
             formattedpM=formattedpM(2:end);
             text(xLimits(2)/11,0.14,'p','Color','r','FontAngle','italic');
             text(xLimits(2)/10,0.14,['= ',formattedpM],'Color','r');
+            topPerfM
+            bottomPerfM
         end
         if ~isempty(perfVisualTrialNo)
             firstTrialsV=perfVisualTrialNo(initialPerfTrials-numTrialsPerBin+1);
@@ -1023,13 +1027,40 @@ if processRaw==1
             formattedpV=formattedpV(2:end);
             text(xLimits(2)/11,0.2,'p','Color','b','FontAngle','italic');
             text(xLimits(2)/10,0.2,['= ',formattedpV],'Color','b');
+            topPerfV
+            bottomPerfM
         end
         title(['performance across the session, on visual (blue) & microstim (red) trials, ',num2str(numTrialsPerBin),' trials/bin']);
         xlabel('trial number (across the session)');
         ylabel('performance'); 
-        pathname=fullfile('D:\data',date,['behavioural_performance_RF_locations_',date]);
+        pathname=fullfile(rootdir,date,['behavioural_performance_RF_locations_',date]);
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        print(pathname,'-dtiff');
+%         print(pathname,'-dtiff');
     end
 end
 pause=1;
+
+% switch(date)%manually compiled results
+%     case '251017_B52'%Z=3.52, p<.001
+%     allPerfM=[7887,6667;6250,8261;7778,6792;7079,8056;8621,6979;8286,6182;7143,7708;5333,7627]/10000;
+% end
+% figure;hold on%plot mean performance across electrode sets (excluding control)
+% if visualOnly==0
+%     perfPlot=allPerfM;
+% else
+%     perfPlot=allPerfV;
+% end
+% bar(1,mean(perfPlot(:,1)))
+% errorbar(1,mean(perfPlot(:,1)),std(perfPlot(:,1)))
+% bar(2,mean(perfPlot(:,2)))
+% errorbar(2,mean(perfPlot(:,2)),std(perfPlot(:,2)))
+% ylim([0 1])
+% set(gca,'XTick',[1 2]);
+% set(gca,'XTickLabels',[{'vertical'} {'horizontal'}]);
+% plot([0 2.5],[0.5 0.5],'k--');
+% xlabel('target')
+% ylabel('mean performance')
+% title(['performance across ',num2str(size(perfPlot,1)),' sets, error 1 SD'])
+% tempPerf=perfPlot(1:size(perfPlot,1),1:2);
+% tempPerf=tempPerf(:);
+% [p,h,stats]=signrank(tempPerf,0.5)%for 160518_B3, Z=2.70, p=.007. for 150518_B8, Z=4.57, p<.001

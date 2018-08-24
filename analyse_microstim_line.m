@@ -4,7 +4,7 @@ function analyse_microstim_line(date,allInstanceInd)
 %microstimulation/visual 4-phosphene ('line') task.
 
 interleaved=0;%set interleaved to 0, if trigger pulse was sent using microB. set interleaved to 1, if stimulation was sent by calling stimulator.play function
-localDisk=1;
+localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
@@ -1915,7 +1915,7 @@ if processRaw==1
            axis equal
            xlim([-20 220]);
            ylim([-160 20]);
-           title(['RF locations for direction of motion task, ',date], 'Interpreter', 'none');
+           title(['RF locations for line orientation task, ',date], 'Interpreter', 'none');
            for arrayInd=1:length(arrays)
                text(175,0-10*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
            end

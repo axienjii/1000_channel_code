@@ -728,14 +728,14 @@ for calculateVisual=[0 1]
                     perfMicroBin=perfMicroBin(1:initialPerfTrials);
                     if ~isempty(perfMicroBin)
                         allSetsPerfMicroBin(setNo,:)=perfMicroBin;
-                        save(['D:\microPerf_',date,'.mat'],'perfMicroBin');
+                        save([rootdir,'microPerf_',date,'.mat'],'perfMicroBin');
                     end
                 elseif calculateVisual==1
                     perfVisualBin=perfVisualBin(1:initialPerfTrials);
                     %perfVisualBin=perfVisualBin(end-initialPerfTrials+1:end);
                     if ~isempty(perfVisualBin)
                         allSetsPerfVisualBin(setNo,:)=perfVisualBin;
-                        save(['D:\visualPerf_',date,'.mat'],'perfVisualBin');
+                        save([rootdir,'visualPerf_',date,'.mat'],'perfVisualBin');
                     end
                 end
                 
@@ -951,11 +951,11 @@ for calculateVisual=[0 1]
     end
 end
 title(['performance across the session, on visual (blue) & microstim (red) trials']);
-pathname=fullfile('D:\data\behavioural_performance_all_sets_241017');
+pathname=fullfile(rootdir,'behavioural_performance_all_sets_241017');
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 print(pathname,'-dtiff');
 
-perfMat=['D:\data\performance_',num2str(initialPerfTrials),'trials.mat'];
+perfMat=fullfile(rootdir,'performance_',num2str(initialPerfTrials),'trials.mat');
 save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
 pause=1;
 

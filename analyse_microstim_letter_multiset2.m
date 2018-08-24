@@ -10,12 +10,12 @@ localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
-    rootdir='Z:\best\';
+    rootdir='X:\best\';
 end
 matFile=[rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'];
 dataDir=[rootdir,date,'\',date,'_data'];
 if ~exist('dataDir','dir')
-    copyfile(['Z:\best\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
+    copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
 end
 load(matFile);
 maxNumTrials=size(TRLMAT,1);
@@ -512,6 +512,28 @@ if processRaw==1
                 %            print(pathname,'-dtiff');
                 end            
             end
+            
+            figure;hold on%plot mean performance across electrode sets
+            if visualOnly==0
+                perfPlot=allPerfM(1:length(setInds),:);
+            else
+                perfPlot=allPerfV(1:length(setInds),:);
+            end
+            bar(1,mean(perfPlot(:,1)))
+            errorbar(1,mean(perfPlot(:,1)),std(perfPlot(:,1)))
+            bar(2,mean(perfPlot(:,2)))
+            errorbar(2,mean(perfPlot(:,2)),std(perfPlot(:,2)))
+            ylim([0 1])
+            set(gca,'XTick',[1 2]);
+            set(gca,'XTickLabels',[{'T'} {'O'}]);
+            plot([0 2.5],[0.5 0.5],'k--');
+            xlabel('letter')
+            ylabel('mean performance')
+            title(['performance across ',num2str(size(perfPlot,1)),' sets, error 1 SD'])
+            tempPerf=perfPlot(1:size(perfPlot,1),1:2);
+            tempPerf=tempPerf(:);
+            [p,h,stats]=signrank(tempPerf,0.5)%for 160518_B3, Z=2.70, p=.007. for 150518_B8, Z=4.57, p<.001
+
             for figCount=1:numFigs
                 figure(figInd(figCount));
                 if labelElectrodes==1
