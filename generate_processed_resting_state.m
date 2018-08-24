@@ -1,4 +1,4 @@
-function generate_processed_resting_state(date)
+function generate_processed_resting_state(date,allInstanceInd)
 %Written by Xing 24/8/17
 %Load resting state data, extract MUA, LFP, and EEG, and save new processed data files.
 % date='180717_resting_state';
@@ -9,7 +9,7 @@ function generate_processed_resting_state(date)
 % date='090817_resting_state';
 % date='100817_resting_state';
 topDir='X:\best';
-for instanceInd=2:8
+for instanceInd=allInstanceInd    
     instanceName=['instance',num2str(instanceInd)];
     alignedInstanceNS6FileName=fullfile(topDir,date,[instanceName,'_aligned.ns6']);
     NS=openNSx(alignedInstanceNS6FileName,'read');
