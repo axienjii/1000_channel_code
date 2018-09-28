@@ -1,8 +1,10 @@
-function remove_artefacts_attention_task(date)
-%Written by Xing 19/7/18, based on Feng's testdata.m code to remove
-%microstimulation artefacts from data collected during an attention task
-%(attend to a phosphene percept that is evoked by microstimulation, or
-%attend to a visually presented stimulus).
+function generate_processed_data_attention_task(date)
+%Written by Xing 12/9/18, to extract MUA data from raw traces during an attention task
+%(attend to a visually presented stimulus either on the left or the right).
+%Note that as no micrositmulation was delivered, no artifact removal is
+%carried out. However, variables names still have 'AR' ('artifact removed')
+%appended to them, to allow compatibility with next analysis script,
+%(analyse_eyedata_attention_task.m).
 
 localDisk=1;
 if localDisk==1
@@ -11,15 +13,8 @@ elseif localDisk==0
     rootdir='X:\best\';
 end
 switch(date)
-    case '240718_B13'
-        goodBlocks=[1 2];
-    case '310718_B1'
-        goodBlocks=1;
-    case '290818_B1'
-        goodBlocks=1:7;
-        includeIncorrectInds=2;
-    case '050918_B1'        
-        includeIncorrectInds=2;
+    case '120918_B1' 
+        includeIncorrectInds=[1 2];
         matFileName=fullfile(rootdir,date,'instance1_trialInfo.mat');
         load(matFileName,'goodBlocks');
         goodBlocks=1:length(goodBlocks);
@@ -57,45 +52,10 @@ for neuronalCh=1:128%[34:75 77:96]%76%:96%1:128%1:128%length(neuronalChsV4)%anal
             SupersamplingRatio = 16;
             debug = 1;
             
-            AMF = AMF(any(AMF,2),:);%remove trials where no microstimulation delivered (zero values throughout whole trial). Actually only needed for AVS variable
-            AVF = AVF(any(AVF,2),:);
-            AMS = AMS(any(AMS,2),:);
-            AVS = AVS(any(AVS,2),:);
-            AMFAR = AMF;
-            AVFAR = AVF;
-            AMSAR = AMS;
-            AVSAR = AVS;
-            
-            NumElec = size(AMF,3);
-            
-            for ElecID = 1:NumElec
-                
-                RawTrace = AMF(:,:,ElecID);
-                RawTrace = RawTrace';
-                AlignedMeanTrace = squeeze(mean(mean(AMF,1),3));
-                ARTrace = RemoveArtifacts4(RawTrace,StimulationParam,SampleRate,SupersamplingRatio,debug);
-                AMFAR(:,:,ElecID) = ARTrace';
-                
-                RawTrace = AVF(:,:,ElecID);
-                RawTrace = RawTrace';
-                AlignedMeanTrace = squeeze(mean(mean(AVF,1),3));
-                ARTrace = RemoveArtifacts4(RawTrace,StimulationParam,SampleRate,SupersamplingRatio,debug);
-                AVFAR(:,:,ElecID) = ARTrace';
-                
-                RawTrace = AMS(:,:,ElecID);
-                RawTrace = RawTrace';
-                AlignedMeanTrace = squeeze(mean(mean(AMS,1),3));
-                ARTrace = RemoveArtifacts4(RawTrace,StimulationParam,SampleRate,SupersamplingRatio,debug);
-                AMSAR(:,:,ElecID) = ARTrace';
-                
-                if ~isempty(AVS)%for analysis that includes only correct trials, the variable AVS will be empty
-                    RawTrace = AVS(:,:,ElecID);
-                    RawTrace = RawTrace';
-                    AlignedMeanTrace = squeeze(mean(mean(AVS,1),3));
-                    ARTrace = RemoveArtifacts4(RawTrace,StimulationParam,SampleRate,SupersamplingRatio,debug);
-                    AVSAR(:,:,ElecID) = ARTrace';
-                end
-            end
+            AMFAR = AMF(any(AMF,2),:);%remove trials where no microstimulation delivered (zero values throughout whole trial). Actually only needed for AVS variable
+            AVFAR = AVF(any(AVF,2),:);
+            AMSAR = AMS(any(AMS,2),:);
+            AVSAR = AVS(any(AVS,2),:);
             
             AMFARMUAe=[];
             AMFARlfp=[];
@@ -106,7 +66,7 @@ for neuronalCh=1:128%[34:75 77:96]%76%:96%1:128%1:128%length(neuronalChsV4)%anal
             AVSARMUAe=[];
             AVSARlfp=[];
             
-            for ElecID = 1:NumElec
+            for ElecID = 1
                 RawData = AMFAR(:,:,ElecID);
                 RawData = RawData';
                 [MUAe, LFP] = GetMUAeLFP(RawData,SampleRate,MUAparameters,LFPparameters);
@@ -114,12 +74,14 @@ for neuronalCh=1:128%[34:75 77:96]%76%:96%1:128%1:128%length(neuronalChsV4)%anal
                 AMFARMUAe(:,:,ElecID) = MUAe.data';
                 AMFARlfp(:,:,ElecID) = LFP.data';
                 
-                RawData = AVFAR(:,:,ElecID);
-                RawData = RawData';
-                [MUAe, LFP] = GetMUAeLFP(RawData,SampleRate,MUAparameters,LFPparameters);
-%                 MUAe.data=MUAe.data-mean(MUAe.data(50:0.3*700));%subtract activity level during spontaneous period
-                AVFARMUAe(:,:,ElecID) = MUAe.data';
-                AVFARlfp(:,:,ElecID) = LFP.data';
+                if ~isempty(AVFAR)
+                    RawData = AVFAR(:,:,ElecID);
+                    RawData = RawData';
+                    [MUAe, LFP] = GetMUAeLFP(RawData,SampleRate,MUAparameters,LFPparameters);
+                    %                 MUAe.data=MUAe.data-mean(MUAe.data(50:0.3*700));%subtract activity level during spontaneous period
+                    AVFARMUAe(:,:,ElecID) = MUAe.data';
+                    AVFARlfp(:,:,ElecID) = LFP.data';
+                end
                 
                 RawData = AMSAR(:,:,ElecID);
                 RawData = RawData';
@@ -128,7 +90,7 @@ for neuronalCh=1:128%[34:75 77:96]%76%:96%1:128%1:128%length(neuronalChsV4)%anal
                 AMSARMUAe(:,:,ElecID) = MUAe.data';
                 AMSARlfp(:,:,ElecID) = LFP.data';
                 
-                if ~isempty(AVS)%for analysis that includes only correct trials, the variable AVS will be empty
+                if ~isempty(AVSAR)%for analysis that includes only correct trials, the variable AVS will be empty
                     RawData = AVSAR(:,:,ElecID);
                     RawData = RawData';
                     [MUAe, LFP] = GetMUAeLFP(RawData,SampleRate,MUAparameters,LFPparameters);

@@ -14,14 +14,40 @@ switch(date)
         goodBlocks=[1 2];
     case '310718_B1'
         goodBlocks=1;
+    case '290818_B1'
+        goodBlocks=1:7;
+        array=16;
+        channel=20;
+        chInd128=20;
+        RFx=25.8;
+        RFy=-45.9;
+    case '050918_B1'  
+        array=16;
+        channel=20;
+        chInd128=20;
+        RFx=25.8;
+        RFy=-45.9;      
+        matFileName=fullfile(rootdir,date,'instance1_trialInfo.mat');
+        load(matFileName,'goodBlocks');
+        goodBlocks=1:length(goodBlocks);
+    case '120918_B1' 
+        array=16;
+        channel=20;
+        chInd128=20;
+        RFx=25.8;
+        RFy=-45.9;   
+        matFileName=fullfile(rootdir,date,'instance1_trialInfo.mat');
+        load(matFileName,'goodBlocks');
+        goodBlocks=1:length(goodBlocks);
+        goodBlocks=1:3;
 end
 eyeChannels=131;%[130 131];
-extractSaccadeTimes=1;
+extractSaccadeTimes=0;
 if extractSaccadeTimes==1
     for neuronalChInd=1:length(eyeChannels)
         neuronalCh=eyeChannels(neuronalChInd);
-        for blockInd=1%1:length(goodBlocks)
-            for includeIncorrect=2%1:2%1: include all trials; 2: exclude incorrect trials
+        for blockInd=goodBlocks%1:length(goodBlocks)
+            for includeIncorrect=1:2%1:2%1: include all trials; 2: exclude incorrect trials
                 if includeIncorrect==1
                     subFolderName='all_trials';
                 elseif includeIncorrect==2%exclude incorrect trials
@@ -85,13 +111,13 @@ if extractSaccadeTimes==1
 end
 
 %analyse MUA data:
-generateMeanTraces=1;
+generateMeanTraces=0;
 if generateMeanTraces==1
     postSaccadeTime=40;%time duration to include following saccade onset, in ms. use 40 ms because it takes about 50 ms for activity to propagate to V4
     postSaccadeDatapoints=postSaccadeTime/1000*30000;
-    for neuronalCh=[1:75 77:128]%[1:33 35:75 77:128]
+    for neuronalCh=1:128%[1:75 77:128]%[1:33 35:75 77:128]
         for blockInd=1:length(goodBlocks)
-            for includeIncorrect=2%1:2%1: include all trials; 2: exclude incorrect trials
+            for includeIncorrect=1:2%1:2%1: include all trials; 2: exclude incorrect trials
                 if includeIncorrect==1
                     subFolderName='all_trials';
                 elseif includeIncorrect==2%exclude incorrect trials
@@ -209,15 +235,15 @@ if generateMeanTraces==1
 end
 
 %identify channels with 'visually evoked' response to microstimulation:
-identifyVisRespChs=1;
+identifyVisRespChs=0;
 if identifyVisRespChs==1    
     baselinePeriod=1:0.3*700;%MUA sampling frequency is 700 Hz
     stimOnset=(0.3+0.05)*700+1;%MUA sampling frequency is 700 Hz.
     stimOffset=(0.3+0.167)*700;%MUA sampling frequency is 700 Hz.
-    visuallyResponsiveChannels=[];
-    for blockInd=1:length(goodBlocks)
-        for neuronalCh=[1:75 77:128]%[1:33 35:75 77:128]
-            for includeIncorrect=2%1:2%1: include all trials; 2: exclude incorrect trials
+    for includeIncorrect=1:2%1:2%1: include all trials; 2: exclude incorrect trials
+        visuallyResponsiveChannels=[];
+        for blockInd=1:length(goodBlocks)
+            for neuronalCh=1:128%[1:75 77:128]%[1:33 35:75 77:128]
                 if includeIncorrect==1
                     subFolderName='all_trials';
                 elseif includeIncorrect==2%exclude incorrect trials
@@ -255,22 +281,22 @@ if identifyVisRespChs==1
                     end
                 end
             end
+            visuallyResponsiveMV=sum(visuallyResponsiveChannels,2);
+            visuallyResponsiveMV=find(visuallyResponsiveMV==2);%identify channels where visually evoked response occurred for both attend-micro and attend-visual conditions
+            includeChannelsFileName=fullfile(rootdir,date,subFolderName,artifactRemovedFolder,['visually_responsive_chs_block',num2str(blockInd),'.mat']);
+            save(includeChannelsFileName,'visuallyResponsiveMV','visuallyResponsiveChannels');
         end
-        visuallyResponsiveMV=sum(visuallyResponsiveChannels,2);
-        visuallyResponsiveMV=find(visuallyResponsiveMV==2);%identify channels where visually evoked response occurred for both attend-micro and attend-visual conditions
-        includeChannelsFileName=fullfile(rootdir,date,subFolderName,artifactRemovedFolder,['visually_responsive_chs_block',num2str(blockInd),'.mat']);
-        save(includeChannelsFileName,'visuallyResponsiveMV','visuallyResponsiveChannels');
     end
 end
 
 %normalize activity to baseline and maximum response:
-generateNormAct=1;
+generateNormAct=0;
 if generateNormAct==1
     baselinePeriod=1:0.3*700;%MUA sampling frequency is 700 Hz
     stimOnset=(0.3+0.05)*700+1;%MUA sampling frequency is 700 Hz.
     stimOffset=(0.3+0.167)*700;%MUA sampling frequency is 700 Hz.
     for blockInd=1:length(goodBlocks)
-        for includeIncorrect=2%1:2%1: include all trials; 2: exclude incorrect trials
+        for includeIncorrect=1:2%1:2%1: include all trials; 2: exclude incorrect trials
             if includeIncorrect==1
                 subFolderName='all_trials';
             elseif includeIncorrect==2%exclude incorrect trials
@@ -335,7 +361,7 @@ baselinePeriod=1:0.3*700;%MUA sampling frequency is 700 Hz
 stimOnset=(0.3+0.05)*700+1;%MUA sampling frequency is 700 Hz.
 stimOffset=(0.3+0.167)*700;%MUA sampling frequency is 700 Hz.
 for blockInd=1:length(goodBlocks)
-    for includeIncorrect=2%1:2%1: include all trials; 2: exclude incorrect trials
+    for includeIncorrect=1:2%1:2%1: include all trials; 2: exclude incorrect trials
         if includeIncorrect==1
             subFolderName='all_trials';
         elseif includeIncorrect==2%exclude incorrect trials
@@ -379,3 +405,250 @@ for blockInd=1:length(goodBlocks)
         close all  
     end
 end
+
+% remove_artefacts_attention_task_correction(date)
+load(['D:\data\',date,'\correct_trials\AR\AR_all_mean_chs_block',num2str(goodBlocks(1)),'-',num2str(goodBlocks(end)),'.mat']);
+baselinePeriod=1:0.3*700;%MUA sampling frequency is 700 Hz
+stimOnset=(0.3+0.05)*700+1;%MUA sampling frequency is 700 Hz.
+stimOffset=(0.3+0.167)*700;%MUA sampling frequency is 700 Hz.
+allMeanAMFARMUAe_corNew=0*allMeanAMFARMUAe_cor{1};
+allMeanAVFARMUAe_corNew=0*allMeanAVFARMUAe_cor{1};
+allMeanAMSARMUAe_corNew=0*allMeanAMSARMUAe_cor{1};
+allMeanAVSARMUAe_corNew=0*allMeanAVSARMUAe_cor{1};
+for channelInd=1:128%calculate average across blocks
+    for blockInd=goodBlocks
+        allMeanAMFARMUAe_corNew(channelInd,:)=allMeanAMFARMUAe_corNew(channelInd,:)+allMeanAMFARMUAe_cor{blockInd}(channelInd,:);
+        allMeanAMSARMUAe_corNew(channelInd,:)=allMeanAMSARMUAe_corNew(channelInd,:)+allMeanAMSARMUAe_cor{blockInd}(channelInd,:);
+        allMeanAVFARMUAe_corNew(channelInd,:)=allMeanAVFARMUAe_corNew(channelInd,:)+allMeanAVFARMUAe_cor{blockInd}(channelInd,:);
+        allMeanAVSARMUAe_corNew(channelInd,:)=allMeanAVSARMUAe_corNew(channelInd,:)+allMeanAVSARMUAe_cor{blockInd}(channelInd,:);
+    end
+    allMeanAMFARMUAe_corNew(channelInd,:)=allMeanAMFARMUAe_corNew(channelInd,:)/(length(goodBlocks));
+    allMeanAMSARMUAe_corNew(channelInd,:)=allMeanAMSARMUAe_corNew(channelInd,:)/(length(goodBlocks));
+    allMeanAVFARMUAe_corNew(channelInd,:)=allMeanAVFARMUAe_corNew(channelInd,:)/(length(goodBlocks));
+    allMeanAVSARMUAe_corNew(channelInd,:)=allMeanAVSARMUAe_corNew(channelInd,:)/(length(goodBlocks));
+end
+
+%instance 1 chs 33-96; instance 2 chs 1-32, 97-128
+load('D:\data\best_260617-280617\RFs_instance1.mat')
+instance1RFs=RFs;
+load('D:\data\best_260617-280617\RFs_instance2.mat')
+instance2RFs=RFs;
+instance12RFs=[instance2RFs(1:32) instance1RFs(33:96) instance2RFs(97:128)];
+load('D:\data\best_260617-280617\RFs_instance8.mat')
+figure;hold on
+V4RFs=[];
+nonOverlap=[];
+overlapChs=[];
+nonoverlapChs=[];
+for chInd=1:128
+    V4RFs=[V4RFs;instance12RFs{chInd}.centrex instance12RFs{chInd}.centrey instance12RFs{chInd}.sz];
+    xRange=[instance12RFs{chInd}.centrex-instance12RFs{chInd}.sz/2 instance12RFs{chInd}.centrex+instance12RFs{chInd}.sz/2];
+    yRange=[instance12RFs{chInd}.centrey-instance12RFs{chInd}.sz/2 instance12RFs{chInd}.centrey+instance12RFs{chInd}.sz/2];
+    if RFx>xRange(1)&&RFx<xRange(2)&&RFy>yRange(1)&&RFy<yRange(2)
+        overlapChs=[overlapChs chInd];
+        ellipse(instance12RFs{chInd}.sz/2,instance12RFs{chInd}.sz/2,instance12RFs{chInd}.centrex,instance12RFs{chInd}.centrey,'r');
+    else
+        nonOverlap=[nonOverlap;xRange yRange];
+        nonoverlapChs=[nonoverlapChs chInd];
+        ellipse(instance12RFs{chInd}.sz/2,instance12RFs{chInd}.sz/2,instance12RFs{chInd}.centrex,instance12RFs{chInd}.centrey,'b');
+    end
+end
+plot(RFx,RFy,'kx');
+axis square
+
+%average activity separately for channels with or without good overlap
+figure;
+subplot(2,2,1);
+grandAllMeanAMFARMUAe_corNewOverlap=mean(allMeanAMFARMUAe_corNew(overlapChs,:),1);
+grandAllMeanAMFARMUAe_corNewNonoverlap=mean(allMeanAMFARMUAe_corNew(nonoverlapChs,:),1);
+grandAllMeanAVFARMUAe_corNewOverlap=mean(allMeanAVFARMUAe_corNew(overlapChs,:),1);
+grandAllMeanAVFARMUAe_corNewNonoverlap=mean(allMeanAVFARMUAe_corNew(nonoverlapChs,:),1);
+plot(grandAllMeanAMFARMUAe_corNewOverlap,'r');
+hold on
+plot(grandAllMeanAVFARMUAe_corNewOverlap,'b');
+ax = gca;
+ax.XTick=[0 0.3*700 (0.3+0.167)*700 (0.3+0.167+0.4)*700];
+ax.XTickLabel={'-300','0','167','400'};
+maxGraph=max([grandAllMeanAMFARMUAe_corNewOverlap(5:end) grandAllMeanAVFARMUAe_corNewOverlap(5:end)]);
+minGraph=min([grandAllMeanAMFARMUAe_corNewOverlap(5:end) grandAllMeanAVFARMUAe_corNewOverlap(5:end)]);
+ylim([minGraph maxGraph]);
+ylims=get(ax,'ylim');
+plot([0.3*700 0.3*700],[ylims(1) ylims(2)],'k:');
+plot([(0.3+0.167)*700 (0.3+0.167)*700],[ylims(1) ylims(2)],'k:');
+title(['overlapping channels, N = ',num2str(length(overlapChs))]);
+xlim([20 600])
+legend('attend-micro','attend-visual');
+
+subplot(2,2,2);
+plot(grandAllMeanAMFARMUAe_corNewNonoverlap,'r');
+hold on
+plot(grandAllMeanAVFARMUAe_corNewNonoverlap,'b');
+ax = gca;
+ax.XTick=[0 0.3*700 (0.3+0.167)*700 (0.3+0.167+0.4)*700];
+ax.XTickLabel={'-300','0','167','400'};
+maxGraph=max([grandAllMeanAMFARMUAe_corNewNonoverlap(5:end) grandAllMeanAVFARMUAe_corNewNonoverlap(5:end)]);
+minGraph=min([grandAllMeanAMFARMUAe_corNewNonoverlap(5:end) grandAllMeanAVFARMUAe_corNewNonoverlap(5:end)]);
+ylim([minGraph maxGraph]);
+ylims=get(ax,'ylim');
+plot([0.3*700 0.3*700],[ylims(1) ylims(2)],'k:');
+plot([(0.3+0.167)*700 (0.3+0.167)*700],[ylims(1) ylims(2)],'k:');
+title(['non-overlapping channels, N = ',num2str(length(nonoverlapChs))]);
+xlim([20 600])
+
+subplot(2,2,3);
+plot(smooth(grandAllMeanAMFARMUAe_corNewOverlap,20),'r');
+hold on
+plot(smooth(grandAllMeanAVFARMUAe_corNewOverlap,20),'b');
+ax = gca;
+ax.XTick=[0 0.3*700 (0.3+0.167)*700 (0.3+0.167+0.4)*700];
+ax.XTickLabel={'-300','0','167','400'};
+maxGraph=max([grandAllMeanAMFARMUAe_corNewOverlap(5:end) grandAllMeanAVFARMUAe_corNewOverlap(5:end)]);
+minGraph=min([grandAllMeanAMFARMUAe_corNewOverlap(5:end) grandAllMeanAVFARMUAe_corNewOverlap(5:end)]);
+ylim([minGraph maxGraph]);
+ylims=get(ax,'ylim');
+plot([0.3*700 0.3*700],[ylims(1) ylims(2)],'k:');
+plot([(0.3+0.167)*700 (0.3+0.167)*700],[ylims(1) ylims(2)],'k:');
+title(['overlapping channels, N = ',num2str(length(overlapChs)),' (smoothed)']);
+xlim([20 600])
+legend('attend-micro','attend-visual');
+
+subplot(2,2,4);
+plot(smooth(grandAllMeanAMFARMUAe_corNewNonoverlap,20),'r');
+hold on
+plot(smooth(grandAllMeanAVFARMUAe_corNewNonoverlap,20),'b');
+ax = gca;
+ax.XTick=[0 0.3*700 (0.3+0.167)*700 (0.3+0.167+0.4)*700];
+ax.XTickLabel={'-300','0','167','400'};
+maxGraph=max([grandAllMeanAMFARMUAe_corNewNonoverlap(5:end) grandAllMeanAVFARMUAe_corNewNonoverlap(5:end)]);
+minGraph=min([grandAllMeanAMFARMUAe_corNewNonoverlap(5:end) grandAllMeanAVFARMUAe_corNewNonoverlap(5:end)]);
+ylim([minGraph maxGraph]);
+ylims=get(ax,'ylim');
+plot([0.3*700 0.3*700],[ylims(1) ylims(2)],'k:');
+plot([(0.3+0.167)*700 (0.3+0.167)*700],[ylims(1) ylims(2)],'k:');
+title(['non-overlapping channels, N = ',num2str(length(nonoverlapChs)),' (smoothed)']);
+xlim([20 600])
+pathname=fullfile(rootdir,date,subFolderName,artifactRemovedFolder,'overlapping_vs_nonoverlapping_chs_MUA');
+set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+print(pathname,'-dtiff');
+pause=1;
+
+%Calculate and plot attention modulation index as function of RF location
+%instance 1 chs 33-96; instance 2 chs 1-32, 97-128
+for chInd=1:128
+    actM=mean(allMeanAMFARMUAe_corNew(chInd,0.3*700:(0.3+0.167)*700));%activity during 0 to 167 ms, for attend-micro
+    actV=mean(allMeanAVFARMUAe_corNew(chInd,0.3*700:(0.3+0.167)*700));%activity during 0 to 167 ms, for attend-visual
+    AMI(chInd)=(actM-actV)/actV;
+end
+figure;hold on
+for chInd=1:128
+    if instance12RFs{chInd}.centrex>-10&&instance12RFs{chInd}.centrey<10
+        scatter(instance12RFs{chInd}.centrex,instance12RFs{chInd}.centrey,[],AMI(chInd),'filled');
+    end
+end
+plot(RFx,RFy,'ko','MarkerFaceColor','k');
+text(RFx-7,RFy-3,'stimulus location');
+plot(0,0,'ro','MarkerFaceColor','r');
+axis square
+colorbar
+plot([0 0],[-250 200],'k:')
+plot([-200 300],[0 0],'k:')
+plot([-200 300],[200 -300],'k:')
+pixPerDeg=26;
+ellipse(2*pixPerDeg,2*pixPerDeg,0,0,[0.1 0.1 0.1]);
+ellipse(4*pixPerDeg,4*pixPerDeg,0,0,[0.1 0.1 0.1]);
+ellipse(6*pixPerDeg,6*pixPerDeg,0,0,[0.1 0.1 0.1]);
+ellipse(8*pixPerDeg,8*pixPerDeg,0,0,[0.1 0.1 0.1]);
+text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+xlim([-20 100])
+ylim([-100 20])
+axis square
+set(gca,'XTick',[0 2*pixPerDeg 4*pixPerDeg 6*pixPerDeg 8*pixPerDeg 10*pixPerDeg]);
+set(gca,'XTickLabel',{'0','2','4','6','8','10'});
+set(gca,'YTick',[-6*pixPerDeg -4*pixPerDeg -2*pixPerDeg 0]);
+set(gca,'YTickLabel',{'-6','-4','-2','0'});
+titleText=['AMI on V4 channels'];
+title(titleText);
+
+%average activity separately for channels with or without good visually
+%evoked response (as opposed to deducing the amount of overlap based on prior RF measurements):
+overlapChs=visuallyResponsiveMV;
+allChs=1:128;
+nonoverlapChs=setdiff(allChs,overlapChs);
+figure;
+subplot(2,2,1);
+grandAllMeanAMFARMUAe_corNewOverlap=mean(allMeanAMFARMUAe_corNew(overlapChs,:),1);
+grandAllMeanAMFARMUAe_corNewNonoverlap=mean(allMeanAMFARMUAe_corNew(nonoverlapChs,:),1);
+grandAllMeanAVFARMUAe_corNewOverlap=mean(allMeanAVFARMUAe_corNew(overlapChs,:),1);
+grandAllMeanAVFARMUAe_corNewNonoverlap=mean(allMeanAVFARMUAe_corNew(nonoverlapChs,:),1);
+plot(grandAllMeanAMFARMUAe_corNewOverlap,'r');
+hold on
+plot(grandAllMeanAVFARMUAe_corNewOverlap,'b');
+ax = gca;
+ax.XTick=[0 0.3*700 (0.3+0.167)*700 (0.3+0.167+0.4)*700];
+ax.XTickLabel={'-300','0','167','400'};
+maxGraph=max([grandAllMeanAMFARMUAe_corNewOverlap(5:end) grandAllMeanAVFARMUAe_corNewOverlap(5:end)]);
+minGraph=min([grandAllMeanAMFARMUAe_corNewOverlap(5:end) grandAllMeanAVFARMUAe_corNewOverlap(5:end)]);
+ylim([minGraph maxGraph]);
+ylims=get(ax,'ylim');
+plot([0.3*700 0.3*700],[ylims(1) ylims(2)],'k:');
+plot([(0.3+0.167)*700 (0.3+0.167)*700],[ylims(1) ylims(2)],'k:');
+title(['overlapping channels, N = ',num2str(length(overlapChs))]);
+xlim([20 600])
+legend('attend-micro','attend-visual');
+
+subplot(2,2,2);
+plot(grandAllMeanAMFARMUAe_corNewNonoverlap,'r');
+hold on
+plot(grandAllMeanAVFARMUAe_corNewNonoverlap,'b');
+ax = gca;
+ax.XTick=[0 0.3*700 (0.3+0.167)*700 (0.3+0.167+0.4)*700];
+ax.XTickLabel={'-300','0','167','400'};
+maxGraph=max([grandAllMeanAMFARMUAe_corNewNonoverlap(5:end) grandAllMeanAVFARMUAe_corNewNonoverlap(5:end)]);
+minGraph=min([grandAllMeanAMFARMUAe_corNewNonoverlap(5:end) grandAllMeanAVFARMUAe_corNewNonoverlap(5:end)]);
+ylim([minGraph maxGraph]);
+ylims=get(ax,'ylim');
+plot([0.3*700 0.3*700],[ylims(1) ylims(2)],'k:');
+plot([(0.3+0.167)*700 (0.3+0.167)*700],[ylims(1) ylims(2)],'k:');
+title(['non-overlapping channels, N = ',num2str(length(nonoverlapChs))]);
+xlim([20 600])
+
+subplot(2,2,3);
+plot(smooth(grandAllMeanAMFARMUAe_corNewOverlap,20),'r');
+hold on
+plot(smooth(grandAllMeanAVFARMUAe_corNewOverlap,20),'b');
+ax = gca;
+ax.XTick=[0 0.3*700 (0.3+0.167)*700 (0.3+0.167+0.4)*700];
+ax.XTickLabel={'-300','0','167','400'};
+maxGraph=max([grandAllMeanAMFARMUAe_corNewOverlap(5:end) grandAllMeanAVFARMUAe_corNewOverlap(5:end)]);
+minGraph=min([grandAllMeanAMFARMUAe_corNewOverlap(5:end) grandAllMeanAVFARMUAe_corNewOverlap(5:end)]);
+ylim([minGraph maxGraph]);
+ylims=get(ax,'ylim');
+plot([0.3*700 0.3*700],[ylims(1) ylims(2)],'k:');
+plot([(0.3+0.167)*700 (0.3+0.167)*700],[ylims(1) ylims(2)],'k:');
+title(['overlapping channels, N = ',num2str(length(overlapChs)),' (smoothed)']);
+xlim([20 600])
+legend('attend-micro','attend-visual');
+
+subplot(2,2,4);
+plot(smooth(grandAllMeanAMFARMUAe_corNewNonoverlap,20),'r');
+hold on
+plot(smooth(grandAllMeanAVFARMUAe_corNewNonoverlap,20),'b');
+ax = gca;
+ax.XTick=[0 0.3*700 (0.3+0.167)*700 (0.3+0.167+0.4)*700];
+ax.XTickLabel={'-300','0','167','400'};
+maxGraph=max([grandAllMeanAMFARMUAe_corNewNonoverlap(5:end) grandAllMeanAVFARMUAe_corNewNonoverlap(5:end)]);
+minGraph=min([grandAllMeanAMFARMUAe_corNewNonoverlap(5:end) grandAllMeanAVFARMUAe_corNewNonoverlap(5:end)]);
+ylim([minGraph maxGraph]);
+ylims=get(ax,'ylim');
+plot([0.3*700 0.3*700],[ylims(1) ylims(2)],'k:');
+plot([(0.3+0.167)*700 (0.3+0.167)*700],[ylims(1) ylims(2)],'k:');
+title(['non-overlapping channels, N = ',num2str(length(nonoverlapChs)),' (smoothed)']);
+xlim([20 600])
+pathname=fullfile(rootdir,date,subFolderName,artifactRemovedFolder,'visuallyresponsive_vs_nonvisuallyresponsive_chs_MUA');
+set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+print(pathname,'-dtiff');
+pause=1;
+
