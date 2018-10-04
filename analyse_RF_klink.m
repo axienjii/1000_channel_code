@@ -7,14 +7,14 @@ stimDur=stimDurms/1000;%in seconds
 % date='020818_B2';
 % date='070818_B2';
 date='041018_B7_aston';
-if strcmp(date(end-5:end),'aston')
+if strcmp(date(end-4:end),'aston')
     rootDir='D:\aston_data\';
 else
     rootDir='D:\data\';
 end
 processRaw=1;
 if processRaw==1
-    for instanceInd=1:4
+    for instanceInd=5:8
         instanceName=['instance',num2str(instanceInd)];
         instanceNEVFileName=[rootDir,date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);
