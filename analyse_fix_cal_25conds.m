@@ -1,7 +1,7 @@
-function analyse_fix_cal(date,allInstanceInd)
-%31/1/18
+function analyse_fix_cal_25conds(date,allInstanceInd)
+%14/9/18
 %Written by Xing, analyses eye data from a fixation task, in which
-%fixation was maintained at 1 of 9 possible positions, to calculate the pixels
+%fixation was maintained at 1 of 25 possible positions, to calculate the pixels
 %per volt for the eye traces (separately for X and Y). 
 
 localDisk=1;
@@ -14,16 +14,32 @@ end
 load([rootdir,date,'\',date(1:6),'_data\PAR.mat'])
 % load('X:\best\310118_data\microstim_saccade_test_310118_3.mat')
 load([rootdir,date,'\',date(1:6),'_data\microstim_saccade_',date,'.mat'])
-timestampCell2=289409-1;%data recording was briefly paused at beginning of recording; hence, use the second cell of data in NSchOriginal and account for the temporal offset when reading out timestamps
-sampleDist=300;%distance between adjacent fix spot positions, in pixels
-dvaSampleDist=300/Par.PixPerDeg;%%distance between adjacent fix spot positions, in degrees of visual angle
+timestampCell2=0;%data recording was briefly paused at beginning of recording; hence, use the second cell of data in NSchOriginal and account for the temporal offset when reading out timestamps
+switch(date)
+    case '140918_B1'
+        sampleDist=150;%distance between adjacent fix spot positions, in pixels
+    case '180918_B1'
+        sampleDist=150;%distance between adjacent fix spot positions, in pixels
+    case '180918_B3'
+        sampleDist=150;%distance between adjacent fix spot positions, in pixels
+    case '260918_B1'
+        sampleDist=150;%distance between adjacent fix spot positions, in pixels
+    case '270918_B1'
+        sampleDist=150;%distance between adjacent fix spot positions, in pixels
+    case '280918_B1'
+        sampleDist=40;%distance between adjacent fix spot positions, in pixels
+    case '041018_B2'
+        sampleDist=40;%distance between adjacent fix spot positions, in pixels
+        
+end
+dvaSampleDist=sampleDist/Par.PixPerDeg;%%distance between adjacent fix spot positions, in degrees of visual angle
 
-processRaw=0;
+processRaw=1;
 if processRaw==1
     for instanceCount=1%:length(allInstanceInd)
         instanceInd=allInstanceInd(instanceCount);
         instanceName=['instance',num2str(instanceInd)];
-        instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+        instanceNEVFileName=[rootdir,date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);
         
         %read in eye data:
@@ -35,11 +51,14 @@ if processRaw==1
                 eyeChannels=[130 131];
             elseif NEV.ElectrodesInfo(130).ConnectorPin==3
                 eyeChannels=[129 130];
+                if strcmp(date,'140819_B1')
+                    eyeChannels=[2 3];
+                end
             end
         end
         minFixDur=300/1000;%fixates for at least 300 ms, up to 800 ms
-        instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6']; 
-        eyeDataMat=['D:\data\',date,'\',instanceName,'_NSch_eye_channels.mat'];
+        instanceNS6FileName=[rootdir,date,'\',instanceName,'.ns6']; 
+        eyeDataMat=[rootdir,date,'\',instanceName,'_NSch_eye_channels.mat'];
         if exist(eyeDataMat,'file')
             load(eyeDataMat,'NSch');
         else
@@ -53,9 +72,9 @@ if processRaw==1
                     readChannel=['c:',num2str(eyeChannels(channelInd)),':',num2str(eyeChannels(channelInd))];
                     NSchOriginal=openNSx(instanceNS6FileName,readChannel);
                     if iscell(NSchOriginal.Data)
-                        if size(NSchOriginal.Data,2)==2
+                        if size(NSchOriginal.Data,2)>=2
 %                             NSch{channelInd}=[NSchOriginal.Data{1} NSchOriginal.Data{2}];
-                            NSch{channelInd}=[NSchOriginal.Data{2}];
+                            NSch{channelInd}=[NSchOriginal.Data{end}];
                         end
                     else%if isdouble(NSchOriginal.Data)
                         NSch{channelInd}=NSchOriginal.Data;
@@ -135,8 +154,8 @@ if processRaw==1
         timestampTrialStimOn=NEV.Data.SerialDigitalIO.TimeStamp(goodStimOnInd);
         posIndXvolt=[];
         posIndYvolt=[];
-        meanPosX=cell(1,9);
-        meanPosY=cell(1,9);
+        meanPosX=cell(1,25);
+        meanPosY=cell(1,25);
         fig1=figure
         fig2=figure
         for trialInd=1:length(goodStimOffInd)
@@ -145,10 +164,10 @@ if processRaw==1
                 trialDataY=NSch{2}(timestampTrialStimOn(trialInd)-timestampCell2:timestampTrialStimOff(trialInd)-timestampCell2);
                 condNo=allCondNo(trialInds(trialInd));
                 figure(fig1)
-                subplot(3,3,condNo)
+                subplot(5,5,condNo)
                 plot(trialDataX);hold on
                 figure(fig2)
-                subplot(3,3,condNo)
+                subplot(5,5,condNo)
                 plot(trialDataY);hold on
                 baselineX=mean(trialDataX);
                 baselineY=mean(trialDataY);
@@ -156,7 +175,7 @@ if processRaw==1
                 meanPosY{condNo}=[meanPosY{condNo};baselineY];
             end
         end
-        for condNoInd=1:9
+        for condNoInd=1:25
             allMeanPosX(condNoInd)=mean(meanPosX{condNoInd}(:));
             allMeanPosY(condNoInd)=mean(meanPosY{condNoInd}(:));
             percentOutliers=80;%
@@ -165,19 +184,27 @@ if processRaw==1
         end
         figure;
         scatter(allMeanPosX,allMeanPosY);
+        title('including outliers')
         figure;
         scatter(allMeanPosXexcludeOutliers,allMeanPosYexcludeOutliers);
-        row1X=mean([allMeanPosXexcludeOutliers(1) allMeanPosXexcludeOutliers(4) allMeanPosXexcludeOutliers(7)])
-        row2X=mean([allMeanPosXexcludeOutliers(2) allMeanPosXexcludeOutliers(5) allMeanPosXexcludeOutliers(8)]);
-        row3X=mean([allMeanPosXexcludeOutliers(3) allMeanPosXexcludeOutliers(6) allMeanPosXexcludeOutliers(9)]);
-        col1Y=mean([allMeanPosYexcludeOutliers(1) allMeanPosYexcludeOutliers(2) allMeanPosYexcludeOutliers(3)])
-        col2Y=mean([allMeanPosYexcludeOutliers(4) allMeanPosYexcludeOutliers(5) allMeanPosYexcludeOutliers(6)]);
-        col3Y=mean([allMeanPosYexcludeOutliers(7) allMeanPosYexcludeOutliers(8) allMeanPosYexcludeOutliers(9)]);
-        voltsPerDegreeX=mean([row1X-row2X row2X-row3X])/dvaSampleDist;
-        voltsPerDegreeY=mean([col3Y-col2Y col2Y-col1Y])/dvaSampleDist;
+        title('excluding outliers')
+        row1X=mean([allMeanPosXexcludeOutliers(1) allMeanPosXexcludeOutliers(6) allMeanPosXexcludeOutliers(11) allMeanPosXexcludeOutliers(16) allMeanPosXexcludeOutliers(21)])
+        row2X=mean([allMeanPosXexcludeOutliers(2) allMeanPosXexcludeOutliers(7) allMeanPosXexcludeOutliers(12) allMeanPosXexcludeOutliers(17) allMeanPosXexcludeOutliers(22)]);
+        row3X=mean([allMeanPosXexcludeOutliers(3) allMeanPosXexcludeOutliers(8) allMeanPosXexcludeOutliers(13) allMeanPosXexcludeOutliers(18) allMeanPosXexcludeOutliers(23)]);
+        row4X=mean([allMeanPosXexcludeOutliers(4) allMeanPosXexcludeOutliers(9) allMeanPosXexcludeOutliers(14) allMeanPosXexcludeOutliers(19) allMeanPosXexcludeOutliers(24)]);
+        row5X=mean([allMeanPosXexcludeOutliers(5) allMeanPosXexcludeOutliers(10) allMeanPosXexcludeOutliers(15) allMeanPosXexcludeOutliers(20) allMeanPosXexcludeOutliers(25)]);
+        col1Y=mean([allMeanPosYexcludeOutliers(1) allMeanPosYexcludeOutliers(2) allMeanPosYexcludeOutliers(3) allMeanPosYexcludeOutliers(4) allMeanPosYexcludeOutliers(5)])
+        col2Y=mean([allMeanPosYexcludeOutliers(6) allMeanPosYexcludeOutliers(7) allMeanPosYexcludeOutliers(8) allMeanPosYexcludeOutliers(9) allMeanPosYexcludeOutliers(10)]);
+        col3Y=mean([allMeanPosYexcludeOutliers(11) allMeanPosYexcludeOutliers(12) allMeanPosYexcludeOutliers(13) allMeanPosYexcludeOutliers(14) allMeanPosYexcludeOutliers(15)]);
+        col4Y=mean([allMeanPosYexcludeOutliers(16) allMeanPosYexcludeOutliers(17) allMeanPosYexcludeOutliers(18) allMeanPosYexcludeOutliers(19) allMeanPosYexcludeOutliers(20)]);
+        col5Y=mean([allMeanPosYexcludeOutliers(21) allMeanPosYexcludeOutliers(22) allMeanPosYexcludeOutliers(23) allMeanPosYexcludeOutliers(24) allMeanPosYexcludeOutliers(25)]);
+        voltsPerDegreeX=mean([row1X-row2X row2X-row3X row3X-row4X row4X-row5X])/dvaSampleDist;
+        voltsPerDegreeY=mean([col5Y-col4Y col4Y-col3Y col3Y-col2Y col2Y-col1Y])/dvaSampleDist;
         degpervoltx=1/voltsPerDegreeX;
         degpervolty=1/voltsPerDegreeY;
-        save(['D:\data\',date,'\volts_per_dva.mat'],'voltsPerDegreeX','voltsPerDegreeY')
+        save([rootdir,date,'\volts_per_dva.mat'],'voltsPerDegreeX','voltsPerDegreeY')
+        save([rootdir,date,'\',date(1:6),'_data\cal_vals.mat'],'xConds','yConds','allMeanPosX','allMeanPosY')
+        save([rootdir,date,'\',date(1:6),'_data\cal_vals_no_outliers.mat'],'xConds','yConds','allMeanPosXexcludeOutliers','allMeanPosYexcludeOutliers')
     end
 end
        

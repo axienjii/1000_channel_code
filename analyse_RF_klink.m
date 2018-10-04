@@ -5,14 +5,20 @@ function analyse_RF_klink
 stimDurms=1000;%in ms
 stimDur=stimDurms/1000;%in seconds
 % date='020818_B2';
-date='070818_B2';
+% date='070818_B2';
+date='041018_B7_aston';
+if strcmp(date(end-5:end),'aston')
+    rootDir='D:\aston_data\';
+else
+    rootDir='D:\data\';
+end
 processRaw=1;
 if processRaw==1
     for instanceInd=1:4
         instanceName=['instance',num2str(instanceInd)];
-        instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+        instanceNEVFileName=[rootDir,date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);
-        instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+        instanceNS6FileName=[rootDir,date,'\',instanceName,'.ns6'];
         NS=openNSx(instanceNS6FileName);%200 s
         % NS=openNSx('t:1:6000000');%200 s
         sampFreq=NS.MetaTags.SamplingFreq;
@@ -79,9 +85,9 @@ if processRaw==1
             LFP=GetLFP(S,Fs,LFPparameters);%modified from Feng's GetMUAeLFP script, to generate only LFP
             channelDataLFP{channelInd}=LFP;
         end
-        fileName=fullfile('D:\data',date,['MUA_',instanceName,'.mat']);
+        fileName=fullfile(rootDir,date,['MUA_',instanceName,'.mat']);
         save(fileName,'channelDataMUA');   
-        fileName=fullfile('D:\data',date,['LFP_',instanceName,'.mat']);
+        fileName=fullfile(rootDir,date,['LFP_',instanceName,'.mat']);
         save(fileName,'channelDataLFP');        
     end
 end

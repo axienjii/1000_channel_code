@@ -23,7 +23,11 @@ date='260617';
 % date='020218';
 % date='280218';
 % date='080618';
+<<<<<<< HEAD
 % date='070818';
+=======
+date='070818';
+>>>>>>> c20ec46d6023897dc0206eefe1d4ee7f2ffa267c
 colind = hsv(16);
 colindImp = hsv(1000);%colour-code impedances
 
@@ -503,14 +507,14 @@ array16=chInfo(chInfo(:,7)==16,:);
 for arrayInd=8:16
    save(['C:\Users\User\Documents\impedance_values\280218\array',num2str(arrayInd),'.mat'],['array',num2str(arrayInd)]); 
 end
-figure;plot(array12(1:12,1),array12(1:12,2),'ko');
-hold on
-for ind=1:12
-    plot(array12(ind,1),array12(ind,2),'go');
-    text(array12(ind,1),array12(ind,2),num2str(ind));
-    pause(2);
-end
-a=[1 6 10 12 8 4 9];a=sort(a);
-array12selectedChs=array12(a,:);
-% save('C:\Users\User\Documents\impedance_values\170717\array12selectedChs.mat','array12selectedChs')
-pauseHere=1;
+% figure;plot(array12(1:12,1),array12(1:12,2),'ko');
+% hold on
+% for ind=1:12
+%     plot(array12(ind,1),array12(ind,2),'go');
+%     text(array12(ind,1),array12(ind,2),num2str(ind));
+%     pause(2);
+% end
+% a=[1 6 10 12 8 4 9];a=sort(a);
+% array12selectedChs=array12(a,:);
+% % save('C:\Users\User\Documents\impedance_values\170717\array12selectedChs.mat','array12selectedChs')
+% pauseHere=1;

@@ -6,6 +6,7 @@ function analyse_microstim_attention(date,allInstanceInd,analyseEyeData)
 
 interleaved=0;%set interleaved to 0, if trigger pulse was sent using microB. set interleaved to 1, if stimulation was sent by calling stimulator.play function
 drummingOn=0;%for sessions after 9/4/18, drumming with only 2 targets was uesd 
+visualVersion=1;%set to 1 for 120918_B1, in which a visual version was run.
 localDisk=1;
 if localDisk==1
     rootdir='D:\data\';
@@ -58,9 +59,6 @@ sampFreq=30000;
 cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
 arrays=8:16;
 
-trialsDesired=100;
-trialsDesiredInitialBlock=20;
-
 analyseConds=1;
 if analyseConds==1
     switch(date)
@@ -72,9 +70,10 @@ if analyseConds==1
             numTargets=[];
             electrodePairs=[];
             currentThresholdChs=133;
-            visualOnly=1;  
             syncPulseCh=136;%analog input 8, records sync pulse from array 11
             syncPulseThreshold=1000;
+            trialsDesired=20;
+            trialsDesiredInitialBlock=20;
         case '130718_B3'
             setElectrodes=34;%0118_B & B?
             setArrays=11;
@@ -82,9 +81,10 @@ if analyseConds==1
             numTargets=[];
             electrodePairs=[];
             currentThresholdChs=133;
-            visualOnly=1;  
             syncPulseCh=136;%analog input 8, records sync pulse from array 11
             syncPulseThreshold=1000;
+            trialsDesired=100;
+            trialsDesiredInitialBlock=20;
         case '240718_B13'
             setElectrodes=20;%0118_B & B?
             setArrays=16;
@@ -92,9 +92,10 @@ if analyseConds==1
             numTargets=[];
             electrodePairs=[];
             currentThresholdChs=134;
-            visualOnly=1;  
             syncPulseCh=141;%analog input 8, records sync pulse from array 16   
-            syncPulseThreshold=24000;    
+            syncPulseThreshold=24000;
+            trialsDesired=100;
+            trialsDesiredInitialBlock=20;
         case '310718_B1'
             setElectrodes=20;%0118_B & B?
             setArrays=16;
@@ -102,9 +103,43 @@ if analyseConds==1
             numTargets=[];
             electrodePairs=[];
             currentThresholdChs=134;
-            visualOnly=1;  
             syncPulseCh=141;%analog input 8, records sync pulse from array 16   
-            syncPulseThreshold=1000;       
+            syncPulseThreshold=1000;   
+            trialsDesired=100;
+            trialsDesiredInitialBlock=20;
+        case '290818_B1'
+            setElectrodes=20;%0118_B & B?
+            setArrays=16;
+            setInd=[];
+            numTargets=[];
+            electrodePairs=[];
+            currentThresholdChs=134;
+            syncPulseCh=141;%analog input 8, records sync pulse from array 16   
+            syncPulseThreshold=1000;
+            trialsDesired=20;
+            trialsDesiredInitialBlock=10;%note that this value was set to 20 trials, during analysis. hence the first 10 'real' trials (following the distractor-free trials) were excluded
+        case '050918_B1'
+            setElectrodes=20;
+            setArrays=16;
+            setInd=[];
+            numTargets=[];
+            electrodePairs=[];
+            currentThresholdChs=134;
+            syncPulseCh=141;%analog input 8, records sync pulse from array 16
+            syncPulseThreshold=1000;
+            trialsDesired=50;
+            trialsDesiredInitialBlock=30;
+        case '120918_B1'
+            setElectrodes=20;
+            setArrays=16;
+            setInd=[];
+            numTargets=[];
+            electrodePairs=[];
+            currentThresholdChs=134;
+            syncPulseCh=141;%analog input 8, records sync pulse from array 16
+            syncPulseThreshold=1000;
+            trialsDesired=50;
+            trialsDesiredInitialBlock=30;
 
         %visual task only:
     end
@@ -131,6 +166,9 @@ if processRaw==1
         eyeDataMat=['D:\data\',date,'\',instanceName,'_NSch_eye_channels.mat'];
         if exist(eyeDataMat,'file')
             load(eyeDataMat,'NSch');
+            if strcmp(class(NSch),'cell')
+                NSch=NSch{end};
+            end
         else
             if recordedRaw==0
                 NSchOriginal=openNSx(instanceNS6FileName);
@@ -287,7 +325,7 @@ if processRaw==1
         end
         
         matFileName=fullfile(rootdir,date,[instanceName,'_trialInfo.mat']);
-        save(matFileName,'targetOns','distractorOns','visualTarget','microTarget','distractorFirst','targetFirst','attendMicroTrialsIndFirst','attendMicroTrialsIndSecond','attendVisualTrialsIndFirst','attendVisualTrialsIndSecond','correctTrialsInd','incorrectTrialsInd','responseTrialsInd','attendMicroResponseBlockInd','notInitialTrialsM','notInitialTrialsCorrectM','attendVisualResponseBlockInd','notInitialTrialsV','notInitialTrialsCorrectV','attendMicroFirstNotInitial','attendMicroSecondNotInitial','attendMicroFirstNotInitialC','attendMicroSecondNotInitialC','attendVisualFirstNotInitial' ,'attendVisualSecondNotInitial' ,'attendVisualFirstNotInitialC','attendVisualSecondNotInitialC');
+        save(matFileName,'goodBlocks','targetOns','distractorOns','visualTarget','microTarget','distractorFirst','targetFirst','attendMicroTrialsIndFirst','attendMicroTrialsIndSecond','attendVisualTrialsIndFirst','attendVisualTrialsIndSecond','correctTrialsInd','incorrectTrialsInd','responseTrialsInd','attendMicroResponseBlockInd','notInitialTrialsM','notInitialTrialsCorrectM','attendVisualResponseBlockInd','notInitialTrialsV','notInitialTrialsCorrectV','attendMicroFirstNotInitial','attendMicroSecondNotInitial','attendMicroFirstNotInitialC','attendMicroSecondNotInitialC','attendVisualFirstNotInitial' ,'attendVisualSecondNotInitial' ,'attendVisualFirstNotInitialC','attendVisualSecondNotInitialC');
         
         %detect periods of stimulation using sync pulse:
         syncPulseMat=[rootdir,date,'\instance1_NSch_sync_pulse.mat'];%always recorded on instance 1
@@ -298,6 +336,9 @@ if processRaw==1
                 readChannel=['c:',num2str(syncPulseCh),':',num2str(syncPulseCh)];
                 NSchOriginalSync=openNSx(instanceNS6FileName,readChannel);
                 NSchSync=NSchOriginalSync.Data;
+                if strcmp(class(NSchSync),'cell')
+                    NSchSync=NSchSync{end};
+                end
             end
             save(syncPulseMat,'NSchSync');
         end
@@ -328,6 +369,7 @@ if processRaw==1
         end
         %read in neuronal data, only for V4:
         if instanceInd==1
+            neuronalChsV4=33:96;
             if strcmp(date,'130718_B1')||strcmp(date,'240718_B13')||strcmp(date,'310718_B1')
                 neuronalChsV4=33:96;
             elseif strcmp(date,'130718_B3')
@@ -346,16 +388,25 @@ if processRaw==1
             if analyseEyeData==1&&instanceInd==1
                 neuronalCh=eyeChannels(neuronalChInd);
                 NSch=NSchOriginal{neuronalChInd};
+                if strcmp(class(NSch),'cell')
+                    NSch=NSch{end};
+                end
             else
                 neuronalCh=neuronalChsV4(neuronalChInd);
                 neuronalMat=[rootdir,date,'\',instanceName,'_NSch',num2str(neuronalCh),'.mat'];
                 if exist(neuronalMat,'file')
                     load(neuronalMat,'NSch');
+                    if strcmp(class(NSch),'cell')
+                        NSch=NSch{end};
+                    end
                 else
                     if recordedRaw==1
                         readChannel=['c:',num2str(neuronalCh),':',num2str(neuronalCh)];
                         NSchOriginal=openNSx(instanceNS6FileName,readChannel);
                         NSch=NSchOriginal.Data;
+                        if strcmp(class(NSch),'cell')
+                            NSch=NSch{end};
+                        end
                     end
                     save(neuronalMat,'NSch');
                 end
@@ -394,16 +445,27 @@ if processRaw==1
                         attendVisualSecondNotInitialDistractorTS=distractorOns(attendVisualSecondNotInitialC{blockInd});%get time stamps of distractor onset for trials during attend-visual block, excluding initial distractor-free trials, when microstim is in second interval
                     end
                     %identify nearest threshold crossing to event of interest:
-                    eventOfInterest=attendMicroFirstNotInitialTargetTS;
-                    [onCrossingIndTS_AMF offCrossingIndTS_AMF]=readThresholdCrossings(eventOfInterest,thresholdCrossingsOn,thresholdCrossingsOff);%attend-micro condition, microstim occurs in first interval
-                    eventOfInterest=attendVisualFirstNotInitialDistractorTS;
-                    [onCrossingIndTS_AVF offCrossingIndTS_AVF]=readThresholdCrossings(eventOfInterest,thresholdCrossingsOn,thresholdCrossingsOff);%attend-visual condition, microstim occurs in first interval
-                    
-                    eventOfInterest=attendMicroSecondNotInitialTargetTS;
-                    [onCrossingIndTS_AMS offCrossingIndTS_AMS]=readThresholdCrossings(eventOfInterest,thresholdCrossingsOn,thresholdCrossingsOff);%attend-micro condition, microstim occurs in second interval
-                    eventOfInterest=attendVisualSecondNotInitialDistractorTS;
-                    [onCrossingIndTS_AVS offCrossingIndTS_AVS]=readThresholdCrossings(eventOfInterest,thresholdCrossingsOn,thresholdCrossingsOff);%attend-visual condition, microstim occurs in second interval
-                    
+                    if visualVersion==0
+                        eventOfInterest=attendMicroFirstNotInitialTargetTS;
+                        [onCrossingIndTS_AMF offCrossingIndTS_AMF]=readThresholdCrossings(eventOfInterest,thresholdCrossingsOn,thresholdCrossingsOff);%attend-micro condition, microstim occurs in first interval
+                        eventOfInterest=attendVisualFirstNotInitialDistractorTS;
+                        [onCrossingIndTS_AVF offCrossingIndTS_AVF]=readThresholdCrossings(eventOfInterest,thresholdCrossingsOn,thresholdCrossingsOff);%attend-visual condition, microstim occurs in first interval
+                        
+                        eventOfInterest=attendMicroSecondNotInitialTargetTS;
+                        [onCrossingIndTS_AMS offCrossingIndTS_AMS]=readThresholdCrossings(eventOfInterest,thresholdCrossingsOn,thresholdCrossingsOff);%attend-micro condition, microstim occurs in second interval
+                        eventOfInterest=attendVisualSecondNotInitialDistractorTS;
+                        [onCrossingIndTS_AVS offCrossingIndTS_AVS]=readThresholdCrossings(eventOfInterest,thresholdCrossingsOn,thresholdCrossingsOff);%attend-visual condition, microstim occurs in second interval
+                    elseif visualVersion==1
+                        stimDurVis=0.167;
+                        onCrossingIndTS_AMF=attendMicroFirstNotInitialTargetTS;
+                        offCrossingIndTS_AMF=onCrossingIndTS_AMF+stimDurVis*sampFreq;
+                        onCrossingIndTS_AVF=attendVisualFirstNotInitialDistractorTS;
+                        offCrossingIndTS_AVF=onCrossingIndTS_AVF+stimDurVis*sampFreq;
+                        onCrossingIndTS_AMS=attendMicroSecondNotInitialTargetTS;
+                        offCrossingIndTS_AMS=onCrossingIndTS_AMS+stimDurVis*sampFreq;
+                        onCrossingIndTS_AVS=attendVisualSecondNotInitialDistractorTS;
+                        offCrossingIndTS_AVS=onCrossingIndTS_AVS+stimDurVis*sampFreq;                        
+                    end
                     for trialInd=1:length(onCrossingIndTS_AMF)
                         if onCrossingIndTS_AMF(trialInd)~=0
                             AMF(trialInd,:)=NSch(onCrossingIndTS_AMF(trialInd)-preStimDur*sampFreq:onCrossingIndTS_AMF(trialInd)-preStimDur*sampFreq+25989);
@@ -431,7 +493,7 @@ if processRaw==1
                         end
                     end
                     for trialInd=1:length(onCrossingIndTS_AVS)
-                        if onCrossingIndTS_AVS(trialInd)~=0
+                        if onCrossingIndTS_AVS(trialInd)~=0&&~isnan(onCrossingIndTS_AVS(trialInd))
                             AVS(trialInd,:)=NSch(onCrossingIndTS_AVS(trialInd)-preStimDur*sampFreq:onCrossingIndTS_AVS(trialInd)-preStimDur*sampFreq+25989);
                             %                     AVS(trialInd,:,neuronalCh)=NSch(onCrossingIndTS_AVS(trialInd)-preStimDur*sampFreq:offCrossingIndTS_AVS(trialInd)+postStimDur*sampFreq);
                         end

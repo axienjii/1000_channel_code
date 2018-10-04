@@ -17,7 +17,7 @@ function analyse_microstim_saccade14_letter(date,allInstanceInd)
 %time points corresponding to peak velocities.
 %Also generates data for Feng, to create movie of eye movements.
 
-localDisk=0;
+localDisk=1;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
@@ -63,28 +63,88 @@ stimDur=stimDurms/1000;%in seconds
 postStimDur=400/1000;%length of post-stimulus-offset period, in s
 sampFreq=30000;
 minCrossingTime=0;
+analyseVisualOnly=1;
 switch date
     case '180518_B2'
         minCrossingTime=preStimDur-0.166;
         electrodeNums=[50 58 55 53 30 10 49 46 24 38 42 28 1 27 5 44 29 13 20 1 8 28 49 32 53 55 46 4 60 56];%170518_B & B?
         arrayNums=[12 14 14 16 16 8 10 15 13 10 10 10 10 9 9 12 14 14 16 8 15 15 15 13 13 10 10 10 10 9];
         currentThresholdChs=126;
+        degPerVoltXFinal=0.0073;%as measured in 240518_B2
+        degPerVoltYFinal=0.0069;
     case '230518_B5'
         minCrossingTime=preStimDur-0.166;
         electrodeNums=[60 34 50 37 4 1 16 15 51 52 63 5 56 35 36 55 55 48 22 62];%010518_B & B
         arrayNums=[10 10 13 15 15 15 11 10 11 13 15 15 13 13 13 10 11 11 11 11];
         currentThresholdChs=126;
+        degPerVoltXFinal=0.0073;%as measured in 240518_B2
+        degPerVoltYFinal=0.0069;
     case '230518_B6'
         minCrossingTime=preStimDur-0.166;
         electrodeNums=[60 34 50 37 4 1 16 15 51 52 63 5 56 35 36 55 55 48 22 62];%010518_B & B
         arrayNums=[10 10 13 15 15 15 11 10 11 13 15 15 13 13 13 10 11 11 11 11];
         currentThresholdChs=126;
         visualOnly=0;
+        degPerVoltXFinal=0.0073;%as measured in 240518_B2
+        degPerVoltYFinal=0.0069;
     case '230518_B15'
         minCrossingTime=preStimDur-0.166;
         electrodeNums=[60 34 50 37 4 1 16 15 51 52 63 5 56 35 36 55 55 48 22 62];%010518_B & B
         arrayNums=[10 10 13 15 15 15 11 10 11 13 15 15 13 13 13 10 11 11 11 11];
         currentThresholdChs=126;
+        degPerVoltXFinal=0.0073;%as measured in 240518_B2
+        degPerVoltYFinal=0.0069;
+    case '170918_B3'
+        minCrossingTime=preStimDur-0.166;
+        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
+        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
+%         currentThresholdChs=134;
+        currentThresholdChs=135;
+        degPerVoltXFinal=0.0026;%as measured in 180918_B3
+        degPerVoltYFinal=0.0024;
+    case '180918_B2'
+        minCrossingTime=preStimDur-0.166;
+        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
+        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
+%         currentThresholdChs=134;
+        currentThresholdChs=135;
+        degPerVoltXFinal=0.0026;%as measured in 180918_B3
+        degPerVoltYFinal=0.0024;
+    case '260918_B3'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
+        if analyseVisualOnly==0
+            minCrossingTime=preStimDur-0.166;
+        elseif analyseVisualOnly==1
+            minCrossingTime=preStimDur-0.1;
+        end
+        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
+        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
+        currentThresholdChs=135;
+        degPerVoltXFinal=0.0026;%as measured in 260918_B1
+        degPerVoltYFinal=0.0024;
+    case '270918_B3'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
+        analyseVisualOnly=1;
+        minCrossingTime=preStimDur-0.1;%visual stimulus left on until saccade made, in this session
+        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
+        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
+        currentThresholdChs=135;
+        degPerVoltXFinal=0.0026;%as measured in 270918_B1
+        degPerVoltYFinal=0.0024;
+    case '280918_B'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
+        analyseVisualOnly=1;
+        minCrossingTime=preStimDur-0.1;%visual stimulus left on until saccade made, in this session
+        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
+        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
+        currentThresholdChs=135;
+        degPerVoltXFinal=0.25;%as measured in 280918_B1
+        degPerVoltYFinal=0.25;
+    case '041018_B3'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
+        analyseVisualOnly=1;
+        minCrossingTime=preStimDur-0.1;%visual stimulus left on until saccade made, in this session
+        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
+        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
+        currentThresholdChs=136;
+        degPerVoltXFinal=0.25;%as measured in 041018_B2
+        degPerVoltYFinal=0.25;
 end
 
 cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
@@ -124,6 +184,9 @@ if processRaw==1
                 for channelInd=1:length(eyeChannels)
                     readChannel=['c:',num2str(eyeChannels(channelInd)),':',num2str(eyeChannels(channelInd))];
                     NSchOriginal=openNSx(instanceNS6FileName,readChannel);
+                    if strcmp(class(NSchOriginal.Data),'cell')
+                        NSchOriginal.Data=NSchOriginal.Data{end};
+                    end
                     NSch{channelInd}=NSchOriginal.Data;
                 end
             end
@@ -145,16 +208,35 @@ if processRaw==1
             end
         end
                 
-        if visualOnly==0
-            microstimTrialsInd=find(allCurrentLevel>0);
-            correctTrialsInd=find(performance==1);
-            correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
-            fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
-        elseif visualOnly==1%note that in this code, trials with visually presented stimuli are read into the variable 'microstimTrialsInd'
-            microstimTrialsInd=find(cell2mat(allElectrodeNum)>0);
-            correctTrialsInd=find(performance==1);
-            correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
-            fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
+        if exist('allVisualTrial','var')%session(s) in which visual and microstim trials are interleaved
+            if analyseVisualOnly==0
+                microstimTrialsInd1=find(allCurrentLevel>0);
+                microstimTrialsInd2=find(allVisualTrial==0);
+                microstimTrialsInd=intersect(microstimTrialsInd1,microstimTrialsInd2);
+                correctTrialsInd=find(performance==1);
+                correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
+                fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
+            elseif analyseVisualOnly==1%note that in this code, trials with visually presented stimuli are read into the variable 'microstimTrialsInd'
+                microstimTrialsInd1=find(cell2mat(allElectrodeNum)>0);
+                microstimTrialsInd2=find(allVisualTrial==1);
+                microstimTrialsInd=intersect(microstimTrialsInd1,microstimTrialsInd2);
+                correctTrialsInd=find(performance==1);
+                correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
+                fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
+            end
+        else
+            if visualOnly==0
+                microstimTrialsInd=find(allCurrentLevel>0);
+                correctTrialsInd=find(performance==1);
+                correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
+                fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
+            elseif visualOnly==1%note that in this code, trials with visually presented stimuli are read into the variable 'microstimTrialsInd'
+                microstimTrialsInd=find(cell2mat(allElectrodeNum)>0);
+                correctTrialsInd=find(performance==1);
+                correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
+                fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
+            end
+            
         end
         figInd1=figure;hold on
         figInd2=figure;hold on
@@ -169,20 +251,43 @@ if processRaw==1
         timePeakVelocityXYsAllTrials=[];
         timePeakVelocityXYSecsAllTrials=[];
         arrayAllTrials=[];
-        if ~exist('goodArrays8to16','var')
+        if ~exist('goodArrays8to16New','var')
             load([dataDir,'\currentThresholdChs',num2str(currentThresholdChs),'.mat']);
         end
-        for uniqueElectrode=1:15%16:30%1:15%length(electrodeNums)
+        for uniqueElectrode=1:length(electrodeNums)%15%16:30%1:15%
             figInd9(uniqueElectrode)=figure;hold on
             array=arrayNums(uniqueElectrode);
             arrayColInd=find(arrays==array);
             electrode=electrodeNums(uniqueElectrode);
-            electrodeIndTemp1=find(goodArrays8to16(:,8)==electrode);
-            electrodeIndTemp2=find(goodArrays8to16(:,7)==array);
+            electrodeIndTemp1=find(goodArrays8to16New(:,8)==electrode);
+            electrodeIndTemp2=find(goodArrays8to16New(:,7)==array);
             electrodeInd=intersect(electrodeIndTemp1,electrodeIndTemp2);
-            impedance=goodArrays8to16(electrodeInd,6);
-            RFx=goodArrays8to16(electrodeInd,1);
-            RFy=goodArrays8to16(electrodeInd,2);
+            impedance=goodArrays8to16New(electrodeInd,6);
+%             RFx=goodArrays8to16(electrodeInd,1);
+%             RFy=goodArrays8to16(electrodeInd,2);
+            RFx=goodArrays8to16New(electrodeInd,1);
+            RFy=goodArrays8to16New(electrodeInd,2);
+            
+            electrodeNumsAll=load('D:\data\channel_area_mapping.mat','channelNums');
+            electrodeNumsAll=electrodeNumsAll.channelNums;
+            arrayNumsAll=load('D:\data\channel_area_mapping.mat','arrayNums');
+            arrayNumsAll=arrayNumsAll.arrayNums;
+            electrodeIndTemp1=find(electrodeNumsAll(:)==electrode);
+            electrodeIndTemp2=find(arrayNumsAll(:)==array);
+            electrodeInd=intersect(electrodeIndTemp1,electrodeIndTemp2);
+            instance=ceil(electrodeInd/128);
+            chInd128=mod(electrodeInd,128);
+            if chInd128==0
+                chInd128=128;
+            end
+            load(['D:\data\best_260617-280617\RFs_instance',num2str(instance),'.mat'])
+%             RFx=RFs{chInd128}.centrex
+%             RFy=RFs{chInd128}.centrey
+            
+%             if RFx2~=RFx||RFy2~=RFy
+%                pauseHere=1; 
+%             end
+            
             if RFy<-500
                 RFy=NaN;
             end
@@ -195,8 +300,6 @@ if processRaw==1
             trialDataXY={};
 %             degPerVoltXFinal=0.0024;
 %             degPerVoltYFinal=0.0022;
-            degPerVoltXFinal=0.0073;%as measured in 240518_B2
-            degPerVoltYFinal=0.0069;
             flankingSamples=(30000/50)/2;%50-ms period before reward delivery
             saccadeEndTrials=[];
             electrodeTrials=[];
@@ -392,6 +495,7 @@ if processRaw==1
                 trialsXYElectrode=saccadeEndTrials(trialsIndElectrode,:);
                 meanSaccadeXY=nanmean(trialsXYElectrode,1);%calculate mean of saccade end points
                 stdSaccadeXY=nanstd(trialsXYElectrode,0,1);%calculate std of saccade end points
+                allStdSaccadeXY(uniqueElectrode,:)=stdSaccadeXY;
                 for trialElectrodeInd=1:length(trialsIndElectrode)
                     plot([meanSaccadeXY(1) trialsXYElectrode(trialElectrodeInd,1)],[-meanSaccadeXY(2) -trialsXYElectrode(trialElectrodeInd,2)],'-','Color',[impCol impCol 1]);
                 end
@@ -459,7 +563,7 @@ if processRaw==1
             text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
             axis equal
             xlim([-20 220]);
-            ylim([-160 20]);
+            ylim([-200 15]);
             title('saccade endpoints');
             for arrayInd=1:length(arrays)
                 text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
@@ -506,7 +610,7 @@ if processRaw==1
         text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
         axis equal
         xlim([-20 220]);
-        ylim([-160 20]);
+        ylim([-200 15]);
         title(['RF locations, SD saccade end points, max SD = ',num2str(stdCutoff)]);
         for arrayInd=1:length(arrays)
             text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
@@ -607,7 +711,7 @@ if processRaw==1
         text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
         axis equal
         xlim([-20 220]);
-        ylim([-160 20]);
+        ylim([-200 15]);
         title('saccade endpoints'); 
         for arrayInd=1:length(arrays)
             text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
@@ -651,7 +755,7 @@ if processRaw==1
         text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
         axis equal
         xlim([-20 220]);
-        ylim([-160 20]);
+        ylim([-200 15]);
         title('saccade endpoints');
         for arrayInd=1:length(arrays)
             text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
@@ -678,7 +782,7 @@ if processRaw==1
         text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
         axis equal
         xlim([-20 220]);
-        ylim([-160 20]);
+        ylim([-200 15]);
         title('saccade endpoints and RF centres');
         for arrayInd=1:length(arrays)
             text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
@@ -705,7 +809,7 @@ if processRaw==1
         text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
         axis equal
         xlim([-20 220]);
-        ylim([-160 20]);
+        ylim([-200 15]);
         title('saccade endpoints (filled) and RF centres');
         for arrayInd=1:length(arrays)
             text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
@@ -737,7 +841,7 @@ if processRaw==1
         text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
         axis equal
         xlim([-20 360]);
-        ylim([-220 20]);
+        ylim([-220 15]);
         title('saccade endpoints (filled), second saccade endpoints (X), and RF centres');
         for arrayInd=1:length(arrays)
             text(260,0-6*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
