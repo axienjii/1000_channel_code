@@ -17,7 +17,7 @@ function analyse_microstim_saccade14_letter(date,allInstanceInd)
 %time points corresponding to peak velocities.
 %Also generates data for Feng, to create movie of eye movements.
 
-localDisk=0;
+localDisk=1;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
@@ -136,6 +136,14 @@ switch date
         arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
         currentThresholdChs=135;
         degPerVoltXFinal=0.25;%as measured in 280918_B1
+        degPerVoltYFinal=0.25;
+    case '041018_B3'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
+        analyseVisualOnly=1;
+        minCrossingTime=preStimDur-0.1;%visual stimulus left on until saccade made, in this session
+        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
+        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
+        currentThresholdChs=136;
+        degPerVoltXFinal=0.25;%as measured in 041018_B2
         degPerVoltYFinal=0.25;
 end
 

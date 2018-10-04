@@ -28,6 +28,8 @@ switch(date)
         sampleDist=150;%distance between adjacent fix spot positions, in pixels
     case '280918_B1'
         sampleDist=40;%distance between adjacent fix spot positions, in pixels
+    case '041018_B2'
+        sampleDist=40;%distance between adjacent fix spot positions, in pixels
         
 end
 dvaSampleDist=sampleDist/Par.PixPerDeg;%%distance between adjacent fix spot positions, in degrees of visual angle
@@ -202,6 +204,7 @@ if processRaw==1
         degpervolty=1/voltsPerDegreeY;
         save([rootdir,date,'\volts_per_dva.mat'],'voltsPerDegreeX','voltsPerDegreeY')
         save([rootdir,date,'\',date(1:6),'_data\cal_vals.mat'],'xConds','yConds','allMeanPosX','allMeanPosY')
+        save([rootdir,date,'\',date(1:6),'_data\cal_vals_no_outliers.mat'],'xConds','yConds','allMeanPosXexcludeOutliers','allMeanPosYexcludeOutliers')
     end
 end
        
