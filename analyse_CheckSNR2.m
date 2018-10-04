@@ -87,6 +87,9 @@ switch(date)
     case '070818_B1'
         whichDir=2;
         best=1;
+    case '280918_B4'
+        whichDir=1;
+        best=1;
 end
 if whichDir==1%local copy available
     topDir='D:\data';
@@ -106,7 +109,7 @@ if copyRemotely==1
     end
 end
 stimDur=400/1000;%in seconds
-allInstanceInd=1:4;
+allInstanceInd=5:8;
 preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=300/1000;%length of post-stimulus-offset period, in s
 downsampleFreq=30;

@@ -8,7 +8,7 @@ function impedance_plotter4
 %recording).
 %Corrected the indexing of RF coordinate data, which was previously incorrect in 
 %impedance_plotter.m
-% date='260617';
+date='260617';
 % date='110717';
 % date='170717';
 % date='200717';
@@ -22,7 +22,7 @@ function impedance_plotter4
 % date='201017';
 % date='020218';
 % date='280218';
-date='080618';
+% date='080618';
 % date='070818';
 colind = hsv(16);
 colindImp = hsv(1000);%colour-code impedances
@@ -51,7 +51,7 @@ for instanceInd=1:8
     for i=1:length(indStart)
         array(i)=str2num(A(indStart(i)+4:indHyphen(i)-1));
         electrode(i)=str2num(A(indHyphen(i)+1:indHyphen(i)+4));
-        impedance(i)=str2num(A(indEnd(i)-4:indEnd(i)-1));
+        impedance(i)=str2num(A(indEnd(i)-5:indEnd(i)-1));
     end
     allArray=[allArray array];
     allElectrode=[allElectrode electrode];
@@ -480,22 +480,22 @@ array16=chInfo(chInfo(:,7)==16,:);
 plot(array16(:,1),array16(:,2),'x','Color',colind(16,:));
 %some channels with low impedance on array 16
 
-% array1=chInfo(chInfo(:,7)==1,:);
-% array2=chInfo(chInfo(:,7)==2,:);
-% array3=chInfo(chInfo(:,7)==3,:);
-% array4=chInfo(chInfo(:,7)==4,:);
-% array5=chInfo(chInfo(:,7)==5,:);
-% array6=chInfo(chInfo(:,7)==6,:);
-% array7=chInfo(chInfo(:,7)==7,:);
-% array8=chInfo(chInfo(:,7)==8,:);
-% array9=chInfo(chInfo(:,7)==9,:);
-% array10=chInfo(chInfo(:,7)==10,:);
-% array11=chInfo(chInfo(:,7)==11,:);
-% array12=chInfo(chInfo(:,7)==12,:);
-% array13=chInfo(chInfo(:,7)==13,:);
-% array14=chInfo(chInfo(:,7)==14,:);
-% array15=chInfo(chInfo(:,7)==15,:);
-% array16=chInfo(chInfo(:,7)==16,:);
+array1=chInfo(chInfo(:,7)==1,:);
+array2=chInfo(chInfo(:,7)==2,:);
+array3=chInfo(chInfo(:,7)==3,:);
+array4=chInfo(chInfo(:,7)==4,:);
+array5=chInfo(chInfo(:,7)==5,:);
+array6=chInfo(chInfo(:,7)==6,:);
+array7=chInfo(chInfo(:,7)==7,:);
+array8=chInfo(chInfo(:,7)==8,:);
+array9=chInfo(chInfo(:,7)==9,:);
+array10=chInfo(chInfo(:,7)==10,:);
+array11=chInfo(chInfo(:,7)==11,:);
+array12=chInfo(chInfo(:,7)==12,:);
+array13=chInfo(chInfo(:,7)==13,:);
+array14=chInfo(chInfo(:,7)==14,:);
+array15=chInfo(chInfo(:,7)==15,:);
+array16=chInfo(chInfo(:,7)==16,:);
 % for arrayInd=1:16
 %    save(['C:\Users\User\Documents\impedance_values\280218\max10000kohms_array',num2str(arrayInd),'.mat'],['array',num2str(arrayInd)]); 
 % end
