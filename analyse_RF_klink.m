@@ -14,7 +14,7 @@ else
 end
 processRaw=1;
 if processRaw==1
-    for instanceInd=1:4
+    for instanceInd=5:8
         instanceName=['instance',num2str(instanceInd)];
         instanceNEVFileName=[rootDir,date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);
