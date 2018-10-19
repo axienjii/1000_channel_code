@@ -6,7 +6,7 @@ stimDurms=1000;%in ms
 stimDur=stimDurms/1000;%in seconds
 % date='020818_B2';
 % date='070818_B2';
-date='041018_B7_aston';
+date='041018_B1_aston';
 if strcmp(date(end-4:end),'aston')
     rootDir='D:\aston_data\';
 else

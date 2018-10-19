@@ -90,6 +90,9 @@ switch(date)
     case '280918_B4'
         whichDir=1;
         best=1;
+    case '191018_B1'
+        whichDir=1;
+        best=1;
 end
 if whichDir==1%local copy available
     topDir='D:\data';
