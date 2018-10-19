@@ -56,6 +56,14 @@ switch(date)%x & y co-ordinates of centre-point
         x0 = 70;
         y0 = -70;
         speed = 500/1000; 
+    case '191018_B2'
+        x0 = 30;
+        y0 = -30;
+        speed = 500/1000; 
+    case '191018_B3'
+        x0 = 70;
+        y0 = -70;
+        speed = 500/1000; 
 end
 bardist = speed*bardur;
 
@@ -63,7 +71,7 @@ manualChannels=[];
 doManualChecks=0;
 
 colInd=jet(128);
-for instanceInd=1
+for instanceInd=5:8
     instanceName=['instance',num2str(instanceInd)];
     Ons = zeros(1,4);
     Offs = zeros(1,4);
