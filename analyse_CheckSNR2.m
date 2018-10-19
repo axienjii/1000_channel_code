@@ -90,6 +90,9 @@ switch(date)
     case '280918_B4'
         whichDir=1;
         best=1;
+    case '191018_B1'
+        whichDir=1;
+        best=1;
 end
 if whichDir==1%local copy available
     topDir='D:\data';
@@ -109,7 +112,7 @@ if copyRemotely==1
     end
 end
 stimDur=400/1000;%in seconds
-allInstanceInd=5:8;
+allInstanceInd=1:4;
 preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=300/1000;%length of post-stimulus-offset period, in s
 downsampleFreq=30;
@@ -131,8 +134,14 @@ for instanceCount=1:length(allInstanceInd)
         trialData={};
         for trialInd=1:length(timeStimOns)
             if strcmp(class(NS.Data),'cell')
-                if size(NS.Data{end},2)>=timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1
-                    trialData{trialInd}=NS.Data{end}(:,timeStimOns(trialInd)-sampFreq*preStimDur:timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
+                NSnew.Data=[];
+                for cellInd=1:length(NS.Data)
+                    NSnew.Data=[NSnew.Data NS.Data{cellInd}];
+                end
+                NS.Data=NSnew.Data;
+                clear NSnew
+                if size(NS.Data,2)>=timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1
+                    trialData{trialInd}=NS.Data(:,timeStimOns(trialInd)-sampFreq*preStimDur:timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1);%raw data in uV, read in data during stimulus presentation
                 end
             elseif strcmp(class(NS.Data),'double')
                 if size(NS.Data,2)>=timeStimOns(trialInd)+sampFreq*stimDur+sampFreq*postStimDur-1

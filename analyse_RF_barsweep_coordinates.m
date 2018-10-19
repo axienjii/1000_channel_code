@@ -1,4 +1,4 @@
-function analyse_RF_barsweep_coordinates
+function analyse_RF_barsweep_coordinates(date)
 %31/5/17
 %Modified by Xing from ana_RF_barsweep_singlechannel.m, to obtain RF
 %coordinates from 1000-channel data.
@@ -30,7 +30,7 @@ preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=300/1000;%length of post-stimulus-offset period, in s
 downsampleFreq=30;
 
-date='260617_B1';
+% date='260617_B1';
 switch(date)%x & y co-ordinates of centre-point
     case '060617_B2'
         x0 = 70;
@@ -48,14 +48,22 @@ switch(date)%x & y co-ordinates of centre-point
         x0 = 30;
         y0 = -30;
         speed = 100/1000; 
+    case '280918_B2'
+        x0 = 30;
+        y0 = -30;
+        speed = 100/1000; 
+    case '280918_B3'
+        x0 = 70;
+        y0 = -70;
+        speed = 500/1000; 
 end
 bardist = speed*bardur;
 
 manualChannels=[];
-doManualChecks=1;
+doManualChecks=0;
 
 colInd=jet(128);
-for instanceInd=7
+for instanceInd=1
     instanceName=['instance',num2str(instanceInd)];
     Ons = zeros(1,4);
     Offs = zeros(1,4);
@@ -68,7 +76,7 @@ for instanceInd=7
     stimCondCol='rgbk';
     SigDif=[];
     channelSNR=[];
-    for channelInd=[41];%[1:32 97:128]
+    for channelInd=1:128%[41];%[1:32 97:128]
         MUAmAllConds=[];
         for stimCond = 1:4
             MUAm=meanChannelMUAconds{stimCond}(channelInd,:);%each value corresponds to 1 ms
@@ -269,10 +277,10 @@ for instanceInd=7
         hold on
         %Only plot channels where all directons were signifcant and the SNR is
         %high enough
+        plotAreas=1;
         if mean(channelSNR(channelInd,:))>SNRthreshold&&sum(SigDif(channelInd,:))==4
 %             scatter(RF.centrex(1),RF.centrey(1),20,'x','MarkerFaceColor',colInd(channelInd,:))
             scatter(RF.centrex(1),RF.centrey(1),20,'o','MarkerFaceColor',colInd(channelInd,:))
-            plotAreas=1;
             if plotAreas==1
                 ellipse(abs(right-left)/2,abs(top-bottom)/2,RF.centrex(1),RF.centrey(1),colInd(channelInd,:));
             end

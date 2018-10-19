@@ -1,5 +1,5 @@
 function analyse_microstim_saccade14_letter(date,allInstanceInd)
-%%23/5/18
+%23/5/18
 %Written by Xing, modified from analyse_microstim_letter_eye2.m, extracts eye data during a
 %saccade task during microstimulation of individual electrodes 
 %(runstim_microstim_saccade_endpoints_letter.m). The electrodes
@@ -12,7 +12,7 @@ function analyse_microstim_saccade14_letter(date,allInstanceInd)
 %Can run analyses on raw data files in which neuronal data was also saved,
 %unlike analyse_microstim_saccade9, which only analyses files without neuronal
 %data.
-%Finds saccade end point using function calculateSaccadeEndpoint2,
+%Finds saccade end point using function calculateSaccadeEndpoint3,
 %which calculates velocity of eye movements in dva per s, and identifies
 %time points corresponding to peak velocities.
 %Also generates data for Feng, to create movie of eye movements.
@@ -23,6 +23,7 @@ if localDisk==1
 elseif localDisk==0
     rootdir='X:\best\';
 end
+copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
 dataDir=[rootdir,date,'\',date(1:6),'_data'];
 matFile=[dataDir,'\microstim_saccade_',date,'.mat'];
 load(matFile);
@@ -111,6 +112,7 @@ switch date
         degPerVoltXFinal=0.0026;%as measured in 180918_B3
         degPerVoltYFinal=0.0024;
     case '260918_B3'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
+        analyseVisualOnly=0;
         if analyseVisualOnly==0
             minCrossingTime=preStimDur-0.166;
         elseif analyseVisualOnly==1
@@ -118,6 +120,26 @@ switch date
         end
         electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
         arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
+        allElectrodes=0;
+        if allElectrodes==1
+            electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
+            arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
+        elseif allElectrodes==0
+            thresholdChangeGrouping=0;%set to 1 to categorise electrodes based on whether the current threshold increased substantially between this session and previous ones
+            if thresholdChangeGrouping==0
+                electrodeNums=[40 28 41 64 32 35 43 31 6 36 62 63];
+                arrayNums=[10 10 10 11 11 13 13 13 14 14 15 15];
+            elseif thresholdChangeGrouping==1
+                change=0;
+                if change==1%electrodes on which a substantial increase in current threshold was observed
+                    electrodeNums=[64 32 31 6 36 40 28 41];
+                    arrayNums=[11 11 13 14 14 10 10 10];
+                elseif change==0%electrodes on which no substantial increase in current threshold was observed
+                    electrodeNums=[35 43 62 63];
+                    arrayNums=[13 13 15 15];
+                end
+            end
+        end
         currentThresholdChs=135;
         degPerVoltXFinal=0.0026;%as measured in 260918_B1
         degPerVoltYFinal=0.0024;
@@ -129,22 +151,40 @@ switch date
         currentThresholdChs=135;
         degPerVoltXFinal=0.0026;%as measured in 270918_B1
         degPerVoltYFinal=0.0024;
-    case '280918_B'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
-        analyseVisualOnly=1;
-        minCrossingTime=preStimDur-0.1;%visual stimulus left on until saccade made, in this session
-        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
-        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
-        currentThresholdChs=135;
-        degPerVoltXFinal=0.25;%as measured in 280918_B1
-        degPerVoltYFinal=0.25;
-    case '041018_B3'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
-        analyseVisualOnly=1;
-        minCrossingTime=preStimDur-0.1;%visual stimulus left on until saccade made, in this session
-        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
-        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
+    case '041018_B7'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
+        analyseVisualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        allElectrodes=0;
+        if allElectrodes==1
+            electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
+            arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
+        elseif allElectrodes==0
+            thresholdChangeGrouping=1;%set to 1 to categorise electrodes based on whether the current threshold increased substantially between this session and previous ones
+            if thresholdChangeGrouping==0
+                electrodeNums=[40 28 41 64 32 35 43 31 6 36 62 63];
+                arrayNums=[10 10 10 11 11 13 13 13 14 14 15 15];
+            elseif thresholdChangeGrouping==1
+                change=0;
+                if change==1%electrodes on which a substantial increase in current threshold was observed
+                    electrodeNums=[64 32 31 6 36 40 28 41];
+                    arrayNums=[11 11 13 14 14 10 10 10];
+                elseif change==0%electrodes on which no substantial increase in current threshold was observed
+                    electrodeNums=[35 43 62 63];
+                    arrayNums=[13 13 15 15];
+                end
+            end
+        end
         currentThresholdChs=136;
-        degPerVoltXFinal=0.25;%as measured in 041018_B2
-        degPerVoltYFinal=0.25;
+        degPerVoltXFinal=0.0025;%as measured in 041018_B2
+        degPerVoltYFinal=0.0025;
+    case '161018_B3'%session with only microstim trials. Trial type stored in variable 'allVisualTrials'
+        analyseVisualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[22 27 52 1 51 64 6 14 20 22 31 35 43 52 12 40 62 63 4 34 46 47 53];
+        arrayNums=[8 8 8 9 11 11 12 12 12 13 13 13 13 13 14 15 15 15 16 16 16 16 16];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
 end
 
 cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];

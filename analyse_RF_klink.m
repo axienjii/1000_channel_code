@@ -6,8 +6,8 @@ stimDurms=1000;%in ms
 stimDur=stimDurms/1000;%in seconds
 % date='020818_B2';
 % date='070818_B2';
-date='041018_B7_aston';
-if strcmp(date(end-5:end),'aston')
+date='041018_B1_aston';
+if strcmp(date(end-4:end),'aston')
     rootDir='D:\aston_data\';
 else
     rootDir='D:\data\';
@@ -21,6 +21,14 @@ if processRaw==1
         instanceNS6FileName=[rootDir,date,'\',instanceName,'.ns6'];
         NS=openNSx(instanceNS6FileName);%200 s
         % NS=openNSx('t:1:6000000');%200 s
+        if strcmp(class(NS.Data),'cell')
+            NSnew.Data=[];
+            for cellInd=1:length(NS.Data)
+                NSnew.Data=[NSnew.Data NS.Data{cellInd}];
+            end
+            NS.Data=NSnew.Data;
+            clear NSnew
+        end
         sampFreq=NS.MetaTags.SamplingFreq;
         channelData={};
         for channelInd=1:NS.MetaTags.ChannelCount

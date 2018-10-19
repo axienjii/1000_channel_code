@@ -1,19 +1,29 @@
-function analyse_RF_barsweep
+function analyse_RF_barsweep(date)
 %29/5/17
 %Written by Xing. Extracts MUA data from raw .NS6 file, during presentation
 %of sweeping white bar stimuli for RF mapping.
 stimDurms=1000;%in ms
 stimDur=stimDurms/1000;%in seconds
-date='280617_B1';
-processRaw=1;
+% date='280617_B1';
+% date='280918_B2';
+% date='280918_B3';
+processRaw=0;
 if processRaw==1
-    for instanceInd=1:2
+    for instanceInd=1:8
         instanceName=['instance',num2str(instanceInd)];
         instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);
         instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
         NS=openNSx(instanceNS6FileName);%200 s
         % NS=openNSx('t:1:6000000');%200 s
+        if strcmp(class(NS.Data),'cell')
+            NSnew.Data=[];
+            for cellInd=1:length(NS.Data)
+                NSnew.Data=[NSnew.Data NS.Data{cellInd}];
+            end
+            NS.Data=NSnew.Data;
+            clear NSnew
+        end
         sampFreq=NS.MetaTags.SamplingFreq;
         codeStimOn=1;%In runstim code, StimB (stimulus bit) is 1.
         %dasbit sends a change in the bit (either high or low) on one of the 8 ports

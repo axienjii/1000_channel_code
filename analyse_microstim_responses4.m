@@ -1159,6 +1159,12 @@ arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 1
 highSDChs=[17 19 26 29 30 34 35 39 40];
 electrodeNums=electrodeNums(highSDChs);
 arrayNums=arrayNums(highSDChs);
+date='161018_B1';%saccade task
+electrodeNums=[22 27 52 1 40 51 64 6 14 20 22 31 35 43 52 12 40 62 63 4 34 46 47 53];
+arrayNums=[8 8 8 9 10 11 11 12 12 12 13 13 13 13 13 14 15 15 15 16 16 16 16 16];
+date='161018_B2';%saccade task
+electrodeNums=[52 22 6 64 1 12 63 34 46 47 53];
+arrayNums=[13 13 12 11 9 14 15 16 16 16 16];
 
 
 finalCurrentValsFile=7;

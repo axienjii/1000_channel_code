@@ -23,11 +23,8 @@ date='260617';
 % date='020218';
 % date='280218';
 % date='080618';
-<<<<<<< HEAD
 % date='070818';
-=======
 date='070818';
->>>>>>> c20ec46d6023897dc0206eefe1d4ee7f2ffa267c
 colind = hsv(16);
 colindImp = hsv(1000);%colour-code impedances
 

@@ -11,6 +11,7 @@ elseif localDisk==0
     rootdir='X:\best\';
 end
 
+copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
 load([rootdir,date,'\',date(1:6),'_data\PAR.mat'])
 % load('X:\best\310118_data\microstim_saccade_test_310118_3.mat')
 load([rootdir,date,'\',date(1:6),'_data\microstim_saccade_',date,'.mat'])
@@ -29,6 +30,8 @@ switch(date)
     case '280918_B1'
         sampleDist=40;%distance between adjacent fix spot positions, in pixels
     case '041018_B2'
+        sampleDist=40;%distance between adjacent fix spot positions, in pixels
+    case '161018_B4'
         sampleDist=40;%distance between adjacent fix spot positions, in pixels
         
 end
