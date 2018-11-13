@@ -8,7 +8,7 @@ function impedance_plotter4
 %recording).
 %Corrected the indexing of RF coordinate data, which was previously incorrect in 
 %impedance_plotter.m
-date='260617';
+% date='260617';
 % date='110717';
 % date='170717';
 % date='200717';
@@ -24,7 +24,8 @@ date='260617';
 % date='280218';
 % date='080618';
 % date='070818';
-date='070818';
+% date='070818';
+date='191018';
 colind = hsv(16);
 colindImp = hsv(1000);%colour-code impedances
 
@@ -248,6 +249,18 @@ switch(date)
         %column 3: electrode number (out of 1024)
         xLabelsConds={[previousDate,' HT'],[date,' HT']};
         titleText=['red: ',previousDate,'; blue: ',date];
+        
+    case('191018')
+        load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsNew=impedanceAllChannels;
+        previousDate='070818';
+        load(['C:\Users\User\Documents\impedance_values\',previousDate,'\impedanceAllChannels.mat'],'impedanceAllChannels');
+        impedanceAllChannelsPrevious=impedanceAllChannels;
+        %column 1: impedance
+        %column 2: array number
+        %column 3: electrode number (out of 1024)
+        xLabelsConds={[previousDate,' HT'],[date,' HT']};
+        titleText=['red: ',previousDate,'; blue: ',date];
 end
 figure;hold on
 length(find(impedanceAllChannelsPrevious(:,1)>800))%number of channels with too-high impedances values during hand-tightening, 485
@@ -292,6 +305,9 @@ xlim([0 7000]);
 set(gca,'box','off'); 
 xlim([0 1400]); 
 ylim([0 70]); 
+title(titleText)
+xlabel('impedance (kOhms)');
+ylabel('channel count');
 pathname=fullfile('C:\Users\User\Documents\impedance_values\',date,'impedance_histograms_zoom_lower_values');
 print(pathname,'-dtiff');
 
@@ -417,7 +433,7 @@ ylim([-200 0]);
 title('low-high impedance: dark-light; V1: red; V4: blue');
 pathname=fullfile('C:\Users\User\Documents\impedance_values\',date,['RFs_channels_impedance_below_',num2str(impThreshold),'kOhms_vals']);
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-% print(pathname,'-dtiff','-r300');
+print(pathname,'-dtiff','-r300');
     
 %Note: the following RFs may be incorrect:
 %candidate channels for stimulation:
@@ -502,7 +518,7 @@ array16=chInfo(chInfo(:,7)==16,:);
 % end
 
 for arrayInd=8:16
-   save(['C:\Users\User\Documents\impedance_values\280218\array',num2str(arrayInd),'.mat'],['array',num2str(arrayInd)]); 
+   save(['C:\Users\User\Documents\impedance_values\',date,'\array',num2str(arrayInd),'.mat'],['array',num2str(arrayInd)]); 
 end
 % figure;plot(array12(1:12,1),array12(1:12,2),'ko');
 % hold on

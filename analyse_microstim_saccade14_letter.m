@@ -20,10 +20,10 @@ function analyse_microstim_saccade14_letter(date,allInstanceInd)
 localDisk=1;
 if localDisk==1
     rootdir='D:\data\';
+    copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
 elseif localDisk==0
     rootdir='X:\best\';
 end
-copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
 dataDir=[rootdir,date,'\',date(1:6),'_data'];
 matFile=[dataDir,'\microstim_saccade_',date,'.mat'];
 load(matFile);
@@ -112,7 +112,7 @@ switch date
         degPerVoltXFinal=0.0026;%as measured in 180918_B3
         degPerVoltYFinal=0.0024;
     case '260918_B3'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
-        analyseVisualOnly=0;
+        analyseVisualOnly=1;
         if analyseVisualOnly==0
             minCrossingTime=preStimDur-0.166;
         elseif analyseVisualOnly==1
@@ -120,7 +120,7 @@ switch date
         end
         electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
         arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
-        allElectrodes=0;
+        allElectrodes=1;
         if allElectrodes==1
             electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
             arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
@@ -185,6 +185,30 @@ switch date
         currentThresholdChs=137;
         degPerVoltXFinal=0.0026;%as measured in 161018_B4
         degPerVoltYFinal=0.0023;
+    case '251018_B1'%current thresholding
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[58 59 1 42 50 57 34 9 15 16 51 25 32 8 48 6 64 55 60 61 62 16 52 34 35 51 50 53 12 13 33 11 60 49 51 40 64 24 17 55 41 48 56 61 47 43 8 23 51 48 49 37 38 56 55 31 47 62 44 22 32 23 61 54 42 18 60 24 30];
+        arrayNums=[10 10 10 10 10 10 10 10 10 10 11 11 11 11 11 11 11 11 11 11 11 11 13 13 13 13 13 13 13 13 13 13 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 11 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
+    case '251018_B2'%current thresholding
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[52,34,35,51,50,53,12,13,33,11,60,49,51,40,64,24,17,55,41,48,56,61,47,43,8,23,51,48,49,37,38,56,55,31,47,62,44,22,32,23,61,54,42,18,60,24,30];
+        arrayNums=[13,13,13,13,13,13,13,13,13,13,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
+    case '261018_B4'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[62 48 47 32 61 64 43 62 63 40 27 52 1 4 47 6 14 12];
+        arrayNums=[13 13 13 13 10 11 13 15 15 15 8 8 9 16 16 12 12 14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0028;%as measured in 261018_B2
+        degPerVoltYFinal=0.0024;
 end
 
 cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
@@ -345,6 +369,19 @@ if processRaw==1
             electrodeTrials=[];
             timePeakVelocityXYs=[];
             timePeakVelocityXYSecs=[];
+            trialNoTrials=[];
+            trialDataX=[];
+            trialDataY=[];
+            trialDataXSmooth={};
+            trialDataYSmooth={};
+            trialDataXSmoothFix={};
+            trialDataYSmoothFix={};
+            startMicrostim=[];
+            endMicrostim=[];
+            posIndXTrials=[];
+            posIndYTrials=[];
+            baselineXChs=[];
+            baselineYChs=[];
             for trialCounter=1:length(matchTrials)%for each correct microstim trial
                 trialNo=matchTrials(trialCounter);%trial number, out of all trials from that session  
                 trialNoTrials(trialCounter)=trialNo;
@@ -354,173 +391,175 @@ if processRaw==1
                 timeTrialStart=NEV.Data.SerialDigitalIO.TimeStamp(timeTrialStartInd);%timestamp in NEV file corresponding to something
                 corrBit=7;
                 temp=find(NEV.Data.SerialDigitalIO.UnparsedData(1:encodeInd(trialNo))==2^corrBit);
-                timeRewardInd=temp(end);%index in NEV file corresponding to reward delivery
-                timeReward=NEV.Data.SerialDigitalIO.TimeStamp(timeRewardInd);%timestamp in NEV file corresponding to reward delivery
-                codeMicrostimOn=2;%sent at the end of microstimulation train
-                temp=find(NEV.Data.SerialDigitalIO.UnparsedData(1:timeRewardInd)==2^codeMicrostimOn);%(two encodes before reward encode)
-                timeMicrostimInd=temp(end);%index in NEV file corresponding to end of microstim train
-                timeMicrostim=NEV.Data.SerialDigitalIO.TimeStamp(timeMicrostimInd);%timestamp in NEV file corresponding to reward delivery
-                timeMicrostimToReward=timeMicrostim:timeReward;%timestamps from 150 ms before end of microstimulation to reward delivery (because eyeanalysis_baseline_correct requires at least 150 ms of eye fixation time)
-                trialDataX{trialCounter}=NSch{1}(timeMicrostimToReward);
-                trialDataY{trialCounter}=NSch{2}(timeMicrostimToReward);
-                timeSmooth=timeMicrostim-preStimDur*sampFreq:timeReward;%timestamps from 150 ms before end of microstimulation to reward delivery (because eyeanalysis_baseline_correct requires at least 150 ms of eye fixation time)
-                trialDataXSmooth{trialCounter}=double(NSch{1}(timeSmooth));
-                trialDataYSmooth{trialCounter}=double(NSch{2}(timeSmooth));
-                timeSmoothFix=timeMicrostim-(166.7+allFixT(trialNo))*sampFreq/1000:timeReward;%timestamps from acquisition of fixation to reward delivery 
-                trialDataXSmoothFix{trialCounter}=double(NSch{1}(timeSmoothFix));
-                trialDataYSmoothFix{trialCounter}=double(NSch{2}(timeSmoothFix));
-                startMicrostim(trialCounter)=allFixT(trialNo)*sampFreq/1000;
-                endMicrostim(trialCounter)=(166.7+allFixT(trialNo))*sampFreq/1000;
-%                 figure;
-%                 plot(trialDataXSmoothFix{trialCounter});
-%                 hold on
-%                 yLims=get(gca,'ylim');
-%                 plot([startMicrostim(trialCounter) startMicrostim(trialCounter)],[yLims(1) yLims(2)],'k:');
-%                 plot([endMicrostim(trialCounter) endMicrostim(trialCounter)],[yLims(1) yLims(2)],'k:');
-% %                 trialDataArtefactFix{trialCounter}=double(NSch{1}(timeSmoothFix));
-% %                 plot(trialDataArtefactFix{trialCounter}+mean(trialDataXSmoothFix{trialCounter}));
-                numDataPointsAfterStim=timeReward-timeMicrostim;
-                eyepx=-0.15*sampFreq:double(numDataPointsAfterStim);
-                eyepx=eyepx/sampFreq;
-%                 [EYExs,EYEys] = eyeanalysis_baseline_correct(double(trialDataXSmooth{trialCounter}),double(trialDataYSmooth{trialCounter}),eyepx,sampFreq,1:size(trialDataX{1},1));
-%                 figure(figInd1)
-%                 subplot(2,1,1)
-%                 plot(trialDataX{trialCounter});hold on
-%                 subplot(2,1,2)
-%                 plot(trialDataY{trialCounter});hold on
-                figure(figInd2)
-                subplot(2,1,1)
-                plot(trialDataXSmooth{trialCounter},'Color',cols(arrayColInd,:));hold on
-                subplot(2,1,2)
-                plot(trialDataYSmooth{trialCounter},'Color',cols(arrayColInd,:));hold on
-                baselineX=mean(trialDataXSmooth{trialCounter}(1:5000));
-                baselineY=mean(trialDataYSmooth{trialCounter}(1:5000));
-                baselineXTrials(trialCounter)=baselineX;
-                baselineYTrials(trialCounter)=baselineY;
-                %quick-and-dirty estimate of saccade end position:
-                if length(trialDataXSmooth{trialCounter})>=10460
-                    roughPosIndX=(trialDataXSmooth{trialCounter}(10460)-baselineX)*degPerVoltXFinal*Par.PixPerDeg;%position during saccade, very rough calculation
-                    roughPosIndY=(trialDataYSmooth{trialCounter}(10460)-baselineY)*degPerVoltYFinal*Par.PixPerDeg;
-                end
-                %scatter(-roughPosIndX,-roughPosIndY,[],cols(arrayColInd,:),'MarkerFaceColor',cols(arrayColInd,:));
-                %accurate calculation of saccade end position:
-                numHistBins=50;
-                posIndX=NaN;
-                posIndY=NaN;
-                posIndXs=[];
-                posIndYs=[];
-                posIndXSec=NaN;
-                posIndYSec=NaN;
-                timePeakVelocityXY=NaN;
-                timePeakVelocityXYSec=NaN;
-%                 if min(trialDataXSmooth{trialCounter})>5500&&max(trialDataYSmooth{trialCounter})<1500%exclude extreme outliers
-%                     try
-                        figInd7=figure;  
-                        saccadeTimeAfterPeakVel=50/1000;%time interval following occurrence of peak velocity of eye movement, before saccade end point is calculated
-                        saccadeCalcWin=50/1000;%duration of window, for calculation of saccade end point
-                        trialDataXYSmooth{trialCounter}=sqrt((trialDataXSmooth{trialCounter}*degPerVoltXFinal).^2+(trialDataYSmooth{trialCounter}*degPerVoltYFinal).^2);%calculate displacement
-                        timePeakVelocityXY=calculateSaccadeEndpoint3([1:length(trialDataXYSmooth{trialCounter})]',trialDataXYSmooth{trialCounter}',Par.PixPerDeg);%return the midpoints of the peaks of the bimodal distribution, relative to histogram bins
-                        timePeakVelocityXY=timePeakVelocityXY(find(timePeakVelocityXY>minCrossingTime*sampFreq));%exclude spurious peaks that occur before stimulation
-                        for peakVelInd=1:length(timePeakVelocityXY)
-                            startWin=timePeakVelocityXY(peakVelInd)+saccadeTimeAfterPeakVel*sampFreq;
-                            endWin=timePeakVelocityXY(peakVelInd)+(saccadeTimeAfterPeakVel+saccadeCalcWin)*sampFreq;
+                if ~isempty(temp)
+                    timeRewardInd=temp(end);%index in NEV file corresponding to reward delivery
+                    timeReward=NEV.Data.SerialDigitalIO.TimeStamp(timeRewardInd);%timestamp in NEV file corresponding to reward delivery
+                    codeMicrostimOn=2;%sent at the end of microstimulation train
+                    temp=find(NEV.Data.SerialDigitalIO.UnparsedData(1:timeRewardInd)==2^codeMicrostimOn);%(two encodes before reward encode)
+                    timeMicrostimInd=temp(end);%index in NEV file corresponding to end of microstim train
+                    timeMicrostim=NEV.Data.SerialDigitalIO.TimeStamp(timeMicrostimInd);%timestamp in NEV file corresponding to reward delivery
+                    timeMicrostimToReward=timeMicrostim:timeReward;%timestamps from 150 ms before end of microstimulation to reward delivery (because eyeanalysis_baseline_correct requires at least 150 ms of eye fixation time)
+                    trialDataX{trialCounter}=NSch{1}(timeMicrostimToReward);
+                    trialDataY{trialCounter}=NSch{2}(timeMicrostimToReward);
+                    timeSmooth=timeMicrostim-preStimDur*sampFreq:timeReward;%timestamps from 150 ms before end of microstimulation to reward delivery (because eyeanalysis_baseline_correct requires at least 150 ms of eye fixation time)
+                    trialDataXSmooth{trialCounter}=double(NSch{1}(timeSmooth));
+                    trialDataYSmooth{trialCounter}=double(NSch{2}(timeSmooth));
+                    timeSmoothFix=timeMicrostim-(166.7+allFixT(trialNo))*sampFreq/1000:timeReward;%timestamps from acquisition of fixation to reward delivery
+                    trialDataXSmoothFix{trialCounter}=double(NSch{1}(timeSmoothFix));
+                    trialDataYSmoothFix{trialCounter}=double(NSch{2}(timeSmoothFix));
+                    startMicrostim(trialCounter)=allFixT(trialNo)*sampFreq/1000;
+                    endMicrostim(trialCounter)=(166.7+allFixT(trialNo))*sampFreq/1000;
+                    %                 figure;
+                    %                 plot(trialDataXSmoothFix{trialCounter});
+                    %                 hold on
+                    %                 yLims=get(gca,'ylim');
+                    %                 plot([startMicrostim(trialCounter) startMicrostim(trialCounter)],[yLims(1) yLims(2)],'k:');
+                    %                 plot([endMicrostim(trialCounter) endMicrostim(trialCounter)],[yLims(1) yLims(2)],'k:');
+                    % %                 trialDataArtefactFix{trialCounter}=double(NSch{1}(timeSmoothFix));
+                    % %                 plot(trialDataArtefactFix{trialCounter}+mean(trialDataXSmoothFix{trialCounter}));
+                    numDataPointsAfterStim=timeReward-timeMicrostim;
+                    eyepx=-0.15*sampFreq:double(numDataPointsAfterStim);
+                    eyepx=eyepx/sampFreq;
+                    %                 [EYExs,EYEys] = eyeanalysis_baseline_correct(double(trialDataXSmooth{trialCounter}),double(trialDataYSmooth{trialCounter}),eyepx,sampFreq,1:size(trialDataX{1},1));
+                    %                 figure(figInd1)
+                    %                 subplot(2,1,1)
+                    %                 plot(trialDataX{trialCounter});hold on
+                    %                 subplot(2,1,2)
+                    %                 plot(trialDataY{trialCounter});hold on
+                    figure(figInd2)
+                    subplot(2,1,1)
+                    plot(trialDataXSmooth{trialCounter},'Color',cols(arrayColInd,:));hold on
+                    subplot(2,1,2)
+                    plot(trialDataYSmooth{trialCounter},'Color',cols(arrayColInd,:));hold on
+                    baselineX=mean(trialDataXSmooth{trialCounter}(1:5000));
+                    baselineY=mean(trialDataYSmooth{trialCounter}(1:5000));
+                    baselineXTrials(trialCounter)=baselineX;
+                    baselineYTrials(trialCounter)=baselineY;
+                    %quick-and-dirty estimate of saccade end position:
+                    if length(trialDataXSmooth{trialCounter})>=10460
+                        roughPosIndX=(trialDataXSmooth{trialCounter}(10460)-baselineX)*degPerVoltXFinal*Par.PixPerDeg;%position during saccade, very rough calculation
+                        roughPosIndY=(trialDataYSmooth{trialCounter}(10460)-baselineY)*degPerVoltYFinal*Par.PixPerDeg;
+                    end
+                    %scatter(-roughPosIndX,-roughPosIndY,[],cols(arrayColInd,:),'MarkerFaceColor',cols(arrayColInd,:));
+                    %accurate calculation of saccade end position:
+                    numHistBins=50;
+                    posIndX=NaN;
+                    posIndY=NaN;
+                    posIndXs=[];
+                    posIndYs=[];
+                    posIndXSec=NaN;
+                    posIndYSec=NaN;
+                    timePeakVelocityXY=NaN;
+                    timePeakVelocityXYSec=NaN;
+                    %                 if min(trialDataXSmooth{trialCounter})>5500&&max(trialDataYSmooth{trialCounter})<1500%exclude extreme outliers
+                    %                     try
+                    figInd7=figure;
+                    saccadeTimeAfterPeakVel=50/1000;%time interval following occurrence of peak velocity of eye movement, before saccade end point is calculated
+                    saccadeCalcWin=50/1000;%duration of window, for calculation of saccade end point
+                    trialDataXYSmooth{trialCounter}=sqrt((trialDataXSmooth{trialCounter}*degPerVoltXFinal).^2+(trialDataYSmooth{trialCounter}*degPerVoltYFinal).^2);%calculate displacement
+                    timePeakVelocityXY=calculateSaccadeEndpoint3([1:length(trialDataXYSmooth{trialCounter})]',trialDataXYSmooth{trialCounter}',Par.PixPerDeg);%return the midpoints of the peaks of the bimodal distribution, relative to histogram bins
+                    timePeakVelocityXY=timePeakVelocityXY(find(timePeakVelocityXY>minCrossingTime*sampFreq));%exclude spurious peaks that occur before stimulation
+                    for peakVelInd=1:length(timePeakVelocityXY)
+                        startWin=timePeakVelocityXY(peakVelInd)+saccadeTimeAfterPeakVel*sampFreq;
+                        endWin=timePeakVelocityXY(peakVelInd)+(saccadeTimeAfterPeakVel+saccadeCalcWin)*sampFreq;
+                        ax=gca;
+                        yLims=get(gca,'ylim');
+                        plot([startWin startWin],[yLims(1) yLims(2)],'k:');
+                        plot([endWin endWin],[yLims(1) yLims(2)],'k:');
+                        if length(trialDataXYSmooth{trialCounter})>=endWin
+                            saccadeEndX(peakVelInd)=mean(trialDataXSmooth{trialCounter}(startWin:endWin));
                             ax=gca;
-                            yLims=get(gca,'ylim');
-                            plot([startWin startWin],[yLims(1) yLims(2)],'k:');
-                            plot([endWin endWin],[yLims(1) yLims(2)],'k:');
-                            if length(trialDataXYSmooth{trialCounter})>=endWin
-                                saccadeEndX(peakVelInd)=mean(trialDataXSmooth{trialCounter}(startWin:endWin));
-                                ax=gca;
-                                xLims=get(gca,'xlim');
-                                plot([xLims(1) xLims(2)],[saccadeEndX(peakVelInd) saccadeEndX(peakVelInd)],'r:');
-                                posIndXs(peakVelInd)=-(saccadeEndX(peakVelInd)-baselineX)*degPerVoltXFinal*Par.PixPerDeg;
-                                posIndX=posIndXs(1);
-                                saccadeEndY(peakVelInd)=mean(trialDataYSmooth{trialCounter}(startWin:endWin));
-                                ax=gca;
-                                xLims=get(gca,'xlim');
-                                plot([xLims(1) xLims(2)],[saccadeEndY(peakVelInd) saccadeEndY(peakVelInd)],'r:');
-                                posIndYs(peakVelInd)=(saccadeEndY(peakVelInd)-baselineY)*degPerVoltYFinal*Par.PixPerDeg;
-                                posIndY=posIndYs(1);
-                            end
+                            xLims=get(gca,'xlim');
+                            plot([xLims(1) xLims(2)],[saccadeEndX(peakVelInd) saccadeEndX(peakVelInd)],'r:');
+                            posIndXs(peakVelInd)=-(saccadeEndX(peakVelInd)-baselineX)*degPerVoltXFinal*Par.PixPerDeg;
+                            posIndX=posIndXs(1);
+                            saccadeEndY(peakVelInd)=mean(trialDataYSmooth{trialCounter}(startWin:endWin));
+                            ax=gca;
+                            xLims=get(gca,'xlim');
+                            plot([xLims(1) xLims(2)],[saccadeEndY(peakVelInd) saccadeEndY(peakVelInd)],'r:');
+                            posIndYs(peakVelInd)=(saccadeEndY(peakVelInd)-baselineY)*degPerVoltYFinal*Par.PixPerDeg;
+                            posIndY=posIndYs(1);
                         end
-                        subplot(2,1,1);
-                        plot(trialDataXSmooth{trialCounter});hold on
-                        if ~isempty(posIndXs)
-                            if length(posIndXs)>1&&abs(posIndXs(2))>abs(posIndXs(1))
-                                posIndXSec=posIndXs(2);%second saccade
-                                timePeakVelocityXYSec=timePeakVelocityXY(2);
-                            end
+                    end
+                    subplot(2,1,1);
+                    plot(trialDataXSmooth{trialCounter});hold on
+                    if ~isempty(posIndXs)
+                        if length(posIndXs)>1&&abs(posIndXs(2))>abs(posIndXs(1))
+                            posIndXSec=posIndXs(2);%second saccade
+                            timePeakVelocityXYSec=timePeakVelocityXY(2);
                         end
-                        subplot(2,1,2);
-                        plot(trialDataYSmooth{trialCounter});hold on
-                        if ~isempty(posIndYs)
-                            if length(posIndYs)>1&&abs(posIndYs(2))>abs(posIndYs(1))
-                                posIndYSec=posIndYs(2);%second saccade
-                            end
+                    end
+                    subplot(2,1,2);
+                    plot(trialDataYSmooth{trialCounter});hold on
+                    if ~isempty(posIndYs)
+                        if length(posIndYs)>1&&abs(posIndYs(2))>abs(posIndYs(1))
+                            posIndYSec=posIndYs(2);%second saccade
                         end
-                            close(figInd7);
-%                     catch ME
-%                     end
-%                 end
-                cleanUp=1;%remove datapoints that are too close to fixation?
-                if cleanUp==1
-                    if posIndX<5||posIndY<5
-                        manualCheck=1;
-                        posIndX=NaN;
-                        posIndY=NaN;
                     end
-                end
-                cleanUp2=1;%remove datapoints that are too far away?
-                if cleanUp2==1
-                    if posIndX>200||posIndY>200
-                        manualCheck=1;
-                        posIndX=NaN;
-                        posIndY=NaN;
+                    close(figInd7);
+                    %                     catch ME
+                    %                     end
+                    %                 end
+                    cleanUp=1;%remove datapoints that are too close to fixation?
+                    if cleanUp==1
+                        if posIndX<5||posIndY<5
+                            manualCheck=1;
+                            posIndX=NaN;
+                            posIndY=NaN;
+                        end
                     end
-                end
-                posIndXTrials(trialCounter)=posIndX;
-                posIndYTrials(trialCounter)=posIndY;
-                saccadeEndTrials(trialCounter,:)=[posIndX posIndY];
-                electrodeTrials(trialCounter)=electrode;
-                freqMicrostim=300;%microstimulation frequency in Hz
-                pulseDuration=1000/freqMicrostim;%duration of each pulse in ms
-                numPulsesTrain=50;%number of pulses delivered in a train on every trial
-                if ~isempty(timePeakVelocityXY)
-                    if strcmp(date,'110917_B3')%for monopolar stimulation, dasbit for target occurred at the end of stimulation
-                        timePeakVelocityXYs(trialCounter)=(timePeakVelocityXY(1)/sampFreq-preStimDur+0.166)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity relative to end of microstimulation delivery, in ms
-                        timePeakVelocityXYSecs(trialCounter)=(timePeakVelocityXYSec/sampFreq-preStimDur+0.166)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity for 2nd saccade, relative to end of microstimulation delivery, in ms
-                    else %strcmp(date,'110917_B1')||strcmp(date,'110917_B2')%for bipolar stimulation, dasbit for target occurred at the beginning of stimulation
-                        timePeakVelocityXYs(trialCounter)=(timePeakVelocityXY(1)/sampFreq-preStimDur)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity relative to end of microstimulation delivery, in ms
-                        timePeakVelocityXYSecs(trialCounter)=(timePeakVelocityXYSec/sampFreq-preStimDur)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity for 2nd saccade, relative to end of microstimulation delivery, in ms
+                    cleanUp2=1;%remove datapoints that are too far away?
+                    if cleanUp2==1
+                        if posIndX>200||posIndY>200
+                            manualCheck=1;
+                            posIndX=NaN;
+                            posIndY=NaN;
+                        end
                     end
-                else
-                    timePeakVelocityXYs(trialCounter)=NaN;
-                    timePeakVelocityXYSecs(trialCounter)=NaN;
-                end
-                figure(figInd3)
-                scatter(posIndX,-posIndY,[],cols(arrayColInd,:),'MarkerFaceColor',cols(arrayColInd,:));
-                
-                figure(figInd4)    
-                plot(posIndX,-posIndY,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',10);
-                impCol=impedance*0.9/150+0.05;
-                text(posIndX-0.05,-posIndY,num2str(electrode),'FontSize',6,'Color',[impCol impCol 1]);
-                
-                figure(figInd9(uniqueElectrode))%plot the saccade end points for an individual electrode, with the mean 
-%                 subplot(11,10,uniqueElectrode);
-                hold on
-                plot(posIndX,-posIndY,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',10);
-                impCol=impedance*0.9/150+0.05;
-                text(posIndX-0.05,-posIndY,num2str(electrode),'FontSize',6,'Color',[impCol impCol 1]);
-                
-%                 close(figHistogram);
-                figure(figInd8)
-                plot(RFx,RFy,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',6);
-                text(RFx+0.2,RFy,num2str(electrode),'FontSize',8,'Color',[0 0 0]);
-                if ~isnan(posIndXSec)&&~isnan(posIndYSec)
+                    posIndXTrials(trialCounter)=posIndX;
+                    posIndYTrials(trialCounter)=posIndY;
+                    saccadeEndTrials(trialCounter,:)=[posIndX posIndY];
+                    electrodeTrials(trialCounter)=electrode;
+                    freqMicrostim=300;%microstimulation frequency in Hz
+                    pulseDuration=1000/freqMicrostim;%duration of each pulse in ms
+                    numPulsesTrain=50;%number of pulses delivered in a train on every trial
+                    if ~isempty(timePeakVelocityXY)
+                        if strcmp(date,'110917_B3')%for monopolar stimulation, dasbit for target occurred at the end of stimulation
+                            timePeakVelocityXYs(trialCounter)=(timePeakVelocityXY(1)/sampFreq-preStimDur+0.166)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity relative to end of microstimulation delivery, in ms
+                            timePeakVelocityXYSecs(trialCounter)=(timePeakVelocityXYSec/sampFreq-preStimDur+0.166)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity for 2nd saccade, relative to end of microstimulation delivery, in ms
+                        else %strcmp(date,'110917_B1')||strcmp(date,'110917_B2')%for bipolar stimulation, dasbit for target occurred at the beginning of stimulation
+                            timePeakVelocityXYs(trialCounter)=(timePeakVelocityXY(1)/sampFreq-preStimDur)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity relative to end of microstimulation delivery, in ms
+                            timePeakVelocityXYSecs(trialCounter)=(timePeakVelocityXYSec/sampFreq-preStimDur)*1000;%+pulseDuration*numPulsesTrain/1000;%time of peak velocity for 2nd saccade, relative to end of microstimulation delivery, in ms
+                        end
+                    else
+                        timePeakVelocityXYs(trialCounter)=NaN;
+                        timePeakVelocityXYSecs(trialCounter)=NaN;
+                    end
+                    figure(figInd3)
+                    scatter(posIndX,-posIndY,[],cols(arrayColInd,:),'MarkerFaceColor',cols(arrayColInd,:));
+                    
+                    figure(figInd4)
                     plot(posIndX,-posIndY,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',10);
-                    plot(posIndXSec,-posIndYSec,'x:','Color',cols(arrayColInd,:));
-                    plot([posIndX posIndXSec],[-posIndY -posIndYSec],':','Color',cols(arrayColInd,:));
-                    text(posIndXSec+0.2,-posIndYSec,['(',num2str(electrode),')'],'FontSize',6,'Color',[0 0 0]);
+                    impCol=impedance*0.9/150+0.05;
+                    text(posIndX-0.05,-posIndY,num2str(electrode),'FontSize',6,'Color',[impCol impCol 1]);
+                    
+                    figure(figInd9(uniqueElectrode))%plot the saccade end points for an individual electrode, with the mean
+                    %                 subplot(11,10,uniqueElectrode);
+                    hold on
+                    plot(posIndX,-posIndY,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',10);
+                    impCol=impedance*0.9/150+0.05;
+                    text(posIndX-0.05,-posIndY,num2str(electrode),'FontSize',6,'Color',[impCol impCol 1]);
+                    
+                    %                 close(figHistogram);
+                    figure(figInd8)
+                    plot(RFx,RFy,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',6);
+                    text(RFx+0.2,RFy,num2str(electrode),'FontSize',8,'Color',[0 0 0]);
+                    if ~isnan(posIndXSec)&&~isnan(posIndYSec)
+                        plot(posIndX,-posIndY,'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',10);
+                        plot(posIndXSec,-posIndYSec,'x:','Color',cols(arrayColInd,:));
+                        plot([posIndX posIndXSec],[-posIndY -posIndYSec],':','Color',cols(arrayColInd,:));
+                        text(posIndXSec+0.2,-posIndYSec,['(',num2str(electrode),')'],'FontSize',6,'Color',[0 0 0]);
+                    end
                 end
             end
             saccadeEndAllTrials=[saccadeEndAllTrials;saccadeEndTrials];
@@ -585,51 +624,51 @@ if processRaw==1
                 plot(meanSaccadeXY(1),-meanSaccadeXY(2),'MarkerFaceColor',cols(arrayColInd,:),'MarkerEdgeColor',cols(arrayColInd,:),'Marker','o','MarkerSize',6);
                 text(meanSaccadeXY(1)+0.2,-meanSaccadeXY(2),num2str(electrode),'FontSize',8,'Color',[0 0 0]);
                 plot([meanSaccadeXY(1) RFx],[-meanSaccadeXY(2) RFy],'-','Color',cols(arrayColInd,:));
-            end
             
-            figure(figInd9(uniqueElectrode))
-            scatter(0,0,'r','o','filled');%fix spot
-            %draw dotted lines indicating [0,0]
-            plot([0 0],[-250 200],'k:');
-            plot([-200 300],[0 0],'k:');
-            plot([-200 300],[200 -300],'k:');
-            ellipse(50,50,0,0,[0.1 0.1 0.1]);
-            ellipse(100,100,0,0,[0.1 0.1 0.1]);
-            ellipse(150,150,0,0,[0.1 0.1 0.1]);
-            ellipse(200,200,0,0,[0.1 0.1 0.1]);
-            text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-            text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-            text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-            text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-            axis equal
-            xlim([-20 220]);
-            ylim([-200 15]);
-            title('saccade endpoints');
-            for arrayInd=1:length(arrays)
-                text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
+                figure(figInd9(uniqueElectrode))
+                scatter(0,0,'r','o','filled');%fix spot
+                %draw dotted lines indicating [0,0]
+                plot([0 0],[-250 200],'k:');
+                plot([-200 300],[0 0],'k:');
+                plot([-200 300],[200 -300],'k:');
+                ellipse(50,50,0,0,[0.1 0.1 0.1]);
+                ellipse(100,100,0,0,[0.1 0.1 0.1]);
+                ellipse(150,150,0,0,[0.1 0.1 0.1]);
+                ellipse(200,200,0,0,[0.1 0.1 0.1]);
+                text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+                text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+                text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+                text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+                axis equal
+                xlim([-20 220]);
+                ylim([-200 15]);
+                title('saccade endpoints');
+                for arrayInd=1:length(arrays)
+                    text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
+                end
+                ax=gca;
+                ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
+                ax.XTickLabel={'0','2','4','6','8'};
+                ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
+                ax.YTickLabel={'-8','-6','-4','-2','0'};
+                xlabel('x-coordinates (dva)')
+                ylabel('y-coordinates (dva)')
+                set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+                pathname=fullfile(rootdir,date,['saccade_endpoints_dva_array_',num2str(array),'_electrode_',num2str(electrode),'_',date]);
+                print(pathname,'-dtiff');
+                close(figInd9(uniqueElectrode))
+                baselineXChs{uniqueElectrode}=baselineXTrials;
+                baselineYChs{uniqueElectrode}=baselineYTrials;
+                trialDataXSmoothChs{uniqueElectrode}=trialDataXSmooth;
+                trialDataYSmoothChs{uniqueElectrode}=trialDataYSmooth;
+                trialNoChs{uniqueElectrode}=trialNoTrials;
+                posIndXChs{uniqueElectrode}=posIndXTrials;
+                posIndYChs{uniqueElectrode}=posIndYTrials;
+                trialDataXSmoothFixChs{uniqueElectrode}=trialDataXSmoothFix;
+                trialDataYSmoothFixChs{uniqueElectrode}=trialDataYSmoothFix;
+                startMicrostimChs{uniqueElectrode}=startMicrostim;
+                endMicrostimChs{uniqueElectrode}=endMicrostim;
             end
-            ax=gca;
-            ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
-            ax.XTickLabel={'0','2','4','6','8'};
-            ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
-            ax.YTickLabel={'-8','-6','-4','-2','0'};
-            xlabel('x-coordinates (dva)')
-            ylabel('y-coordinates (dva)')
-            set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-            pathname=fullfile(rootdir,date,['saccade_endpoints_dva_array_',num2str(array),'_electrode_',num2str(electrode),'_',date]);
-            print(pathname,'-dtiff');
-            close(figInd9(uniqueElectrode))
-            baselineXChs{uniqueElectrode}=baselineXTrials;
-            baselineYChs{uniqueElectrode}=baselineYTrials;
-            trialDataXSmoothChs{uniqueElectrode}=trialDataXSmooth;
-            trialDataYSmoothChs{uniqueElectrode}=trialDataYSmooth;
-            trialNoChs{uniqueElectrode}=trialNoTrials;
-            posIndXChs{uniqueElectrode}=posIndXTrials;
-            posIndYChs{uniqueElectrode}=posIndYTrials;
-            trialDataXSmoothFixChs{uniqueElectrode}=trialDataXSmoothFix;
-            trialDataYSmoothFixChs{uniqueElectrode}=trialDataYSmoothFix;
-            startMicrostimChs{uniqueElectrode}=startMicrostim;
-            endMicrostimChs{uniqueElectrode}=endMicrostim;
         end
         save([rootdir,date,'\saccade_data_',date,'_fix_to_rew.mat'],'baselineXChs','baselineYChs','trialDataXSmoothFixChs','trialDataYSmoothFixChs','trialNoChs','posIndXChs','posIndYChs','startMicrostimChs','endMicrostimChs');
         

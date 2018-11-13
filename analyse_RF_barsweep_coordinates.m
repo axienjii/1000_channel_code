@@ -71,7 +71,7 @@ manualChannels=[];
 doManualChecks=0;
 
 colInd=jet(128);
-for instanceInd=5:8
+for instanceInd=1:4
     instanceName=['instance',num2str(instanceInd)];
     Ons = zeros(1,4);
     Offs = zeros(1,4);
