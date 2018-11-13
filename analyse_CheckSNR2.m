@@ -91,6 +91,15 @@ switch(date)
         whichDir=1;
         best=1;
     case '191018_B1'
+        whichDir=2;
+        best=1;
+    case '061118_B1'
+        whichDir=2;
+        best=1;
+    case '071118_B1'
+        whichDir=2;
+        best=1;
+    case '071118_B2'%simple fixation task, not checkSNR
         whichDir=1;
         best=1;
     case '071118_B1'
@@ -115,7 +124,11 @@ if copyRemotely==1
     end
 end
 stimDur=400/1000;%in seconds
+<<<<<<< HEAD
 allInstanceInd=5:8;
+=======
+allInstanceInd=1:8;
+>>>>>>> f050dd76ea37cb7769a702453d5e824e74fbf24c
 preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=300/1000;%length of post-stimulus-offset period, in s
 downsampleFreq=30;
@@ -126,7 +139,7 @@ for instanceCount=1:length(allInstanceInd)
     instanceNEVFileName=fullfile(topDir,date,[instanceName,'.nev']);
     NEV=openNEV(instanceNEVFileName);
     instanceNS6FileName=fullfile(topDir,date,[instanceName,'.ns6']);
-    readRaw=1;
+    readRaw=0;
     if readRaw==1
         NS=openNSx(instanceNS6FileName);
         sampFreq=NS.MetaTags.SamplingFreq;
@@ -272,7 +285,7 @@ for instanceCount=1:length(allInstanceInd)
         set(gca,'ylim',[min(meanChannelMUA(channelInd,2:end)) max(meanChannelMUA(channelInd,:))]);
         title(num2str(channelInd));
     end
-    plot1024=0;
+    plot1024=1;
     for figInd=1:4
         figure(figInd)
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))

@@ -33,6 +33,8 @@ switch(date)
         sampleDist=40;%distance between adjacent fix spot positions, in pixels
     case '161018_B4'
         sampleDist=40;%distance between adjacent fix spot positions, in pixels
+    case '261018_B2'
+        sampleDist=40;%distance between adjacent fix spot positions, in pixels
         
 end
 dvaSampleDist=sampleDist/Par.PixPerDeg;%%distance between adjacent fix spot positions, in degrees of visual angle

@@ -17,6 +17,72 @@ function check_microstim_cerestim_mit_cable
 %When stimulator.wait(10) used (add a temporal delay of 10 ms before
 %sending of train), stimulation onset is delayed by 32 ms.
 
+date='071118_test_microstim_waveform3';
+%test first electrode, check sync pulses on analog inputs 15 and 11 (actual
+%signal from MIT cable, and monitor port output from CereStim 14293,
+%respectively). 5 pulses per train.
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+%analog input 15 (Cerestim 14293/65493 direct microstim signal through altered MIT cable)
+plot(NSch(128+15,:));
+ylimits=get(gca,'ylim');
+StimB=1;
+stimBTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^StimB);
+for i=1:length(stimBTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(stimBTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(stimBTimestamps(i))],ylimits,'r:');
+end
+plot(NSch(128+11,:),'m');
+
+date='071118_test_microstim_waveform2';
+%test first electrode, check sync pulses on analog inputs 15 and 11 (actual
+%signal from MIT cable, and monitor port output from CereStim 14293,
+%respectively). 50 pulses per train.
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+%analog input 15 (Cerestim 14293/65493 direct microstim signal through altered MIT cable)
+plot(NSch(128+15,:));
+ylimits=get(gca,'ylim');
+StimB=1;
+stimBTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^StimB);
+for i=1:length(stimBTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(stimBTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(stimBTimestamps(i))],ylimits,'r:');
+end
+plot(NSch(128+11,:),'m');
+
+date='071118_test_microstim_waveform1';
+%test first electrode, check sync pulses on analog inputs 15 and 11 (actual
+%signal from MIT cable, and monitor port output from CereStim 14293,
+%respectively). 1 pulse per train.
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+%analog input 15 (Cerestim 14293/65493 direct microstim signal through altered MIT cable)
+plot(NSch(128+15,:));
+ylimits=get(gca,'ylim');
+StimB=1;
+stimBTimestamps=find(NEV.Data.SerialDigitalIO.UnparsedData==2^StimB);
+for i=1:length(stimBTimestamps)
+    plot([NEV.Data.SerialDigitalIO.TimeStamp(stimBTimestamps(i)) NEV.Data.SerialDigitalIO.TimeStamp(stimBTimestamps(i))],ylimits,'r:');
+end
+plot(NSch(128+11,:),'m');
+
 date='280917_test_microstim_waveform';
 instanceInd=1;
 instanceName=['instance',num2str(instanceInd)];
