@@ -28,7 +28,7 @@ arrays=8:16;
 localDisk=0;
 analyseConds=0;
 for calculateVisual=[0 1]
-    for setNo=[1:17]%26
+    for setNo=[1 3:12 14:17]%[1:17]%26%sets 2 and 13 have relatively few microstim trials
         perfNEV=[];
         timeInd=[];
         encodeInd=[];
@@ -524,7 +524,7 @@ for calculateVisual=[0 1]
                         end
                     end
                 end
-                initialPerfTrials=10;%first set of trials are the most important
+                initialPerfTrials=41;%first set of trials are the most important
                 if calculateVisual==0
                     perfMicroBin=perfMicroBin(1:initialPerfTrials);
                     if ~isempty(perfMicroBin)
@@ -733,9 +733,10 @@ for calculateVisual=[0 1]
         ylim([0 1]);
         xLimits=get(gca,'xlim');
         plot([0 xLimits(2)],[0.5 0.5],'k:');
-        plot([10 10],[0 1],'k:');
-        xlabel('trial number (from beginning of session)');
-        ylabel('mean performance across electrode sets');
+%         plot([10 10],[0 1],'k:');
+        xlabel('trial number');
+        ylabel('mean performance');
+        xlim([0 41]);
     end
     if calculateVisual==1
         subplot(2,1,2);
@@ -745,15 +746,16 @@ for calculateVisual=[0 1]
         ylim([0 1]);
         xLimits=get(gca,'xlim');
         plot([0 xLimits(2)],[0.5 0.5],'k:');
-        plot([10 10],[0 1],'k:');
-        xlabel('trial number (from beginning of session)');
+%         plot([10 10],[0 1],'k:');
+        xlabel('trial number');
 %         xlabel('trial number (from end of session)');
-        ylabel('mean performance across electrode sets');
+        ylabel('mean performance');
+        xlim([0 41]);
     end
 end
-title(['performance across the session, on visual (blue) & microstim (red) trials']);
-pathname=fullfile('D:\data\behavioural_performance_all_sets_041217');
-set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+% title(['performance across the session, on visual (blue) & microstim (red) trials']);
+pathname=fullfile(['D:\data\behavioural_performance_all_sets_041217_',num2str(initialPerfTrials),'trials_highres']);
+% set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 print(pathname,'-dtiff');
 
 perfMat=['D:\data\behavioural_performance_all_sets_041217_',num2str(initialPerfTrials),'trials.mat'];
@@ -769,7 +771,7 @@ for trialInd=1:length(meanAllSetsPerfMicroBin)
         significantByThisTrialMicro(trialInd)=1;
     end
 end
-significantByThisTrialMicro
+significantByThisTrialMicro%1st trial onwards
 
 significantByThisTrialVisual=0;
 for trialInd=1:length(meanAllSetsPerfVisualBin)
@@ -780,4 +782,4 @@ for trialInd=1:length(meanAllSetsPerfVisualBin)
         significantByThisTrialVisual(trialInd)=1;
     end
 end
-significantByThisTrialVisual
+significantByThisTrialVisual%8th trial onwards

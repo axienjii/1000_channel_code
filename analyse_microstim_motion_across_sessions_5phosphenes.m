@@ -632,7 +632,7 @@ for calculateVisual=[0 1]
                         end
                     end
                 end
-                initialPerfTrials=10;%first set of trials are the most important
+                initialPerfTrials=51;%first set of trials are the most important
                 if calculateVisual==0
                     perfMicroBin=perfMicroBin(1:initialPerfTrials);
                     if ~isempty(perfMicroBin)
@@ -841,9 +841,9 @@ for calculateVisual=[0 1]
         ylim([0 1]);
         xLimits=get(gca,'xlim');
         plot([0 xLimits(2)],[0.5 0.5],'k:');
-        plot([10 10],[0 1],'k:');
-        xlabel('trial number (from beginning of session)');
-        ylabel('mean performance across electrode sets');
+%         plot([10 10],[0 1],'k:');
+        xlabel('trial number');
+        ylabel('mean performance');
     end
     if calculateVisual==1
         subplot(2,1,2);
@@ -853,14 +853,14 @@ for calculateVisual=[0 1]
         ylim([0 1]);
         xLimits=get(gca,'xlim');
         plot([0 xLimits(2)],[0.5 0.5],'k:');
-        plot([10 10],[0 1],'k:');
-        xlabel('trial number (from beginning of session)');
+%         plot([10 10],[0 1],'k:');
+        xlabel('trial number');
 %         xlabel('trial number (from end of session)');
-        ylabel('mean performance across electrode sets');
+        ylabel('mean performance');
     end
 end
-title(['performance across the session, on visual (blue) & microstim (red) trials']);
-pathname=fullfile('D:\data\behavioural_performance_all_sets_121217');
+% title(['performance across the session, on visual (blue) & microstim (red) trials']);
+pathname=fullfile('D:\data\behavioural_performance_all_sets_121217_41trials_highres');
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 print(pathname,'-dtiff');
 
