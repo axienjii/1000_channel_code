@@ -51,7 +51,7 @@ for instanceInd=1:8
     load(fileName)
     channelRFs1000=[channelRFs1000;channelRFs];
 end
-SNRthreshold=1;
+SNRthreshold=2;
 meanChannelSNR=mean(channelRFs1000(:,8:11),2);
 goodInd=find(meanChannelSNR>=SNRthreshold);
 badInd=find(meanChannelSNR<SNRthreshold);
@@ -214,10 +214,12 @@ if drawBarArea==1
     end
 end
 colind = hsv(16);
+colind(8,:)=[139/255 69/255 19/255];
 arrayNums=[];
 goodArrays=1:16;
 % goodArrays=[1 2 3 4 9 10 11 13 14 15 16];
 % colind = hsv(11);
+plotCircles=1;
 badQuadrant=[];
 for i=1:length(goodInd)
     channelRow=goodInd(i);
@@ -248,11 +250,20 @@ for i=1:length(goodInd)
         end
         badQuadrant=[badQuadrant;arrayNum channelNum areaNum instanceInd channelInd];
     end
-    if channelRow>32&&channelRow<=96||channelRow>128&&channelRow<=128+32||channelRow>128*2-32&&channelRow<=128*2
-        plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o','MarkerSize',5);%V4 RFs, unfilled circles
-    else
-        plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o','MarkerSize',5,'MarkerFaceColor',colind(arrayCol,:));%V1 RFs, filled circles
-        %     ellipse(channelRFs1000(goodInd(i),12),channelRFs1000(goodInd(i),13),channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2));
+    if area=='V1'
+        areaNum=1;
+        if plotCircles==1
+            plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o','MarkerSize',3,'MarkerFaceColor',colind(arrayCol,:));
+        elseif plotCircles==0
+            text(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),num2str(channelNum),'Color',colind(arrayCol,:));
+        end
+    elseif area=='V4'
+        areaNum=4;
+        if plotCircles==1
+            plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o','MarkerSize',3);
+        elseif plotCircles==0
+            text(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),num2str(channelNum),'Color',colind(arrayCol,:));
+        end
     end
 end
 xlim([-100 300]);

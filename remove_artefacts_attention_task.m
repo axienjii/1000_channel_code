@@ -4,7 +4,7 @@ function remove_artefacts_attention_task(date)
 %(attend to a phosphene percept that is evoked by microstimulation, or
 %attend to a visually presented stimulus).
 
-localDisk=1;
+localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
@@ -20,6 +20,11 @@ switch(date)
         includeIncorrectInds=2;
     case '050918_B1'        
         includeIncorrectInds=2;
+        matFileName=fullfile(rootdir,date,'instance1_trialInfo.mat');
+        load(matFileName,'goodBlocks');
+        goodBlocks=1:length(goodBlocks);
+    case '151018_B4'        
+        includeIncorrectInds=[1 2];
         matFileName=fullfile(rootdir,date,'instance1_trialInfo.mat');
         load(matFileName,'goodBlocks');
         goodBlocks=1:length(goodBlocks);

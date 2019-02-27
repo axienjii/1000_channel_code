@@ -531,18 +531,37 @@ for calculateVisual=[0 1]
                         ErrorB=Par.ErrorB;
                         CorrectB=Par.CorrectB;
                         MicroB=Par.MicroB;
-                        if find(trialEncodes==2^CorrectB)
-                            perfNEV(trialNo)=1;
-                        elseif find(trialEncodes==2^ErrorB)
-                            perfNEV(trialNo)=-1;
-                        end
-                        for trialCurrentLevelInd=1:length(allCurrentLevel)
-                            if sum(allCurrentLevel{trialCurrentLevelInd})>0
-                                microstimTrialNEV(trialCurrentLevelInd)=1;
-                            else
-                                microstimTrialNEV(trialCurrentLevelInd)=0;
+                        StimB=Par.StimB;
+                        TargetB=Par.TargetB;
+                        if visualOnly==0
+                            if ~isempty(find(trialEncodes==2^CorrectB))&&~isempty(find(trialEncodes==2^MicroB))&&~isempty(find(trialEncodes==2^TargetB))
+                                perfNEV(trialNo)=1;
+                            elseif ~isempty(find(trialEncodes==2^ErrorB))&&~isempty(find(trialEncodes==2^MicroB))&&~isempty(find(trialEncodes==2^TargetB))
+                                perfNEV(trialNo)=-1;
                             end
+                            if length(find(trialEncodes==2^MicroB))>=1
+                                microstimTrialNEV(trialNo)=1;
+                            end
+                        elseif visualOnly==1
+                            if ~isempty(find(trialEncodes==2^CorrectB))&&~isempty(find(trialEncodes==2^StimB))&&~isempty(find(trialEncodes==2^TargetB))
+                                perfNEV(trialNo)=1;
+                            elseif ~isempty(find(trialEncodes==2^ErrorB))&&~isempty(find(trialEncodes==2^StimB))&&~isempty(find(trialEncodes==2^TargetB))
+                                perfNEV(trialNo)=-1;
+                            end
+                            microstimTrialNEV(trialNo)=0;
                         end
+%                         if find(trialEncodes==2^CorrectB)
+%                             perfNEV(trialNo)=1;
+%                         elseif find(trialEncodes==2^ErrorB)
+%                             perfNEV(trialNo)=-1;
+%                         end
+%                         for trialCurrentLevelInd=1:length(allCurrentLevel)
+%                             if sum(allCurrentLevel{trialCurrentLevelInd})>0
+%                                 microstimTrialNEV(trialCurrentLevelInd)=1;
+%                             else
+%                                 microstimTrialNEV(trialCurrentLevelInd)=0;
+%                             end
+%                         end
                         %analyse individual conditions:
 %                         if analyseConds==1&&length(allElectrodeNum)>=trialNo
 %                             electrode=allElectrodeNum(trialNo);
@@ -632,7 +651,7 @@ for calculateVisual=[0 1]
                         end
                     end
                 end
-                initialPerfTrials=51;%first set of trials are the most important
+                initialPerfTrials=10;%11;%first set of trials are the most important
                 if calculateVisual==0
                     perfMicroBin=perfMicroBin(1:initialPerfTrials);
                     if ~isempty(perfMicroBin)
@@ -860,8 +879,8 @@ for calculateVisual=[0 1]
     end
 end
 % title(['performance across the session, on visual (blue) & microstim (red) trials']);
-pathname=fullfile('D:\data\behavioural_performance_all_sets_121217_41trials_highres');
-set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+pathname=fullfile('D:\data\behavioural_performance_all_sets_121217_',num2str(initialPerfTrials),'trials');
+% set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 print(pathname,'-dtiff');
 
 perfMat=['D:\data\behavioural_performance_all_sets_121217_',num2str(initialPerfTrials),'trials.mat'];

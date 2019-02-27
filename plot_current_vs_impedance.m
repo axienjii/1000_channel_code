@@ -11,7 +11,7 @@ for arrayInd=arrays
     evalText=['array',num2str(arrayInd),'_currentThresholds=goodCurrentThresholds(rowInd);'];
     eval(evalText);    
 end
-save('D:\data\currentThresholds_240718.mat','array8_currentThresholds','array9_currentThresholds','array10_currentThresholds','array11_currentThresholds','array12_currentThresholds','array13_currentThresholds','array14_currentThresholds','array15_currentThresholds','array16_currentThresholds');
+% save('D:\data\currentThresholds_240718.mat','array8_currentThresholds','array9_currentThresholds','array10_currentThresholds','array11_currentThresholds','array12_currentThresholds','array13_currentThresholds','array14_currentThresholds','array15_currentThresholds','array16_currentThresholds');
 
 for rowInd=1:size(impedanceAllChannels,1)
     impedanceAllChannels(rowInd,4)=mod(impedanceAllChannels(rowInd,3),64);

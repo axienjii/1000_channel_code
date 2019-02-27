@@ -457,9 +457,11 @@ end
 % date='210218_B2';
 % electrodeNums=[3 27 40 13 33 63];
 % arrayNums=[11 12 12 13 13 16];
-% date='220218_B1';
+date='220218_B1';
 % electrodeNums=[39 45 47 54 32 15 53 12 29 59 17 58 13 20 30 22 63 13 21 44 39 63 30 40 63 50 27 32 29 33 21 29 48 22 38 20 63 22 20 52];
 % arrayNums=[12 14 14 14 14 16 14 14 14 12 9 14 14 14 14 16 14 14 12 12 16 16 16 15 15 8 8 14 12 13 12 12 13 13 13 16 14 12 12 12];
+electrodeNums=[29];
+arrayNums=[14];
 % date='220218_B2';
 % electrodeNums=[27 21 59 38 48 32 20 30 39];
 % arrayNums=[8 12 12 13 13 14 16 16 16];
@@ -1137,9 +1139,9 @@ end
 % date='060918_B12';%V1-V4 task
 % electrodeNums=[1];
 % arrayNums=[8];
-date='060918_B13';%V1-V4 task
-electrodeNums=[10];
-arrayNums=[8];
+% date='060918_B13';%V1-V4 task
+% electrodeNums=[10];
+% arrayNums=[8];
 % date='060918_B14';%V1-V4 task
 % electrodeNums=[11];
 % arrayNums=[8];
@@ -1174,9 +1176,9 @@ arrayNums=[8];
 % date='261018_B1';%current thresholding
 % electrodeNums=[62 48 47 32 61 64 43 62 63 40 27 52 1 4 34 47 6 14 12];
 % arrayNums=[13 13 13 13 10 11 13 15 15 15 8 8 9 16 16 16 12 12 14];
-date='261018_B3';%current thresholding
-electrodeNums=[61 6 43 12 4 47];
-arrayNums=[10 12 13 14 16 16];
+% date='261018_B3';%current thresholding
+% electrodeNums=[61 6 43 12 4 47];
+% arrayNums=[10 12 13 14 16 16];
 
 
 finalCurrentValsFile=7;

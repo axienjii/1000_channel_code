@@ -7,7 +7,9 @@ impedanceAllChannelsSessions=[];
 figure
 hold on
 dates=[{'260617'} {'110717'} {'170717'} {'200717'} {'080817'} {'100817'} {'180817'} {'200917'} {'061017'} {'091017'} {'131017'} {'201017'} {'020218'} {'280218'} {'080618'} {'070818'}];
-for dateInd=1:16
+dateCount=1;
+impedanceAllChannelsSessions=ones(1024,14)*nan;
+for dateInd=3:16%dates before 17/7/17 use torque wrench
     switch(dateInd)
         case 1
             date='260617';
@@ -43,15 +45,25 @@ for dateInd=1:16
             date='070818';
     end
     load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat']);
-    impedanceAllChannelsSessions=[impedanceAllChannelsSessions impedanceAllChannels(:,1)];
+    removeOutliers=1;
+    if removeOutliers==0
+        impedanceAllChannelsSessions=[impedanceAllChannelsSessions impedanceAllChannels(:,1)];
+    elseif removeOutliers==1
+        cutoff=2000;
+        removeOutliersInd=find(impedanceAllChannels(:,1)<cutoff);
+        impedanceAllChannelsRemoveOutliers=impedanceAllChannels(removeOutliersInd,1);
+        impedanceAllChannelsSessions(1:length(impedanceAllChannelsRemoveOutliers),dateCount)=impedanceAllChannelsRemoveOutliers;
+    end
     formatIn = 'ddmmyy';
-    xval(dateInd)=datenum(date,formatIn);
+    xval(dateCount)=datenum(date,formatIn);
 %     subplot(1,15,dateInd);
+    dateCount=dateCount+1;
 end
 xval(4)=xval(4)+1;
 xval(5)=xval(5)-2;
 xval(9)=xval(9)-1;
-boxplot(impedanceAllChannelsSessions,'positions',xval,'boxstyle','filled','labels',dates);
+% boxplot(impedanceAllChannelsSessions,'positions',xval,'boxstyle','filled','labels',dates(3:16));
+boxplot(impedanceAllChannelsSessions,'positions',xval,'boxstyle','filled','labels',dates(3:16),'whisker',1000);
 set(gca, 'FontSize', 8)
 set(gca,'XTickLabelRotation',60)
 xlabel('date')

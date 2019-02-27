@@ -1255,12 +1255,13 @@ if processRaw==1
                 CorrectB=Par.CorrectB;
                 MicroB=Par.MicroB;
                 StimB=Par.StimB;
-                if find(trialEncodes==2^CorrectB)
-                    perfNEV(trialNo)=1;
-                elseif find(trialEncodes==2^ErrorB)
-                    perfNEV(trialNo)=-1;
-                end
+                TargetB=Par.TargetB;
                 if visualOnly==0
+                    if ~isempty(find(trialEncodes==2^CorrectB))&&~isempty(find(trialEncodes==2^MicroB))&&~isempty(find(trialEncodes==2^TargetB))
+                        perfNEV(trialNo)=1;
+                    elseif ~isempty(find(trialEncodes==2^ErrorB))&&~isempty(find(trialEncodes==2^MicroB))&&~isempty(find(trialEncodes==2^TargetB))
+                        perfNEV(trialNo)=-1;
+                    end
                     if interleaved==0%stimulation sent using trigger pulse from dasbit(microB,1)
                         if length(find(trialEncodes==2^MicroB))>=1
                             microstimTrialNEV(trialNo)=1;
@@ -1269,9 +1270,12 @@ if processRaw==1
                         microstimTrialNEV(trialNo)=1;
                     end
                 elseif visualOnly==1
-                    if length(find(trialEncodes==2^StimB))==1
-                        microstimTrialNEV(trialNo)=0;
+                    if ~isempty(find(trialEncodes==2^CorrectB))&&~isempty(find(trialEncodes==2^StimB))&&~isempty(find(trialEncodes==2^TargetB))
+                        perfNEV(trialNo)=1;
+                    elseif ~isempty(find(trialEncodes==2^ErrorB))&&~isempty(find(trialEncodes==2^StimB))&&~isempty(find(trialEncodes==2^TargetB))
+                        perfNEV(trialNo)=-1;
                     end
+                    microstimTrialNEV(trialNo)=0;
                 end
                 trialNo=trialNo+1;
             end
@@ -1624,7 +1628,7 @@ if processRaw==1
         ylabel('performance');
         pathname=fullfile(rootdir,date,['behavioural_performance_RF_locations_',date]);
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-%         print(pathname,'-dtiff');
+        print(pathname,'-dtiff');
     end
 end
 pause=1;

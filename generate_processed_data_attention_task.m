@@ -1,12 +1,12 @@
 function generate_processed_data_attention_task(date)
 %Written by Xing 12/9/18, to extract MUA data from raw traces during an attention task
 %(attend to a visually presented stimulus either on the left or the right).
-%Note that as no micrositmulation was delivered, no artifact removal is
+%Note that as no microstimulation was delivered, no artifact removal is
 %carried out. However, variables names still have 'AR' ('artifact removed')
 %appended to them, to allow compatibility with next analysis script,
 %(analyse_eyedata_attention_task.m).
 
-localDisk=1;
+localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
@@ -14,6 +14,16 @@ elseif localDisk==0
 end
 switch(date)
     case '120918_B1' 
+        includeIncorrectInds=[1 2];
+        matFileName=fullfile(rootdir,date,'instance1_trialInfo.mat');
+        load(matFileName,'goodBlocks');
+        goodBlocks=1:length(goodBlocks);
+    case '151018_B2' 
+        includeIncorrectInds=[1 2];
+        matFileName=fullfile(rootdir,date,'instance1_trialInfo.mat');
+        load(matFileName,'goodBlocks');
+        goodBlocks=1:length(goodBlocks);
+    case '151018_B4' 
         includeIncorrectInds=[1 2];
         matFileName=fullfile(rootdir,date,'instance1_trialInfo.mat');
         load(matFileName,'goodBlocks');

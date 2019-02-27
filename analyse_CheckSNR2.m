@@ -105,6 +105,9 @@ switch(date)
     case '181218_B4'%simple fixation task, not checkSNR
         whichDir=1;
         best=1;
+    case '270219_B1'%simple fixation task, not checkSNR
+        whichDir=1;
+        best=1;
 end
 if whichDir==1%local copy available
     topDir='D:\data';
@@ -269,7 +272,7 @@ for instanceCount=1:length(allInstanceInd)
     end
     allSNR=[allSNR;channelSNR(1:128)];
     
-    for channelInd=1:NS.MetaTags.ChannelCount
+    for channelInd=1:128%NS.MetaTags.ChannelCount
         figInd=ceil(channelInd/36);
         figure(figInd);hold on
         subplotInd=channelInd-((figInd-1)*36);

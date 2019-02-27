@@ -617,6 +617,34 @@ for calculateVisual=[0 1]
                         ErrorB=Par.ErrorB;
                         CorrectB=Par.CorrectB;
                         MicroB=Par.MicroB;
+                        StimB=Par.StimB;
+                        TargetB=Par.TargetB;
+%                         if visualOnly==0
+%                             if ~isempty(find(trialEncodes==2^CorrectB))&&~isempty(find(trialEncodes==2^MicroB))&&~isempty(find(trialEncodes==2^TargetB))
+%                                 perfNEV(trialNo)=1;
+%                             elseif ~isempty(find(trialEncodes==2^ErrorB))&&~isempty(find(trialEncodes==2^MicroB))&&~isempty(find(trialEncodes==2^TargetB))
+%                                 perfNEV(trialNo)=-1;
+%                             end
+%                             if strcmp(date,'231017_B45')
+%                                 if length(find(trialEncodes==2^MicroB))==3
+%                                     microstimTrialNEV(trialNo)=1;
+%                                 end
+%                                 if length(find(trialEncodes==2^MicroB))==2
+%                                     microstimTrialNEV(trialNo)=1;
+%                                 else
+%                                     microstimTrialNEV(trialNo)=0;
+%                                 end
+%                             else
+%                                 microstimTrialNEV=allCurrentLevel>0;
+%                             end
+%                         elseif visualOnly==1
+%                             if ~isempty(find(trialEncodes==2^CorrectB))&&~isempty(find(trialEncodes==2^StimB))&&~isempty(find(trialEncodes==2^TargetB))
+%                                 perfNEV(trialNo)=1;
+%                             elseif ~isempty(find(trialEncodes==2^ErrorB))&&~isempty(find(trialEncodes==2^StimB))&&~isempty(find(trialEncodes==2^TargetB))
+%                                 perfNEV(trialNo)=-1;
+%                             end
+%                             microstimTrialNEV=allCurrentLevel>0;
+%                         end
                         if find(trialEncodes==2^CorrectB)
                             perfNEV(trialNo)=1;
                         elseif find(trialEncodes==2^ErrorB)
@@ -665,6 +693,7 @@ for calculateVisual=[0 1]
                         trialNo=trialNo+1;
                     end
                 end
+                perfNEV=performance;
                 
                 tallyCorrect=length(find(perfNEV==1));
                 tallyIncorrect=length(find(perfNEV==-1));
@@ -932,9 +961,11 @@ for calculateVisual=[0 1]
         ylim([0 1]);
         xLimits=get(gca,'xlim');
         plot([0 xLimits(2)],[0.5 0.5],'k:');
-        plot([10 10],[0 1],'k:');
-        xlabel('trial number (from beginning of session)');
-        ylabel('mean performance across electrode sets');
+%         plot([10 10],[0 1],'k:');
+%         xlabel('trial number (from beginning of session)');
+        xlabel('trial number');
+%         ylabel('mean performance across electrode sets');
+        ylabel('mean performance');
     end
     if calculateVisual==1
         subplot(2,1,2);
@@ -944,18 +975,20 @@ for calculateVisual=[0 1]
         ylim([0 1]);
         xLimits=get(gca,'xlim');
         plot([0 xLimits(2)],[0.5 0.5],'k:');
-        plot([10 10],[0 1],'k:');
-        xlabel('trial number (from beginning of session)');
+%         plot([10 10],[0 1],'k:');
+%         xlabel('trial number (from beginning of session)');
+        xlabel('trial number');
 %         xlabel('trial number (from end of session)');
         ylabel('mean performance across electrode sets');
+        ylabel('mean performance');
     end
 end
 title(['performance across the session, on visual (blue) & microstim (red) trials']);
-pathname=fullfile(rootdir,'behavioural_performance_all_sets_241017');
+pathname=fullfile(rootdir,['behavioural_performance_all_sets_241017_',num2str(initialPerfTrials),'trials']);
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 print(pathname,'-dtiff');
 
-perfMat=fullfile(rootdir,'performance_',num2str(initialPerfTrials),'trials.mat');
+perfMat=fullfile(rootdir,['behavioural_performance_all_sets_241017_',num2str(initialPerfTrials),'trials.mat']);
 save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
 pause=1;
 
