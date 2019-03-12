@@ -6,6 +6,7 @@ function analyse_CheckSNR2(date)
 %on local disk or on server, depending on the date.
 % date='240717_B2';
 best=1;
+notRisingEdge=0;%set to 0 for digital input that detects only rising edge; set to 1 for session where digital input was mistakenly set to detect any change (whether rising or falling), i.e. 270219_B1
 switch(date)
     case '040717_B2'
         whichDir=2;
@@ -108,6 +109,7 @@ switch(date)
     case '270219_B1'%simple fixation task, not checkSNR
         whichDir=1;
         best=1;
+        notRisingEdge=1;
 end
 if whichDir==1%local copy available
     topDir='D:\data';
@@ -127,7 +129,7 @@ if copyRemotely==1
     end
 end
 stimDur=400/1000;%in seconds
-allInstanceInd=1:4;
+allInstanceInd=5;
 preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=300/1000;%length of post-stimulus-offset period, in s
 downsampleFreq=30;
@@ -145,6 +147,9 @@ for instanceCount=1:length(allInstanceInd)
         codeStimOn=1;%In runstim code, StimB (stimulus bit) is 1.
         %dasbit sends a change in the bit (either high or low) on one of the 8 ports
         indStimOns=find(NEV.Data.SerialDigitalIO.UnparsedData==2^codeStimOn);%starts at 2^0, till 2^7
+        if notRisingEdge
+            indStimOns=find(NEV.Data.SerialDigitalIO.UnparsedData==65314);
+        end
         timeStimOns=NEV.Data.SerialDigitalIO.TimeStamp(indStimOns);%time stamps corresponding to stimulus onset
         trialData={};
         for trialInd=1:length(timeStimOns)

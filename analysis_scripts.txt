@@ -2,10 +2,45 @@ analyse_RF_barsweep			process raw data
 analyse_RF_barsweep_coordinates		calculate RF coordinates
 plot_all_RFs				draw plots for all channels, colour coding for cortical location of array
 plot_array_RFs				colour coding for individual electrodes on each array
+electrode_mapping			map channels to location on array
+check_SNR_poorchannels			plot RFs for channels with poor SNR to check their location
+impedance_plotter			examine impedances of channels and select ideal channels for microstimulation
+combine_best_RF_sessions		combine RF data across sessions with different bar sweep stimuli
+raw_data_channel_extraction		extract raw data for one channel at a time. used for Catherine's data
+handmap_RFs				compiles list of channels for which manual RF mapping was carried out
+tallyTrials				combine simphosphene data across recordings, and check number of trials collected per condition
+draw_rf_letters				plots superimposed letters and channel RF
+plot_eye_data				plot X and Y eye data for simphosphenes task
+RF_splitter				separate RF information by array number
+check_pupil_diameter			read in data from analog input channels 129-132 on instance 1, to obtain eye position and pupil diameter, respectively
+convert_channel_1024			take array number and channel number (from 1 to 64) and return channel number on the instance (1 to 128) and channel number out of 1024 channels
+analyse_simphosphenes3			process raw data and draw figures of neuronal responses to letter stimuli
+analyse_simphosphenes4			process raw data and draw figures of neuronal responses to letter stimuli, generate movie
+analyse_microstim_saccade		examine eye movements during trials with microstimulation delivery
+align_resting_state			check that encoding of syncing data is identical across instances, during resting state
+combine_simphosphenes_data		combines data that was split between several recordings- 110717_B & B2, 120717_B1, B2 & B3
+combine_simphosphenes_data2		combines data across 3 recordings- 110717_B1, 110717_B2, and 120717_B1, B2 & B3
+analyse_CheckSNR			extract and analyse data from flashing fullscreen checkerboard task
+impedance_plotter2			corrected indexing of RF coordinate data, previously incorrect in impedance_plotter.m
+impedance_plotter3			reads impedance values from txt files
+analyse_microstim_saccade6		code to analyse microstim sessions with catch trials
+analyse_microstim_saccade7		code to analyse microstim sessions with catch trials and read in RF coordinate data from file, as was done in runstim_microstim_saccade_catch4
+lookup_microstim_electrodes		takes data of recording session and returns electrode identity and other properties
+analyse_RF_barsweep_visual_response	visualise responses to bar sweeps, generate movie
+analyse_microstim_responses3		calculate current thresholds from behavioural data
+analyse_microstim_artefact		plot microstimulation-induced artefact across electrodes
+analyse_microstim_saccade8
+analyse_microstim_saccade9		uses serial port data to identify trials. Analyses
+ data for runstim_microstim_saccade_catch10 (different trial timing)/11 (same timing as before catch10), with an arbitrarily large
+ target window and random selection of electrodes on which microstimulation
+ was delivered (out of 201 electrodes on arrays 8 to 16).		
+calculateSaccadeEndpoint		calculate saccade end point for trials where single saccade was made to target (does not handle double saccade)
 
-ana_RF_flashgrid_xing2			extract MUA for RF mapping using white square stimuli
+
+ana_RF_flashgrid_xing2/3		extract MUA for RF mapping using white square stimuli
+
 
 Folders:
 Z:\Shared\MFILES\RF_mapping
 
-Modified openNSx at lines 370 and 371, to suppress prompt for user input when attemtping to read a too-high number of data points from a file
+Modified openNSx at lines 370 and 371, to suppress prompt for user input when attempting to read a too-high number of data points from a file
