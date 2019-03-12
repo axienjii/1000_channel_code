@@ -1,7 +1,6 @@
 function plot_array_RFs
 %Written by Xing 31/5/17
-%Plots RF centres and sizes of all 1000 channels (can select channel
-%inclusion based on SNR of MUA).
+%Plots RF centres for individual arrays.
 
 % channelRFs(channelInd,:)=[RF.centrex RF.centrey RF.sz RF.szdeg RF.ang RF.theta RF.ecc channelSNR(channelInd,:) horizontalRadius verticalRadius];
 
