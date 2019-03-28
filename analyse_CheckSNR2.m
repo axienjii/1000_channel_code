@@ -107,7 +107,7 @@ switch(date)
         whichDir=1;
         best=1;
     case '270219_B1'%simple fixation task, not checkSNR
-        whichDir=1;
+        whichDir=2;
         best=1;
         notRisingEdge=1;
 end
@@ -129,7 +129,7 @@ if copyRemotely==1
     end
 end
 stimDur=400/1000;%in seconds
-allInstanceInd=5;
+allInstanceInd=[2 8];
 preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=300/1000;%length of post-stimulus-offset period, in s
 downsampleFreq=30;

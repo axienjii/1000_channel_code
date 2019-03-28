@@ -6,13 +6,13 @@ function analyse_microstim_responses4
 %electrode identities.
 
 close all
-localDisk=1;
+localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
     rootdir='X:\best\';
 end
-
+exampleFig=1;
 % arrayNums=[8 10 10 10 10 10 10 10 10 10 10 11 11 11 12 12 12 12 12 12 12 12 12 13 13 13 13 13 13 13 13 14 14 14 15 16 16];
 % electrodeNums=[40 40 35 46 57 55 58 37 62 59 20 55 24 18 61 40 50 28 10 34 29 41 20 35 48 47 53 55 38 56 32 43 12 30 49 21 39];
 % date='051217_T4';
@@ -1230,12 +1230,30 @@ arrayNums=[14];
 % date='110319_B1';
 % electrodeNums=[12 29 24 22 12];
 % arrayNums=[12 14 12 12 14];
-date='110319_B2';
-electrodeNums=[12];
-arrayNums=[12];
+% date='110319_B2';
+% electrodeNums=[12];
+% arrayNums=[12];
 % date='110319_B3';
 % electrodeNums=[29];
 % arrayNums=[14];
+date='120319_B1';
+electrodeNums=[24 22 12];
+arrayNums=[12 12 14];
+date='120319_B3';
+electrodeNums=[22];
+arrayNums=[12];
+date='120319_B4';
+electrodeNums=[12];
+arrayNums=[14];
+date='120319_B6';
+electrodeNums=[24];
+arrayNums=[12];
+
+if exampleFig==1%example current thresholding plot for paper
+    date='110319_B2';
+    electrodeNums=[12];
+    arrayNums=[12];
+end
 
 
 finalCurrentValsFile=7;
@@ -1295,15 +1313,20 @@ for uniqueElectrode=1:length(electrodeNums)
     end
     hits./misses;
     for Weibull=0:1% set to 1 to get the Weibull fit, 0 for a sigmoid fit
+        figure('Name','Psychometric function')
         [theta threshold]=analyse_current_thresholds_Plot_Psy_Fie(currentAmplitudes,hits,misses,falseAlarms,correctRejections,Weibull);
         hold on
         yLimits=get(gca,'ylim');
         plot([threshold threshold],yLimits,'r:')
-        plot([theta theta],yLimits,'k:')
+        if exampleFig==0
+            plot([theta theta],yLimits,'k:')
+        end
         %     text(threshold-10,yLimits(2)-0.05,['threshold = ',num2str(round(threshold)),' uA'],'FontSize',12,'Color','k');
         text(threshold,yLimits(2)-0.05,['threshold = ',num2str(round(threshold)),' uA'],'FontSize',12,'Color','k');
-        ylabel('proportion of trials');
-        xlabel('current amplitude (uA)');
+        if exampleFig==0
+            ylabel('proportion of trials');
+            xlabel('current amplitude (uA)');
+        end
         if Weibull==1
             title(['Psychometric function for array',num2str(array),' electrode',num2str(electrode),', Weibull fit.'])
             pathname=fullfile(rootdir,date,['array',num2str(array),'_electrode',num2str(electrode),'_current_amplitudes_weibull']);
@@ -1317,5 +1340,11 @@ for uniqueElectrode=1:length(electrodeNums)
         thresholds(uniqueElectrode,Weibull+2)=electrode;
         thresholds(uniqueElectrode,Weibull+3)=array;
     end
+end
+if exampleFig==1
+    set(gca,'Box','off')
+    xlim([0 15])
+    set(gca,'YTick',[0 0.5 1])
+    set(gca,'XTick',[0 5 10 15])
 end
 save([rootdir,date,'\',date,'_thresholds.mat'],'thresholds');

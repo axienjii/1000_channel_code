@@ -77,20 +77,27 @@ allEccentricitySacs(outliers)=[];
 
 ax1=subplot(1,2,1);
 %     plot(polarAngleRF,polarAngleSac,'ko','MarkerSize',2,'MarkerFaceColor','k');hold on
-scatter(allPolarAngleRFs,allPolarAngleSacs,2,'ko');hold on
+scatter(-rad2deg(allPolarAngleRFs),-rad2deg(allPolarAngleSacs),2,'ko');hold on
 ax2=subplot(1,2,2);
 %     plot(eccentricityRF,eccentricitySac,'ko','MarkerSize',2,'MarkerFaceColor','k');hold on
 scatter(allEccentricityRFs,allEccentricitySacs,2,'ko');hold on
 subplot(1,2,1);
 axis equal
 axis square
-xlabel('RF polar angle (rad)');
+ylim([0 100])
+% xlabel('RF polar angle (rad)');
+xlabel('RF polar angle (deg)');
 ylabel('Saccade end point polar angle');
-ylabel('Saccade polar angle (rad)');
-h1 = lsline(ax1);
-h1.Color = 'r';
+% ylabel('Saccade polar angle (rad)');
+ylabel('Saccade polar angle (deg)');
+% h1 = lsline(ax1);
+% h1.Color = 'r';
+dlm = fitlm(-rad2deg(allPolarAngleRFs),-rad2deg(allPolarAngleRFs),'Intercept',false);
+xVals=0:100;
+yVals=xVals*1;%as calculated and returned in dlm.Coefficients
+plot(xVals,yVals,'r-');
 
-subplot(1,2,2);
+subplot(2,1,2);
 xlim([0 10])
 axis equal
 axis square
@@ -102,9 +109,13 @@ ax.XTick=[0 5 10];
 ax.XTickLabel={'0','5','10'};
 ax.YTick=[0 5 10];
 ax.YTickLabel={'0','5','10'};
-h2 = lsline(ax2);
-h2.Color = 'r';
-[rhoPA,pPA]=corrcoef([allPolarAngleRFs',allPolarAngleSacs'],'rows','pairwise')%r=0.72; p<0.01
+% h2 = lsline(ax2);
+% h2.Color = 'r';
+dlm = fitlm(allEccentricityRFs,allEccentricitySacs,'Intercept',false);
+xVals=0:10;
+yVals=xVals*0.967556131993876;%as calculated and returned in dlm.Coefficients
+plot(xVals,yVals,'r-');
+[rhoPA,pPA]=corrcoef([-rad2deg(allPolarAngleRFs'),-rad2deg(allPolarAngleSacs')],'rows','pairwise')%r=0.72; p<0.01
 [rhoEc,pEc]=corrcoef([allEccentricityRFs',allEccentricitySacs'],'rows','pairwise')%r=0.81; p<.001
 %         axis equal
 %         xlim([-20 360]);

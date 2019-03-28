@@ -1,4 +1,4 @@
-function analyse_microstim_motion_across_sessions_5phosphenes(date)
+function analyse_microstim_motion_across_sessions_5phosphenes_alltrials(date)
 %30/11/17
 %Written by Xing, calculates behavioural performance during a
 %microstimulation/visual direction-of-motion task.
@@ -27,8 +27,13 @@ arrays=8:16;
 
 localDisk=0;
 analyseConds=0;
+allSetsPerfMicroAllTrials=[];
+allSetsPerfVisualAllTrials=[];
+allPerfV=[];
+allPerfM=[];
+setNos=[1:23];
 for calculateVisual=[0 1]
-    for setNo=[1:23]%26
+    for setNo=setNos%26
         perfNEV=[];
         timeInd=[];
         encodeInd=[];
@@ -651,19 +656,13 @@ for calculateVisual=[0 1]
                         end
                     end
                 end
-                initialPerfTrials=10;%11;%first set of trials are the most important
                 if calculateVisual==0
-                    perfMicroBin=perfMicroBin(1:initialPerfTrials);
                     if ~isempty(perfMicroBin)
-                        allSetsPerfMicroBin(setNo,:)=perfMicroBin;
-                        save(['D:\microPerf_',date,'.mat'],'perfMicroBin');
+                        allSetsPerfMicroAllTrials(setNo,:)=mean(perfMicroBin);
                     end
                 elseif calculateVisual==1
-                    perfVisualBin=perfVisualBin(1:initialPerfTrials);
-                    %perfVisualBin=perfVisualBin(end-initialPerfTrials+1:end);
                     if ~isempty(perfVisualBin)
-                        allSetsPerfVisualBin(setNo,:)=perfVisualBin;
-                        save(['D:\visualPerf_',date,'.mat'],'perfVisualBin');
+                        allSetsPerfVisualAllTrials(setNo,:)=mean(perfVisualBin);
                     end
                 end
                 
@@ -704,6 +703,8 @@ for calculateVisual=[0 1]
                     corrIndsV=intersect(condInds,correctVisualTrialsInd);
                     incorrIndsV=intersect(condInds,incorrectVisualTrialsInd);
                     bottomPerfV=length(corrIndsV)/(length(corrIndsV)+length(incorrIndsV));
+                    allPerfV(setNo,:)=perfV;
+                    allPerfM(setNo,:)=perfM;
                     
                     figure;
                     subplot(2,4,1:2);
@@ -851,40 +852,63 @@ for calculateVisual=[0 1]
             end
         end
     end
-    if calculateVisual==0
-        figure;
-        meanAllSetsPerfMicroBin=mean(allSetsPerfMicroBin,1);
-        subplot(2,1,1);
-        hold on
-        plot(meanAllSetsPerfMicroBin,'r');
-        ylim([0 1]);
-        xLimits=get(gca,'xlim');
-        plot([0 xLimits(2)],[0.5 0.5],'k:');
-%         plot([10 10],[0 1],'k:');
-        xlabel('trial number');
-        ylabel('mean performance');
-    end
-    if calculateVisual==1
-        subplot(2,1,2);
-        hold on
-        meanAllSetsPerfVisualBin=mean(allSetsPerfVisualBin,1);
-        plot(meanAllSetsPerfVisualBin,'b');
-        ylim([0 1]);
-        xLimits=get(gca,'xlim');
-        plot([0 xLimits(2)],[0.5 0.5],'k:');
-%         plot([10 10],[0 1],'k:');
-        xlabel('trial number');
-%         xlabel('trial number (from end of session)');
-        ylabel('mean performance');
-    end
+%     if calculateVisual==0
+%         figure;
+%         meanAllSetsPerfMicroBin=mean(allSetsPerfMicroBin,1);
+%         subplot(2,1,1);
+%         hold on
+%         plot(meanAllSetsPerfMicroBin,'r');
+%         ylim([0 1]);
+%         xLimits=get(gca,'xlim');
+%         plot([0 xLimits(2)],[0.5 0.5],'k:');
+% %         plot([10 10],[0 1],'k:');
+%         xlabel('trial number');
+%         ylabel('mean performance');
+%     end
+%     if calculateVisual==1
+%         subplot(2,1,2);
+%         hold on
+%         meanAllSetsPerfVisualBin=mean(allSetsPerfVisualBin,1);
+%         plot(meanAllSetsPerfVisualBin,'b');
+%         ylim([0 1]);
+%         xLimits=get(gca,'xlim');
+%         plot([0 xLimits(2)],[0.5 0.5],'k:');
+% %         plot([10 10],[0 1],'k:');
+%         xlabel('trial number');
+% %         xlabel('trial number (from end of session)');
+%         ylabel('mean performance');
+%     end
 end
-% title(['performance across the session, on visual (blue) & microstim (red) trials']);
-pathname=fullfile('D:\data\behavioural_performance_all_sets_121217_',num2str(initialPerfTrials),'trials');
-% set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-print(pathname,'-dtiff');
 
-perfMat=['D:\data\behavioural_performance_all_sets_121217_',num2str(initialPerfTrials),'trials.mat'];
-save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
+goodSetsallSetsPerfVisualAllTrials=allSetsPerfVisualAllTrials(setNos);
+goodSetsallSetsPerfMicroAllTrials=allSetsPerfMicroAllTrials(setNos);
+mean(goodSetsallSetsPerfVisualAllTrials)
+mean(goodSetsallSetsPerfMicroAllTrials)
+figure;
+subplot(2,1,1);
+% plot(goodSetsallSetsPerfMicroAllTrials,'r');
+b2=bar(goodSetsallSetsPerfMicroAllTrials);
+b2(1).FaceColor = 'flat';
+b2(1).FaceColor = [1 0 0];
+hold on
+plot([0 length(goodSetsallSetsPerfMicroAllTrials)+1],[0.5 0.5],'k:');
+xlim([0 length(goodSetsallSetsPerfMicroAllTrials)+1]);
+ylim([0 1]);
+set(gca,'Box','off');
+subplot(2,1,2);
+% plot(goodSetsallSetsPerfVisualAllTrials,'b');
+b3=bar(goodSetsallSetsPerfVisualAllTrials);
+b3(1).FaceColor = 'flat';
+b3(1).FaceColor = [0 0 1];
+hold on
+plot([0 length(goodSetsallSetsPerfVisualAllTrials)+1],[0.5 0.5],'k:');
+xlim([0 length(goodSetsallSetsPerfVisualAllTrials)+1]);
+ylim([0 1]);
+set(gca,'Box','off');
+%exported as behavioural_perf_motion_all_sets_121217_all_trials_lick_5phosphenes.eps
+
+perfMat='D:\data\behavioural_performance_all_sets_121217_all_trials.mat';
+save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','allPerfV','allPerfM');
 pause=1;
 
 significantByThisTrialMicro=0;
