@@ -26,7 +26,7 @@ cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/25
 arrays=8:16;
 
 localDisk=0;
-analyseConds=1;
+analyseConds=0;
 allSetsPerfMicroAllTrials=[];
 allSetsPerfVisualAllTrials=[];
 allPerfV=[];
@@ -1021,8 +1021,35 @@ set(gca,'Box','off');
 %exported as behavioural_perf_2phosphene_all_sets_241017_all_trials_lick.eps
 
 perfMat=fullfile(rootdir,'behavioural_performance_all_sets_241017_all_trials.mat');
-save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','allPerfV','allPerfM');
+save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','goodSetsallSetsPerfVisualAllTrials','goodSetsallSetsPerfMicroAllTrials','allPerfV','allPerfM');
 pause=1;
+
+%histograms:
+figure;
+subplot(1,2,1);
+edges=0:0.1:1;
+h1=histogram(goodSetsallSetsPerfMicroAllTrials,edges);
+h1(1).FaceColor = [1 0 0];
+h1(1).EdgeColor = [0 0 0];
+hold on
+plot([0.5 0.5],[0 10],'k:');
+xlim([0 1]);
+ylim([0 10]);
+set(gca,'Box','off');
+ax=gca;
+ax.YTick=[0 4 8];
+
+figure;
+subplot(1,2,1);
+edges=0:0.1:1;
+h1=histogram(goodSetsallSetsPerfVisualAllTrials,edges);
+h1(1).FaceColor = [0 0 1];
+h1(1).EdgeColor = [0 0 0];
+hold on
+plot([0.5 0.5],[0 10],'k:');
+xlim([0 1]);
+ylim([0 11]);
+set(gca,'Box','off');
 
 significantByThisTrialMicro=0;
 for trialInd=1:length(meanAllSetsPerfMicroBin)

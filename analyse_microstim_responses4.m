@@ -1320,9 +1320,9 @@ for uniqueElectrode=1:length(electrodeNums)
         plot([threshold threshold],yLimits,'r:')
         if exampleFig==0
             plot([theta theta],yLimits,'k:')
-        end
         %     text(threshold-10,yLimits(2)-0.05,['threshold = ',num2str(round(threshold)),' uA'],'FontSize',12,'Color','k');
         text(threshold,yLimits(2)-0.05,['threshold = ',num2str(round(threshold)),' uA'],'FontSize',12,'Color','k');
+        end
         if exampleFig==0
             ylabel('proportion of trials');
             xlabel('current amplitude (uA)');

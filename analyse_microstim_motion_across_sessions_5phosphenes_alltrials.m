@@ -908,8 +908,36 @@ set(gca,'Box','off');
 %exported as behavioural_perf_motion_all_sets_121217_all_trials_lick_5phosphenes.eps
 
 perfMat='D:\data\behavioural_performance_all_sets_121217_all_trials.mat';
-save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','allPerfV','allPerfM');
+save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','goodSetsallSetsPerfVisualAllTrials','goodSetsallSetsPerfMicroAllTrials','allPerfV','allPerfM');
 pause=1;
+
+%histogram:
+figure;
+subplot(2,1,1);
+edges=0:0.1:1;
+h1=histogram(goodSetsallSetsPerfMicroAllTrials,edges);
+h1(1).FaceColor = [1 0 0];
+h1(1).EdgeColor = [0 0 0];
+hold on
+plot([0.5 0.5],[0 10],'k:');
+xlim([0 1]);
+ylim([0 7]);
+set(gca,'Box','off');
+ax=gca;
+ax.YTick=[0 3 6];
+
+subplot(2,1,2);
+edges=0:0.1:1;
+h1=histogram(goodSetsallSetsPerfVisualAllTrials,edges);
+h1(1).FaceColor = [0 0 1];
+h1(1).EdgeColor = [0 0 0];
+hold on
+plot([0.5 0.5],[0 10],'k:');
+xlim([0 1]);
+ylim([0 10]);
+set(gca,'Box','off');
+ax=gca;
+ax.YTick=[0 5 10];
 
 significantByThisTrialMicro=0;
 for trialInd=1:length(meanAllSetsPerfMicroBin)

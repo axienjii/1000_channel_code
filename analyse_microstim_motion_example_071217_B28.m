@@ -965,6 +965,18 @@ if processRaw==1
            
            figure;
            subplot(2,2,2);
+           hold on
+           %draw dotted lines indicating [0,0]
+           plot([0 0],[-250 200],'k:');
+           plot([-200 300],[0 0],'k:');
+           plot([-200 300],[200 -300],'k:');
+%            ellipse(Par.PixPerDeg*2,Par.PixPerDeg*2,0,0,[0.1 0.1 0.1]);
+           ellipse(Par.PixPerDeg*4,Par.PixPerDeg*4,0,0,[0.1 0.1 0.1]);
+%            ellipse(Par.PixPerDeg*6,Par.PixPerDeg*6,0,0,[0.1 0.1 0.1]);
+%            ellipse(Par.PixPerDeg*8,Par.PixPerDeg*8,0,0,[0.1 0.1 0.1]);
+           motionCols=[1 1 0;1 1 0.3;1 1 0.5;1 1 0.7;1 1 0.8;1 1 0.9];
+           motionCols=[1 0.5 0;1 0.6 0.3;1 0.7 0.5;1 0.8 0.7;1 0.9 0.8;1 0.1 0.9];
+           motionCols=[0 0 0;0.2 0.2 0.2;0.4 0.4 0.4;0.6 0.6 0.6;0.8 0.8 0.8;1 1 1];
            for electrodeCount=1:size(setElectrodes,2)
                electrode=setElectrodes(setInd,electrodeCount);
                array=setArrays(setInd,electrodeCount);
@@ -974,7 +986,7 @@ if processRaw==1
                electrodeInd=intersect(electrodeIndtemp1,electrodeIndtemp2);%channel number
                RFx=goodArrays8to16(electrodeInd,1);
                RFy=goodArrays8to16(electrodeInd,2);
-               plot(RFx,RFy,'o','Color',cols(7,:),'MarkerFaceColor',cols(7,:));hold on
+               plot(RFx,RFy,'o','Color',motionCols(electrodeCount,:),'MarkerFaceColor',motionCols(electrodeCount,:),'MarkerSize',4);hold on
                currentThreshold=goodCurrentThresholds(electrodeInd);
 %                if electrodeCount==1
 %                    text(RFx-28,RFy,[num2str(electrode),'(',num2str(array),')'],'FontSize',10,'Color','k');
@@ -1002,14 +1014,6 @@ if processRaw==1
 %                plot([RFx1 RFx2],[RFy1 RFy2],'k--');
            end
            scatter(0,0,'r','o','filled');%fix spot
-           %draw dotted lines indicating [0,0]
-           plot([0 0],[-250 200],'k:');
-           plot([-200 300],[0 0],'k:');
-           plot([-200 300],[200 -300],'k:');
-           ellipse(Par.PixPerDeg*2,Par.PixPerDeg*2,0,0,[0.1 0.1 0.1]);
-           ellipse(Par.PixPerDeg*4,Par.PixPerDeg*4,0,0,[0.1 0.1 0.1]);
-           ellipse(Par.PixPerDeg*6,Par.PixPerDeg*6,0,0,[0.1 0.1 0.1]);
-           ellipse(Par.PixPerDeg*8,Par.PixPerDeg*8,0,0,[0.1 0.1 0.1]);
 %            text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
 %            text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
 %            text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);

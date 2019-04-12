@@ -881,7 +881,7 @@ end
 % title(['performance across the session, on visual (blue) & microstim (red) trials']);
 pathname=fullfile('D:\data\behavioural_performance_all_sets_121217_',num2str(initialPerfTrials),'trials');
 % set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-print(pathname,'-dtiff');
+% print(pathname,'-dtiff');
 
 perfMat=['D:\data\behavioural_performance_all_sets_121217_',num2str(initialPerfTrials),'trials.mat'];
 save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
