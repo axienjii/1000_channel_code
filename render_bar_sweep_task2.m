@@ -3,13 +3,13 @@ function render_bar_sweep_task2
 %x- and y-coordinates of arrays on cortex, and assign pixels on each array
 %to each electrode. Combines pixel coordinates with neuronal activity.
 
-for monkeyInd=1:2
+for monkeyInd=2
     if monkeyInd==1%Lick
-        A = imread('D:\data\barsweep_video_in_setup\lick_realistic_skin.jpg');
+        A = imread('D:\data\barsweep_video_in_setup\lick_realistic_skin_intact11.jpg');
         rootDir='D:\data';
         remoteDir='X:\best';
     elseif monkeyInd==2%Aston
-        A = imread('D:\aston_data\barsweep_video_in_setup\aston_realistic_skin3.jpg');
+        A = imread('D:\aston_data\barsweep_video_in_setup\aston_realistic_skin_intact11.jpg');
         rootDir='D:\aston_data';
         remoteDir='X:\aston';
     end
@@ -189,7 +189,7 @@ for monkeyInd=1:2
     end
     normalisedResponse=cell(1,4);
     
-    drawFrames=1;
+    drawFrames=0;
     if drawFrames==1
         fileName=fullfile('X:\best',date,['normalised_visual_response_all_conds','.mat']);
         fileName=fullfile(remoteDir,date,['normalised_visual_response_all_conds','.mat']);
@@ -215,6 +215,10 @@ for monkeyInd=1:2
             for timePoint=1:1599%size(normalisedResponse{stimCond},2)
                 col=normalisedResponse{stimCond}(:,timePoint);
                 newcol=255*(col-min(col(:)))/(max(col(:))-min(col(:)));
+                newcol=newcol-90;%zoom in on range of values above 90- to show activity modulation more clearly in figure
+                lowInd=find(newcol<0);
+                newcol(lowInd)=0;
+                newcol=newcol*255/(255-90);
                 reshapedCol=reshape(newcol,128,8);
                 arrayCols=[];
                 for instanceInd=1:8
@@ -239,7 +243,7 @@ for monkeyInd=1:2
                         for rowCount=1:numElectrodesPerEdge%each row of electrodes
                             if ~isempty(pixelIDs{rowCount,colCount})
                                 for pixelCount=1:size(pixelIDs{rowCount,colCount},1)
-                                    copyA(round(pixelIDs{rowCount,colCount}(pixelCount,2)),round(pixelIDs{rowCount,colCount}(pixelCount,1)),:)=[255-arrayCols(arrayInd,rowCount,colCount) 255-arrayCols(arrayInd,rowCount,colCount) arrayCols(arrayInd,rowCount,colCount)];
+                                    copyA(round(pixelIDs{rowCount,colCount}(pixelCount,2)),round(pixelIDs{rowCount,colCount}(pixelCount,1)),:)=[arrayCols(arrayInd,rowCount,colCount) arrayCols(arrayInd,rowCount,colCount) 255-arrayCols(arrayInd,rowCount,colCount)];
                                 end
                             end
                         end
@@ -257,37 +261,37 @@ for monkeyInd=1:2
                 %during plotting
                 if timePoint>preStimDur*1000&&timePoint<=preStimDur*1000+stimDurms
                     barWidth=6;
-                    barLength=20*pixperdeg;
+                    barLength=30*pixperdeg;%estimate based on dimensions of visual stimulus on screen- not precise
                     if stimCond==1
-                        rectangle('Position',[346+(timePoint-300)*0.173 327-(timePoint-300)*0.01 barWidth barLength/3],'FaceColor',[1 1 1],'EdgeColor','none');
+                        rectangle('Position',[266+(timePoint-300)*0.256 262-(timePoint-300)*0.02 barWidth barLength/3],'FaceColor',[1 1 1],'EdgeColor','none');
                         %                 plot([x0-(speed*1000)/2+timePoint-preStimDur*1000 x0-(speed*1000)/2+timePoint-preStimDur*1000],[y0-(speed*1000)/2 y0+(speed*1000)/2],'r-')
                     elseif stimCond==2
-                        center=[350+barLength/6 490-(timePoint-300)*0.173];
+                        center=[266+barLength/6 510-(timePoint-300)*0.245];
                         width=barLength/3;
                         height=barWidth;
                         coords = [center(1)-(width/2) center(1)-(width/2) center(1)+(width/2) center(1)+(width/2);...
                             center(2)-(height/2) center(2)+(height/2) center(2)+(height/2) center(2)-(height/2)];
                         shift_coords=coords;
-                        shift_coords(2,3:4)=shift_coords(2,3:4)-6;
+                        shift_coords(2,3:4)=shift_coords(2,3:4)-16+(timePoint-300)*0.01;
                         hold on
                         plot(coords(1,[2 4]),shift_coords(2,[2 4]),'Color','w','LineWidth',barWidth/3);
-                        %                     rectangle('Position',[336 490-(timePoint-300)*0.173 barLength/3 barWidth],'FaceColor',[1 1 1],'EdgeColor','none');
+                        %                     rectangle('Position',[336 490-(timePoint-300)*0.256 barLength/3 barWidth],'FaceColor',[1 1 1],'EdgeColor','none');
                         %                 plot([x0-(speed*1000)/2 x0+(speed*1000)/2],[y0-(speed*1000)/2+timePoint-preStimDur*1000 y0-(speed*1000)/2+timePoint-preStimDur*1000],'r-')
                     elseif stimCond==3
                         %                     rectangle('Position',[(barEndX-barWidth/2-(timePoint-preStimDur*1000)*speed+1200)/3 (barStartY+3500+(timePoint-300)/10)/10 barWidth barLength/3],'FaceColor',[1 1 1],'EdgeColor','none');
-                        rectangle('Position',[519-(timePoint-300)*0.173 317+(timePoint-300)*0.01 barWidth barLength/3],'FaceColor',[1 1 1],'EdgeColor','none');
+                        rectangle('Position',[522-(timePoint-300)*0.256 240+(timePoint-300)*0.02 barWidth barLength/3],'FaceColor',[1 1 1],'EdgeColor','none');
                         %                 plot([x0+(speed*1000)/2-timePoint+preStimDur*1000 x0+(speed*1000)/2-timePoint+preStimDur*1000],[y0-(speed*1000)/2 y0+(speed*1000)/2],'r-')
                     elseif stimCond==4
-                        center=[350+barLength/6 318+(timePoint-300)*0.173];
-                        width=barLength/3+10;
+                        center=[266+barLength/6 262+(timePoint-300)*0.245];
+                        width=barLength/3;
                         height=barWidth;
                         coords = [center(1)-(width/2) center(1)-(width/2) center(1)+(width/2) center(1)+(width/2);...
                             center(2)-(height/2) center(2)+(height/2) center(2)+(height/2) center(2)-(height/2)];
                         shift_coords=coords;
-                        shift_coords(2,3:4)=shift_coords(2,3:4)-8;
+                        shift_coords(2,3:4)=shift_coords(2,3:4)-8-(timePoint-300)*0.004;
                         hold on
                         plot(coords(1,[2 4]),shift_coords(2,[2 4]),'Color','w','LineWidth',barWidth/3);
-                        %                     rectangle('Position',[336 317+(timePoint-300)*0.173 barLength/3 barWidth],'FaceColor',[1 1 1],'EdgeColor','none');
+                        %                     rectangle('Position',[336 317+(timePoint-300)*0.256 barLength/3 barWidth],'FaceColor',[1 1 1],'EdgeColor','none');
                         %                 plot([x0-(speed*1000)/2 x0+(speed*1000)/2],[y0+(speed*1000)/2-timePoint+preStimDur*1000 y0+(speed*1000)/2-timePoint+preStimDur*1000],'r-')
                     end
                 end
@@ -301,6 +305,8 @@ for monkeyInd=1:2
                 %             set(gca,'ytick',[])
                 %             set(gca,'xticklabel',[])
                 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+                set(gca,'LooseInset',get(gca,'TightInset'))
+                set(gca,'visible','off')
                 framesResponse(frameNo)=getframe;
                 frameNo=frameNo+1;
                 close all
@@ -322,10 +328,14 @@ for monkeyInd=1:2
             v.FrameRate=500;%has to be a factor of the number of frames, otherwise part of data will not be written. I.e. for 1500-frame movie, cannot set frame rate to be 1000
             open(v)
             for timePoint=1:length(framesResponse)-100
-                %             if size(framesResponse(timePoint).cdata,1)~=771||size(framesResponse(timePoint).cdata,2)~=995
-                %                 framesResponse(timePoint).cdata=framesResponse(timePoint-1).cdata;
-                %                 timePoint
-                %             end
+                if size(framesResponse(timePoint).cdata,1)~=915||size(framesResponse(timePoint).cdata,2)~=1240
+                    framesResponse(timePoint).cdata=framesResponse(timePoint).cdata(1:915,1:1240,:);
+%                     framesResponse(timePoint).cdata=framesResponse(timePoint-1).cdata;
+                    timePoint
+                end
+                if size(framesResponse(timePoint).cdata,2)==1240
+                    framesResponse(timePoint).cdata=framesResponse(timePoint).cdata(1:914,3:1238,:);
+                end
                 writeVideo(v,framesResponse(timePoint))
             end
             close(v)
@@ -341,6 +351,12 @@ for monkeyInd=1:2
                 %                 framesResponse(timePoint*sampleFactor).cdata=framesResponse(timePoint*sampleFactor-1).cdata;
                 %                 timePoint
                 %             end
+                if size(framesResponse(timePoint*sampleFactor).cdata,1)~=914||size(framesResponse(timePoint*sampleFactor).cdata,2)~=1236
+                    framesResponse(timePoint*sampleFactor).cdata=framesResponse(timePoint*sampleFactor-1).cdata(1:914,1:1236,:);
+                end
+                if size(framesResponse(timePoint).cdata,2)==1240
+                    framesResponse(timePoint).cdata=framesResponse(timePoint).cdata(1:914,3:1238,:);
+                end
                 if timePoint*sampleFactor<=size(framesResponse,2)
                     writeVideo(v,framesResponse(timePoint*sampleFactor))
                 end
@@ -373,7 +389,8 @@ end
 
 %create combined MP4 video across conditions and monkeys:
 realtime=0;%set to 1 to run movie at real time. set to 0 to slow it down
-moviename=fullfile(['D:\aston_data\barsweep_video_in_setup\setup 1024-channel responses to sweeping bar_both_monkeys']);
+%Lick:
+moviename='D:\aston_data\barsweep_video_in_setup\setup 1024-channel responses to sweeping bar_both_monkeys';
 if realtime==0
     slowedDownFactor=5;%2: 50% speed; 4: 25%; 5: 20%; 10: 10%
     moviename=[moviename,'_slowed_',num2str(slowedDownFactor),'x'];
@@ -388,69 +405,131 @@ end
 open(v)
 figure;hold on
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-set(gca,'Color',[0.7 0.7 0.7]);
+set(gca,'LooseInset',get(gca,'TightInset'))
+set(gca,'visible','off')
+set(gca,'Color','k');
 set(gca,'xtick',[])
 set(gca,'ytick',[])
-text(0.4,0.5,'Monkey 1','FontSize',40,'FontName','Calibri','FontWeight','bold');
+text(0.4,0.5,'Monkey 1','FontSize',40,'FontName','Calibri','FontWeight','bold','Color',[0.2 0.2 0.2]);
 if realtime==0
-    text(0.405,0.4,['Speed: 1/',num2str(slowedDownFactor),' x'],'FontSize',30,'FontName','Calibri','FontWeight','bold');
+    text(0.405,0.4,['Speed: 1/',num2str(slowedDownFactor),' x'],'FontSize',30,'FontName','Calibri','FontWeight','bold','Color',[0.2 0.2 0.2]);
 end
 framesResponse(1)=getframe;
-for i=1:v.FrameRate%set to 1 second
+if size(framesResponse(1).cdata,1)~=914
+    framesResponse(1).cdata=framesResponse(1).cdata(2:915,:,:);
+end
+if size(framesResponse(1).cdata,2)~=1236
+    framesResponse(1).cdata=framesResponse(1).cdata(:,3:1238,:);
+end
+for i=1:v.FrameRate*2%multiply by 1: set to 1 second; multiply by 2: set to 2 seconds
     writeVideo(v,framesResponse(1))
 end
-for dissolveInd=1:5%dissolve skin
+close all
+figure;
+for dissolveInd=1:11%dissolve skin
     A = imread(['D:\data\barsweep_video_in_setup\lick_realistic_skin_intact',num2str(dissolveInd),'.jpg']);
     image(A);
+    set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+    set(gca,'LooseInset',get(gca,'TightInset'))
+    set(gca,'visible','off')
     framesResponse(1)=getframe;
-    for i=1:v.FrameRate%set to 1 second
-        writeVideo(v,framesResponse(1))
+    if size(framesResponse(1).cdata,1)~=914
+        framesResponse(1).cdata=framesResponse(1).cdata(2:915,:,:);
+    end
+    if size(framesResponse(1).cdata,2)~=1236
+        framesResponse(1).cdata=framesResponse(1).cdata(:,3:1238,:);
+    end
+    if dissolveInd<11
+        for i=1:v.FrameRate*0.5%set to 0.5 seconds
+            writeVideo(v,framesResponse(1))
+        end
+    elseif dissolveInd==11%leave last image (of arrays) on for longer
+        for i=1:v.FrameRate*1.5%set to 1.5 seconds
+            writeVideo(v,framesResponse(1))
+        end
     end
 end
 
 for stimCond=1:4
-    pathname=fullfile(['D:\data\barsweep_video_in_setup\setup 1024-channel responses to bar sweeping ',direct{stimCond},'.mat']);
+    pathname=['D:\data\barsweep_video_in_setup\setup 1024-channel responses to bar sweeping ',direct{stimCond},'.mat'];
     load(pathname)
     
     for timePoint=1:ceil((length(framesResponse)-100)/sampleFactor)
-        if size(framesResponse(timePoint*sampleFactor).cdata,1)~=771||size(framesResponse(timePoint*sampleFactor).cdata,2)~=995
+        if size(framesResponse(timePoint*sampleFactor).cdata,1)~=914||size(framesResponse(timePoint*sampleFactor).cdata,2)~=1236
             framesResponse(timePoint*sampleFactor).cdata=framesResponse(timePoint*sampleFactor-1).cdata;
             timePoint
+        end
+        if size(framesResponse(timePoint*sampleFactor).cdata,1)==915
+            framesResponse(timePoint*sampleFactor).cdata=framesResponse(timePoint*sampleFactor).cdata(2:915,:,:);
+        end
+        if size(framesResponse(timePoint*sampleFactor).cdata,2)==1240
+            framesResponse(timePoint*sampleFactor).cdata=framesResponse(timePoint*sampleFactor).cdata(:,3:1238,:);
         end
         writeVideo(v,framesResponse(timePoint*sampleFactor))
     end
 end
-date='280818_B2_aston';
+%Aston:
 figure;hold on
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-set(gca,'Color',[0.7 0.7 0.7]);
+set(gca,'LooseInset',get(gca,'TightInset'))
+set(gca,'visible','off')
+set(gca,'Color','k');
 set(gca,'xtick',[])
 set(gca,'ytick',[])
-text(0.4,0.5,'Monkey 2','FontSize',40,'FontName','Calibri','FontWeight','bold');
+text(0.4,0.5,'Monkey 2','FontSize',40,'FontName','Calibri','FontWeight','bold','Color',[0.2 0.2 0.2]);
 if realtime==0
-    text(0.405,0.4,['Speed: 1/',num2str(slowedDownFactor),' x'],'FontSize',30,'FontName','Calibri','FontWeight','bold');
+    text(0.405,0.4,['Speed: 1/',num2str(slowedDownFactor),' x'],'FontSize',30,'FontName','Calibri','FontWeight','bold','Color',[0.2 0.2 0.2]);
 end
 clear framesResponse
 framesResponse(1)=getframe;
-for i=1:v.FrameRate%set to 1 second
+if size(framesResponse(1).cdata,1)~=914
+    framesResponse(1).cdata=framesResponse(1).cdata(2:915,:,:);
+end
+if size(framesResponse(1).cdata,2)~=1236
+    framesResponse(1).cdata=framesResponse(1).cdata(:,3:1238,:);
+end
+for i=1:v.FrameRate*2%multiply by 1: set to 1 second; multiply by 2: set to 2 seconds
     writeVideo(v,framesResponse(1))
 end
-for dissolveInd=1:5%dissolve skin
+close all
+figure;
+for dissolveInd=1:11%dissolve skin
     A = imread(['D:\aston_data\barsweep_video_in_setup\aston_realistic_skin_intact',num2str(dissolveInd),'.jpg']);
     image(A);
+    set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+    set(gca,'LooseInset',get(gca,'TightInset'))
+    set(gca,'visible','off')
     framesResponse(1)=getframe;
-    for i=1:v.FrameRate%set to 1 second
-        writeVideo(v,framesResponse(1))
+    if size(framesResponse(1).cdata,1)==915
+        framesResponse(1).cdata=framesResponse(1).cdata(2:915,:,:);
+    end
+    if size(framesResponse(1).cdata,2)==1240
+        framesResponse(1).cdata=framesResponse(1).cdata(:,3:1238,:);
+    end
+    if dissolveInd<11
+        for i=1:v.FrameRate*0.5%set to 0.5 seconds
+            writeVideo(v,framesResponse(1))
+        end
+    elseif dissolveInd==11%leave last image (of arrays) on for longer
+        for i=1:v.FrameRate*1.5%set to 1.5 seconds
+            writeVideo(v,framesResponse(1))
+        end
     end
 end
 for stimCond=1:4
-    pathname=fullfile(['D:\aston_data\barsweep_video_in_setup\setup 1024-channel responses to bar sweeping ',direct{stimCond},'.mat']);
+    pathname=['D:\aston_data\barsweep_video_in_setup\setup 1024-channel responses to bar sweeping ',direct{stimCond},'.mat'];
     load(pathname)
     
     for timePoint=1:ceil((length(framesResponse)-100)/sampleFactor)
-        if size(framesResponse(timePoint*sampleFactor).cdata,1)~=771||size(framesResponse(timePoint*sampleFactor).cdata,2)~=995
+        if size(framesResponse(timePoint*sampleFactor).cdata,1)~=915||size(framesResponse(timePoint*sampleFactor).cdata,2)~=1236
             framesResponse(timePoint*sampleFactor).cdata=framesResponse(timePoint*sampleFactor-1).cdata;
             timePoint
+        end
+        if size(framesResponse(timePoint*sampleFactor).cdata,1)==915
+            framesResponse(timePoint*sampleFactor).cdata=framesResponse(timePoint*sampleFactor).cdata(2:915,:,:);
+        end
+        if size(framesResponse(timePoint*sampleFactor).cdata,2)==1240
+            framesResponse(timePoint*sampleFactor).cdata=framesResponse(timePoint*sampleFactor).cdata(:,3:1238,:);
         end
         writeVideo(v,framesResponse(timePoint*sampleFactor))
     end

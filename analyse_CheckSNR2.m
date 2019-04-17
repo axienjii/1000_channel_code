@@ -110,6 +110,9 @@ switch(date)
         whichDir=2;
         best=1;
         notRisingEdge=1;
+    case '170419_B1'%simple fixation task, not checkSNR
+        whichDir=1;
+        best=1;
 end
 if whichDir==1%local copy available
     topDir='D:\data';
@@ -129,7 +132,7 @@ if copyRemotely==1
     end
 end
 stimDur=400/1000;%in seconds
-allInstanceInd=[2 8];
+allInstanceInd=1:4;
 preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=300/1000;%length of post-stimulus-offset period, in s
 downsampleFreq=30;
@@ -289,7 +292,7 @@ for instanceCount=1:length(allInstanceInd)
         set(gca,'ylim',[min(meanChannelMUA(channelInd,2:end)) max(meanChannelMUA(channelInd,:))]);
         title(num2str(channelInd));
     end
-    plot1024=0;
+    plot1024=1;
     for figInd=1:4
         figure(figInd)
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
@@ -310,8 +313,11 @@ for instanceCount=1:length(allInstanceInd)
         end
         for channelInd=1:128
             subaxis(32,32,channelInd+(instanceCount-1)*128, 'sh', 0.01, 'sv', 0.01, 'padding', 0, 'margin', 0);
-            plot(meanChannelMUA(channelInd,:),'k');
-            set(gca,'ylim',[min(meanChannelMUA(channelInd,2:end)) max(meanChannelMUA(channelInd,300:end))]);
+            meanChannelMUASmoothed(channelInd,:)=smooth(meanChannelMUA(channelInd,:),50);%smoothing
+            plot(meanChannelMUASmoothed(channelInd,10:end-9),'k');
+            set(gca,'ylim',[min(meanChannelMUASmoothed(channelInd,10:end-9)) max(meanChannelMUASmoothed(channelInd,300:end-9))]);
+%             plot(meanChannelMUA(channelInd,:),'k');
+%             set(gca,'ylim',[min(meanChannelMUA(channelInd,2:end)) max(meanChannelMUA(channelInd,300:end))]);
             set(gca,'Visible','off')
         end
     end
