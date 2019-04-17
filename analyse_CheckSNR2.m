@@ -132,7 +132,7 @@ if copyRemotely==1
     end
 end
 stimDur=400/1000;%in seconds
-allInstanceInd=1:4;
+allInstanceInd=1:8;
 preStimDur=300/1000;%length of pre-stimulus-onset period, in s
 postStimDur=300/1000;%length of post-stimulus-offset period, in s
 downsampleFreq=30;
@@ -143,7 +143,7 @@ for instanceCount=1:length(allInstanceInd)
     instanceNEVFileName=fullfile(topDir,date,[instanceName,'.nev']);
     NEV=openNEV(instanceNEVFileName);
     instanceNS6FileName=fullfile(topDir,date,[instanceName,'.ns6']);
-    readRaw=1;
+    readRaw=0;
     if readRaw==1
         NS=openNSx(instanceNS6FileName);
         sampFreq=NS.MetaTags.SamplingFreq;
