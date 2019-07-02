@@ -1023,4 +1023,4 @@ for trialInd=1:length(meanAllSetsPerfVisualBin)
         significantByThisTrialVisual(trialInd)=1;
     end
 end
-significantByThisTrialVisual%3rd trial onward
+significantByThisTrialVisual%1st trial onward

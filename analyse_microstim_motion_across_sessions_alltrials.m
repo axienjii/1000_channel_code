@@ -819,6 +819,8 @@ ylim([0 4.5]);
 set(gca,'Box','off');
 ax=gca;
 ax.YTick=[0 2 4 6];
+[h,p,ci,stats]=ttest(goodSetsallSetsPerfMicroAllTrials,0.5)
+sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(14) = 6.3953, p = 0.0000
 
 figure;
 subplot(1,2,1);
@@ -833,6 +835,8 @@ ylim([0 4.5]);
 set(gca,'Box','off');
 ax=gca;
 ax.YTick=[0 3 6];
+[h,p,ci,stats]=ttest(goodSetsallSetsPerfVisualAllTrials,0.5)
+sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(14) = 9.1344, p = 0.0000
 
 significantByThisTrialMicro=0;
 for trialInd=1:length(meanAllSetsPerfMicroBin)

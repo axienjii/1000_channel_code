@@ -10,40 +10,7 @@ dates=[{'260617'} {'110717'} {'170717'} {'200717'} {'080817'} {'100817'} {'18081
 dateCount=1;
 impedanceAllChannelsSessions=ones(1024,14)*nan;
 for dateInd=3:16%dates before 17/7/17 use torque wrench
-    switch(dateInd)
-        case 1
-            date='260617';
-        case 2
-            date='110717';
-        case 3
-            date='170717';
-        case 4
-            date='200717';
-        case 5
-            date='080817';
-        case 6
-            date='100817';
-        case 7
-            date='180817';
-        case 8
-            date='200917';
-        case 9
-            date='061017';
-        case 10
-            date='091017';
-        case 11
-            date='131017';
-        case 12
-            date='201017';
-        case 13
-            date='020218';
-        case 14
-            date='280218';
-        case 15
-            date='080618';
-        case 16
-            date='070818';
-    end
+    date=dates{dateInd};
     load(['C:\Users\User\Documents\impedance_values\',date,'\impedanceAllChannels.mat']);
     removeOutliers=1;
     if removeOutliers==0
@@ -74,4 +41,23 @@ plot([surgery surgery],[0 1500],'r');
 ylim([0 1500])
 lines = findobj(gcf, 'type', 'line', 'Tag', 'Median');
 set(lines, 'Color', 'r','LineWidth',5);
+
+numSessionsPerGroup=2;
+earlySessions=impedanceAllChannelsSessions(:,1:numSessionsPerGroup);
+lateSessions=impedanceAllChannelsSessions(:,end-numSessionsPerGroup+1:end);
+% [h p ci stats]=ttest(earlySessions,lateSessions);
+% sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)
+groupAssignment=[earlySessions*0+1 lateSessions*0+2];
+formattedGroupAssignment=groupAssignment(:);
+earlyLateSessions=[earlySessions lateSessions];
+formattedSessions=earlyLateSessions(:);
+% [h p ci stats]=anovan(formattedSessions,formattedGroupAssignment);
+[p table stats]=anova1(formattedSessions,formattedGroupAssignment);
+dfBetween=table{2,3};
+dfWithin=table{3,3};
+Fstat=table{2,5};
+sprintf(['F(',num2str(dfBetween),',',num2str(dfWithin),') = ',num2str(Fstat),', p = %.4f'],p)
+figure;
+boxplot([earlySessions(:) lateSessions(:)]);
+
 pause

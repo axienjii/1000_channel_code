@@ -1,30 +1,20 @@
-function analyse_microstim_saccade14_letter(date,allInstanceInd)
-%23/5/18
-%Written by Xing, modified from analyse_microstim_letter_eye2.m, extracts eye data during a
-%saccade task during microstimulation of individual electrodes 
-%(runstim_microstim_saccade_endpoints_letter.m). The electrodes
-%on which stimulation is delivered are those used during a letter recognition task. 
-%The goal is the check whether the saccade endpoints correspond roughly to 
-%the expected phosphene locations, based on RF mapping. Uses a target
-%window that is centered on the letter, and fairly large (to cover a region
-%that is slightly larger than the entire letter. 50% catch trials.
-%Uses serial port data to identify trial number. 
-%Can run analyses on raw data files in which neuronal data was also saved,
-%unlike analyse_microstim_saccade9, which only analyses files without neuronal
-%data.
+function analyse_microstim_saccade14_target(date,allInstanceInd)
+%14/6/19
+%Written by Xing, modified from analyse_microstim_saccade14_letter.m, extracts eye data during a
+%2-phosphene task and checks locations of saccade end points when saccading
+%to targets. Used for eye calibration of other sessions.
 %Finds saccade end point using function calculateSaccadeEndpoint3,
 %which calculates velocity of eye movements in dva per s, and identifies
 %time points corresponding to peak velocities.
-%Also generates data for Feng, to create movie of eye movements.
 
-localDisk=1;
+localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
-%     copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
+    copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
 elseif localDisk==0
     rootdir='X:\best\';
 end
-dataDir=[rootdir,date,'\',date(1:6),'_data'];
+dataDir=[rootdir,date,'\',date,'_data'];
 matFile=[dataDir,'\microstim_saccade_',date,'.mat'];
 load(matFile);
 maxNumTrials=size(TRLMAT,1);
@@ -66,293 +56,30 @@ sampFreq=30000;
 minCrossingTime=0;
 analyseVisualOnly=1;
 switch date
-    case '180518_B2'
+    case '280917_B4'
         minCrossingTime=preStimDur-0.166;
-        electrodeNums=[50 58 55 53 30 10 49 46 24 38 42 28 1 27 5 44 29 13 20 1 8 28 49 32 53 55 46 4 60 56];%170518_B & B?
-        arrayNums=[12 14 14 16 16 8 10 15 13 10 10 10 10 9 9 12 14 14 16 8 15 15 15 13 13 10 10 10 10 9];
-        currentThresholdChs=126;
-        degPerVoltXFinal=0.0073;%as measured in 240518_B2
-        degPerVoltYFinal=0.0069;
-    case '230518_B5'
+        currentThresholdChs=2;
+        degPerVoltXFinal=0.0036;%as calculated on this date
+        degPerVoltYFinal=[];
+        visualOnly=1;
+        electrodeNums=[50 55 37 51];
+        arrayNums=[13 11 13 10];
+        targetLocs='TB';
+    case '280917_B8'
         minCrossingTime=preStimDur-0.166;
-        electrodeNums=[60 34 50 37 4 1 16 15 51 52 63 5 56 35 36 55 55 48 22 62];%010518_B & B
-        arrayNums=[10 10 13 15 15 15 11 10 11 13 15 15 13 13 13 10 11 11 11 11];
-        currentThresholdChs=126;
-        degPerVoltXFinal=0.0073;%as measured in 240518_B2
-        degPerVoltYFinal=0.0069;
-    case '230518_B6'
-        minCrossingTime=preStimDur-0.166;
-        electrodeNums=[60 34 50 37 4 1 16 15 51 52 63 5 56 35 36 55 55 48 22 62];%010518_B & B
-        arrayNums=[10 10 13 15 15 15 11 10 11 13 15 15 13 13 13 10 11 11 11 11];
-        currentThresholdChs=126;
-        visualOnly=0;
-        degPerVoltXFinal=0.0073;%as measured in 240518_B2
-        degPerVoltYFinal=0.0069;
-    case '230518_B15'
-        minCrossingTime=preStimDur-0.166;
-        electrodeNums=[60 34 50 37 4 1 16 15 51 52 63 5 56 35 36 55 55 48 22 62];%010518_B & B
-        arrayNums=[10 10 13 15 15 15 11 10 11 13 15 15 13 13 13 10 11 11 11 11];
-        currentThresholdChs=126;
-        degPerVoltXFinal=0.0073;%as measured in 240518_B2
-        degPerVoltYFinal=0.0069;
-    case '170918_B3'
-        minCrossingTime=preStimDur-0.166;
-        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
-        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
-%         currentThresholdChs=134;
-        currentThresholdChs=135;
-        degPerVoltXFinal=0.0026;%as measured in 180918_B3
-        degPerVoltYFinal=0.0024;
-    case '180918_B2'
-        minCrossingTime=preStimDur-0.166;
-        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
-        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
-%         currentThresholdChs=134;
-        currentThresholdChs=135;
-        degPerVoltXFinal=0.0026;%as measured in 180918_B3
-        degPerVoltYFinal=0.0024;
-    case '260918_B3'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
-        analyseVisualOnly=1;
-        if analyseVisualOnly==0
-            minCrossingTime=preStimDur-0.166;
-        elseif analyseVisualOnly==1
-            minCrossingTime=preStimDur-0.1;
-        end
-        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
-        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
-        allElectrodes=1;
-        if allElectrodes==1
-            electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
-            arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
-        elseif allElectrodes==0
-            thresholdChangeGrouping=0;%set to 1 to categorise electrodes based on whether the current threshold increased substantially between this session and previous ones
-            if thresholdChangeGrouping==0
-                electrodeNums=[40 28 41 64 32 35 43 31 6 36 62 63];
-                arrayNums=[10 10 10 11 11 13 13 13 14 14 15 15];
-            elseif thresholdChangeGrouping==1
-                change=0;
-                if change==1%electrodes on which a substantial increase in current threshold was observed
-                    electrodeNums=[64 32 31 6 36 40 28 41];
-                    arrayNums=[11 11 13 14 14 10 10 10];
-                elseif change==0%electrodes on which no substantial increase in current threshold was observed
-                    electrodeNums=[35 43 62 63];
-                    arrayNums=[13 13 15 15];
-                end
-            end
-        end
-        currentThresholdChs=135;
-        degPerVoltXFinal=0.0026;%as measured in 260918_B1
-        degPerVoltYFinal=0.0024;
-    case '270918_B3'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
-        analyseVisualOnly=1;
-        minCrossingTime=preStimDur-0.1;%visual stimulus left on until saccade made, in this session
-        electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
-        arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
-        currentThresholdChs=135;
-        degPerVoltXFinal=0.0026;%as measured in 270918_B1
-        degPerVoltYFinal=0.0024;
-    case '041018_B7'%session in which microstim and visual trials were interleaved. Trial type stored in variable 'allVisualTrials'
-        analyseVisualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        allElectrodes=0;
-        if allElectrodes==1
-            electrodeNums=[52 9 27 11 22 36 44 19 56 1 46 40 28 41 34 51 64 18 32 34 6 20 14 12 30 35 52 22 43 31 31 12 13 6 36 1 37 40 62 63 47 34 4 53 46];%010518_B & B
-            arrayNums=[8 8 8 8 8 9 9 9 9 9 10 10 10 10 10 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15 16 16 16 16 16];
-        elseif allElectrodes==0
-            thresholdChangeGrouping=1;%set to 1 to categorise electrodes based on whether the current threshold increased substantially between this session and previous ones
-            if thresholdChangeGrouping==0
-                electrodeNums=[40 28 41 64 32 35 43 31 6 36 62 63];
-                arrayNums=[10 10 10 11 11 13 13 13 14 14 15 15];
-            elseif thresholdChangeGrouping==1
-                change=0;
-                if change==1%electrodes on which a substantial increase in current threshold was observed
-                    electrodeNums=[64 32 31 6 36 40 28 41];
-                    arrayNums=[11 11 13 14 14 10 10 10];
-                elseif change==0%electrodes on which no substantial increase in current threshold was observed
-                    electrodeNums=[35 43 62 63];
-                    arrayNums=[13 13 15 15];
-                end
-            end
-        end
-        currentThresholdChs=136;
-        degPerVoltXFinal=0.0025;%as measured in 041018_B2
-        degPerVoltYFinal=0.0025;
-    case '161018_B3'%session with only microstim trials. Trial type stored in variable 'allVisualTrials'
-        analyseVisualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[22 27 52 1 51 64 6 14 20 22 31 35 43 52 12 40 62 63 4 34 46 47 53];
-        arrayNums=[8 8 8 9 11 11 12 12 12 13 13 13 13 13 14 15 15 15 16 16 16 16 16];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '171018_B1'%varied current amplitude systematically
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[22];
-        arrayNums=[13];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '171018_B2'%varied current amplitude systematically
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[40];
-        arrayNums=[10];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '171018_B5'%varied current amplitude systematically
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[51];
-        arrayNums=[11];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '171018_B6'%varied current amplitude systematically
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[1];
-        arrayNums=[9];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '171018_B7'%varied current amplitude systematically
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[64];
-        arrayNums=[11];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '171018_B8'%varied current amplitude systematically
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[6];
-        arrayNums=[12];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '171018_B9'%varied current amplitude systematically
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[20];
-        arrayNums=[12];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '171018_B10'%varied current amplitude systematically
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[4];
-        arrayNums=[16];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '171018_B11'%varied current amplitude systematically
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[46];
-        arrayNums=[16];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '171018_B12'%varied current amplitude systematically
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[40];
-        arrayNums=[15];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '251018_B1'%current thresholding
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[58 59 1 42 50 57 34 9 15 16 51 25 32 8 48 6 64 55 60 61 62 16 52 34 35 51 50 53 12 13 33 11 60 49 51 40 64 24 17 55 41 48 56 61 47 43 8 23 51 48 49 37 38 56 55 31 47 62 44 22 32 23 61 54 42 18 60 24 30];
-        arrayNums=[10 10 10 10 10 10 10 10 10 10 11 11 11 11 11 11 11 11 11 11 11 11 13 13 13 13 13 13 13 13 13 13 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 11 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '251018_B2'%current thresholding
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[52,34,35,51,50,53,12,13,33,11,60,49,51,40,64,24,17,55,41,48,56,61,47,43,8,23,51,48,49,37,38,56,55,31,47,62,44,22,32,23,61,54,42,18,60,24,30];
-        arrayNums=[13,13,13,13,13,13,13,13,13,13,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13];
-        currentThresholdChs=137;
-        degPerVoltXFinal=0.0026;%as measured in 161018_B4
-        degPerVoltYFinal=0.0023;
-    case '261018_B4'%saccade task
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[62 48 47 32 61 64 43 62 63 40 27 52 1 4 47 6 14 12];
-        arrayNums=[13 13 13 13 10 11 13 15 15 15 8 8 9 16 16 12 12 14];
-        currentThresholdChs=139;
-        degPerVoltXFinal=0.0028;%as measured in 261018_B2
-        degPerVoltYFinal=0.0024;
-    case '010719_B5'%saccade task
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[20];
-        arrayNums=[12];
-        currentThresholdChs=139;
-        degPerVoltXFinal=0.0031;%as measured in 010719_B1
-        degPerVoltYFinal=0.0026;
-    case '010719_B6'%saccade task
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[20];
-        arrayNums=[12];
-        currentThresholdChs=139;
-        degPerVoltXFinal=0.0031;%as measured in 010719_B1
-        degPerVoltYFinal=0.0026;
-    case '010719_B9'%saccade task
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[32];
-        arrayNums=[14];
-        currentThresholdChs=139;
-        degPerVoltXFinal=0.0031;%as measured in 010719_B1
-        degPerVoltYFinal=0.0026;
-    case '010719_B10'%saccade task
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[32];
-        arrayNums=[14];
-        currentThresholdChs=139;
-        degPerVoltXFinal=0.0031;%as measured in 010719_B1
-        degPerVoltYFinal=0.0026;
-    case '010719_B11'%saccade task
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[30];
-        arrayNums=[14];
-        currentThresholdChs=139;
-        degPerVoltXFinal=0.0031;%as measured in 010719_B1
-        degPerVoltYFinal=0.0026;
-    case '010719_B14'%saccade task
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[32];
-        arrayNums=[14];
-        currentThresholdChs=139;
-        degPerVoltXFinal=0.0031;%as measured in 010719_B1
-        degPerVoltYFinal=0.0026;
-    case '020719_B2'%saccade task
-        visualOnly=0;
-        minCrossingTime=preStimDur-0.1;
-        electrodeNums=[30];
-        arrayNums=[14];
-        currentThresholdChs=139;
-        degPerVoltXFinal=0.00;%as measured in 020719_B1
-        degPerVoltYFinal=0.00;
+        currentThresholdChs=2;
+        degPerVoltXFinal=[];%as calculated on this date
+        degPerVoltYFinal=0.0038;
+        visualOnly=1;
+        electrodeNums=[50 55 37 51];
+        arrayNums=[13 11 13 10];
+        targetLocs='LR';
 end
 
 cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
 arrays=8:16;
 
 currentAmplitudeAllTrials=[];
-freqAllTrials=[];
-numPulsesAllTrials=[];
 processRaw=1;
 if processRaw==1
     for instanceCount=1%:length(allInstanceInd)
@@ -434,20 +161,12 @@ if processRaw==1
                 correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
                 fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
             elseif visualOnly==1%note that in this code, trials with visually presented stimuli are read into the variable 'microstimTrialsInd'
-                microstimTrialsInd=find(cell2mat(allElectrodeNum)>0);
+                microstimTrialsInd=find(allElectrodeNum>0);
                 correctTrialsInd=find(performance==1);
                 correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
                 fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
-            end            
-            incorrectTrialsInd=find(performance==-1);
-            incorrectMicrostimTrialsInd=intersect(microstimTrialsInd,incorrectTrialsInd);
-            visualTrialsInd=find(allCurrentLevel==0);
-            correctVisualTrialsInd=intersect(visualTrialsInd,correctTrialsInd);
-            incorrectTrialsInd=find(performance==-1);
-            incorrectVisualTrialsInd=find(allFalseAlarms==1);
-            perfM=length(correctMicrostimTrialsInd)/(length(correctMicrostimTrialsInd)+length(incorrectMicrostimTrialsInd));
-            perfV=length(correctVisualTrialsInd)/(length(correctVisualTrialsInd)+length(incorrectVisualTrialsInd));
-
+            end
+            
         end
         figInd1=figure;hold on
         figInd2=figure;hold on
@@ -458,11 +177,12 @@ if processRaw==1
         figInd8=figure;hold on
         figInd10=figure;hold on
         saccadeEndAllTrials=[]; 
+        saccadeEndAllTrialsVolt=[];
         electrodeAllTrials=[];
         timePeakVelocityXYsAllTrials=[];
         timePeakVelocityXYSecsAllTrials=[];
         arrayAllTrials=[];
-        if ~exist('goodArrays8to16New','var')
+        if ~exist('goodArrays8to16','var')
             load([dataDir,'\currentThresholdChs',num2str(currentThresholdChs),'.mat']);
         end
         for uniqueElectrode=1:length(electrodeNums)%15%16:30%1:15%
@@ -470,14 +190,14 @@ if processRaw==1
             array=arrayNums(uniqueElectrode);
             arrayColInd=find(arrays==array);
             electrode=electrodeNums(uniqueElectrode);
-            electrodeIndTemp1=find(goodArrays8to16New(:,8)==electrode);
-            electrodeIndTemp2=find(goodArrays8to16New(:,7)==array);
+            electrodeIndTemp1=find(goodArrays8to16(:,8)==electrode);
+            electrodeIndTemp2=find(goodArrays8to16(:,7)==array);
             electrodeInd=intersect(electrodeIndTemp1,electrodeIndTemp2);
-            impedance=goodArrays8to16New(electrodeInd,6);
+            impedance=goodArrays8to16(electrodeInd,6);
 %             RFx=goodArrays8to16(electrodeInd,1);
 %             RFy=goodArrays8to16(electrodeInd,2);
-            RFx=goodArrays8to16New(electrodeInd,1);
-            RFy=goodArrays8to16New(electrodeInd,2);
+            RFx=goodArrays8to16(electrodeInd,1);
+            RFy=goodArrays8to16(electrodeInd,2);
             
             electrodeNumsAll=load('D:\data\channel_area_mapping.mat','channelNums');
             electrodeNumsAll=electrodeNumsAll.channelNums;
@@ -503,27 +223,18 @@ if processRaw==1
                 RFy=NaN;
             end
             
-            electrodeInd=find(cell2mat(allElectrodeNum)==electrode);
-            arrayInd=find(cell2mat(allArrayNum)==array);
+            electrodeInd=find(allElectrodeNum==electrode);
+            arrayInd=find(allArrayNum==array);
             matchTrials=intersect(electrodeInd,arrayInd);%identify trials where stimulation was delivered on a particular array and electrode
-            incorrectmatchTrials=intersect(matchTrials,incorrectMicrostimTrialsInd);
             matchTrials=intersect(matchTrials,correctMicrostimTrialsInd);%identify subset of trials where performance was correct
             currentAmplitudeAllTrials=[currentAmplitudeAllTrials allCurrentLevel(matchTrials)];
-
-            perf(uniqueElectrode)=length(matchTrials)/(length(matchTrials)+length(incorrectmatchTrials));
-            numTrials(uniqueElectrode)=(length(matchTrials)+length(incorrectmatchTrials));
-            if exist('allFreqVals','var')
-                freqAllTrials=[freqAllTrials allFreqVals(matchTrials)];
-            end
-            if exist('allNumPulses','var')
-                numPulsesAllTrials=[numPulsesAllTrials allNumPulses(matchTrials)];
-            end
-            
+        
             trialDataXY={};
 %             degPerVoltXFinal=0.0024;
 %             degPerVoltYFinal=0.0022;
             flankingSamples=(30000/50)/2;%50-ms period before reward delivery
             saccadeEndTrials=[];
+            saccadeEndTrialsVolt=[];
             electrodeTrials=[];
             timePeakVelocityXYs=[];
             timePeakVelocityXYSecs=[];
@@ -538,6 +249,8 @@ if processRaw==1
             endMicrostim=[];
             posIndXTrials=[];
             posIndYTrials=[];
+            posIndXTrialsVolt=[];
+            posIndYTrialsVolt=[];
             baselineXChs=[];
             baselineYChs=[];
             for trialCounter=1:length(matchTrials)%for each correct microstim trial
@@ -618,8 +331,10 @@ if processRaw==1
                     timePeakVelocityXY=calculateSaccadeEndpoint3([1:length(trialDataXYSmooth{trialCounter})]',trialDataXYSmooth{trialCounter}',Par.PixPerDeg);%return the midpoints of the peaks of the bimodal distribution, relative to histogram bins
                     timePeakVelocityXY=timePeakVelocityXY(find(timePeakVelocityXY>minCrossingTime*sampFreq));%exclude spurious peaks that occur before stimulation
                     for peakVelInd=1:length(timePeakVelocityXY)
-                        startWin=timePeakVelocityXY(peakVelInd)+saccadeTimeAfterPeakVel*sampFreq;
-                        endWin=timePeakVelocityXY(peakVelInd)+(saccadeTimeAfterPeakVel+saccadeCalcWin)*sampFreq;
+                        startWin=timePeakVelocityXY(peakVelInd);%+saccadeTimeAfterPeakVel*sampFreq;
+                        endWin=length(trialDataXYSmooth{trialCounter});
+%                         startWin=timePeakVelocityXY(peakVelInd)+saccadeTimeAfterPeakVel*sampFreq;
+%                         endWin=timePeakVelocityXY(peakVelInd)+(saccadeTimeAfterPeakVel+saccadeCalcWin)*sampFreq;
                         ax=gca;
                         yLims=get(gca,'ylim');
                         plot([startWin startWin],[yLims(1) yLims(2)],'k:');
@@ -631,12 +346,16 @@ if processRaw==1
                             plot([xLims(1) xLims(2)],[saccadeEndX(peakVelInd) saccadeEndX(peakVelInd)],'r:');
                             posIndXs(peakVelInd)=-(saccadeEndX(peakVelInd)-baselineX)*degPerVoltXFinal*Par.PixPerDeg;
                             posIndX=posIndXs(1);
+                            posIndXsVolt(peakVelInd)=-(saccadeEndX(peakVelInd)-baselineX);%in units of voltage
+                            posIndXVolt=posIndXsVolt(1);
                             saccadeEndY(peakVelInd)=mean(trialDataYSmooth{trialCounter}(startWin:endWin));
                             ax=gca;
                             xLims=get(gca,'xlim');
                             plot([xLims(1) xLims(2)],[saccadeEndY(peakVelInd) saccadeEndY(peakVelInd)],'r:');
                             posIndYs(peakVelInd)=(saccadeEndY(peakVelInd)-baselineY)*degPerVoltYFinal*Par.PixPerDeg;
                             posIndY=posIndYs(1);
+                            posIndYsVolt(peakVelInd)=(saccadeEndY(peakVelInd)-baselineY);%in units of voltage
+                            posIndYVolt=posIndYsVolt(1);
                         end
                     end
                     subplot(2,1,1);
@@ -658,7 +377,7 @@ if processRaw==1
                     %                     catch ME
                     %                     end
                     %                 end
-                    cleanUp=1;%remove datapoints that are too close to fixation?
+                    cleanUp=0;%remove datapoints that are too close to fixation?
                     if cleanUp==1
                         if posIndX<5||posIndY<5
                             manualCheck=1;
@@ -666,7 +385,7 @@ if processRaw==1
                             posIndY=NaN;
                         end
                     end
-                    cleanUp2=1;%remove datapoints that are too far away?
+                    cleanUp2=0;%remove datapoints that are too far away?
                     if cleanUp2==1
                         if posIndX>200||posIndY>200
                             manualCheck=1;
@@ -677,6 +396,9 @@ if processRaw==1
                     posIndXTrials(trialCounter)=posIndX;
                     posIndYTrials(trialCounter)=posIndY;
                     saccadeEndTrials(trialCounter,:)=[posIndX posIndY];
+                    posIndXTrialsVolt(trialCounter)=posIndXVolt;
+                    posIndYTrialsVolt(trialCounter)=posIndYVolt;
+                    saccadeEndTrialsVolt(trialCounter,:)=[posIndXVolt posIndYVolt];
                     electrodeTrials(trialCounter)=electrode;
                     freqMicrostim=300;%microstimulation frequency in Hz
                     pulseDuration=1000/freqMicrostim;%duration of each pulse in ms
@@ -721,6 +443,7 @@ if processRaw==1
                 end
             end
             saccadeEndAllTrials=[saccadeEndAllTrials;saccadeEndTrials];
+            saccadeEndAllTrialsVolt=[saccadeEndAllTrialsVolt;saccadeEndTrialsVolt];
             electrodeAllTrials=[electrodeAllTrials;electrodeTrials'];
             arrayTrials=repmat(array,1,length(electrodeTrials));
             arrayAllTrials=[arrayAllTrials;arrayTrials'];
@@ -828,272 +551,25 @@ if processRaw==1
                 endMicrostimChs{uniqueElectrode}=endMicrostim;
             end
         end
-        save([rootdir,date,'\saccade_data_',date,'_fix_to_rew.mat'],'baselineXChs','baselineYChs','trialDataXSmoothFixChs','trialDataYSmoothFixChs','trialNoChs','posIndXChs','posIndYChs','startMicrostimChs','endMicrostimChs','currentAmplitudeAllTrials','freqAllTrials','numPulsesAllTrials');
-        
-% %         
-        figure(figInd10)
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:');
-        plot([-200 300],[0 0],'k:');
-        plot([-200 300],[200 -300],'k:');
-        ellipse(50,50,0,0,[0.1 0.1 0.1]);
-        ellipse(100,100,0,0,[0.1 0.1 0.1]);
-        ellipse(150,150,0,0,[0.1 0.1 0.1]);
-        ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis equal
-        xlim([-20 220]);
-        ylim([-200 15]);
-        title(['RF locations, SD saccade end points, max SD = ',num2str(stdCutoff)]);
-        for arrayInd=1:length(arrays)
-            text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
+        save([rootdir,date,'\saccade_data_',date,'_fix_to_rew.mat'],'baselineXChs','baselineYChs','trialDataXSmoothFixChs','trialDataYSmoothFixChs','trialNoChs','posIndXChs','posIndYChs','startMicrostimChs','endMicrostimChs','currentAmplitudeAllTrials');
+        (200/26)/mean(saccadeEndAllTrialsVolt(:,1))
+        (200/26)/mean(saccadeEndAllTrialsVolt(:,2))
+        %calculate distance between targets, in volts:
+        uniqueElectrodes=unique(electrodeAllTrials);
+        for electrodeInd=1:length(uniqueElectrodes)
+            trialInd=find(electrodeAllTrials==uniqueElectrodes(electrodeInd));
+            switch targetLocs
+                case 'TB'
+                    meanSaccadeEndVolt(electrodeInd)=mean(saccadeEndAllTrialsVolt(trialInd,2));%y-location, for session with TB targets
+                    distance400=abs(meanSaccadeEndVolt(1)-meanSaccadeEndVolt(2));%voltage corresponding to 400 pixels
+                    degPerVoltYFinal=(400/26)/distance400%0.0038 on 280917_B4
+                case 'LR'
+                    meanSaccadeEndVolt(electrodeInd)=mean(saccadeEndAllTrialsVolt(trialInd,1));%x-location, for session with LR targets
+                    distance400=abs(meanSaccadeEndVolt(1)-meanSaccadeEndVolt(2));%voltage corresponding to 400 pixels
+                    degPerVoltXFinal=(400/26)/distance400%0.0036 on 280917_B8
+            end
         end
-        ax=gca;
-        ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
-        ax.XTickLabel={'0','2','4','6','8'};
-        ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
-        ax.YTickLabel={'-8','-6','-4','-2','0'};
-        xlabel('x-coordinates (dva)')
-        ylabel('y-coordinates (dva)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile(rootdir,date,['RF_centres_dva_',date,'_std',num2str(stdCutoff)]);
-        print(pathname,'-dtiff','-r600');
-        
-        figure;
-        subplot(2,1,1)
-        histogram(timePeakVelocityXYsAllTrials)
-        hold on
-        yLims=get(gca,'ylim');
-        plot([-165 -165],[yLims(1) yLims(2)],'k:')
-        plot([0 0],[yLims(1) yLims(2)],'k:')
-        ylabel('counts')
-        plot([-165 -165],[yLims(1) yLims(2)],'k:')
-        plot([0 0],[yLims(1) yLims(2)],'k:')
-%         xlim([0 400])
-        xlabel('time (ms)')
-        ylabel('counts')
-        subplot(2,1,2)
-        histogram(timePeakVelocityXYSecsAllTrials)
-        hold on
-        yLims=get(gca,'ylim');
-        plot([-165 -165],[yLims(1) yLims(2)],'k:')
-        plot([0 0],[yLims(1) yLims(2)],'k:')
-        ylabel('counts')
-        pathname=fullfile(rootdir,date,['all_saccade_latencies_relative_to_end_microstim_',date]);
-        print(pathname,'-dtiff','-r600'); 
-        
-        figure;
-        histogram(timePeakVelocityXYsAllTrials)
-        hold on
-        histogram(timePeakVelocityXYSecsAllTrials)
-        ylabel('counts')
-        yLims=get(gca,'ylim');
-        plot([-165 -165],[yLims(1) yLims(2)],'k:')
-        plot([0 0],[yLims(1) yLims(2)],'k:')
-        pathname=fullfile(rootdir,date,['saccade_latencies_blue_second_red_relative_to_end_microstim_',date]);
-        print(pathname,'-dtiff','-r600');
-        
-        save([rootdir,date,'\saccade_endpoints_',date,'.mat'],'saccadeEndAllTrials','electrodeAllTrials','arrayAllTrials','timePeakVelocityXYsAllTrials','timePeakVelocityXYSecsAllTrials');
-        
-%         figure(figInd2)
-%         subplot(2,1,1)
-%         switch date
-%             case '070917_B13'
-%                 ylim([-1000 500])
-%             case '110917_B1'
-%                 ylim([6000 11000])
-%             case '110917_B2'
-%                 ylim([6000 11500])
-%             case '110917_B3'
-%                 ylim([7000 11500])
-%         end
-%         ylim([7000 11500])
-%         xlabel('time')
-%         ylabel('raw X trace')
-%         subplot(2,1,2)
-%         switch date
-%             case '070917_B13'
-%                 ylim([-500 500])
-%             case '110917_B1'
-%                 ylim([-2500 100])
-%             case '110917_B2'
-%                 
-%             case '110917_B3'
-%                 ylim([-2600 0])
-%         end
-%         ylim([-2600 0])
-%         xlabel('time')
-%         ylabel('raw Y trace')
-%         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-%         pathname=fullfile('D:\data',date,['instance1_eye_traces_align_to_end_microstim_pulsetrain_',date]);
-%         print(pathname,'-dtiff','-r600'); 
-        
-        figure(figInd3)
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:');
-        plot([-200 300],[0 0],'k:');
-        plot([-200 300],[200 -300],'k:');
-        ellipse(50,50,0,0,[0.1 0.1 0.1]);
-        ellipse(100,100,0,0,[0.1 0.1 0.1]);
-        ellipse(150,150,0,0,[0.1 0.1 0.1]);
-        ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis equal
-        xlim([-20 220]);
-        ylim([-200 15]);
-        title('saccade endpoints'); 
-        for arrayInd=1:length(arrays)
-            text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-        end
-        xlabel('x-coordinates (pixels)')
-        ylabel('y-coordinates (pixels)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile(rootdir,date,['saccade_endpoints_pixels_',date]);
-        if cleanUp==1
-            pathname=[pathname,'_cleaned'];
-        end
-        print(pathname,'-dtiff','-r600');   
-        
-        ax=gca;
-        ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
-        ax.XTickLabel={'0','2','4','6','8'};
-        ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
-        ax.YTickLabel={'-8','-6','-4','-2','0'};
-        xlabel('x-coordinates (dva)')
-        ylabel('y-coordinates (dva)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile(rootdir,date,['saccade_endpoints_dva_',date]);
-        if cleanUp==1
-            pathname=[pathname,'_cleaned'];
-        end
-        print(pathname,'-dtiff','-r600');   
-        
-        figure(figInd4)
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:');
-        plot([-200 300],[0 0],'k:');
-        plot([-200 300],[200 -300],'k:');
-        ellipse(50,50,0,0,[0.1 0.1 0.1]);
-        ellipse(100,100,0,0,[0.1 0.1 0.1]);
-        ellipse(150,150,0,0,[0.1 0.1 0.1]);
-        ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis equal
-        xlim([-20 220]);
-        ylim([-200 15]);
-        title('saccade endpoints');
-        for arrayInd=1:length(arrays)
-            text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-        end
-        xlabel('x-coordinates (pixels)')
-        ylabel('y-coordinates (pixels)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile(rootdir,date,['saccade_endpoints_pixels_mean_filled_',date]);
-        print(pathname,'-dtiff','-r600');
-
-        figure(figInd5)
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:');
-        plot([-200 300],[0 0],'k:');
-        plot([-200 300],[200 -300],'k:');
-        ellipse(50,50,0,0,[0.1 0.1 0.1]);
-        ellipse(100,100,0,0,[0.1 0.1 0.1]);
-        ellipse(150,150,0,0,[0.1 0.1 0.1]);
-        ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis equal
-        xlim([-20 220]);
-        ylim([-200 15]);
-        title('saccade endpoints and RF centres');
-        for arrayInd=1:length(arrays)
-            text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-        end
-        xlabel('x-coordinates (pixels)')
-        ylabel('y-coordinates (pixels)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile(rootdir,date,['saccade_endpoints_RFs_std_',date]);
-        print(pathname,'-dtiff','-r600');
-        
-        figure(figInd6)
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:');
-        plot([-200 300],[0 0],'k:');
-%         plot([-200 300],[200 -300],'k:');
-%         ellipse(50,50,0,0,[0.1 0.1 0.1]);
-%         ellipse(100,100,0,0,[0.1 0.1 0.1]);
-%         ellipse(150,150,0,0,[0.1 0.1 0.1]);
-%         ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis equal
-        xlim([-20 220]);
-        ylim([-200 15]);
-        title('saccade endpoints (filled) and RF centres');
-        for arrayInd=1:length(arrays)
-            text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-        end
-        ax=gca;
-        ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
-        ax.XTickLabel={'0','2','4','6','8'};
-        ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
-        ax.YTickLabel={'-8','-6','-4','-2','0'};
-        xlabel('x-coordinates (dva)')
-        ylabel('y-coordinates (dva)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile(rootdir,date,['saccade_endpoints_RFs_',date]);
-        print(pathname,'-dtiff','-r600');
-        
-        figure(figInd8)
-        scatter(0,0,'r','o','filled');%fix spot
-        %draw dotted lines indicating [0,0]
-        plot([0 0],[-250 200],'k:');
-        plot([-200 380],[0 0],'k:');
-%         plot([-200 300],[200 -300],'k:');
-%         ellipse(50,50,0,0,[0.1 0.1 0.1]);
-%         ellipse(100,100,0,0,[0.1 0.1 0.1]);
-%         ellipse(150,150,0,0,[0.1 0.1 0.1]);
-%         ellipse(200,200,0,0,[0.1 0.1 0.1]);
-        text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-        text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-        axis equal
-        xlim([-20 360]);
-        ylim([-220 15]);
-        title('saccade endpoints (filled), second saccade endpoints (X), and RF centres');
-        for arrayInd=1:length(arrays)
-            text(260,0-6*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-        end
-        ax=gca;
-        ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8 Par.PixPerDeg*10 Par.PixPerDeg*12];
-        ax.XTickLabel={'0','2','4','6','8','10','12'};
-        ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
-        ax.YTickLabel={'-8','-6','-4','-2','0'};
-        xlabel('x-coordinates (dva)')
-        ylabel('y-coordinates (dva)')
-        set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile(rootdir,date,['saccade_endpoints_RFs_second_saccade_',date]);
-        print(pathname,'-dtiff','-r600');      
-        
+        save([rootdir,date,'\saccade_endpoints_',date,'.mat'],'saccadeEndAllTrials','electrodeAllTrials','arrayAllTrials','timePeakVelocityXYsAllTrials','timePeakVelocityXYSecsAllTrials','saccadeEndAllTrialsVolt','distance400','degPerVoltXFinal','degPerVoltYFinal');
     end
 end
 pause=1;

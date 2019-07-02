@@ -6,13 +6,13 @@ function analyse_microstim_responses4
 %electrode identities.
 
 close all
-localDisk=0;
+localDisk=1;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
     rootdir='X:\best\';
 end
-exampleFig=1;
+exampleFig=0;
 % arrayNums=[8 10 10 10 10 10 10 10 10 10 10 11 11 11 12 12 12 12 12 12 12 12 12 13 13 13 13 13 13 13 13 14 14 14 15 16 16];
 % electrodeNums=[40 40 35 46 57 55 58 37 62 59 20 55 24 18 61 40 50 28 10 34 29 41 20 35 48 47 53 55 38 56 32 43 12 30 49 21 39];
 % date='051217_T4';
@@ -1236,18 +1236,33 @@ arrayNums=[14];
 % date='110319_B3';
 % electrodeNums=[29];
 % arrayNums=[14];
-date='120319_B1';
-electrodeNums=[24 22 12];
-arrayNums=[12 12 14];
-date='120319_B3';
-electrodeNums=[22];
-arrayNums=[12];
-date='120319_B4';
-electrodeNums=[12];
-arrayNums=[14];
-date='120319_B6';
-electrodeNums=[24];
-arrayNums=[12];
+% date='120319_B1';
+% electrodeNums=[24 22 12];
+% arrayNums=[12 12 14];
+% date='120319_B3';
+% electrodeNums=[22];
+% arrayNums=[12];
+% date='120319_B4';
+% electrodeNums=[12];
+% arrayNums=[14];
+% date='120319_B6';
+% electrodeNums=[24];
+% arrayNums=[12];
+% date='170519_B1';
+% electrodeNums=[22];
+% arrayNums=[12];
+date='170519_B2';
+electrodeNums=[24 12];
+arrayNums=[12 12];
+% date='200519_B1';
+% electrodeNums=[24 12 20 29 12 29 13 20 28 32 30 31 23 33 47];
+% arrayNums=[12 12 12 12 14 14 14 14 14 14 14 14 13 13 13];
+% date='200519_B2';
+% electrodeNums=[12 20 12 29 13 32 23 47];
+% arrayNums=[12 12 14 14 14 14 13 13];
+% date='200519_B3';
+% electrodeNums=[12 12 32 23];
+% arrayNums=[12 14 14 13];
 
 if exampleFig==1%example current thresholding plot for paper
     date='110319_B2';

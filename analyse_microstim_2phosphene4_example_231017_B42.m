@@ -857,7 +857,7 @@ if processRaw==1
            bottomPerfV=length(corrIndsV)/(length(corrIndsV)+length(incorrIndsV));
            
            figure;
-           subplot(2,2,2);
+           subplot(2,2,1);
            hold on
            %draw dotted lines indicating [0,0]
            plot([0 0],[-250 200],'k:');
@@ -935,7 +935,7 @@ if processRaw==1
 %            ylabel('y-coordinates (dva)')
            
 %            if numTargets==4
-               subplot(2,2,1);
+               subplot(2,2,2);
 %            else
 %                subplot(2,4,3);
 %            end

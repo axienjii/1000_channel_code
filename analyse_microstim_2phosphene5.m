@@ -989,7 +989,7 @@ set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 print(pathname,'-dtiff');
 
 perfMat=fullfile(rootdir,['behavioural_performance_all_sets_241017_',num2str(initialPerfTrials),'trials.mat']);
-save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
+save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin','allSetsPerfMicroBin','allSetsPerfVisualBin');
 pause=1;
 
 significantByThisTrialMicro=0;
@@ -1001,7 +1001,7 @@ for trialInd=1:length(meanAllSetsPerfMicroBin)
         significantByThisTrialMicro(trialInd)=1;
     end
 end
-significantByThisTrialMicro
+significantByThisTrialMicro%1st trial
 
 significantByThisTrialVisual=0;
 for trialInd=1:length(meanAllSetsPerfVisualBin)
@@ -1012,4 +1012,4 @@ for trialInd=1:length(meanAllSetsPerfVisualBin)
         significantByThisTrialVisual(trialInd)=1;
     end
 end
-significantByThisTrialVisual
+significantByThisTrialVisual%1st trial

@@ -4,7 +4,7 @@ function analyse_RF_barsweep(date)
 %of sweeping white bar stimuli for RF mapping.
 stimDurms=1000;%in ms
 stimDur=stimDurms/1000;%in seconds
-% date='280617_B1';
+date='280617_B1';
 % date='280918_B2';
 % date='280918_B3';
 processRaw=1;

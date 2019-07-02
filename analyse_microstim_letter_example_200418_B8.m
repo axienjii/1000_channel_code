@@ -1,8 +1,8 @@
-function analyse_microstim_letter_example_080518_B7
-%7/3/18
-%Written by Xing, modified from analyse_microstim_line.m, calculates behavioural performance during a
+function analyse_microstim_letter_example_200418_B8
+%5/6/19
+%Written by Xing, modified from analyse_microstim_letter_example_080518_B7.m, calculates behavioural performance during a
 %microstimulation/visual 'letter' task.
-date='080518_B7';
+date='200418_B8';
 allInstanceInd=1;
 interleaved=0;%set interleaved to 0, if trigger pulse was sent using microB. set interleaved to 1, if stimulation was sent by calling stimulator.play function
 drummingOn=0;%for sessions after 9/4/18, drumming with only 2 targets was uesd 
@@ -1477,8 +1477,10 @@ if processRaw==1
                 axis equal
 %                 xlim([-20 220]);
 %                 ylim([-160 20]);
-           xlim([-20 190]);
-           ylim([-135 20]);
+%            xlim([-20 190]);
+%            ylim([-135 20]);
+           xlim([-20 170]);
+           ylim([-115 20]);
                 if setNo==1
 %                     title([' RF locations, ',date,' letter task'], 'Interpreter', 'none');
                 end

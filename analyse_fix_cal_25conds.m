@@ -11,7 +11,7 @@ elseif localDisk==0
     rootdir='X:\best\';
 end
 
-copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
+% copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
 load([rootdir,date,'\',date(1:6),'_data\PAR.mat'])
 % load('X:\best\310118_data\microstim_saccade_test_310118_3.mat')
 load([rootdir,date,'\',date(1:6),'_data\microstim_saccade_',date,'.mat'])
@@ -34,6 +34,8 @@ switch(date)
     case '161018_B4'
         sampleDist=40;%distance between adjacent fix spot positions, in pixels
     case '261018_B2'
+        sampleDist=40;%distance between adjacent fix spot positions, in pixels
+    case '010719_B1'%0.0031, 0.0026
         sampleDist=40;%distance between adjacent fix spot positions, in pixels
         
 end
@@ -190,9 +192,25 @@ if processRaw==1
         figure;
         scatter(allMeanPosX,allMeanPosY);
         title('including outliers')
+        axis equal
+        row1X=mean([allMeanPosX(1) allMeanPosX(6) allMeanPosX(11) allMeanPosX(16) allMeanPosX(21)])
+        row2X=mean([allMeanPosX(2) allMeanPosX(7) allMeanPosX(12) allMeanPosX(17) allMeanPosX(22)]);
+        row3X=mean([allMeanPosX(3) allMeanPosX(8) allMeanPosX(13) allMeanPosX(18) allMeanPosX(23)]);
+        row4X=mean([allMeanPosX(4) allMeanPosX(9) allMeanPosX(14) allMeanPosX(19) allMeanPosX(24)]);
+        row5X=mean([allMeanPosX(5) allMeanPosX(10) allMeanPosX(15) allMeanPosX(20) allMeanPosX(25)]);
+        col1Y=mean([allMeanPosY(1) allMeanPosY(2) allMeanPosY(3) allMeanPosY(4) allMeanPosY(5)])
+        col2Y=mean([allMeanPosY(6) allMeanPosY(7) allMeanPosY(8) allMeanPosY(9) allMeanPosY(10)]);
+        col3Y=mean([allMeanPosY(11) allMeanPosY(12) allMeanPosY(13) allMeanPosY(14) allMeanPosY(15)]);
+        col4Y=mean([allMeanPosY(16) allMeanPosY(17) allMeanPosY(18) allMeanPosY(19) allMeanPosY(20)]);
+        col5Y=mean([allMeanPosY(21) allMeanPosY(22) allMeanPosY(23) allMeanPosY(24) allMeanPosY(25)]);
+        voltsPerDegreeX=mean([row1X-row2X row2X-row3X row3X-row4X row4X-row5X])/dvaSampleDist;
+        voltsPerDegreeY=mean([col5Y-col4Y col4Y-col3Y col3Y-col2Y col2Y-col1Y])/dvaSampleDist;
+        degpervoltxAll=1/voltsPerDegreeX;
+        degpervoltyAll=1/voltsPerDegreeY;
         figure;
         scatter(allMeanPosXexcludeOutliers,allMeanPosYexcludeOutliers);
         title('excluding outliers')
+        axis equal
         row1X=mean([allMeanPosXexcludeOutliers(1) allMeanPosXexcludeOutliers(6) allMeanPosXexcludeOutliers(11) allMeanPosXexcludeOutliers(16) allMeanPosXexcludeOutliers(21)])
         row2X=mean([allMeanPosXexcludeOutliers(2) allMeanPosXexcludeOutliers(7) allMeanPosXexcludeOutliers(12) allMeanPosXexcludeOutliers(17) allMeanPosXexcludeOutliers(22)]);
         row3X=mean([allMeanPosXexcludeOutliers(3) allMeanPosXexcludeOutliers(8) allMeanPosXexcludeOutliers(13) allMeanPosXexcludeOutliers(18) allMeanPosXexcludeOutliers(23)]);

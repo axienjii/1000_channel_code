@@ -32,6 +32,8 @@ allSetsPerfVisualAllTrials=[];
 allPerfV=[];
 allPerfM=[];
 setNos=[1:17 19:25];
+allRFsFigure=figure;
+setNoSubplot=1;
 for calculateVisual=[0 1]
     for setNo=setNos
         perfNEV=[];
@@ -809,45 +811,12 @@ for calculateVisual=[0 1]
                     perfM=[leftPerfM rightPerfM topPerfM bottomPerfM];
                     allPerfV(setNo,:)=perfV;
                     allPerfM(setNo,:)=perfM;
-                    
-                    figure;
-                    subplot(2,4,1:2);
-                    for electrodeCount=1:4
-                        electrode=setElectrodes(setInd,electrodeCount);
-                        array=setArrays(setInd,electrodeCount);
-                        load([dataDir,'\array',num2str(array),'.mat']);
-                        electrodeIndtemp1=find(goodArrays8to16(:,8)==electrode);%matching channel number
-                        electrodeIndtemp2=find(goodArrays8to16(:,7)==array);%matching array number
-                        electrodeInd=intersect(electrodeIndtemp1,electrodeIndtemp2);%channel number
-                        RFx=goodArrays8to16(electrodeInd,1);
-                        RFy=goodArrays8to16(electrodeInd,2);
-                        plot(RFx,RFy,'o','Color',cols(array-7,:),'MarkerFaceColor',cols(array-7,:));hold on
-                        currentThreshold=goodCurrentThresholds(electrodeInd);
-                        if electrodeCount==1
-                            text(RFx-28,RFy,[num2str(electrode),'(',num2str(array),')'],'FontSize',10,'Color','k');
-                            text(RFx-28,RFy-7,[num2str(currentThreshold),' uA'],'FontSize',10,'Color','k');
-                        else
-                            text(RFx+4,RFy,[num2str(electrode),'(',num2str(array),')'],'FontSize',10,'Color','k');
-                            text(RFx+4,RFy-7,[num2str(currentThreshold),' uA'],'FontSize',10,'Color','k');
-                        end
-                    end
-                    for electrodePairInd=1:size(electrodePairs,1)
-                        electrode1=setElectrodes(setInd,electrodePairs(electrodePairInd,1));
-                        array1=setArrays(setInd,electrodePairs(electrodePairInd,1));
-                        electrode2=setElectrodes(setInd,electrodePairs(electrodePairInd,2));
-                        array2=setArrays(setInd,electrodePairs(electrodePairInd,2));
-                        electrodeIndtemp1=find(goodArrays8to16(:,8)==electrode1);%matching channel number
-                        electrodeIndtemp2=find(goodArrays8to16(:,7)==array1);%matching array number
-                        electrodeInd1=intersect(electrodeIndtemp1,electrodeIndtemp2);%channel number
-                        electrodeIndtemp1=find(goodArrays8to16(:,8)==electrode2);%matching channel number
-                        electrodeIndtemp2=find(goodArrays8to16(:,7)==array2);%matching array number
-                        electrodeInd2=intersect(electrodeIndtemp1,electrodeIndtemp2);%channel number
-                        RFx1=goodArrays8to16(electrodeInd1,1);
-                        RFy1=goodArrays8to16(electrodeInd1,2);
-                        RFx2=goodArrays8to16(electrodeInd2,1);
-                        RFy2=goodArrays8to16(electrodeInd2,2);
-                        plot([RFx1 RFx2],[RFy1 RFy2],'k--');
-                    end
+                end
+                if calculateVisual==0
+                    figure(allRFsFigure);
+                    subplot(ceil(length(setNos)/4),4,setNoSubplot);
+                    setNoSubplot=setNoSubplot+1;
+                    hold on
                     scatter(0,0,'r','o','filled');%fix spot
                     %draw dotted lines indicating [0,0]
                     plot([0 0],[-250 200],'k:');
@@ -864,18 +833,60 @@ for calculateVisual=[0 1]
                     axis equal
                     xlim([-20 220]);
                     ylim([-160 20]);
-                    title(['RF locations for 2-phosphene task, ',date], 'Interpreter', 'none');
-                    for arrayInd=1:length(arrays)
-                        text(175,0-10*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
+                    for electrodeCount=1:4
+                        electrode=setElectrodes(setInd,electrodeCount);
+                        array=setArrays(setInd,electrodeCount);
+                        load([dataDir,'\array',num2str(array),'.mat']);
+                        electrodeIndtemp1=find(goodArrays8to16(:,8)==electrode);%matching channel number
+                        electrodeIndtemp2=find(goodArrays8to16(:,7)==array);%matching array number
+                        electrodeInd=intersect(electrodeIndtemp1,electrodeIndtemp2);%channel number
+                        RFx=goodArrays8to16(electrodeInd,1);
+                        RFy=goodArrays8to16(electrodeInd,2);
+                        plot(RFx,RFy,'o','Color',cols(array-7,:),'MarkerFaceColor',cols(array-7,:));hold on
+                        currentThreshold=goodCurrentThresholds(electrodeInd);
+%                         if electrodeCount==1
+%                             text(RFx-28,RFy,[num2str(electrode),'(',num2str(array),')'],'FontSize',10,'Color','k');
+%                             text(RFx-28,RFy-7,[num2str(currentThreshold),' uA'],'FontSize',10,'Color','k');
+%                         else
+%                             text(RFx+4,RFy,[num2str(electrode),'(',num2str(array),')'],'FontSize',10,'Color','k');
+%                             text(RFx+4,RFy-7,[num2str(currentThreshold),' uA'],'FontSize',10,'Color','k');
+%                         end
+                    end
+                    for electrodePairInd=1:size(electrodePairs,1)
+                        electrode1=setElectrodes(setInd,electrodePairs(electrodePairInd,1));
+                        array1=setArrays(setInd,electrodePairs(electrodePairInd,1));
+                        electrode2=setElectrodes(setInd,electrodePairs(electrodePairInd,2));
+                        array2=setArrays(setInd,electrodePairs(electrodePairInd,2));
+                        electrodeIndtemp1=find(goodArrays8to16(:,8)==electrode1);%matching channel number
+                        electrodeIndtemp2=find(goodArrays8to16(:,7)==array1);%matching array number
+                        electrodeInd1=intersect(electrodeIndtemp1,electrodeIndtemp2);%channel number
+                        electrodeIndtemp1=find(goodArrays8to16(:,8)==electrode2);%matching channel number
+                        electrodeIndtemp2=find(goodArrays8to16(:,7)==array2);%matching array number
+                        electrodeInd2=intersect(electrodeIndtemp1,electrodeIndtemp2);%channel number
+                        RFx1=goodArrays8to16(electrodeInd1,1);
+                        RFy1=goodArrays8to16(electrodeInd1,2);
+                        RFx2=goodArrays8to16(electrodeInd2,1);
+                        RFy2=goodArrays8to16(electrodeInd2,2);
+                        plot([RFx1 RFx2],[RFy1 RFy2],'k-');
+                    end
+%                     title(['RF locations for 2-phosphene task, ',date], 'Interpreter', 'none');
+                    if setNoSubplot==1
+                        for arrayInd=1:length(arrays)
+                            text(175,0-10*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
+                        end
                     end
                     ax=gca;
-                    ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
-                    ax.XTickLabel={'0','2','4','6','8'};
-                    ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
-                    ax.YTickLabel={'-8','-6','-4','-2','0'};
-                    xlabel('x-coordinates (dva)')
-                    ylabel('y-coordinates (dva)')
+%                     ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
+%                     ax.XTickLabel={'0','2','4','6','8'};
+%                     ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
+%                     ax.YTickLabel={'-8','-6','-4','-2','0'};
+                    set(gca, 'XTickLabel', [],'XTick',[])
+                    set(gca, 'YTickLabel', [],'YTick',[])
+%                     xlabel('x-coordinates (dva)')
+%                     ylabel('y-coordinates (dva)')
+                end
                     
+                if analyseConds==1
                     %            if numTargets==4
                     subplot(2,4,3:4);
                     %            else
@@ -1034,10 +1045,12 @@ h1(1).EdgeColor = [0 0 0];
 hold on
 plot([0.5 0.5],[0 10],'k:');
 xlim([0 1]);
-ylim([0 10]);
+ylim([0 8]);
 set(gca,'Box','off');
 ax=gca;
 ax.YTick=[0 4 8];
+[h,p,ci,stats]=ttest(goodSetsallSetsPerfMicroAllTrials,0.5)
+sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(23) = 6.7987, p = 0.0000
 
 figure;
 subplot(1,2,1);
@@ -1050,6 +1063,8 @@ plot([0.5 0.5],[0 10],'k:');
 xlim([0 1]);
 ylim([0 11]);
 set(gca,'Box','off');
+[h,p,ci,stats]=ttest(goodSetsallSetsPerfVisualAllTrials,0.5)
+sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(23) = 16.5684, p = 0.0000
 
 significantByThisTrialMicro=0;
 for trialInd=1:length(meanAllSetsPerfMicroBin)

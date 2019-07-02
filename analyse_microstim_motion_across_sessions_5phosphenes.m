@@ -896,7 +896,7 @@ for trialInd=1:length(meanAllSetsPerfMicroBin)
         significantByThisTrialMicro(trialInd)=1;
     end
 end
-significantByThisTrialMicro
+significantByThisTrialMicro%1st trial
 
 significantByThisTrialVisual=0;
 for trialInd=1:length(meanAllSetsPerfVisualBin)
@@ -907,4 +907,4 @@ for trialInd=1:length(meanAllSetsPerfVisualBin)
         significantByThisTrialVisual(trialInd)=1;
     end
 end
-significantByThisTrialVisual
+significantByThisTrialVisual%1st trial
