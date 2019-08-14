@@ -21,6 +21,7 @@ localDisk=1;
 if localDisk==1
     rootdir='D:\data\';
 %     copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
+    copyfile([rootdir,'\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
 elseif localDisk==0
     rootdir='X:\best\';
 end
@@ -343,8 +344,80 @@ switch date
         electrodeNums=[30];
         arrayNums=[14];
         currentThresholdChs=139;
-        degPerVoltXFinal=0.00;%as measured in 020719_B1
-        degPerVoltYFinal=0.00;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B3'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[30];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B4'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[31];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B5'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[31];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B7'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[13];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B8'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[13];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B9'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[28];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B10'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[28];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B11'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[31];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B12'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[13];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
 end
 
 cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];

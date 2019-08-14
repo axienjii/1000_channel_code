@@ -790,17 +790,27 @@ for calculateVisual=[0 1]
                 end
                 initialPerfTrials=100;%first set of trials are the most important
                 if calculateVisual==0
-                    perfMicroBin=perfMicroBin(1:initialPerfTrials);
+%                     perfMicroBin=perfMicroBin(1:initialPerfTrials);
+                    if length(perfMicroBin)>=initialPerfTrials
+                        perfMicroBin=perfMicroBin(1:initialPerfTrials);
+                    else
+                        perfMicroBin=[perfMicroBin nan*ones(1,initialPerfTrials-length(perfMicroBin))];
+                    end
                     if ~isempty(perfMicroBin)
                         allSetsPerfMicroBin=[allSetsPerfMicroBin;perfMicroBin];
-                        save(['D:\microPerf_',date,'.mat'],'perfMicroBin');
+                        save(['D:\microPerf','_',date,'_',num2str(initialPerfTrials),'trials.mat'],'perfMicroBin');
                     end
                 elseif calculateVisual==1
-                    perfVisualBin=perfVisualBin(1:initialPerfTrials);
+%                     perfVisualBin=perfVisualBin(1:initialPerfTrials);
+                    if length(perfMicroBin)>=initialPerfTrials
+                        perfVisualBin=perfVisualBin(1:initialPerfTrials);
+                    else
+                        perfVisualBin=[perfVisualBin nan*ones(1,initialPerfTrials-length(perfVisualBin))];
+                    end
                     %perfVisualBin=perfVisualBin(end-initialPerfTrials+1:end);
                     if ~isempty(perfVisualBin)
                         allSetsPerfVisualBin=[allSetsPerfVisualBin;perfVisualBin];
-                        save(['D:\visualPerf_',date,'.mat'],'perfVisualBin');
+                        save(['D:\visualPerf','_',date,'_',num2str(initialPerfTrials),'trials.mat'],'perfVisualBin');
                     end
                 end
                 

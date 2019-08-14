@@ -37,7 +37,9 @@ switch(date)
         sampleDist=40;%distance between adjacent fix spot positions, in pixels
     case '010719_B1'%0.0031, 0.0026
         sampleDist=40;%distance between adjacent fix spot positions, in pixels
-        
+    case '020719_B1'%degpervolty=0.0025
+        sampleDist=40;%distance between adjacent fix spot positions, in pixels
+                
 end
 dvaSampleDist=sampleDist/Par.PixPerDeg;%%distance between adjacent fix spot positions, in degrees of visual angle
 
@@ -193,36 +195,36 @@ if processRaw==1
         scatter(allMeanPosX,allMeanPosY);
         title('including outliers')
         axis equal
-        row1X=mean([allMeanPosX(1) allMeanPosX(6) allMeanPosX(11) allMeanPosX(16) allMeanPosX(21)])
-        row2X=mean([allMeanPosX(2) allMeanPosX(7) allMeanPosX(12) allMeanPosX(17) allMeanPosX(22)]);
-        row3X=mean([allMeanPosX(3) allMeanPosX(8) allMeanPosX(13) allMeanPosX(18) allMeanPosX(23)]);
-        row4X=mean([allMeanPosX(4) allMeanPosX(9) allMeanPosX(14) allMeanPosX(19) allMeanPosX(24)]);
-        row5X=mean([allMeanPosX(5) allMeanPosX(10) allMeanPosX(15) allMeanPosX(20) allMeanPosX(25)]);
-        col1Y=mean([allMeanPosY(1) allMeanPosY(2) allMeanPosY(3) allMeanPosY(4) allMeanPosY(5)])
-        col2Y=mean([allMeanPosY(6) allMeanPosY(7) allMeanPosY(8) allMeanPosY(9) allMeanPosY(10)]);
-        col3Y=mean([allMeanPosY(11) allMeanPosY(12) allMeanPosY(13) allMeanPosY(14) allMeanPosY(15)]);
-        col4Y=mean([allMeanPosY(16) allMeanPosY(17) allMeanPosY(18) allMeanPosY(19) allMeanPosY(20)]);
-        col5Y=mean([allMeanPosY(21) allMeanPosY(22) allMeanPosY(23) allMeanPosY(24) allMeanPosY(25)]);
-        voltsPerDegreeX=mean([row1X-row2X row2X-row3X row3X-row4X row4X-row5X])/dvaSampleDist;
-        voltsPerDegreeY=mean([col5Y-col4Y col4Y-col3Y col3Y-col2Y col2Y-col1Y])/dvaSampleDist;
+        row1X=nanmean([allMeanPosX(1) allMeanPosX(6) allMeanPosX(11) allMeanPosX(16) allMeanPosX(21)])
+        row2X=nanmean([allMeanPosX(2) allMeanPosX(7) allMeanPosX(12) allMeanPosX(17) allMeanPosX(22)]);
+        row3X=nanmean([allMeanPosX(3) allMeanPosX(8) allMeanPosX(13) allMeanPosX(18) allMeanPosX(23)]);
+        row4X=nanmean([allMeanPosX(4) allMeanPosX(9) allMeanPosX(14) allMeanPosX(19) allMeanPosX(24)]);
+        row5X=nanmean([allMeanPosX(5) allMeanPosX(10) allMeanPosX(15) allMeanPosX(20) allMeanPosX(25)]);
+        col1Y=nanmean([allMeanPosY(1) allMeanPosY(2) allMeanPosY(3) allMeanPosY(4) allMeanPosY(5)])
+        col2Y=nanmean([allMeanPosY(6) allMeanPosY(7) allMeanPosY(8) allMeanPosY(9) allMeanPosY(10)]);
+        col3Y=nanmean([allMeanPosY(11) allMeanPosY(12) allMeanPosY(13) allMeanPosY(14) allMeanPosY(15)]);
+        col4Y=nanmean([allMeanPosY(16) allMeanPosY(17) allMeanPosY(18) allMeanPosY(19) allMeanPosY(20)]);
+        col5Y=nanmean([allMeanPosY(21) allMeanPosY(22) allMeanPosY(23) allMeanPosY(24) allMeanPosY(25)]);
+        voltsPerDegreeX=nanmean([row1X-row2X row2X-row3X row3X-row4X row4X-row5X])/dvaSampleDist;
+        voltsPerDegreeY=nanmean([col5Y-col4Y col4Y-col3Y col3Y-col2Y col2Y-col1Y])/dvaSampleDist;
         degpervoltxAll=1/voltsPerDegreeX;
         degpervoltyAll=1/voltsPerDegreeY;
         figure;
         scatter(allMeanPosXexcludeOutliers,allMeanPosYexcludeOutliers);
         title('excluding outliers')
         axis equal
-        row1X=mean([allMeanPosXexcludeOutliers(1) allMeanPosXexcludeOutliers(6) allMeanPosXexcludeOutliers(11) allMeanPosXexcludeOutliers(16) allMeanPosXexcludeOutliers(21)])
-        row2X=mean([allMeanPosXexcludeOutliers(2) allMeanPosXexcludeOutliers(7) allMeanPosXexcludeOutliers(12) allMeanPosXexcludeOutliers(17) allMeanPosXexcludeOutliers(22)]);
-        row3X=mean([allMeanPosXexcludeOutliers(3) allMeanPosXexcludeOutliers(8) allMeanPosXexcludeOutliers(13) allMeanPosXexcludeOutliers(18) allMeanPosXexcludeOutliers(23)]);
-        row4X=mean([allMeanPosXexcludeOutliers(4) allMeanPosXexcludeOutliers(9) allMeanPosXexcludeOutliers(14) allMeanPosXexcludeOutliers(19) allMeanPosXexcludeOutliers(24)]);
-        row5X=mean([allMeanPosXexcludeOutliers(5) allMeanPosXexcludeOutliers(10) allMeanPosXexcludeOutliers(15) allMeanPosXexcludeOutliers(20) allMeanPosXexcludeOutliers(25)]);
-        col1Y=mean([allMeanPosYexcludeOutliers(1) allMeanPosYexcludeOutliers(2) allMeanPosYexcludeOutliers(3) allMeanPosYexcludeOutliers(4) allMeanPosYexcludeOutliers(5)])
-        col2Y=mean([allMeanPosYexcludeOutliers(6) allMeanPosYexcludeOutliers(7) allMeanPosYexcludeOutliers(8) allMeanPosYexcludeOutliers(9) allMeanPosYexcludeOutliers(10)]);
-        col3Y=mean([allMeanPosYexcludeOutliers(11) allMeanPosYexcludeOutliers(12) allMeanPosYexcludeOutliers(13) allMeanPosYexcludeOutliers(14) allMeanPosYexcludeOutliers(15)]);
-        col4Y=mean([allMeanPosYexcludeOutliers(16) allMeanPosYexcludeOutliers(17) allMeanPosYexcludeOutliers(18) allMeanPosYexcludeOutliers(19) allMeanPosYexcludeOutliers(20)]);
-        col5Y=mean([allMeanPosYexcludeOutliers(21) allMeanPosYexcludeOutliers(22) allMeanPosYexcludeOutliers(23) allMeanPosYexcludeOutliers(24) allMeanPosYexcludeOutliers(25)]);
-        voltsPerDegreeX=mean([row1X-row2X row2X-row3X row3X-row4X row4X-row5X])/dvaSampleDist;
-        voltsPerDegreeY=mean([col5Y-col4Y col4Y-col3Y col3Y-col2Y col2Y-col1Y])/dvaSampleDist;
+        row1X=nanmean([allMeanPosXexcludeOutliers(1) allMeanPosXexcludeOutliers(6) allMeanPosXexcludeOutliers(11) allMeanPosXexcludeOutliers(16) allMeanPosXexcludeOutliers(21)])
+        row2X=nanmean([allMeanPosXexcludeOutliers(2) allMeanPosXexcludeOutliers(7) allMeanPosXexcludeOutliers(12) allMeanPosXexcludeOutliers(17) allMeanPosXexcludeOutliers(22)]);
+        row3X=nanmean([allMeanPosXexcludeOutliers(3) allMeanPosXexcludeOutliers(8) allMeanPosXexcludeOutliers(13) allMeanPosXexcludeOutliers(18) allMeanPosXexcludeOutliers(23)]);
+        row4X=nanmean([allMeanPosXexcludeOutliers(4) allMeanPosXexcludeOutliers(9) allMeanPosXexcludeOutliers(14) allMeanPosXexcludeOutliers(19) allMeanPosXexcludeOutliers(24)]);
+        row5X=nanmean([allMeanPosXexcludeOutliers(5) allMeanPosXexcludeOutliers(10) allMeanPosXexcludeOutliers(15) allMeanPosXexcludeOutliers(20) allMeanPosXexcludeOutliers(25)]);
+        col1Y=nanmean([allMeanPosYexcludeOutliers(1) allMeanPosYexcludeOutliers(2) allMeanPosYexcludeOutliers(3) allMeanPosYexcludeOutliers(4) allMeanPosYexcludeOutliers(5)])
+        col2Y=nanmean([allMeanPosYexcludeOutliers(6) allMeanPosYexcludeOutliers(7) allMeanPosYexcludeOutliers(8) allMeanPosYexcludeOutliers(9) allMeanPosYexcludeOutliers(10)]);
+        col3Y=nanmean([allMeanPosYexcludeOutliers(11) allMeanPosYexcludeOutliers(12) allMeanPosYexcludeOutliers(13) allMeanPosYexcludeOutliers(14) allMeanPosYexcludeOutliers(15)]);
+        col4Y=nanmean([allMeanPosYexcludeOutliers(16) allMeanPosYexcludeOutliers(17) allMeanPosYexcludeOutliers(18) allMeanPosYexcludeOutliers(19) allMeanPosYexcludeOutliers(20)]);
+        col5Y=nanmean([allMeanPosYexcludeOutliers(21) allMeanPosYexcludeOutliers(22) allMeanPosYexcludeOutliers(23) allMeanPosYexcludeOutliers(24) allMeanPosYexcludeOutliers(25)]);
+        voltsPerDegreeX=nanmean([row1X-row2X row2X-row3X row3X-row4X row4X-row5X])/dvaSampleDist;
+        voltsPerDegreeY=nanmean([col5Y-col4Y col4Y-col3Y col3Y-col2Y col2Y-col1Y])/dvaSampleDist;
         degpervoltx=1/voltsPerDegreeX;
         degpervolty=1/voltsPerDegreeY;
         save([rootdir,date,'\volts_per_dva.mat'],'voltsPerDegreeX','voltsPerDegreeY')

@@ -16,7 +16,7 @@ switch(date)
     case '060717_B2'
         whichDir=2;
     case '110717_B3'
-        whichDir=2;
+        whichDir=1;
         best=1;
     case '180717_B1'
         whichDir=1;

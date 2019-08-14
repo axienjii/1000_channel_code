@@ -33,6 +33,7 @@ electrodeNums=[28];
 arrayNums=[14];
 
 finalCurrentValsFile=7;
+copyfile([rootdir,'\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
 load([rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'])
 microstimAllHitTrials=intersect(find(allCurrentLevel>0),find(performance==1));
 microstimAllMissTrials=intersect(find(allCurrentLevel>0),find(performance==-1));
