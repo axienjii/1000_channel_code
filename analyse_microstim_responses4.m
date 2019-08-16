@@ -1296,6 +1296,9 @@ arrayNums=[14];
 date='130819_B2';
 electrodeNums=[8 11];
 arrayNums=[9 12];
+date='150819_B5';
+electrodeNums=[8 11];
+arrayNums=[9 12];
 
 
 if exampleFig==1%example current thresholding plot for paper

@@ -34,7 +34,7 @@ for dates=[1 4 6 9 11 16:18 20:22 25:28]%remove dates when two occur very close 
             best=0;
         case 6
             date='200717_B7';
-            whichDir=1;
+            whichDir=2;
             best=1;
         case 7
             date='210717_B4';%forgot to turn off impedance mode on CerePlex Ms connected to instance 1
@@ -46,7 +46,7 @@ for dates=[1 4 6 9 11 16:18 20:22 25:28]%remove dates when two occur very close 
             best=1;
         case 9
             date='250717_B2';
-            whichDir=1;
+            whichDir=2;
             best=1;
         case 10
             date='260717_B3';%events missing from instance 6
@@ -54,7 +54,7 @@ for dates=[1 4 6 9 11 16:18 20:22 25:28]%remove dates when two occur very close 
             best=1;
         case 11
             date='080817_B7';
-            whichDir=1;
+            whichDir=2;
             best=1;
         case 12
             date='090817_B8';
@@ -73,10 +73,10 @@ for dates=[1 4 6 9 11 16:18 20:22 25:28]%remove dates when two occur very close 
             whichDir=1;
         case 16
             date='240817_B39';
-            whichDir=1;
+            whichDir=2;
         case 17
             date='290817_B48';
-            whichDir=1;
+            whichDir=2;
         case 18
             date='200917_B2';
             whichDir=1;
@@ -122,7 +122,11 @@ for dates=[1 4 6 9 11 16:18 20:22 25:28]%remove dates when two occur very close 
             whichDir=2;
             best=1;
     end
-    topDir='X:\best';
+    if whichDir==1
+        topDir='D:\data';
+    elseif whichDir==2
+        topDir='X:\best';
+    end
     if best==0
         topDir='X:\other';
     end
