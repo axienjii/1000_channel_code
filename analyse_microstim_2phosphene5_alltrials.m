@@ -31,7 +31,7 @@ allSetsPerfMicroAllTrials=[];
 allSetsPerfVisualAllTrials=[];
 allPerfV=[];
 allPerfM=[];
-setNos=[1:17 19:25];
+setNos=[1:5 8 10 12:17 19:24];%before RF correction: [1:17 19:25];
 allRFsFigure=figure;
 setNoSubplot=1;
 for calculateVisual=[0 1]
@@ -553,6 +553,7 @@ for calculateVisual=[0 1]
                     localDisk=1;
             end
         end
+        localDisk=0;
         
         if localDisk==1
             rootdir='D:\data\';
@@ -1030,8 +1031,12 @@ xlim([0 length(goodSetsallSetsPerfVisualAllTrials)+1]);
 ylim([0 1]);
 set(gca,'Box','off');
 %exported as behavioural_perf_2phosphene_all_sets_241017_all_trials_lick.eps
+%exported as behavioural_perf_2phosphene_all_sets_241017_all_trials_lick_corrected_RFs.eps
 
-perfMat=fullfile(rootdir,'behavioural_performance_all_sets_241017_all_trials.mat');
+% perfMat=fullfile(rootdir,'behavioural_performance_all_sets_241017_all_trials.mat');
+% save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','goodSetsallSetsPerfVisualAllTrials','goodSetsallSetsPerfMicroAllTrials','allPerfV','allPerfM');
+% pause=1;
+perfMat=fullfile(rootdir,'behavioural_performance_all_sets_corrected_RFs_241017_all_trials.mat');
 save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','goodSetsallSetsPerfVisualAllTrials','goodSetsallSetsPerfMicroAllTrials','allPerfV','allPerfM');
 pause=1;
 
@@ -1045,10 +1050,10 @@ h1(1).EdgeColor = [0 0 0];
 hold on
 plot([0.5 0.5],[0 10],'k:');
 xlim([0 1]);
-ylim([0 8]);
+ylim([0 7]);
 set(gca,'Box','off');
 ax=gca;
-ax.YTick=[0 4 8];
+ax.YTick=[0 3 6];
 [h,p,ci,stats]=ttest(goodSetsallSetsPerfMicroAllTrials,0.5)
 sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(23) = 6.7987, p = 0.0000
 

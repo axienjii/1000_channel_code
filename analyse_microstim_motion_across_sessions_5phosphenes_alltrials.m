@@ -31,7 +31,7 @@ allSetsPerfMicroAllTrials=[];
 allSetsPerfVisualAllTrials=[];
 allPerfV=[];
 allPerfM=[];
-setNos=[1:23];
+setNos=[1 2 5 10 11 13];%before RF correction: [1:23];
 for calculateVisual=[0 1]
     for setNo=setNos%26
         perfNEV=[];
@@ -907,7 +907,9 @@ ylim([0 1]);
 set(gca,'Box','off');
 %exported as behavioural_perf_motion_all_sets_121217_all_trials_lick_5phosphenes.eps
 
-perfMat='D:\data\behavioural_performance_all_sets_121217_all_trials.mat';
+% perfMat='D:\data\behavioural_performance_all_sets_121217_all_trials.mat';
+% save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','goodSetsallSetsPerfVisualAllTrials','goodSetsallSetsPerfMicroAllTrials','allPerfV','allPerfM');
+perfMat='D:\data\behavioural_performance_all_sets_121217_all_trials_corrected_RFs.mat';
 save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','goodSetsallSetsPerfVisualAllTrials','goodSetsallSetsPerfMicroAllTrials','allPerfV','allPerfM');
 pause=1;
 
@@ -926,7 +928,7 @@ set(gca,'Box','off');
 ax=gca;
 ax.YTick=[0 3 6];
 [h,p,ci,stats]=ttest(goodSetsallSetsPerfMicroAllTrials,0.5)
-sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(22) = 6.0652, p = 0.0000
+sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(5) = 4.7797, p = 0.0050 previous: %t(22) = 6.0652, p = 0.0000
 
 subplot(2,1,2);
 edges=0:0.1:1;
@@ -941,7 +943,7 @@ set(gca,'Box','off');
 ax=gca;
 ax.YTick=[0 5 10];
 [h,p,ci,stats]=ttest(goodSetsallSetsPerfVisualAllTrials,0.5)
-sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(22) = 16.5997, p = 0.0000
+sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(5) = 9.284, p = 0.0002 previous: %t(22) = 16.5997, p = 0.0000
 
 significantByThisTrialMicro=0;
 for trialInd=1:length(meanAllSetsPerfMicroBin)

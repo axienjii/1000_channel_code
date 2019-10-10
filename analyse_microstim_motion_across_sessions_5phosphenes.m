@@ -26,9 +26,11 @@ cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/25
 arrays=8:16;
 
 localDisk=0;
+allSetsPerfMicroBin=[];
+allSetsPerfVisualBin=[];
 analyseConds=0;
 for calculateVisual=[0 1]
-    for setNo=[1:23]%26
+    for setNo=[1 2 5 10 11 13]%before corrected RFs:[1:23]%26
         perfNEV=[];
         timeInd=[];
         encodeInd=[];
@@ -651,19 +653,19 @@ for calculateVisual=[0 1]
                         end
                     end
                 end
-                initialPerfTrials=10;%11;%first set of trials are the most important
+                initialPerfTrials=19;%10%11;%first set of trials are the most important
                 if calculateVisual==0
                     perfMicroBin=perfMicroBin(1:initialPerfTrials);
                     if ~isempty(perfMicroBin)
-                        allSetsPerfMicroBin(setNo,:)=perfMicroBin;
-                        save(['D:\microPerf_',date,'.mat'],'perfMicroBin');
+                        allSetsPerfMicroBin=[allSetsPerfMicroBin;perfMicroBin];
+%                         save(['D:\microPerf_',date,'.mat'],'perfMicroBin');
                     end
                 elseif calculateVisual==1
                     perfVisualBin=perfVisualBin(1:initialPerfTrials);
                     %perfVisualBin=perfVisualBin(end-initialPerfTrials+1:end);
                     if ~isempty(perfVisualBin)
-                        allSetsPerfVisualBin(setNo,:)=perfVisualBin;
-                        save(['D:\visualPerf_',date,'.mat'],'perfVisualBin');
+                        allSetsPerfVisualBin=[allSetsPerfVisualBin;perfVisualBin];
+%                         save(['D:\visualPerf_',date,'.mat'],'perfVisualBin');
                     end
                 end
                 
@@ -854,6 +856,7 @@ for calculateVisual=[0 1]
     if calculateVisual==0
         figure;
         meanAllSetsPerfMicroBin=mean(allSetsPerfMicroBin,1);
+        mean(meanAllSetsPerfMicroBin)%0.80 (after RF correction)
         subplot(2,1,1);
         hold on
         plot(meanAllSetsPerfMicroBin,'r');
@@ -868,6 +871,7 @@ for calculateVisual=[0 1]
         subplot(2,1,2);
         hold on
         meanAllSetsPerfVisualBin=mean(allSetsPerfVisualBin,1);
+        mean(meanAllSetsPerfVisualBin)%0.80 (after RF correction), coincidentally the same value as the microstim version
         plot(meanAllSetsPerfVisualBin,'b');
         ylim([0 1]);
         xLimits=get(gca,'xlim');
@@ -879,11 +883,16 @@ for calculateVisual=[0 1]
     end
 end
 % title(['performance across the session, on visual (blue) & microstim (red) trials']);
-pathname=fullfile('D:\data\behavioural_performance_all_sets_121217_',num2str(initialPerfTrials),'trials');
+% pathname=fullfile('D:\data\behavioural_performance_all_sets_121217_',num2str(initialPerfTrials),'trials');
 % set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 % print(pathname,'-dtiff');
+pathname=fullfile(['D:\data\behavioural_performance_all_sets_corrected_RFs_121217_',num2str(initialPerfTrials),'trials']);
+set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+print(pathname,'-dtiff');
 
-perfMat=['D:\data\behavioural_performance_all_sets_121217_',num2str(initialPerfTrials),'trials.mat'];
+% perfMat=['D:\data\behavioural_performance_all_sets_121217_',num2str(initialPerfTrials),'trials.mat'];
+% save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
+perfMat=['D:\data\behavioural_performance_all_sets_corrected_sets_121217_',num2str(initialPerfTrials),'trials.mat'];
 save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
 pause=1;
 

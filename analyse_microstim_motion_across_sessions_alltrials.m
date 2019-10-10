@@ -31,7 +31,7 @@ allSetsPerfMicroAllTrials=[];
 allSetsPerfVisualAllTrials=[];
 allPerfV=[];
 allPerfM=[];
-setNos=[1 3:12 14:17];
+setNos=[1 3:6 8 10:12 14:17];%before RF correction: [1 3:12 14:17];
 for calculateVisual=[0 1]
     for setNo=setNos%[1:17]%26%sets 2 and 13 have relatively few microstim trials
         perfNEV=[];
@@ -801,7 +801,9 @@ ylim([0 1]);
 set(gca,'Box','off');
 %exported as behavioural_perf_motion_all_sets_041217_all_trials_lick.eps
 
-perfMat='D:\data\behavioural_performance_all_sets_041217_all_trials.mat';
+% perfMat='D:\data\behavioural_performance_all_sets_041217_all_trials.mat';
+% save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','goodSetsallSetsPerfVisualAllTrials','goodSetsallSetsPerfMicroAllTrials','allPerfV','allPerfM');
+perfMat='D:\data\behavioural_performance_all_sets_041217_all_trials_corrected_RFs.mat';
 save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','goodSetsallSetsPerfVisualAllTrials','goodSetsallSetsPerfMicroAllTrials','allPerfV','allPerfM');
 pause=1;
 
@@ -815,10 +817,10 @@ h1(1).EdgeColor = [0 0 0];
 hold on
 plot([0.5 0.5],[0 10],'k:');
 xlim([0 1]);
-ylim([0 4.5]);
+ylim([0 6]);
 set(gca,'Box','off');
 ax=gca;
-ax.YTick=[0 2 4 6];
+ax.YTick=[0 3 6];
 [h,p,ci,stats]=ttest(goodSetsallSetsPerfMicroAllTrials,0.5)
 sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(14) = 6.3953, p = 0.0000
 

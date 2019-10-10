@@ -26,9 +26,11 @@ cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/25
 arrays=8:16;
 
 localDisk=0;
+allSetsPerfVisualBin=[];
+allSetsPerfMicroBin=[];
 analyseConds=0;
 for calculateVisual=[0 1]
-    for setNo=[1:17 19:25]%26
+    for setNo=[1:5 8 10 12:17 19:24]%before RF correction:[1:17 19:25]%26
         perfNEV=[];
         timeInd=[];
         encodeInd=[];
@@ -546,6 +548,7 @@ for calculateVisual=[0 1]
                     localDisk=1;
             end
         end
+        localDisk=0;
         
         if localDisk==1
             rootdir='D:\data\';
@@ -756,14 +759,14 @@ for calculateVisual=[0 1]
                 if calculateVisual==0
                     perfMicroBin=perfMicroBin(1:initialPerfTrials);
                     if ~isempty(perfMicroBin)
-                        allSetsPerfMicroBin(setNo,:)=perfMicroBin;
+                        allSetsPerfMicroBin=[allSetsPerfMicroBin;perfMicroBin];
                         save([rootdir,'microPerf_',date,'.mat'],'perfMicroBin');
                     end
                 elseif calculateVisual==1
                     perfVisualBin=perfVisualBin(1:initialPerfTrials);
                     %perfVisualBin=perfVisualBin(end-initialPerfTrials+1:end);
                     if ~isempty(perfVisualBin)
-                        allSetsPerfVisualBin(setNo,:)=perfVisualBin;
+                        allSetsPerfVisualBin=[allSetsPerfVisualBin;perfVisualBin];
                         save([rootdir,'visualPerf_',date,'.mat'],'perfVisualBin');
                     end
                 end
@@ -984,11 +987,13 @@ for calculateVisual=[0 1]
     end
 end
 title(['performance across the session, on visual (blue) & microstim (red) trials']);
-pathname=fullfile(rootdir,['behavioural_performance_all_sets_241017_',num2str(initialPerfTrials),'trials']);
+% pathname=fullfile(rootdir,['behavioural_performance_all_sets_241017_',num2str(initialPerfTrials),'trials']);
+pathname=fullfile('D:\data',['behavioural_performance_all_sets_241017_',num2str(initialPerfTrials),'trials_corrected_RFs']);
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 print(pathname,'-dtiff');
 
-perfMat=fullfile(rootdir,['behavioural_performance_all_sets_241017_',num2str(initialPerfTrials),'trials.mat']);
+% perfMat=fullfile(rootdir,['behavioural_performance_all_sets_241017_',num2str(initialPerfTrials),'trials.mat']);
+perfMat=fullfile('D:\data',['behavioural_performance_all_sets_241017_',num2str(initialPerfTrials),'trials_corrected_RFs.mat']);
 save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin','allSetsPerfMicroBin','allSetsPerfVisualBin');
 pause=1;
 

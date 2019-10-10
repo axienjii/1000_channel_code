@@ -30,7 +30,7 @@ allSetsPerfMicroBin=[];
 allSetsPerfVisualBin=[];
 analyseConds=0;
 for calculateVisual=[0 1]
-    for setNo=[1:6 9 17:24 26 28:29]%1:29%[1:11 13:26 28:29]%1:24 for 10 electrodes per letter; subsequent sessions use 15 electrodes per letter
+    for setNo=[1:2 5 19:23 28]%before RF correction: [1:6 9 17:24 26 28:29]%1:29%[1:11 13:26 28:29]%1:24 for 10 electrodes per letter; subsequent sessions use 15 electrodes per letter
         perfNEV=[];
         timeInd=[];
         encodeInd=[];
@@ -798,11 +798,11 @@ for calculateVisual=[0 1]
                     end
                     if ~isempty(perfMicroBin)
                         allSetsPerfMicroBin=[allSetsPerfMicroBin;perfMicroBin];
-                        save(['D:\microPerf','_',date,'_',num2str(initialPerfTrials),'trials.mat'],'perfMicroBin');
+%                         save(['D:\microPerf','_',date,'_',num2str(initialPerfTrials),'trials.mat'],'perfMicroBin');
                     end
                 elseif calculateVisual==1
 %                     perfVisualBin=perfVisualBin(1:initialPerfTrials);
-                    if length(perfMicroBin)>=initialPerfTrials
+                    if length(perfVisualBin)>=initialPerfTrials
                         perfVisualBin=perfVisualBin(1:initialPerfTrials);
                     else
                         perfVisualBin=[perfVisualBin nan*ones(1,initialPerfTrials-length(perfVisualBin))];
@@ -810,7 +810,7 @@ for calculateVisual=[0 1]
                     %perfVisualBin=perfVisualBin(end-initialPerfTrials+1:end);
                     if ~isempty(perfVisualBin)
                         allSetsPerfVisualBin=[allSetsPerfVisualBin;perfVisualBin];
-                        save(['D:\visualPerf','_',date,'_',num2str(initialPerfTrials),'trials.mat'],'perfVisualBin');
+%                         save(['D:\visualPerf','_',date,'_',num2str(initialPerfTrials),'trials.mat'],'perfVisualBin');
                     end
                 end
                 
@@ -1005,11 +1005,16 @@ for calculateVisual=[0 1]
     end
 end
 % title(['performance across the session, on visual (blue) & microstim (red) trials']);
-pathname=['D:\data\letter_behavioural_performance_all_sets_',date,'_',num2str(initialPerfTrials),'trials_highres'];
+% pathname=['D:\data\letter_behavioural_performance_all_sets_',date,'_',num2str(initialPerfTrials),'trials_highres'];
+% set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+% print(pathname,'-dtiff');
+pathname=['D:\data\letter_behavioural_performance_all_sets_corrected_RFs_',date,'_',num2str(initialPerfTrials),'trials_highres'];
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 print(pathname,'-dtiff');
 
-perfMat=['D:\data\letter_behavioural_performance_all_sets_',date,'_',num2str(initialPerfTrials),'trials.mat'];
+% perfMat=['D:\data\letter_behavioural_performance_all_sets_',date,'_',num2str(initialPerfTrials),'trials.mat'];
+% save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
+perfMat=['D:\data\letter_behavioural_performance_all_sets_corrected_RFs_',date,'_',num2str(initialPerfTrials),'trials.mat'];
 save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
 pause=1;
 
@@ -1022,7 +1027,7 @@ for trialInd=1:length(meanAllSetsPerfMicroBin)
         significantByThisTrialMicro(trialInd)=1;
     end
 end
-significantByThisTrialMicro%5th trial onward
+significantByThisTrialMicro%2nd trial onward
 
 significantByThisTrialVisual=0;
 for trialInd=1:length(meanAllSetsPerfVisualBin)

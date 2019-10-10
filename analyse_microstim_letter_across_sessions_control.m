@@ -533,13 +533,15 @@ for trialInd=1:length(meanAllSetsPerfVisualBin)
 end
 significantByThisTrialVisual
 
-load('D:\data\control_letter_behavioural_performance_all_sets_150819_B1_100trials.mat')
-load('D:\data\results\letter_behavioural_performance_all_sets_180618_B5_100trials.mat')%data from original (non-control) task
-load('D:\data\letter_behavioural_performance_all_sets_180618_B5_all_trials.mat')
+load('X:\best\results\control_letter_behavioural_performance_all_sets_150819_B1_100trials.mat')
+load('X:\best\results\letter_behavioural_performance_all_sets_corrected_RFs_070618_B6_100trials.mat')%data from original (non-control) task
+% load('X:\best\results\letter_behavioural_performance_all_sets_180618_B5_100trials.mat')%data from original (non-control, not-RF-corrected) task
+load('X:\best\results\letter_behavioural_performance_all_sets_070618_B6_all_trials_corrected_RFs.mat')
+% load('X:\best\results\letter_behavioural_performance_all_sets_180618_B5_all_trials.mat')%data from original (non-control, not-RF-corrected) task
 [h,p,ci,stats]=ttest2(meanPerfAllSetsV,goodSetsallSetsPerfVisualAllTrials)
-sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(26) = -8.5323, p = 0.0000
+sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(17) = -7.5592, p = 0.0000. not-corrected: %t(26) = -8.5323, p = 0.0000
 [h,p,ci,stats]=ttest2(meanPerfAllSetsM,goodSetsallSetsPerfMicroAllTrials)
-sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(26) = -4.8063, p = 0.0001
+sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(17) = -5.7393, p = 0.0000. not corrected: %t(26) = -4.8063, p = 0.0001
 
 % %Plot data from 2 monkeys on the same figure:
 % figure;
