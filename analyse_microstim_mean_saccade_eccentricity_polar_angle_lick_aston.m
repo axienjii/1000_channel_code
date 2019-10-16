@@ -1,5 +1,5 @@
-function analyse_microstim_saccade_eccentricity_polar_angle_lick_aston3(date,allInstanceInd)
-%8/1/19
+function analyse_microstim_mean_saccade_eccentricity_polar_angle_lick_aston(date,allInstanceInd)
+%14/10/19
 %Written by Xing, modified from analyse_microstim_saccade14_letter.m, reads
 %in saccade end location for each trial on a given date (e.g. 110917_B3)
 %and calculates eccentricity and polar angle of saccade end point. Compares
@@ -133,7 +133,7 @@ pval=pEc(2);
 df=length(allEccentricityRFsMean)-2;
 sprintf(['Lick, eccentricity: r(',num2str(df),') = ',num2str(Rvalue),', p = %.4f'],pval) 
 
-%plot figure of saccade end points, with same colour scheme as RF maps
+%plot figure saccade end points, with same colour scheme as RF maps
 figure;
 hold on
 colind = hsv(16);
@@ -176,58 +176,6 @@ set(gca,'YColor','none')
 % titleText=['saccade end points, N=',num2str(size(saccadeEndAllTrials,1)),' trials'];
 % title(titleText);
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-
-%plot figure of mean saccade end points, with same colour scheme as RF maps
-figure;
-hold on
-colind = hsv(16);
-colind(8,:)=[139/255 69/255 19/255];
-for uniqueElectrodeCount=1:size(uniqueElectrodes,1)
-    temp1=find(electrodeAllTrialsNoOutliers==uniqueElectrodes(uniqueElectrodeCount,1));
-    temp2=find(arrayAllTrialsNoOutliers==uniqueElectrodes(uniqueElectrodeCount,2));
-    uniqueArrayList(uniqueElectrodeCount)=uniqueElectrodes(uniqueElectrodeCount,2);
-    uniqueElectrodeList(uniqueElectrodeCount)=uniqueElectrodes(uniqueElectrodeCount,1);
-    trialInds=intersect(temp1,temp2);
-    meanXCoord(uniqueElectrodeCount)=nanmean(saccadeEndAllTrials(trialInds,1));
-    meanYCoord(uniqueElectrodeCount)=nanmean(saccadeEndAllTrials(trialInds,2));
-    plot(meanXCoord(uniqueElectrodeCount),-meanYCoord(uniqueElectrodeCount),'MarkerEdgeColor',colind(uniqueArrayList(uniqueElectrodeCount),:),'Marker','o','MarkerFaceCol',colind(uniqueArrayList(uniqueElectrodeCount),:),'MarkerSize',3);
-end
-scatter(0,0,'r','o','filled');%fix spot
-plot([0 0],[-250 200],'k:')
-plot([-200 300],[0 0],'k:')
-plot([-200 300],[200 -300],'k:')
-pixPerDeg=26;
-ellipse(2*pixPerDeg,2*pixPerDeg,0,0,[0.1 0.1 0.1]);
-ellipse(4*pixPerDeg,4*pixPerDeg,0,0,[0.1 0.1 0.1]);
-ellipse(6*pixPerDeg,6*pixPerDeg,0,0,[0.1 0.1 0.1]);
-ellipse(8*pixPerDeg,8*pixPerDeg,0,0,[0.1 0.1 0.1]);
-% text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-% text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-% text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-% text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-% for i=1:16
-%     text(220,-5-i*8,num2str(i),'Color',colind(i,:))
-% end
-axis equal
-ylim([-170 30]);
-xlim([-30 250]);
-xlim([-10 250]);
-ylim([-150 20]);
-set(gca,'XTick',[0 2*pixPerDeg 4*pixPerDeg 6*pixPerDeg 8*pixPerDeg 10*pixPerDeg]);
-set(gca,'XTickLabel',{'0','2','4','6','8','10'});
-set(gca,'YTick',[-6*pixPerDeg -4*pixPerDeg -2*pixPerDeg 0]);
-set(gca,'YTickLabel',{'-6','-4','-2','0'});
-set(gca,'XTick',[]);
-set(gca,'YTick',[]);
-set(gca,'XTickLabel',[]);
-set(gca,'YTickLabel',[]);
-axis on
-set(gca,'XColor','none')
-set(gca,'YColor','none')
-% titleText=['saccade end points, N=',num2str(size(saccadeEndAllTrials,1)),' trials'];
-% title(titleText);
-set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-save('D:\data\uniqueElectrodeList_110917_B3_alltrials.mat','uniqueElectrodeList','uniqueArrayList');
 
 %Aston:
 electrodeAllTrials=[];
@@ -443,55 +391,5 @@ if addCurrentThreshData==0
     %to add data from current thresholding session using different marker
     %symbols
 end
-
-%plot figure of mean saccade end points, with same colour scheme as RF maps
-figure;
-hold on
-colind = hsv(16);
-colind(8,:)=[139/255 69/255 19/255];
-for uniqueElectrodeCount=1:size(uniqueElectrodes,1)
-    temp1=find(electrodeAllTrialsNoOutliers==uniqueElectrodes(uniqueElectrodeCount,1));
-    temp2=find(arrayAllTrialsNoOutliers==uniqueElectrodes(uniqueElectrodeCount,2));
-    array=uniqueElectrodes(uniqueElectrodeCount,2);
-    trialInds=intersect(temp1,temp2);
-    meanXCoord=nanmean(saccadeEndAllTrials(trialInds,1));
-    meanYCoord=nanmean(saccadeEndAllTrials(trialInds,2));
-    plot(meanXCoord,-meanYCoord,'MarkerEdgeColor',colind(array,:),'Marker','o','MarkerFaceCol',colind(array,:),'MarkerSize',3);
-end
-scatter(0,0,'r','o','filled');%fix spot
-plot([0 0],[-250 200],'k:')
-plot([-200 300],[0 0],'k:')
-plot([-200 300],[200 -300],'k:')
-pixPerDeg=26;
-ellipse(2*pixPerDeg,2*pixPerDeg,0,0,[0.1 0.1 0.1]);
-ellipse(4*pixPerDeg,4*pixPerDeg,0,0,[0.1 0.1 0.1]);
-ellipse(6*pixPerDeg,6*pixPerDeg,0,0,[0.1 0.1 0.1]);
-ellipse(8*pixPerDeg,8*pixPerDeg,0,0,[0.1 0.1 0.1]);
-% text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-% text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-% text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-% text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-% for i=1:16
-%     text(220,-5-i*8,num2str(i),'Color',colind(i,:))
-% end
-axis equal
-ylim([-170 30]);
-xlim([-30 250]);
-xlim([-10 250]);
-ylim([-150 20]);
-set(gca,'XTick',[0 2*pixPerDeg 4*pixPerDeg 6*pixPerDeg 8*pixPerDeg 10*pixPerDeg]);
-set(gca,'XTickLabel',{'0','2','4','6','8','10'});
-set(gca,'YTick',[-6*pixPerDeg -4*pixPerDeg -2*pixPerDeg 0]);
-set(gca,'YTickLabel',{'-6','-4','-2','0'});
-set(gca,'XTick',[]);
-set(gca,'YTick',[]);
-set(gca,'XTickLabel',[]);
-set(gca,'YTickLabel',[]);
-axis on
-set(gca,'XColor','none')
-set(gca,'YColor','none')
-% titleText=['saccade end points, N=',num2str(size(saccadeEndAllTrials,1)),' trials'];
-% title(titleText);
-set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 
 pause=1;
