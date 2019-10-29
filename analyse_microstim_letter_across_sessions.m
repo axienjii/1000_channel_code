@@ -1015,7 +1015,7 @@ print(pathname,'-dtiff');
 % perfMat=['D:\data\letter_behavioural_performance_all_sets_',date,'_',num2str(initialPerfTrials),'trials.mat'];
 % save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
 perfMat=['D:\data\letter_behavioural_performance_all_sets_corrected_RFs_',date,'_',num2str(initialPerfTrials),'trials.mat'];
-save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin');
+save(perfMat,'meanAllSetsPerfVisualBin','meanAllSetsPerfMicroBin','allSetsPerfVisualBin','allSetsPerfMicroBin');
 pause=1;
 
 significantByThisTrialMicro=0;

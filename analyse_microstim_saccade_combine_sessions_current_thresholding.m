@@ -310,7 +310,7 @@ dates={
 '221217_B5';
 '221217_B6'};
 
-suprathresholdCurrent=0;%set to 1 to use conditions with high current amplitudes, with no hits accrued. Set to 0 to use conditions with lower current amplitudes instead
+suprathresholdCurrent=1;%set to 1 to use conditions with high current amplitudes, with no hits accrued. Set to 0 to use conditions with lower current amplitudes instead
 differentCriteria=0;
 if differentCriteria==1||suprathresholdCurrent==0
     ind=strfind(dates,'110917_B3');
@@ -334,7 +334,7 @@ end
 datesReshape=reshape(dates,1,size(dates,1)*size(dates,2));
 dates=datesReshape(~cellfun('isempty',datesReshape));
 
-readData=1;
+readData=0;
 if readData==1
     for dateInd=1:length(dates)
         try
@@ -409,16 +409,24 @@ for uniqueElectrode=1:length(electrodeNums)
     allPosIndXChsUnique(uniqueElectrode)={cell2mat(allPosIndXChs(ind))};
     allPosIndYChsUnique(uniqueElectrode)={cell2mat(allPosIndYChs(ind))};
 end
+indRemove=find(uniqueElectrodeList==0);
+uniqueElectrodeList(indRemove)=[];
+uniqueArrayList(indRemove)=[];
+allPosIndXChsUnique(indRemove)=[];
+allPosIndYChsUnique(indRemove)=[];
+electrodeNums(indRemove)=[];
+arrayNums(indRemove)=[];
 
 for chNum=1:length(uniqueElectrodeList)
     if ~isempty(allPosIndXChsUnique{chNum})
         array=arrayNums(chNum);
         arrayColInd=find(arrays==array);
-        meanX=nanmean(allPosIndXChsUnique{chNum});
-        meanY=nanmean(allPosIndYChsUnique{chNum});
-        plot(meanX,-meanY,'MarkerFaceColor',cols(array,:),'MarkerEdgeColor',cols(array,:),'Marker','o','MarkerSize',5);
+        meanX(chNum)=nanmean(allPosIndXChsUnique{chNum});
+        meanY(chNum)=nanmean(allPosIndYChsUnique{chNum});
+        plot(meanX(chNum),-meanY(chNum),'MarkerFaceColor',cols(array,:),'MarkerEdgeColor',cols(array,:),'Marker','o','MarkerSize',3);
     end
 end
+% save(['D:\data\saccade_endpoints_',dates{1},'-',dates{end},'.mat'],'uniqueElectrodeList','uniqueArrayList','allPosIndXChsUnique','allPosIndYChsUnique','meanX','meanY')
 scatter(0,0,'r','o','filled');%fix spot
 %draw dotted lines indicating [0,0]
 plot([0 0],[-250 200],'k:');
@@ -430,11 +438,11 @@ ellipse(4*pixPerDeg,4*pixPerDeg,0,0,[0.1 0.1 0.1]);
 ellipse(6*pixPerDeg,6*pixPerDeg,0,0,[0.1 0.1 0.1]);
 ellipse(8*pixPerDeg,8*pixPerDeg,0,0,[0.1 0.1 0.1]);
 axis equal
-xlim([-20 220]);
-ylim([-200 15]);
+% xlim([-20 220]);
+% ylim([-200 15]);
 title('saccade endpoints');
 for arrayInd=1:length(arrays)
-    text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrays(arrayInd),:));
+%     text(180,0-4*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrays(arrayInd),:));
 end
 xlabel('x-coordinates (dva)')
 ylabel('y-coordinates (dva)')
@@ -447,7 +455,9 @@ set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 pathname=fullfile(rootdir,date,['saccade_endpoints_dva_max_amp_',date]);
 pathname=fullfile(rootdir,date,['saccade_endpoints_dva_mid_amp_',date]);
 %         print(pathname,'-dtiff','-r600');
-ylim([-140 25]);
+% ylim([-140 25]);
+xlim([-10 220]);
+ylim([-150 20]);
 set(gca,'visible','off')
 
 figure; 
@@ -457,7 +467,7 @@ for chNum=1:length(uniqueElectrodeList)
         array=arrayNums(chNum);
         arrayColInd=find(arrays==array);
         for trialInd=1:length(allPosIndXChsUnique{chNum})
-            plot(allPosIndXChsUnique{chNum}(trialInd),-allPosIndYChsUnique{chNum}(trialInd),'MarkerFaceColor',cols(array,:),'MarkerEdgeColor',cols(array,:),'Marker','o','MarkerSize',5);
+            plot(allPosIndXChsUnique{chNum}(trialInd),-allPosIndYChsUnique{chNum}(trialInd),'MarkerFaceColor',cols(array,:),'MarkerEdgeColor',cols(array,:),'Marker','o','MarkerSize',3);
         end
     end
 end
