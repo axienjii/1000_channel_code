@@ -1293,12 +1293,12 @@ arrayNums=[14];
 % date='130819_B1';
 % electrodeNums=[8 11 3 48 64 30];
 % arrayNums=[9 12 14 15 14 14];
-date='130819_B2';
-electrodeNums=[8 11];
-arrayNums=[9 12];
-date='150819_B5';
-electrodeNums=[8 11];
-arrayNums=[9 12];
+% date='130819_B2';
+% electrodeNums=[8 11];
+% arrayNums=[9 12];
+% date='150819_B5';
+% electrodeNums=[8 11];
+% arrayNums=[9 12];
 
 
 if exampleFig==1%example current thresholding plot for paper
@@ -1307,12 +1307,15 @@ if exampleFig==1%example current thresholding plot for paper
     arrayNums=[12];
 end
 
+date='150118_B1';
 
 finalCurrentValsFile=7;
 % copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
 % copyfile(['D:\data\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
 copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
 load([rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'])
+% electrodeNums=[29];
+% arrayNums=[14];
 microstimAllHitTrials=intersect(find(allCurrentLevel>0),find(performance==1));
 microstimAllMissTrials=intersect(find(allCurrentLevel>0),find(performance==-1));
 catchAllCRTrials=intersect(find(allCurrentLevel==0),find(performance==1));%correct rejections

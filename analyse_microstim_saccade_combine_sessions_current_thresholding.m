@@ -310,7 +310,7 @@ dates={
 '221217_B5';
 '221217_B6'};
 
-suprathresholdCurrent=1;%set to 1 to use conditions with high current amplitudes, with no hits accrued. Set to 0 to use conditions with lower current amplitudes instead
+suprathresholdCurrent=0;%set to 1 to use conditions with high current amplitudes, with no hits accrued. Set to 0 to use conditions with lower current amplitudes instead
 differentCriteria=0;
 if differentCriteria==1||suprathresholdCurrent==0
     ind=strfind(dates,'110917_B3');
@@ -496,4 +496,105 @@ set(gca,'XTickLabel',{'0','2','4','6','8','10'});
 set(gca,'YTick',[-6*pixPerDeg -4*pixPerDeg -2*pixPerDeg 0]);
 set(gca,'YTickLabel',{'-6','-4','-2','0'});
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+if suprathresholdCurrent==1
+    save(['D:\data\saccade_endpoints_',dates{1},'-',dates{end},'_max_amp.mat'],'uniqueElectrodeList','uniqueArrayList','allPosIndXChsUnique','allPosIndYChsUnique','meanX','meanY')
+elseif suprathresholdCurrent==0
+    save(['D:\data\saccade_endpoints_',dates{1},'-',dates{end},'_mid_amp.mat'],'uniqueElectrodeList','uniqueArrayList','allPosIndXChsUnique','allPosIndYChsUnique','meanX','meanY')
+end
 pause=1;
+
+
+%compare saccade eccentricities between high vs medium current amplitudes:
+load('D:\data\saccade_endpoints_210817_B2-290817_B42_max_amp.mat');
+uniqueElectrodeListMax=uniqueElectrodeList;
+uniqueArrayListMax=uniqueArrayList;
+allPosIndXChsUniqueMax=allPosIndXChsUnique;
+allPosIndYChsUniqueMax=allPosIndYChsUnique;
+meanXMax=meanX;
+meanYMax=meanY;
+meanEccMax=sqrt(meanXMax.^2+meanYMax.^2)/pixPerDeg;
+channelIDsMax=[uniqueElectrodeListMax' uniqueArrayListMax'];
+
+load('D:\data\saccade_endpoints_210817_B2-290817_B42_mid_amp.mat');
+uniqueElectrodeListMid=uniqueElectrodeList;
+uniqueArrayListMid=uniqueArrayList;
+allPosIndXChsUniqueMid=allPosIndXChsUnique;
+allPosIndYChsUniqueMid=allPosIndYChsUnique;
+meanXMid=meanX;
+meanYMid=meanY;
+meanEccMid=sqrt(meanXMid.^2+meanYMid.^2)/pixPerDeg;
+channelIDsMid=[uniqueElectrodeListMid' uniqueArrayListMid'];
+
+%find intersecting channels, from high and medium current conditions
+[intersectRows indMax indMid]=intersect(channelIDsMax,channelIDsMid,'rows');
+meanEccMaxFinal=meanEccMax(indMax);
+meanEccMidFinal=meanEccMid(indMid);
+
+figure;
+subplot(1,2,1);
+scatter(meanEccMaxFinal,meanEccMidFinal,2,'ko');
+hold on
+axis equal
+axis square
+set(gca,'XTick',[0 5])
+set(gca,'YTick',[0 5])
+dlm = fitlm(meanEccMaxFinal,meanEccMidFinal,'Intercept',false);
+xVals=0:5;
+yVals=xVals*dlm.Coefficients.Estimate;%as calculated and returned in dlm.Coefficients
+plot(xVals,yVals,'r-');
+ylim([0 5])
+xlim([0 5])
+plot([0 5],[0 5],'k:');
+%compare eccentricity of saccades for high vs low current with paired t-test
+[h,p,ci,stats]=ttest(meanEccMaxFinal,meanEccMidFinal);
+sprintf(['Lick, undershoot high-low current stats: t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p) 
+%Lick, undershoot high-low current stats: t(164) = 6.641, p = 0.0000
+
+%Combine into figure with Aston's data:
+subplot(1,2,2);
+%compare saccade eccentricities between high vs medium current amplitudes:
+load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_max_amp.mat');
+uniqueElectrodeListMax=uniqueElectrodeList;
+uniqueArrayListMax=uniqueArrayList;
+allPosIndXChsUniqueMax=allPosIndXChsUnique;
+allPosIndYChsUniqueMax=allPosIndYChsUnique;
+meanXMax=meanX;
+meanYMax=meanY;
+meanEccMax=sqrt(meanXMax.^2+meanYMax.^2)/pixPerDeg;
+channelIDsMax=[uniqueElectrodeListMax' uniqueArrayListMax'];
+
+load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_mid_amp.mat');
+uniqueElectrodeListMid=uniqueElectrodeList;
+uniqueArrayListMid=uniqueArrayList;
+allPosIndXChsUniqueMid=allPosIndXChsUnique;
+allPosIndYChsUniqueMid=allPosIndYChsUnique;
+meanXMid=meanX;
+meanYMid=meanY;
+meanEccMid=sqrt(meanXMid.^2+meanYMid.^2)/pixPerDeg;
+channelIDsMid=[uniqueElectrodeListMid' uniqueArrayListMid'];
+
+%find intersecting channels, from high and medium current conditions
+[intersectRows indMax indMid]=intersect(channelIDsMax,channelIDsMid,'rows');
+meanEccMaxFinal=meanEccMax(indMax);
+meanEccMidFinal=meanEccMid(indMid);
+
+scatter(meanEccMaxFinal,meanEccMidFinal,2,'ko');
+hold on
+axis equal
+axis square
+set(gca,'XTick',[0 5])
+set(gca,'YTick',[0 5])
+dlm = fitlm(meanEccMaxFinal,meanEccMidFinal,'Intercept',false);
+xVals=0:5;
+yVals=xVals*dlm.Coefficients.Estimate;%as calculated and returned in dlm.Coefficients
+plot(xVals,yVals,'r-');
+ylim([0 5])
+xlim([0 5])
+plot([0 5],[0 5],'k:');
+
+%compare eccentricity of saccades for high vs low current with paired t-test
+[h,p,ci,stats]=ttest(meanEccMaxFinal,meanEccMidFinal);
+sprintf(['Aston, undershoot high-low current stats: t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p) 
+%Aston, undershoot high-low current stats: t(141) = 4.2127, p = 0.0000
+
+%Save figure as: high_vs_low_current_saccade_eccentricity_lick_aston.eps

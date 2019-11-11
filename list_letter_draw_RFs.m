@@ -7,7 +7,7 @@ figure;
 allDatesV=[];
 allDatesM=[];
 subplotNo=0;
-for calculateVisual=[0]
+for calculateVisual=[0 1]
     %bad sets: 3 4 6 9 17 18 24 26 29 or: 2 3 4 6 9 18 24 26 28 29 or: 6 9 17 24 26 28 29
     for setNo=[1:2 5 19:23 28]%[1:6 9 17:24 26 28:29]
         subplotNo=subplotNo+1;
@@ -295,6 +295,7 @@ for calculateVisual=[0]
                     currentThresholdChs=130;
                     visualOnly=0;
             end
+            allDatesM=[allDatesM;{date}];
         elseif calculateVisual==1
             localDisk=0;
             switch(setNo)
@@ -619,3 +620,5 @@ for calculateVisual=[0]
     end
 end
 %bad sets: 3 4 6 9 17 18 24 26 29
+save('D:\data\list_letter_datesM','allDatesM');
+save('D:\data\list_letter_datesV','allDatesV');

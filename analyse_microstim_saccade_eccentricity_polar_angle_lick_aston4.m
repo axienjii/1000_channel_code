@@ -87,12 +87,13 @@ ax.XTick=[0 50 100];
 ax.XTickLabel={'0','50','100'};
 ax.YTick=[0 50 100];
 ax.YTickLabel={'0','50','100'};
-dlm = fitlm(-rad2deg(allPolarAngleRFs),-rad2deg(allPolarAngleRFs),'Intercept',false);
+dlm = fitlm(-rad2deg(allPolarAngleRFs),-rad2deg(allPolarAngleSacs),'Intercept',false);
 xVals=0:100;
-yVals=xVals*1;%as calculated and returned in dlm.Coefficients
+yVals=xVals*dlm.Coefficients.Estimate;%as calculated and returned in dlm.Coefficients
 plot(xVals,yVals,'r-');
 xlim([0 100])
 ylim([0 100])
+plot([0 100],[0 100],'k:');
 
 figure(fig2)
 subplot(1,2,1);
@@ -110,10 +111,11 @@ ax.YTickLabel={'0','5','10'};
 % h2.Color = 'r';
 dlm = fitlm(allEccentricityRFs,allEccentricitySacs,'Intercept',false);
 xVals=0:10;
-yVals=xVals*0.796224663810548;%as calculated and returned in dlm.Coefficients
+yVals=xVals*dlm.Coefficients.Estimate;%as calculated and returned in dlm.Coefficients
 plot(xVals,yVals,'r-');
 xlim([0 10])
 ylim([0 10])
+plot([0 10],[0 10],'k:');
 [rhoPA,pPA]=corrcoef([-rad2deg(allPolarAngleRFs'),-rad2deg(allPolarAngleSacs')],'rows','pairwise')%r=0.72; p<0.01
 [rhoEc,pEc]=corrcoef([allEccentricityRFs',allEccentricitySacs'],'rows','pairwise')%r=0.81; p<.001
 Rvalue=rhoPA(2);
@@ -125,6 +127,10 @@ Rvalue=rhoEc(2);
 pval=pEc(2);
 df=length(allEccentricityRFs)-2;
 sprintf(['Lick, eccentricity: r(',num2str(df),') = ',num2str(Rvalue),', p = %.4f'],pval) 
+
+%compare RF vs saccade eccentricity with paired t-test
+[h,p,ci,stats]=ttest(allEccentricityRFs,allEccentricitySacs);
+sprintf(['Lick, undershoot stats: t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p) 
 
 %plot figure of mean saccade end points, with same colour scheme as RF maps
 figure;
@@ -232,12 +238,16 @@ allEccentricityRFs(nanRemove)=[];
 allPolarAngleSacs(nanRemove)=[];
 allEccentricitySacs(nanRemove)=[];
 %remove outliers
+% outliers1=find(allPolarAngleRFs<-2);
+% outliers2=find(allPolarAngleSacs<-2);
 outliers1=find(allPolarAngleRFs<-2);
 outliers2=find(allPolarAngleSacs<-2);
 outliersPA1=union(outliers1,outliers2);
 
-outliers1=find(allPolarAngleRFs>2);
-outliers2=find(allPolarAngleSacs>2);
+% outliers1=find(allPolarAngleRFs>2);
+% outliers2=find(allPolarAngleSacs>2);
+outliers1=find(allPolarAngleRFs>1);
+outliers2=find(allPolarAngleSacs>1);
 outliersPA2=union(outliers1,outliers2);
 outliersPA=union(outliersPA1,outliersPA2);
 
@@ -265,19 +275,20 @@ figure(fig1)
 subplot(1,2,2);
 axis equal
 axis square
-set(gca,'XTick',[0 40 80])
-set(gca,'YTick',[0 40 80])
+set(gca,'XTick',[0 50 100])
+set(gca,'YTick',[0 50 100])
 % xlabel('RF polar angle (deg)');
 % ylabel('Saccade end point polar angle');
 % ylabel('Saccade polar angle (deg)');
 % h1 = lsline(ax1);
 % h1.Color = 'r';
 dlm = fitlm(-rad2deg(allPolarAngleRFs),-rad2deg(allPolarAngleSacs),'Intercept',false);
-xVals=-30:80;
-yVals=xVals*0.841132470389613;%as calculated and returned in dlm.Coefficients
+xVals=-30:100;
+yVals=xVals*dlm.Coefficients.Estimate;%as calculated and returned in dlm.Coefficients
 plot(xVals,yVals,'r-');
-ylim([-10 80])
-xlim([-10 80])
+ylim([-20 100])
+xlim([-20 100])
+plot([-20 100],[-20 100],'k:');
 
 figure(fig2)
 subplot(1,2,2);
@@ -295,10 +306,11 @@ ax.YTickLabel={'0','3','6'};
 % h2.Color = 'r';
 dlm = fitlm(allEccentricityRFs,allEccentricitySacs,'Intercept',false);
 xVals=0:10;
-yVals=xVals*0.689666659935434;%as calculated and returned in dlm.Coefficients
+yVals=xVals*dlm.Coefficients.Estimate;%as calculated and returned in dlm.Coefficients
 plot(xVals,yVals,'r-');
 xlim([0 6])
 ylim([0 6])
+plot([0 6],[0 6],'k:');
 [rhoPA,pPA]=corrcoef([-rad2deg(allPolarAngleRFs'),-rad2deg(allPolarAngleSacs')],'rows','pairwise')%r=0.74; p<0.01
 [rhoEc,pEc]=corrcoef([allEccentricityRFs',allEccentricitySacs'],'rows','pairwise')%r=0.63; p<.001
 Rvalue=rhoPA(2);
@@ -310,6 +322,10 @@ Rvalue=rhoEc(2);
 pval=pEc(2);
 df=length(allEccentricityRFs)-2;
 sprintf(['Aston, eccentricity: r(',num2str(df),') = ',num2str(Rvalue),', p = %.4f'],pval) 
+
+%compare RF vs saccade eccentricity with paired t-test
+[h,p,ci,stats]=ttest(allEccentricityRFs,allEccentricitySacs);
+sprintf(['Aston, undershoot stats: t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p) 
 
 %plot figure of mean saccade end points, with same colour scheme as RF maps
 figure;
