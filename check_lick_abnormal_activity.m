@@ -1,5 +1,81 @@
 function check_lick_abnormal_activity
 
+%check recording without a monkey in the setup, connecting phone to saline to send NSS pulses, while stimulating into saline, stimulating on CereStim 14295 and 14172, on channels 2 and 3 respectively, simultaneously:
+date='301118_BR_debug4';
+instanceName='instance1';
+neuronalChannels=33:96;%V4 array 2 on instance 1
+sampFreq=30000;
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+neuronalDataMat=['D:\data\',date,'\',instanceName,'_NSch_channels.mat'];
+figure;
+for channelInd=1%:length(neuronalChannels)
+    readChannel=['c:',num2str(neuronalChannels(channelInd)),':',num2str(neuronalChannels(channelInd))];
+    NSchOriginal=openNSx(instanceNS6FileName,readChannel);%,'t:01:3000000');
+    NSch{channelInd}=NSchOriginal.Data;
+%     for minuteCount=1:17%floor(length(NSchOriginal.Data)/(sampFreq*60))%plot a figure for each minute of data
+%         figure;
+%         subplot(4,5,minuteCount);
+        plot(NSchOriginal.Data);
+%     end
+end
+
+%check recording without a monkey in the setup, connecting phone to saline to send NSS pulses, while stimulating into saline, stimulating on CereStim 14295 on channels 1 and 2 simultaneously:
+date='301118_BR_debug3';
+instanceName='instance1';
+neuronalChannels=33:96;%V4 array 2 on instance 1
+sampFreq=30000;
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+neuronalDataMat=['D:\data\',date,'\',instanceName,'_NSch_channels.mat'];
+figure;
+for channelInd=1%:length(neuronalChannels)
+    readChannel=['c:',num2str(neuronalChannels(channelInd)),':',num2str(neuronalChannels(channelInd))];
+    NSchOriginal=openNSx(instanceNS6FileName,readChannel);%,'t:01:3000000');
+    NSch{channelInd}=NSchOriginal.Data;
+%     for minuteCount=1:17%floor(length(NSchOriginal.Data)/(sampFreq*60))%plot a figure for each minute of data
+%         figure;
+%         subplot(4,5,minuteCount);
+        plot(NSchOriginal.Data);
+%     end
+end
+
+%check recording without a monkey in the setup, connecting phone to saline to send NSS pulses, while stimulating into saline, stimulating on CereStim 14295 on channels 1 and 2 simultaneously- however, wrong MIT cable was dipped into saline:
+date='301118_BR_debug2';
+instanceName='instance1';
+neuronalChannels=33:96;%V4 array 2 on instance 1
+sampFreq=30000;
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+neuronalDataMat=['D:\data\',date,'\',instanceName,'_NSch_channels.mat'];
+figure;
+for channelInd=1%:length(neuronalChannels)
+    readChannel=['c:',num2str(neuronalChannels(channelInd)),':',num2str(neuronalChannels(channelInd))];
+    NSchOriginal=openNSx(instanceNS6FileName,readChannel);%,'t:01:3000000');
+    NSch{channelInd}=NSchOriginal.Data;
+%     for minuteCount=1:17%floor(length(NSchOriginal.Data)/(sampFreq*60))%plot a figure for each minute of data
+%         figure;
+%         subplot(4,5,minuteCount);
+        plot(NSchOriginal.Data);
+%     end
+end
+
+%check recording without a monkey in the setup, connecting phone to saline to send NSS pulses, while stimulating into saline, stimulating on CereStim 14295 on channels 1- however, wrong MIT cable was dipped into saline:
+date='301118_BR_debug1';
+instanceName='instance1';
+neuronalChannels=33:96;%V4 array 2 on instance 1
+sampFreq=30000;
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+neuronalDataMat=['D:\data\',date,'\',instanceName,'_NSch_channels.mat'];
+figure;
+for channelInd=1%:length(neuronalChannels)
+    readChannel=['c:',num2str(neuronalChannels(channelInd)),':',num2str(neuronalChannels(channelInd))];
+    NSchOriginal=openNSx(instanceNS6FileName,readChannel);%,'t:01:3000000');
+    NSch{channelInd}=NSchOriginal.Data;
+%     for minuteCount=1:17%floor(length(NSchOriginal.Data)/(sampFreq*60))%plot a figure for each minute of data
+%         figure;
+%         subplot(4,5,minuteCount);
+        plot(NSchOriginal.Data{end});
+%     end
+end
+
 %check recording without a monkey in the setup, connecting the NSS during 'Other' mode, to each bank of each Cereplex M at a time:
 date='131118';
 % neuronalChannels=33:96;%V4 array 2 on instance 1

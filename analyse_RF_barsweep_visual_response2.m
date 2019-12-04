@@ -1,4 +1,4 @@
-function analyse_RF_barsweep_visual_response2
+function analyse_RF_barsweep_visual_response2(realtime,slowedDownFactor)
 %5/9/18
 %Written by Xing to visualise responses to bar sweeps using 1000-channel data- new version.
 
@@ -226,10 +226,10 @@ end
 % close(v)
 
 %create combined MP4 video across conditions and monkeys:
-realtime=1;%set to 1 to run movie at real time. set to 0 to slow it down
+% realtime=1;%set to 1 to run movie at real time. set to 0 to slow it down
 moviename=fullfile('X:\aston','280818_B2_aston',['1024-channel responses to sweeping bar_both_monkeys']);
 if realtime==0
-    slowedDownFactor=2;%2: 50% speed; 4: 25%; 5: 20%; 10: 10%
+%     slowedDownFactor=2;%2: 50% speed; 4: 25%; 5: 20%; 10: 10%
     moviename=[moviename,'_slowed_',num2str(slowedDownFactor),'x'];
 end
 v = VideoWriter(moviename,'MPEG-4');

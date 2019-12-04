@@ -11981,3 +11981,296 @@ for i=1:length(stimOnset)
     end
 end
 (cursor_info.Position(1) - cursor_info2.Position(1))/30000
+
+%Test Feng's code, sending of multiple pulses but only 1 pusles appears
+date='010819_test_microstim_waveform2';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+
+%Test Feng's code, sending of 1 pulse
+date='010819_test_microstim_waveform3';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+
+%Test Feng's code, sending of 50 pulses, but only 1 pulse appears
+date='010819_test_microstim_waveform4';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+
+%Test Feng's code, sending of 50 pulses, but only 1 pulse appears
+date='010819_test_microstim_waveform5';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+
+%Test Feng's code, sending of 50 pulses, but only 1 pulse appears.
+%Hard-coded stimulator index and waveform ID- no pulses sent
+date='010819_test_microstim_waveform6';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+
+%Test Feng's code, sending of 50 pulses, but only 1 pulse appears.
+%Hard-coded stimulator index and waveform ID- one pulse sent, but no
+%further trains
+date='010819_test_microstim_waveform8';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+
+%Test Feng's code, sending of 50 pulses, but only 1 pulse appears.
+%Hard-coded stimulator index and waveform ID- one pulse sent, but no
+%further trains
+date='010819_test_microstim_waveform10';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+
+%Test Feng's code, sending of 50 pulses, 50 pulses appear.
+date='010819_test_microstim_waveform11';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+
+%Test Feng's code, sending of 50 pulses, 50 pulses appear.
+date='010819_test_microstim_waveform12';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+
+%Test Feng's code, sending of 50 pulses, 50 pulses appear.
+date='010819_test_microstim_waveform13';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+
+%Test Feng's code, sending of 50 pulses, 50 pulses appear.
+date='010819_test_microstim_waveform14';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+microInds=find(NEV.Data.SerialDigitalIO.UnparsedData==64);
+visualInds=find(NEV.Data.SerialDigitalIO.UnparsedData==4);
+(NEV.Data.SerialDigitalIO.TimeStamp(visualInds)-NEV.Data.SerialDigitalIO.TimeStamp(microInds))/30
+
+%Test Feng's code, sending of 50 pulses, 50 pulses appear. Current
+%amplitude of 125 uA (previously was 25 uA).
+date='010819_test_microstim_waveform15';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+microInds=find(NEV.Data.SerialDigitalIO.UnparsedData==64);
+visualInds=find(NEV.Data.SerialDigitalIO.UnparsedData==4);
+(NEV.Data.SerialDigitalIO.TimeStamp(visualInds)-NEV.Data.SerialDigitalIO.TimeStamp(microInds))/30
+
+%Test Feng's code, sending of 50 pulses, 50 pulses appear. Current
+%amplitude of 125 uA (previously was 25 uA).
+date='010819_test_microstim_waveform16';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(15,:),'m');%plot signal on analog input 16, with copy of output from bank A of CereStim
+microInds=find(NEV.Data.SerialDigitalIO.UnparsedData==64);
+visualInds=find(NEV.Data.SerialDigitalIO.UnparsedData==4);
+(NEV.Data.SerialDigitalIO.TimeStamp(visualInds)-NEV.Data.SerialDigitalIO.TimeStamp(microInds))/30
+
+%Test CereStim 14172 (correctly working CereStim, for comparison against
+%14294), sending of 50 pulses, 50 pulses appear. 
+date='200819_test_microstim_waveform3';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(6,:),'m');%plot sync pulse on analog input 1
+hold on
+plot(NSch(16,:),'b');%plot signal on analog input 16, with copy of output from bank A of CereStim
+microInds=find(NEV.Data.SerialDigitalIO.UnparsedData==64);
+visualInds=find(NEV.Data.SerialDigitalIO.UnparsedData==4);
+(NEV.Data.SerialDigitalIO.TimeStamp(visualInds)-NEV.Data.SerialDigitalIO.TimeStamp(microInds))/30
+
+%Test CereStim 14172 (correctly working CereStim, for comparison against
+%14294), sending of 50 pulses, 50 pulses appear. 
+date='200819_test_microstim_waveform6';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(1,:),'m');%plot sync pulse on analog input 1
+hold on
+plot(NSch(16,:),'b');%plot signal on analog input 16, with copy of output from bank A of CereStim
+microInds=find(NEV.Data.SerialDigitalIO.UnparsedData==64);
+visualInds=find(NEV.Data.SerialDigitalIO.UnparsedData==4);
+(NEV.Data.SerialDigitalIO.TimeStamp(visualInds)-NEV.Data.SerialDigitalIO.TimeStamp(microInds))/30
+
+%Test CereStim 14294 (incorrectly working CereStim), sending of 50 pulses on electrodes 2 and 1 sequentially (100 pulses in total), only 1 pulse appears. 
+date='200819_test_microstim_waveform7';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(1,:),'m');%plot sync pulse on analog input 1
+hold on
+plot(NSch(16,:),'b');%plot signal on analog input 16, with copy of output from bank A of CereStim
+microInds=find(NEV.Data.SerialDigitalIO.UnparsedData==64);
+visualInds=find(NEV.Data.SerialDigitalIO.UnparsedData==4);
+(NEV.Data.SerialDigitalIO.TimeStamp(visualInds)-NEV.Data.SerialDigitalIO.TimeStamp(microInds))/30
+
+%Test CereStim 14294 (incorrectly working CereStim), sending of 50 pulses on electrode 2 , only 1 pulse appears. 
+date='200819_test_microstim_waveform8';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(1,:),'m');%plot sync pulse on analog input 1
+hold on
+plot(NSch(16,:),'b');%plot signal on analog input 16, with copy of output from bank A of CereStim
+microInds=find(NEV.Data.SerialDigitalIO.UnparsedData==64);
+visualInds=find(NEV.Data.SerialDigitalIO.UnparsedData==4);
+(NEV.Data.SerialDigitalIO.TimeStamp(visualInds)-NEV.Data.SerialDigitalIO.TimeStamp(microInds))/30
+
+%Test CereStim 14294 (incorrectly working CereStim), sending of 100 pulses on electrode 2 , only 1 pulse appears. 
+date='200819_test_microstim_waveform9';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(1,:),'m');%plot sync pulse on analog input 1
+hold on
+plot(NSch(16,:),'b');%plot signal on analog input 16, with copy of output from bank A of CereStim
+microInds=find(NEV.Data.SerialDigitalIO.UnparsedData==64);
+visualInds=find(NEV.Data.SerialDigitalIO.UnparsedData==4);
+(NEV.Data.SerialDigitalIO.TimeStamp(visualInds)-NEV.Data.SerialDigitalIO.TimeStamp(microInds))/30
+
+%Test CereStim 14294 (incorrectly working CereStim), sending of 100 pulses on electrode 34 , only 1 pulse appears. 
+date='200819_test_microstim_waveform10';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(1,:),'m');%plot sync pulse on analog input 1
+hold on
+plot(NSch(16,:),'b');%plot signal on analog input 16, with copy of output from bank B of CereStim
+microInds=find(NEV.Data.SerialDigitalIO.UnparsedData==64);
+visualInds=find(NEV.Data.SerialDigitalIO.UnparsedData==4);
+(NEV.Data.SerialDigitalIO.TimeStamp(visualInds)-NEV.Data.SerialDigitalIO.TimeStamp(microInds))/30
+
+%Test CereStim 14294 (incorrectly working CereStim), sending of 100 pulses on electrode 64 , only 1 pulse appears. 
+date='200819_test_microstim_waveform11';
+instanceInd=1;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(1,:),'m');%plot sync pulse on analog input 1
+hold on
+plot(NSch(16,:),'b');%plot signal on analog input 16, with copy of output from bank C of CereStim
+microInds=find(NEV.Data.SerialDigitalIO.UnparsedData==64);
+visualInds=find(NEV.Data.SerialDigitalIO.UnparsedData==4);
+(NEV.Data.SerialDigitalIO.TimeStamp(visualInds)-NEV.Data.SerialDigitalIO.TimeStamp(microInds))/30

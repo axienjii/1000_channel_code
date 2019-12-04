@@ -22,7 +22,7 @@ allCorticalDistance1(tooFewTrials)=[];
 allMeanPerfMicrostimCondTarget1(tooFewTrials)=[];
 [r1 p1]=corrcoef(allCorticalDistance1,allMeanPerfMicrostimCondTarget1);
 figure;plot(allCorticalDistance1,allMeanPerfMicrostimCondTarget1,'ko');
-xlabel('mean eccentricity');
+xlabel('cortical distance (dva)');
 ylabel('performance (proportion correct)');
 title(['performance with cortical distance for 2-phosphene task, p=',num2str(p1(1,2))]);
 
@@ -48,7 +48,7 @@ allCorticalDistance2(removeNan)=[];
 allMeanPerfMicrostimCondTarget2(removeNan)=[];
 [r2 p2]=corrcoef(allCorticalDistance2,allMeanPerfMicrostimCondTarget2);
 figure;plot(allCorticalDistance2,allMeanPerfMicrostimCondTarget2,'ko');
-xlabel('mean eccentricity');
+xlabel('cortical distance (dva)');
 ylabel('performance (proportion correct)');
 title(['performance with cortical distance for 2-phosphene task, p=',num2str(p2(1,2))]);
 
@@ -71,7 +71,7 @@ end
 
 [r p]=corrcoef(allCorticalDistance,allMeanPerfMicrostimCondTarget);
 figure;plot(allCorticalDistance,allMeanPerfMicrostimCondTarget,'ko');
-xlabel('mean eccentricity');
+xlabel('cortical distance (dva)');
 ylabel('performance (proportion correct)');
 title(['performance with cortical distance for 2-phosphene task, p=',num2str(p(1,2))]);
 

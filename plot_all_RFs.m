@@ -51,7 +51,7 @@ for instanceInd=1:8
     load(fileName)
     channelRFs1000=[channelRFs1000;channelRFs];
 end
-SNRthreshold=1;
+SNRthreshold=2;
 meanChannelSNR=mean(channelRFs1000(:,8:11),2);
 goodInd=find(meanChannelSNR>=SNRthreshold);
 badInd=find(meanChannelSNR<SNRthreshold);
@@ -214,10 +214,12 @@ if drawBarArea==1
     end
 end
 colind = hsv(16);
+colind(8,:)=[139/255 69/255 19/255];
 arrayNums=[];
 goodArrays=1:16;
 % goodArrays=[1 2 3 4 9 10 11 13 14 15 16];
 % colind = hsv(11);
+plotCircles=1;
 badQuadrant=[];
 for i=1:length(goodInd)
     channelRow=goodInd(i);
@@ -248,11 +250,135 @@ for i=1:length(goodInd)
         end
         badQuadrant=[badQuadrant;arrayNum channelNum areaNum instanceInd channelInd];
     end
-    if channelRow>32&&channelRow<=96||channelRow>128&&channelRow<=128+32||channelRow>128*2-32&&channelRow<=128*2
-        plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o','MarkerSize',5);%V4 RFs, unfilled circles
+    if area=='V1'
+        areaNum=1;
+        if plotCircles==1
+            plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o','MarkerSize',3,'MarkerFaceColor',colind(arrayCol,:));
+        elseif plotCircles==0
+            text(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),num2str(channelNum),'Color',colind(arrayCol,:));
+        end
+    elseif area=='V4'
+        areaNum=4;
+        if plotCircles==1
+            plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o','MarkerSize',3);
+        elseif plotCircles==0
+            text(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),num2str(channelNum),'Color',colind(arrayCol,:));
+        end
+    end
+end
+xlim([-100 300]);
+ylim([-300 100]);
+xlim([-50 250]);
+ylim([-250 50]);
+arrayNums=unique(arrayNums);
+%draw dotted lines indicating [0,0]
+plot([0 0],[-250 200],'k:')
+plot([-200 300],[0 0],'k:')
+plot([-200 300],[200 -300],'k:')
+pixPerDeg=26;
+ellipse(2*pixPerDeg,2*pixPerDeg,0,0,[0.1 0.1 0.1]);
+ellipse(4*pixPerDeg,4*pixPerDeg,0,0,[0.1 0.1 0.1]);
+ellipse(6*pixPerDeg,6*pixPerDeg,0,0,[0.1 0.1 0.1]);
+ellipse(8*pixPerDeg,8*pixPerDeg,0,0,[0.1 0.1 0.1]);
+% text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+% text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+% text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+% text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+xlim([leftEdge-50 rightEdge+50]);
+ylim([bottomEdge-50 topEdge+50]);
+axis square
+set(gca,'XTick',[0 2*pixPerDeg 4*pixPerDeg 6*pixPerDeg 8*pixPerDeg 10*pixPerDeg]);
+set(gca,'XTickLabel',{'0','2','4','6','8','10'});
+set(gca,'YTick',[-6*pixPerDeg -4*pixPerDeg -2*pixPerDeg 0]);
+set(gca,'YTickLabel',{'-6','-4','-2','0'});
+titleText=['all good channel RFs, SNR=',num2str(SNRthreshold),', ',num2str(length(goodInd)),' channels'];
+% title(titleText);
+% for i=1:16
+%     text(220,-100-i*8,num2str(i),'Color',colind(i,:))
+% end
+% for i=1:16
+%     text(220,-5-i*8,num2str(i),'Color',colind(i,:))
+% end
+
+axis equal
+% xlim([-40 260]);
+% ylim([-170 30]);
+% xlim([-30 250]);
+xlim([-10 220]);
+ylim([-150 20]);
+set(gca,'XTick',[]);
+set(gca,'YTick',[]);
+set(gca,'XTickLabel',[]);
+set(gca,'YTickLabel',[]);
+set(gca,'XColor','none')
+set(gca,'YColor','none')
+pathname=fullfile('D:\data\results\RFs_map_figure');
+set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+% print(pathname,'-dtiff','-r600');
+
+%all channels, axes scaled by cortical magnification factor (for Bing's noise correlation analysis)
+figure
+hold on
+scatter(0,0,'r','o','filled');%fix spot
+if drawBarArea==1
+    for i=1:size(XVEC1,1)
+        h = line(XVEC1(i,:),YVEC1(i,:),'LineWidth',1);
+        set(h,'Color',[0.5 0.5 0.5])
+    end
+end
+colind = hsv(16);
+colind(8,:)=[139/255 69/255 19/255];
+arrayNums=[];
+goodArrays=1:16;
+% goodArrays=[1 2 3 4 9 10 11 13 14 15 16];
+% colind = hsv(11);
+plotCircles=1;
+badQuadrant=[];
+for i=1:length(goodInd)
+    channelRow=goodInd(i);
+    instanceInd=ceil(channelRow/128);
+    channelInd=mod(channelRow,128);
+    if channelInd==0
+        channelInd=128;
+    end
+    [channelNum,arrayNum,area]=electrode_mapping(instanceInd,channelInd);
+    arrayCol=find(goodArrays==arrayNum);
+    arrayNums=[arrayNums arrayNum];
+    if strcmp(area,'V1')
+        markerCol='k';%V1
     else
-        plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o','MarkerSize',5,'MarkerFaceColor',colind(arrayCol,:));%V1 RFs, filled circles
-        %     ellipse(channelRFs1000(goodInd(i),12),channelRFs1000(goodInd(i),13),channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2));
+        markerCol='b';%V4
+    end
+%     if channelRow>32&&channelRow<=96||channelRow>128&&channelRow<=128+32||channelRow>128*2-32&&channelRow<=128*2%V4 RFs
+%         plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',markerCol,'Marker','o');
+%     else
+%         plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',markerCol,'Marker','x');
+%         %     ellipse(channelRFs1000(goodInd(i),12),channelRFs1000(goodInd(i),13),channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2));
+%     end
+    if channelRFs1000(goodInd(i),1)<0||channelRFs1000(goodInd(i),2)>10
+        if area=='V1'
+            areaNum=1;
+        elseif area=='V4'
+            areaNum=4;
+        end
+        badQuadrant=[badQuadrant;arrayNum channelNum areaNum instanceInd channelInd];
+    end
+    w=calculate_cortical_coords_from_RFs([channelRFs1000(goodInd(i),1) channelRFs1000(goodInd(i),2)]);
+    channelRFs1000_CMS(goodInd(i),1:2)=[real(w) imag(w)];%RFs with scaling according to cortical magnification factor
+    if area=='V1'
+        areaNum=1;
+        if plotCircles==1
+            plot(real(w),imag(w),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o','MarkerSize',3,'MarkerFaceColor',colind(arrayCol,:));
+        elseif plotCircles==0
+            text(real(w),imag(w),num2str(channelNum),'Color',colind(arrayCol,:));
+        end
+    elseif area=='V4'
+        areaNum=4;
+        if plotCircles==1
+            plot(real(w),imag(w),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o','MarkerSize',3);
+        elseif plotCircles==0
+            text(real(w),imag(w),num2str(channelNum),'Color',colind(arrayCol,:));
+        end
     end
 end
 xlim([-100 300]);
@@ -289,17 +415,104 @@ for i=1:16
     text(220,-5-i*8,num2str(i),'Color',colind(i,:))
 end
 
-axis equal
-xlim([-40 260]);
-ylim([-170 30]);
-xlim([-30 250]);
-pathname=fullfile('D:\data\results\RFs_map_figure');
+pathname=fullfile('D:\data\results\RFs_map_figure_cortical_magnification_factor');
+pathname=fullfile('D:\data\results\RFs_map_figure_cortical_magnification_factor_zoom');
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-print(pathname,'-dtiff','-r600');
+% print(pathname,'-dtiff','-r600');
+
+
+%all channels (for RF size, Yagmur/Umut/Marcel study)
+figure
+hold on
+scatter(0,0,'r','o','filled');%fix spot
+if drawBarArea==1
+    for i=1:size(XVEC1,1)
+        h = line(XVEC1(i,:),YVEC1(i,:),'LineWidth',1);
+        set(h,'Color',[0.5 0.5 0.5])
+    end
+end
+colind = hsv(16);
+arrayNums=[];
+goodArrays=1:16;
+% goodArrays=[1 2 3 4 9 10 11 13 14 15 16];
+% colind = hsv(11);
+badQuadrant=[];
+for i=1:length(goodInd)
+    channelRow=goodInd(i);
+    instanceInd=ceil(channelRow/128);
+    channelInd=mod(channelRow,128);
+    if channelInd==0
+        channelInd=128;
+    end
+    [channelNum,arrayNum,area]=electrode_mapping(instanceInd,channelInd);
+    arrayCol=find(goodArrays==arrayNum);
+    arrayNums=[arrayNums arrayNum];
+    if strcmp(area,'V1')
+        markerCol='k';%V1
+    else
+        markerCol='b';%V4
+    end
+    if channelRFs1000(goodInd(i),1)<0||channelRFs1000(goodInd(i),2)>10
+        if area=='V1'
+            areaNum=1;
+        elseif area=='V4'
+            areaNum=4;
+        end
+        badQuadrant=[badQuadrant;arrayNum channelNum areaNum instanceInd channelInd];
+    end
+    if channelRow>32&&channelRow<=96||channelRow>128&&channelRow<=128+32||channelRow>128*2-32&&channelRow<=128*2
+        plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o','MarkerSize',3,'MarkerFaceColor',colind(arrayCol,:));%V4 RFs, unfilled circles
+        ellipse(channelRFs1000(goodInd(i),12),channelRFs1000(goodInd(i),13),channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),colind(arrayCol,:));
+    else
+        plot(channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),'MarkerEdgeColor',colind(arrayCol,:),'Marker','o','MarkerSize',3,'MarkerFaceColor',colind(arrayCol,:));%V1 RFs, filled circles
+        ellipse(channelRFs1000(goodInd(i),12),channelRFs1000(goodInd(i),13),channelRFs1000(goodInd(i),1),channelRFs1000(goodInd(i),2),colind(arrayCol,:));
+    end
+end
+xlim([-100 300]);
+ylim([-300 100]);
+xlim([-50 250]);
+ylim([-250 50]);
+arrayNums=unique(arrayNums);
+%draw dotted lines indicating [0,0]
+plot([0 0],[-250 200],'k:')
+plot([-200 300],[0 0],'k:')
+% plot([-200 300],[200 -300],'k:')
+pixPerDeg=26;
+% ellipse(2*pixPerDeg,2*pixPerDeg,0,0,[0.1 0.1 0.1]);
+% ellipse(4*pixPerDeg,4*pixPerDeg,0,0,[0.1 0.1 0.1]);
+% ellipse(6*pixPerDeg,6*pixPerDeg,0,0,[0.1 0.1 0.1]);
+% ellipse(8*pixPerDeg,8*pixPerDeg,0,0,[0.1 0.1 0.1]);
+text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
+text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
+xlim([leftEdge-50 rightEdge+50]);
+ylim([bottomEdge-50 topEdge+50]);
+axis square
+set(gca,'XTick',[-6*pixPerDeg -4*pixPerDeg -2*pixPerDeg 0 2*pixPerDeg 4*pixPerDeg 6*pixPerDeg 8*pixPerDeg 10*pixPerDeg]);
+set(gca,'XTickLabel',{'-6','-4','-2','0','2','4','6','8','10'});
+set(gca,'YTick',[-8*pixPerDeg -6*pixPerDeg -4*pixPerDeg -2*pixPerDeg 0 2*pixPerDeg 4*pixPerDeg 6*pixPerDeg]);
+set(gca,'YTickLabel',{'-8','-6','-4','-2','0','2','4','6'});
+titleText=['all good channel RFs, SNR=',num2str(SNRthreshold),', ',num2str(length(goodInd)),' channels'];
+title(titleText);
+for i=1:16
+    text(220,100-i*8,num2str(i),'Color',colind(i,:))
+end
+
+axis equal
+xlim([-100 300]);
+ylim([-220 150]);
+pathname=fullfile('D:\data\results\RFs_map_figure_RFsizes_all');
+set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
+% print(pathname,'-dtiff','-r200');
 
 %analyse RF size as a function of eccentricity:
 channelsV1=[];
-figure;hold on%colour-coded by array number
+channelsV4=[];
+channelsV1arrayNum=[];
+channelsV4arrayNum=[];
+v1fig=figure;hold on%colour-coded by array number
+v4fig=figure;hold on%colour-coded by array number
 for i=1:length(goodInd)
     channelRow=goodInd(i);
     instanceInd=ceil(channelRow/128);
@@ -315,25 +528,61 @@ for i=1:length(goodInd)
             eccentricity=sqrt(channelRFs1000(goodInd(i),1)^2+channelRFs1000(goodInd(i),2)^2);
             if eccentricity<300&&channelRFs1000(goodInd(i),4)<10
                 channelsV1=[channelsV1;eccentricity channelRFs1000(goodInd(i),4)];
-                plot(eccentricity,channelRFs1000(goodInd(i),4),'MarkerEdgeColor',colind(arrayNum,:),'Marker','x');
+                channelsV1arrayNum=[channelsV1arrayNum;colind(arrayNum,:)];
+%                 figure(v1fig);
+%                 plot(eccentricity,channelRFs1000(goodInd(i),4),'MarkerEdgeColor',colind(arrayNum,:),'Marker','x');
             end
         elseif area=='V4'
             areaNum=4;
+            eccentricity=sqrt(channelRFs1000(goodInd(i),1)^2+channelRFs1000(goodInd(i),2)^2);
+            if eccentricity<300&&channelRFs1000(goodInd(i),4)<10
+                channelsV4=[channelsV4;eccentricity channelRFs1000(goodInd(i),4)];
+                channelsV4arrayNum=[channelsV4arrayNum;colind(arrayNum,:)];
+%                 figure(v4fig);
+%                 plot(eccentricity,channelRFs1000(goodInd(i),4),'MarkerEdgeColor',colind(arrayNum,:),'Marker','x');
+            end
         end
     end
 end
+meanEccentricityV1=mean(channelsV1(:,1));
+stdEccentricityV1=std(channelsV1(:,1));
+notOutliers=find(channelsV1(:,1)<meanEccentricityV1+stdEccentricityV1*3);%outliers are considered to be values lying more than 3 SD from the mean
+channelsV1NoOutliers=channelsV1(notOutliers,:);
+channelsV1arrayNum=channelsV1arrayNum(notOutliers,:);
+figure(v1fig);
+scatter(channelsV1NoOutliers(:,1),channelsV1NoOutliers(:,2),[],channelsV1arrayNum)
 set(gca,'XTick',[0:25:200],'XTickLabels',[0:8]);
 xlabel('eccentricity (dva)')
 ylabel('size (dva)')
-title('RF size versus eccentricity, V1 channels (N=859)')
+title(['RF size versus eccentricity, V1 channels (N=',num2str(length(channelsV1NoOutliers)),'/',num2str(64*14),')'])
 
-[r p]=corr(channelsV1)
+[r p]=corr(channelsV1)%R=0.4126, p<.001, N=829
 figure;hold on
-plot(channelsV1(:,1),channelsV1(:,2),'ko');
+plot(channelsV1NoOutliers(:,1),channelsV1NoOutliers(:,2),'ko');
 set(gca,'XTick',[0:25:200],'XTickLabels',[0:8]);
 xlabel('eccentricity (dva)')
 ylabel('size (dva)')
-title('RF size versus eccentricity, V1 channels (N=859)')
+title(['RF size versus eccentricity, V1 channels (N=',num2str(length(channelsV1NoOutliers)),'/',num2str(64*14),')'])
+
+meanEccentricityV4=mean(channelsV4(:,1));
+stdEccentricityV4=std(channelsV4(:,1));
+notOutliers=find(channelsV4(:,1)<meanEccentricityV4+stdEccentricityV4*3);%outliers are considered to be values lying more than 3 SD from the mean
+channelsV4NoOutliers=channelsV4(notOutliers,:);
+channelsV4arrayNum=channelsV4arrayNum(notOutliers,:);
+figure(v4fig);
+scatter(channelsV4NoOutliers(:,1),channelsV4NoOutliers(:,2),[],channelsV4arrayNum)
+set(gca,'XTick',[0:25:200],'XTickLabels',[0:8]);
+xlabel('eccentricity (dva)')
+ylabel('size (dva)')
+title(['RF size versus eccentricity, V4 channels (N=',num2str(length(channelsV4NoOutliers)),'/',num2str(64*2),')'])
+
+[r p]=corr(channelsV4)%R=0.5323, p<.001, N=107
+figure;hold on
+plot(channelsV4NoOutliers(:,1),channelsV4NoOutliers(:,2),'ko');
+set(gca,'XTick',[0:25:200],'XTickLabels',[0:8]);
+xlabel('eccentricity (dva)')
+ylabel('size (dva)')
+title(['RF size versus eccentricity, V4 channels (N=',num2str(length(channelsV4NoOutliers)),'/',num2str(64*2),')'])
 
 %all good orientation-tuned channels, colour-coded by preferred orientation
 fileName='X:\best\080618_B3\good_channels_preferred_orientations.mat';%load data generated by analyse_RForitune.m and combine_orientation_tuning.m

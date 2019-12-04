@@ -3,6 +3,7 @@ function combine_orientation_tuning
 %Read in preferred orientation across all 8 instances, and compile into one
 %output file, which will be used in plot_all_RFs.m, to generate RF map
 %which is colour-coded by preferred orientation.
+%Orientation of 0 degrees corresponds to a vertically oriented grating.
 date='080618_B3';
 load('X:\best\080618_B3\080618_data\CheckSNR_080618_B3.mat')
 best=1;

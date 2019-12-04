@@ -1,4 +1,4 @@
-function [b1 b2]=calculateSaccadeEndpoint2(x,y)
+function [b1 b2]=calculateSaccadeEndpoint(x,y)
 %Written by Xing 12/9/17
 %Takes in histogram values of either the X or Y coordinates of the saccadic
 %movement as second input arg, and the bin number as the first input arg.

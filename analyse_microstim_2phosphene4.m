@@ -13,8 +13,8 @@ elseif localDisk==0
 end
 matFile=[rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'];
 dataDir=[rootdir,date,'\',date,'_data'];
-if ~exist('dataDir','dir')
-    copyfile(['Z:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);    
+if ~exist(dataDir,'dir')
+    copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);    
 end
 load(matFile);
 maxNumTrials=size(TRLMAT,1);

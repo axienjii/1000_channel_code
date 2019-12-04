@@ -12,7 +12,7 @@ if localDisk==1
 elseif localDisk==0
     rootdir='X:\best\';
 end
-
+exampleFig=0;
 % arrayNums=[8 10 10 10 10 10 10 10 10 10 10 11 11 11 12 12 12 12 12 12 12 12 12 13 13 13 13 13 13 13 13 14 14 14 15 16 16];
 % electrodeNums=[40 40 35 46 57 55 58 37 62 59 20 55 24 18 61 40 50 28 10 34 29 41 20 35 48 47 53 55 38 56 32 43 12 30 49 21 39];
 % date='051217_T4';
@@ -457,9 +457,11 @@ end
 % date='210218_B2';
 % electrodeNums=[3 27 40 13 33 63];
 % arrayNums=[11 12 12 13 13 16];
-% date='220218_B1';
+date='220218_B1';
 % electrodeNums=[39 45 47 54 32 15 53 12 29 59 17 58 13 20 30 22 63 13 21 44 39 63 30 40 63 50 27 32 29 33 21 29 48 22 38 20 63 22 20 52];
 % arrayNums=[12 14 14 14 14 16 14 14 14 12 9 14 14 14 14 16 14 14 12 12 16 16 16 15 15 8 8 14 12 13 12 12 13 13 13 16 14 12 12 12];
+electrodeNums=[29];
+arrayNums=[14];
 % date='220218_B2';
 % electrodeNums=[27 21 59 38 48 32 20 30 39];
 % arrayNums=[8 12 12 13 13 14 16 16 16];
@@ -1137,9 +1139,9 @@ end
 % date='060918_B12';%V1-V4 task
 % electrodeNums=[1];
 % arrayNums=[8];
-date='060918_B13';%V1-V4 task
-electrodeNums=[10];
-arrayNums=[8];
+% date='060918_B13';%V1-V4 task
+% electrodeNums=[10];
+% arrayNums=[8];
 % date='060918_B14';%V1-V4 task
 % electrodeNums=[11];
 % arrayNums=[8];
@@ -1174,16 +1176,146 @@ arrayNums=[8];
 % date='261018_B1';%current thresholding
 % electrodeNums=[62 48 47 32 61 64 43 62 63 40 27 52 1 4 34 47 6 14 12];
 % arrayNums=[13 13 13 13 10 11 13 15 15 15 8 8 9 16 16 16 12 12 14];
-date='261018_B3';%current thresholding
-electrodeNums=[61 6 43 12 4 47];
-arrayNums=[10 12 13 14 16 16];
+% date='261018_B3';%current thresholding
+% electrodeNums=[61 6 43 12 4 47];
+% arrayNums=[10 12 13 14 16 16];
+% date='010319_B1';
+% electrodeNums=[29 47 28 33 23 30 31 30 32 16 2 28 20 29 21 24 22 20 12 13];
+% arrayNums=[12 13 12 13 13 13 14 14 14 14 14 14 14 14 12 12 12 12 14 14];
+% date='010319_B4';
+% electrodeNums=[29 47 28 30 31 30 32];
+% arrayNums=[12 13 12 13 14 14 14];
+% date='010319_B7';
+% electrodeNums=[31];
+% arrayNums=[14];
+% date='060319_B1';
+% electrodeNums=[29 47 28 30 30 32];
+% arrayNums=[12 13 12 13 14 14];
+% date='060319_B2';
+% electrodeNums=[30];
+% arrayNums=[14];
+% date='060319_B3';
+% electrodeNums=[30];
+% arrayNums=[14];
+% date='060319_B5';
+% electrodeNums=[29];
+% arrayNums=[12];
+% date='060319_B6';
+% electrodeNums=[32];
+% arrayNums=[14];
+% date='060319_B8';
+% electrodeNums=[16 28 20 29 21 24 22 20 12 13];
+% arrayNums=[14 14 14 14 12 12 12 12 14 14];
+% date='060319_B9';
+% electrodeNums=[16 20 29 21 24 22 12 13];
+% arrayNums=[14 14 14 12 12 12 12 14];
+% date='060319_B10';
+% electrodeNums=[28];
+% arrayNums=[14];
+% date='070319_B1';
+% electrodeNums=[28 20 20 13 12 29 24 22 12];
+% arrayNums=[14 12 14 14 12 14 12 12 14];
+% date='070319_B2';
+% electrodeNums=[28];
+% arrayNums=[14];
+% date='070319_B4';
+% electrodeNums=[20];
+% arrayNums=[14];
+% date='070319_B6';
+% electrodeNums=[13];
+% arrayNums=[14];
+% date='080319_B1';
+% electrodeNums=[20 13 12 29 24 22 12];
+% arrayNums=[12 14 12 14 12 12 14];
+% date='110319_B1';
+% electrodeNums=[12 29 24 22 12];
+% arrayNums=[12 14 12 12 14];
+% date='110319_B2';
+% electrodeNums=[12];
+% arrayNums=[12];
+% date='110319_B3';
+% electrodeNums=[29];
+% arrayNums=[14];
+% date='120319_B1';
+% electrodeNums=[24 22 12];
+% arrayNums=[12 12 14];
+% date='120319_B3';
+% electrodeNums=[22];
+% arrayNums=[12];
+% date='120319_B4';
+% electrodeNums=[12];
+% arrayNums=[14];
+% date='120319_B6';
+% electrodeNums=[24];
+% arrayNums=[12];
+% date='170519_B1';
+% electrodeNums=[22];
+% arrayNums=[12];
+% date='170519_B2';
+% electrodeNums=[24 12];
+% arrayNums=[12 12];
+% date='200519_B1';
+% electrodeNums=[24 12 20 29 12 29 13 20 28 32 30 31 23 33 47];
+% arrayNums=[12 12 12 12 14 14 14 14 14 14 14 14 13 13 13];
+% date='200519_B2';
+% electrodeNums=[12 20 12 29 13 32 23 47];
+% arrayNums=[12 12 14 14 14 14 13 13];
+% date='200519_B3';
+% electrodeNums=[12 12 32 23];
+% arrayNums=[12 14 14 13];
+% date='020819_B2';
+% electrodeNums=[12 20 24 29 12 20 28 30 31 32 13 29 23];
+% arrayNums=[12 12 12 12 14 14 14 14 14 14 14 14 13];
+% date='020819_B3';
+% electrodeNums=[12 20 24 29 20 31 32];
+% arrayNums=[12 12 12 12 14 14 14];
+% date='080819_B1';
+% electrodeNums=[12 13 20 28 30 31 32];
+% arrayNums=[14 14 14 14 14 14 14];
+% date='120819_B3';
+% a9=[1;17;27;44;64;9;26;19;63;48;47;5;38;8;28;13;56;36;45;21;25]';
+% a12=[57;22;24;41;5;23;39;40;58;59;21;6;20;27;28;35;19;43;11;34;36;42;2;12;29;3;4;13;26;44;60;49;37;10;18;14;30;33;25;52;50;51;61;1;8;64;31;7;63;16;15;9;17;56;32]';
+% a13=[35;33;34;50;51;11;12;13;52;53;41;37;38;55;56;61;44;62;43;32;48;49;22;58;31;3;23;47;26;60;42;27;20;18;14;28;46;24;10;54;30;36]';
+% a14=[5;4;12;21;20;28;63;13;62;54;55;29;37;36;31;53;3;32;47;59;40;61;39;15;58;44;45;46;16;30;60;7;48;49;24;64;6]';
+% a15=[15;7;55;48;40;49;46;62;63;4;1;41;8;29;28;5;37]';
+% a16=[12;20;21;27;37;45;7;61;58;40;38;44;63;39;30;15;57;35;43;46;47;50;64;22;28;56;16;23;13;19;24;32;53;59;48;11;4;6;2;60;31;62;55;36;9;3;10;25;34]';
+% electrodeNums=[a9(1:floor(length(a9)/2)) a12(1:floor(length(a12)/2)) a13(1:floor(length(a13)/2)) a14(1:floor(length(a14)/2)) a15(1:floor(length(a15)/2)) a16(1:floor(length(a16)/2))];
+% arrayNums=[9*ones(1,floor(length(a9)/2)) 12*ones(1,floor(length(a12)/2)) 13*ones(1,floor(length(a13)/2)) 14*ones(1,floor(length(a14)/2)) 15*ones(1,floor(length(a15)/2)) 16*ones(1,floor(length(a16)/2))];
+% date='120819_B4';
+% a9=[1;17;27;44;64;9;26;19;63;48;47;5;38;8;28;13;56;36;45;21;25]';
+% a12=[57;22;24;41;5;23;39;40;58;59;21;6;20;27;28;35;19;43;11;34;36;42;2;12;29;3;4;13;26;44;60;49;37;10;18;14;30;33;25;52;50;51;61;1;8;64;31;7;63;16;15;9;17;56;32]';
+% a13=[35;33;34;50;51;11;12;13;52;53;41;37;38;55;56;61;44;62;43;32;48;49;22;58;31;3;23;47;26;60;42;27;20;18;14;28;46;24;10;54;30;36]';
+% a14=[5;4;12;21;20;28;63;13;62;54;55;29;37;36;31;53;3;32;47;59;40;61;39;15;58;44;45;46;16;30;60;7;48;49;24;64;6]';
+% a15=[15;7;55;48;40;49;46;62;63;4;1;41;8;29;28;5;37]';
+% a16=[12;20;21;27;37;45;7;61;58;40;38;44;63;39;30;15;57;35;43;46;47;50;64;22;28;56;16;23;13;19;24;32;53;59;48;11;4;6;2;60;31;62;55;36;9;3;10;25;34]';
+% electrodeNums=[a12(floor(length(a12)/2)+1:end) a13(floor(length(a13)/2)+1:end) a14(floor(length(a14)/2)+1:end) a15(floor(length(a15)/2)+1:end)];
+% arrayNums=[12*ones(1,ceil(length(a12)/2)) 13*ones(1,ceil(length(a13)/2)) 14*ones(1,ceil(length(a14)/2)) 15*ones(1,ceil(length(a15)/2))];
+% date='130819_B1';
+% electrodeNums=[8 11 3 48 64 30];
+% arrayNums=[9 12 14 15 14 14];
+% date='130819_B2';
+% electrodeNums=[8 11];
+% arrayNums=[9 12];
+% date='150819_B5';
+% electrodeNums=[8 11];
+% arrayNums=[9 12];
 
+
+if exampleFig==1%example current thresholding plot for paper
+    date='110319_B2';
+    electrodeNums=[12];
+    arrayNums=[12];
+end
+
+date='150118_B1';
 
 finalCurrentValsFile=7;
 % copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
 % copyfile(['D:\data\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
 copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
 load([rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'])
+% electrodeNums=[29];
+% arrayNums=[14];
 microstimAllHitTrials=intersect(find(allCurrentLevel>0),find(performance==1));
 microstimAllMissTrials=intersect(find(allCurrentLevel>0),find(performance==-1));
 catchAllCRTrials=intersect(find(allCurrentLevel==0),find(performance==1));%correct rejections
@@ -1236,15 +1368,20 @@ for uniqueElectrode=1:length(electrodeNums)
     end
     hits./misses;
     for Weibull=0:1% set to 1 to get the Weibull fit, 0 for a sigmoid fit
+        figure('Name','Psychometric function')
         [theta threshold]=analyse_current_thresholds_Plot_Psy_Fie(currentAmplitudes,hits,misses,falseAlarms,correctRejections,Weibull);
         hold on
         yLimits=get(gca,'ylim');
         plot([threshold threshold],yLimits,'r:')
-        plot([theta theta],yLimits,'k:')
+        if exampleFig==0
+            plot([theta theta],yLimits,'k:')
         %     text(threshold-10,yLimits(2)-0.05,['threshold = ',num2str(round(threshold)),' uA'],'FontSize',12,'Color','k');
         text(threshold,yLimits(2)-0.05,['threshold = ',num2str(round(threshold)),' uA'],'FontSize',12,'Color','k');
-        ylabel('proportion of trials');
-        xlabel('current amplitude (uA)');
+        end
+        if exampleFig==0
+            ylabel('proportion of trials');
+            xlabel('current amplitude (uA)');
+        end
         if Weibull==1
             title(['Psychometric function for array',num2str(array),' electrode',num2str(electrode),', Weibull fit.'])
             pathname=fullfile(rootdir,date,['array',num2str(array),'_electrode',num2str(electrode),'_current_amplitudes_weibull']);
@@ -1258,5 +1395,12 @@ for uniqueElectrode=1:length(electrodeNums)
         thresholds(uniqueElectrode,Weibull+2)=electrode;
         thresholds(uniqueElectrode,Weibull+3)=array;
     end
+    close all
+end
+if exampleFig==1
+    set(gca,'Box','off')
+    xlim([0 15])
+    set(gca,'YTick',[0 0.5 1])
+    set(gca,'XTick',[0 5 10 15])
 end
 save([rootdir,date,'\',date,'_thresholds.mat'],'thresholds');

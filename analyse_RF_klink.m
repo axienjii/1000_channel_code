@@ -6,15 +6,21 @@ stimDurms=1000;%in ms
 stimDur=stimDurms/1000;%in seconds
 % date='020818_B2';
 % date='070818_B2';
-date='041018_B1_aston';
-if strcmp(date(end-4:end),'aston')
-    rootDir='D:\aston_data\';
-else
-    rootDir='D:\data\';
+% date='041018_B1_aston';
+date='L191203_B1';
+fengData=1;
+if fengData==0
+    if strcmp(date(end-4:end),'aston')
+        rootDir='D:\aston_data\';
+    else
+        rootDir='D:\data\';
+    end
+elseif fengData==1
+    rootDir='D:\feng\data\';
 end
 processRaw=1;
 if processRaw==1
-    for instanceInd=5:8
+    for instanceInd=1:4
         instanceName=['instance',num2str(instanceInd)];
         instanceNEVFileName=[rootDir,date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);

@@ -5,6 +5,9 @@ function analyse_CheckSNR_over_time
 %checkerboard stimuli to analyse signals for visually evoked responses.
 %Plots measurements of SNR across time, for each channel.
 
+saveFileName='D:\data\results\allSNR_130818_dateVals.mat';
+formatIn = 'ddmmyy';
+loadRaw=0;
 allSNR=[];
 xval=[];
 dateLabels=[];
@@ -31,7 +34,7 @@ for dates=[1 4 6 9 11 16:18 20:22 25:28]%remove dates when two occur very close 
             best=0;
         case 6
             date='200717_B7';
-            whichDir=1;
+            whichDir=2;
             best=1;
         case 7
             date='210717_B4';%forgot to turn off impedance mode on CerePlex Ms connected to instance 1
@@ -43,7 +46,7 @@ for dates=[1 4 6 9 11 16:18 20:22 25:28]%remove dates when two occur very close 
             best=1;
         case 9
             date='250717_B2';
-            whichDir=1;
+            whichDir=2;
             best=1;
         case 10
             date='260717_B3';%events missing from instance 6
@@ -51,7 +54,7 @@ for dates=[1 4 6 9 11 16:18 20:22 25:28]%remove dates when two occur very close 
             best=1;
         case 11
             date='080817_B7';
-            whichDir=1;
+            whichDir=2;
             best=1;
         case 12
             date='090817_B8';
@@ -70,10 +73,10 @@ for dates=[1 4 6 9 11 16:18 20:22 25:28]%remove dates when two occur very close 
             whichDir=1;
         case 16
             date='240817_B39';
-            whichDir=1;
+            whichDir=2;
         case 17
             date='290817_B48';
-            whichDir=1;
+            whichDir=2;
         case 18
             date='200917_B2';
             whichDir=1;
@@ -119,7 +122,11 @@ for dates=[1 4 6 9 11 16:18 20:22 25:28]%remove dates when two occur very close 
             whichDir=2;
             best=1;
     end
-    topDir='X:\best';
+    if whichDir==1
+        topDir='D:\data';
+    elseif whichDir==2
+        topDir='X:\best';
+    end
     if best==0
         topDir='X:\other';
     end
@@ -136,12 +143,14 @@ for dates=[1 4 6 9 11 16:18 20:22 25:28]%remove dates when two occur very close 
         allSessionSNR=[allSessionSNR;channelSNR(1:128)'];%compile SNR values across recording sessions
     end
     allSNR=[allSNR allSessionSNR];
-    formatIn = 'ddmmyy';
     xval=[xval datenum(date,formatIn)];
     dateLabels=[dateLabels cellstr(date(1:6))];
 end
-saveFileName='D:\data\results\allSNR_130818.mat';
-save(saveFileName,'allSNR');
+if loadRaw==1
+    save(saveFileName,'allSNR','xval','dateLabels');
+elseif loadRaw==0
+    load(saveFileName);
+end
 
 figure;
 for chInd=1:size(allSNR,1)
@@ -208,5 +217,23 @@ oneDatapointChs=find(diffCh==0);
 largeDiffChs=union(largeDiffChs,oneDatapointChs);
 arrayNumsRedo=goodArrays8to16(largeDiffChs,7)';
 electrodeNumsRedo=goodArrays8to16(largeDiffChs,8)';
+
+numSessionsPerGroup=2;
+earlySessions=allSNR(:,1:numSessionsPerGroup);
+lateSessions=allSNR(:,end-numSessionsPerGroup+1:end);
+[h p ci stats]=ttest(earlySessions,lateSessions);
+sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)
+groupAssignment=[earlySessions*0+1 lateSessions*0+2];
+formattedGroupAssignment=groupAssignment(:);
+earlyLateSessions=[earlySessions lateSessions];
+formattedSessions=earlyLateSessions(:);
+% [h p ci stats]=anovan(formattedSessions,formattedGroupAssignment);
+[p table stats]=anova1(formattedSessions,formattedGroupAssignment);
+dfBetween=table{2,3};
+dfWithin=table{3,3};
+Fstat=table{2,5};
+sprintf(['F(',num2str(dfBetween),',',num2str(dfWithin),') = ',num2str(Fstat),', p = %.4f'],p)
+figure;
+boxplot([earlySessions(:) lateSessions(:)]);
 
 pause=1;

@@ -73,7 +73,7 @@ sharedInd=min(lengthEvents)
 
 %load data from ns6 files and remove data at the beginning and end of
 %recording on that particular instance, to align data across all instances:
-alignData=1;
+alignData=0;
 if alignData==1
     for instanceInd=1:8
         instanceName=['instance',num2str(instanceInd)];

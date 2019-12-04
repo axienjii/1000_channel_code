@@ -20,7 +20,8 @@ function analyse_microstim_saccade14_letter(date,allInstanceInd)
 localDisk=1;
 if localDisk==1
     rootdir='D:\data\';
-    copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
+%     copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
+    copyfile([rootdir,'\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
 elseif localDisk==0
     rootdir='X:\best\';
 end
@@ -185,6 +186,86 @@ switch date
         currentThresholdChs=137;
         degPerVoltXFinal=0.0026;%as measured in 161018_B4
         degPerVoltYFinal=0.0023;
+    case '171018_B1'%varied current amplitude systematically
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[22];
+        arrayNums=[13];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
+    case '171018_B2'%varied current amplitude systematically
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[40];
+        arrayNums=[10];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
+    case '171018_B5'%varied current amplitude systematically
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[51];
+        arrayNums=[11];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
+    case '171018_B6'%varied current amplitude systematically
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[1];
+        arrayNums=[9];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
+    case '171018_B7'%varied current amplitude systematically
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[64];
+        arrayNums=[11];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
+    case '171018_B8'%varied current amplitude systematically
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[6];
+        arrayNums=[12];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
+    case '171018_B9'%varied current amplitude systematically
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[20];
+        arrayNums=[12];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
+    case '171018_B10'%varied current amplitude systematically
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[4];
+        arrayNums=[16];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
+    case '171018_B11'%varied current amplitude systematically
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[46];
+        arrayNums=[16];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
+    case '171018_B12'%varied current amplitude systematically
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[40];
+        arrayNums=[15];
+        currentThresholdChs=137;
+        degPerVoltXFinal=0.0026;%as measured in 161018_B4
+        degPerVoltYFinal=0.0023;
     case '251018_B1'%current thresholding
         visualOnly=0;
         minCrossingTime=preStimDur-0.1;
@@ -209,11 +290,142 @@ switch date
         currentThresholdChs=139;
         degPerVoltXFinal=0.0028;%as measured in 261018_B2
         degPerVoltYFinal=0.0024;
+    case '010719_B5'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[20];
+        arrayNums=[12];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0031;%as measured in 010719_B1
+        degPerVoltYFinal=0.0026;
+    case '010719_B6'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[20];
+        arrayNums=[12];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0031;%as measured in 010719_B1
+        degPerVoltYFinal=0.0026;
+    case '010719_B9'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[32];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0031;%as measured in 010719_B1
+        degPerVoltYFinal=0.0026;
+    case '010719_B10'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[32];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0031;%as measured in 010719_B1
+        degPerVoltYFinal=0.0026;
+    case '010719_B11'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[30];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0031;%as measured in 010719_B1
+        degPerVoltYFinal=0.0026;
+    case '010719_B14'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[32];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0031;%as measured in 010719_B1
+        degPerVoltYFinal=0.0026;
+    case '020719_B2'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[30];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B3'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[30];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B4'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[31];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B5'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[31];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B7'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[13];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B8'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[13];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B9'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[28];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B10'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[28];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B11'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[31];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
+    case '020719_B12'%saccade task
+        visualOnly=0;
+        minCrossingTime=preStimDur-0.1;
+        electrodeNums=[13];
+        arrayNums=[14];
+        currentThresholdChs=139;
+        degPerVoltXFinal=0.0025;%as measured in 020719_B1
+        degPerVoltYFinal=0.0025;
 end
 
 cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
 arrays=8:16;
 
+currentAmplitudeAllTrials=[];
+freqAllTrials=[];
+numPulsesAllTrials=[];
 processRaw=1;
 if processRaw==1
     for instanceCount=1%:length(allInstanceInd)
@@ -299,8 +511,16 @@ if processRaw==1
                 correctTrialsInd=find(performance==1);
                 correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
                 fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
-            end
-            
+            end            
+            incorrectTrialsInd=find(performance==-1);
+            incorrectMicrostimTrialsInd=intersect(microstimTrialsInd,incorrectTrialsInd);
+            visualTrialsInd=find(allCurrentLevel==0);
+            correctVisualTrialsInd=intersect(visualTrialsInd,correctTrialsInd);
+            incorrectTrialsInd=find(performance==-1);
+            incorrectVisualTrialsInd=find(allFalseAlarms==1);
+            perfM=length(correctMicrostimTrialsInd)/(length(correctMicrostimTrialsInd)+length(incorrectMicrostimTrialsInd));
+            perfV=length(correctVisualTrialsInd)/(length(correctVisualTrialsInd)+length(incorrectVisualTrialsInd));
+
         end
         figInd1=figure;hold on
         figInd2=figure;hold on
@@ -359,8 +579,19 @@ if processRaw==1
             electrodeInd=find(cell2mat(allElectrodeNum)==electrode);
             arrayInd=find(cell2mat(allArrayNum)==array);
             matchTrials=intersect(electrodeInd,arrayInd);%identify trials where stimulation was delivered on a particular array and electrode
+            incorrectmatchTrials=intersect(matchTrials,incorrectMicrostimTrialsInd);
             matchTrials=intersect(matchTrials,correctMicrostimTrialsInd);%identify subset of trials where performance was correct
-        
+            currentAmplitudeAllTrials=[currentAmplitudeAllTrials allCurrentLevel(matchTrials)];
+
+            perf(uniqueElectrode)=length(matchTrials)/(length(matchTrials)+length(incorrectmatchTrials));
+            numTrials(uniqueElectrode)=(length(matchTrials)+length(incorrectmatchTrials));
+            if exist('allFreqVals','var')
+                freqAllTrials=[freqAllTrials allFreqVals(matchTrials)];
+            end
+            if exist('allNumPulses','var')
+                numPulsesAllTrials=[numPulsesAllTrials allNumPulses(matchTrials)];
+            end
+            
             trialDataXY={};
 %             degPerVoltXFinal=0.0024;
 %             degPerVoltYFinal=0.0022;
@@ -670,7 +901,7 @@ if processRaw==1
                 endMicrostimChs{uniqueElectrode}=endMicrostim;
             end
         end
-        save([rootdir,date,'\saccade_data_',date,'_fix_to_rew.mat'],'baselineXChs','baselineYChs','trialDataXSmoothFixChs','trialDataYSmoothFixChs','trialNoChs','posIndXChs','posIndYChs','startMicrostimChs','endMicrostimChs');
+        save([rootdir,date,'\saccade_data_',date,'_fix_to_rew.mat'],'baselineXChs','baselineYChs','trialDataXSmoothFixChs','trialDataYSmoothFixChs','trialNoChs','posIndXChs','posIndYChs','startMicrostimChs','endMicrostimChs','currentAmplitudeAllTrials','freqAllTrials','numPulsesAllTrials');
         
 % %         
         figure(figInd10)

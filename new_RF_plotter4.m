@@ -51,7 +51,7 @@ set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 % print(pathname,'-dtiff','-r600');
 setElectrodesUsed=[];
 setArraysUsed=[];
-letterInd=2;
+letterInd=1;
 for setInd=69:70
     switch(setInd)
         case 69%begin with new combinations
@@ -67,8 +67,8 @@ end
 uniqueInd=unique([setElectrodesUsed' setArraysUsed'],'rows','stable');
 setElectrodesUsed=uniqueInd(:,1);
 setArraysUsed=uniqueInd(:,2);
-% setElectrodesUsed=[];
-% setArraysUsed=[];
+setElectrodesUsed=[];
+setArraysUsed=[];
 
 figure;hold on
 impThreshold=150;
@@ -112,6 +112,8 @@ set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 if letterInd==1
 %     targetLetter='T';
     targetLetter='I';
+%     targetLetter='J';
+    targetLetter='P';
 elseif letterInd==2
 %     targetLetter='O';
     targetLetter='U';
@@ -125,14 +127,14 @@ end
 letterPath=['D:\data\letters\',targetLetter,'.bmp'];
 originalOutline=imread(letterPath);
 % shape=imresize(originalOutline,[60,60]);
-shape=imresize(originalOutline,[70,70]);
+shape=imresize(originalOutline,[60,60]);
 whiteMask=shape==1;
 whiteMask=whiteMask*255;
 shapeRGB=[];
 shapeRGB(:,:,1)=whiteMask+shape*255*colind(1);
 shapeRGB(:,:,2)=whiteMask+shape*255*colind(2);
 shapeRGB(:,:,3)=whiteMask+shape*255*colind(3);
-if strcmp(targetLetter,'A')||strcmp(targetLetter,'I')
+if strcmp(targetLetter,'A')||strcmp(targetLetter,'I')||strcmp(targetLetter,'J')||strcmp(targetLetter,'P')
 %     h=image(20,-120,flip(shapeRGB,1));
 %     h=image(20,-100,flip(shapeRGB,1));
 %     h=image(20,-85,flip(shapeRGB,1));

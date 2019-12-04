@@ -7,7 +7,7 @@ function analyse_visual_attention(date,allInstanceInd,analyseEyeData)
 interleaved=0;%set interleaved to 0, if trigger pulse was sent using microB. set interleaved to 1, if stimulation was sent by calling stimulator.play function
 drummingOn=0;%for sessions after 9/4/18, drumming with only 2 targets was uesd 
 visualVersion=1;%set to 1 for 120918_B1, in which a visual version was run.
-localDisk=1;
+localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
@@ -70,6 +70,28 @@ if analyseConds==1
             numTargets=[];
             electrodePairs=[];
             currentThresholdChs=134;
+            syncPulseCh=141;%analog input 8, records sync pulse from array 16
+            syncPulseThreshold=1000;
+            trialsDesired=50;
+            trialsDesiredInitialBlock=30;
+        case '151018_B2'
+            setElectrodes=20;
+            setArrays=16;
+            setInd=[];
+            numTargets=[];
+            electrodePairs=[];
+            currentThresholdChs=136;
+            syncPulseCh=141;%analog input 8, records sync pulse from array 16
+            syncPulseThreshold=1000;
+            trialsDesired=50;
+            trialsDesiredInitialBlock=30;
+        case '151018_B4'
+            setElectrodes=20;
+            setArrays=16;
+            setInd=[];
+            numTargets=[];
+            electrodePairs=[];
+            currentThresholdChs=136;
             syncPulseCh=141;%analog input 8, records sync pulse from array 16
             syncPulseThreshold=1000;
             trialsDesired=50;

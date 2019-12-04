@@ -8,7 +8,13 @@ function analyse_microstim_saccade10(date,allInstanceInd)
 %unlike analyse_microstim_saccade9, which only analyses files without neuronal
 %data.
 
-matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
+localDisk=0;
+if localDisk==1
+    rootdir='D:\data\';
+elseif localDisk==0
+    rootdir='X:\best\';
+end
+matFile=[rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'];
 load(matFile);
 maxNumTrials=size(TRLMAT,1);
 if maxNumTrials<=length(performance)
@@ -55,7 +61,7 @@ if processRaw==1
     for instanceCount=1%:length(allInstanceInd)
         instanceInd=allInstanceInd(instanceCount);
         instanceName=['instance',num2str(instanceInd)];
-        instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+        instanceNEVFileName=[rootdir,date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);        
         
         %read in eye data:
@@ -66,8 +72,8 @@ if processRaw==1
             eyeChannels=[129 130];
         end
         minFixDur=300/1000;%fixates for at least 300 ms, up to 800 ms
-        instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6']; 
-        eyeDataMat=['D:\data\',date,'\',instanceName,'_NSch_eye_channels.mat'];
+        instanceNS6FileName=[rootdir,date,'\',instanceName,'.ns6']; 
+        eyeDataMat=[rootdir,date,'\',instanceName,'_NSch_eye_channels.mat'];
         if exist(eyeDataMat,'file')
             load(eyeDataMat,'NSch');
         else
@@ -105,7 +111,16 @@ if processRaw==1
         correctTrialsInd=find(performance==1);
         correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
         fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
-
+        incorrectTrialsInd=find(performance==-1);
+        visualTrialsInd=find(allCurrentLevel==0);
+        incorrectMicrostimTrialsInd=intersect(microstimTrialsInd,incorrectTrialsInd);
+        incorrectVisualTrialsInd=intersect(visualTrialsInd,incorrectTrialsInd);
+        incorrectVisualTrialsInd=find(allFalseAlarms==1);
+        correctVisualTrialsInd=intersect(visualTrialsInd,correctTrialsInd);
+        perfM=length(correctMicrostimTrialsInd)/(length(correctMicrostimTrialsInd)+length(incorrectMicrostimTrialsInd));
+        %569/(569+158)=0.7827
+        perfV=length(correctVisualTrialsInd)/(length(correctVisualTrialsInd)+length(incorrectVisualTrialsInd));
+        %691/(691+163)=0.8091
         figInd1=figure;hold on
         figInd2=figure;hold on
         figInd3=figure;hold on
@@ -126,10 +141,17 @@ if processRaw==1
             electrodeInd=find(cell2mat(allElectrodeNum)==electrode);
             arrayInd=find(cell2mat(allArrayNum)==array);
             matchTrials=intersect(electrodeInd,arrayInd);%identify trials where stimulation was delivered on a particular array and electrode
+            incorrectmatchTrials=intersect(matchTrials,incorrectMicrostimTrialsInd);
             matchTrials=intersect(matchTrials,correctMicrostimTrialsInd);%identify subset of trials where performance was correct
         
+            perf(uniqueElectrode)=length(matchTrials)/(length(matchTrials)+length(incorrectmatchTrials));
+            
             trialDataXY={};
             degpervoltx=0.0027;
+            if strcmp(date,'110917_B3')
+                degpervoltx=0.0036;%as calculated on 280917_B4
+                degpervolty=0.0038;%as calculated on 280917_B8
+            end
             flankingSamples=(30000/50)/2;%50-ms period before reward delivery
             for trialCounter=1:length(matchTrials)%for each correct microstim trial
                 trialNo=matchTrials(trialCounter);%trial number, out of all trials from that session  
@@ -170,7 +192,7 @@ if processRaw==1
                 baselineY=mean(trialDataYSmooth{trialCounter}(1:5000));
                 %quick-and-dirty estimate of saccade end position:
                 roughPosIndX=(trialDataXSmooth{trialCounter}(10460)-baselineX)*degpervoltx*Par.PixPerDeg;%position during saccade, very rough calculation
-                roughPosIndY=(trialDataYSmooth{trialCounter}(10460)-baselineY)*degpervoltx*Par.PixPerDeg;
+                roughPosIndY=(trialDataYSmooth{trialCounter}(10460)-baselineY)*degpervolty*Par.PixPerDeg;
 %                 scatter(-roughPosIndX,-roughPosIndY,[],cols(arrayColInd,:),'MarkerFaceColor',cols(arrayColInd,:));
                 %accurate calculation of saccade end position:
                 numHistBins=50;
@@ -193,7 +215,7 @@ if processRaw==1
                             saccadeEndYB1=binEdges(floor(b1))+(b1-floor(b1))*(binEdges(2)-binEdges(1));%calculate precise midpoint of distribution of eye position values
                             saccadeEndYB2=binEdges(floor(b2))+(b2-floor(b2))*(binEdges(2)-binEdges(1));%calculate precise midpoint of distribution of eye position values
                             saccadeEndYHistBin=max([saccadeEndYB1 saccadeEndYB2]);%for X position, deflections from fixation are represented by smaller values, hence use middle point of second peak in bimodal distribution of eye positions
-                            posIndY=(saccadeEndYHistBin-baselineY)*degpervoltx*Par.PixPerDeg;
+                            posIndY=(saccadeEndYHistBin-baselineY)*degpervolty*Par.PixPerDeg;
                         end
                     catch ME
                     end
@@ -248,6 +270,14 @@ if processRaw==1
                 plot([meanSaccadeXY(1) posIndX],[-meanSaccadeXY(2) -posIndY],':','Color',cols(arrayColInd,:));
             end
         end
+        if strcmp(date,'110917_B3')
+            perfFinal=perf;
+            perfFinal(find(perf==0))=[];
+            length(perfFinal)
+            mean(perfFinal)
+            std(perfFinal)
+        end        
+        save([rootdir,date,'\perf_',date,'.mat'],'perf');
         save(['D:\data\',date,'\saccade_endpoints_',date,'.mat'],'saccadeEndAllTrials','electrodeAllTrials','arrayAllTrials');
         figure(figInd2)
         subplot(2,1,1)

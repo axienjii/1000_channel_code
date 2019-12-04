@@ -3,7 +3,7 @@ function analyse_eyedata_attention_task(date)
 %Load and analyse eye movement data, identifying time at which eye movement
 %was made, on each trial.
 
-localDisk=1;
+localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
@@ -40,6 +40,26 @@ switch(date)
         load(matFileName,'goodBlocks');
         goodBlocks=1:length(goodBlocks);
         goodBlocks=1:3;
+    case '151018_B2'
+        array=16;
+        channel=20;
+        chInd128=20;
+        RFx=25.8;
+        RFy=-45.9;   
+        matFileName=fullfile(rootdir,date,'instance1_trialInfo.mat');
+        load(matFileName,'goodBlocks');
+        goodBlocks=1:length(goodBlocks);
+        goodBlocks=1:3;
+    case '151018_B4'
+        array=16;
+        channel=20;
+        chInd128=20;
+        RFx=25.8;
+        RFy=-45.9;   
+        matFileName=fullfile(rootdir,date,'instance1_trialInfo.mat');
+        load(matFileName,'goodBlocks');
+        goodBlocks=1:length(goodBlocks);
+        goodBlocks=1:3;
 end
 eyeChannels=131;%[130 131];
 extractSaccadeTimes=0;
@@ -62,41 +82,45 @@ if extractSaccadeTimes==1
                     figure;hold on
                     ax = gca;
                     for trialNo=1:size(dataTemp,1)
-                        plot(dataTemp(trialNo,:));
-                        smwin=1;
-                        vel = smooth(diff(dataTemp(trialNo,:)),7,'lowess');
-                        [pks,loc,w,prom] = findpeaks(abs(vel));
-                        [temp locMostProminent]=sort(prom,1,'descend');
-                        findFinalPoint=0;
-                        tempInd=1;
-                        while findFinalPoint==0
-                            if tempInd>50
-                                findFinalPoint=1;
-                            end
-                            if loc(locMostProminent(tempInd))<=(0.3+0.167+0.25)*30000&&loc(locMostProminent(tempInd))>0.3*30000
-                                finalPoint=locMostProminent(tempInd);
-                                preLoc=mean(dataTemp(trialNo,loc(finalPoint)-100:loc(finalPoint)));%mean voltage signal before change
-                                postLoc=mean(dataTemp(trialNo,loc(finalPoint):loc(finalPoint)+100));%mean voltage signal after change
-                                if neuronalCh==131
-                                    if preLoc<postLoc%for y-data, should be a positive inflection
-                                        findFinalPoint=1;
-                                    else
-                                        tempInd=tempInd+1;
-                                    end
-                                elseif neuronalCh==130
-                                    if preLoc>postLoc%for x-data, should be a negative inflection
-                                        findFinalPoint=1;
-                                    else
-                                        tempInd=tempInd+1;
-                                    end
+                        if sum(dataTemp(trialNo,:))~=0
+                            plot(dataTemp(trialNo,:));
+                            smwin=1;
+                            vel = smooth(diff(dataTemp(trialNo,:)),7,'lowess');
+                            [pks,loc,w,prom] = findpeaks(abs(vel));
+                            [temp locMostProminent]=sort(prom,1,'descend');
+                            findFinalPoint=0;
+                            tempInd=1;
+                            while findFinalPoint==0
+                                if tempInd>50
+                                    findFinalPoint=1;
                                 end
-                            else
-                                tempInd=tempInd+1;
+                                if loc(locMostProminent(tempInd))<=(0.3+0.167+0.25)*30000&&loc(locMostProminent(tempInd))>0.3*30000
+                                    finalPoint=locMostProminent(tempInd);
+                                    preLoc=mean(dataTemp(trialNo,loc(finalPoint)-100:loc(finalPoint)));%mean voltage signal before change
+                                    postLoc=mean(dataTemp(trialNo,loc(finalPoint):loc(finalPoint)+100));%mean voltage signal after change
+                                    if neuronalCh==131
+                                        if preLoc<postLoc%for y-data, should be a positive inflection
+                                            findFinalPoint=1;
+                                        else
+                                            tempInd=tempInd+1;
+                                        end
+                                    elseif neuronalCh==130
+                                        if preLoc>postLoc%for x-data, should be a negative inflection
+                                            findFinalPoint=1;
+                                        else
+                                            tempInd=tempInd+1;
+                                        end
+                                    end
+                                else
+                                    tempInd=tempInd+1;
+                                end
                             end
+                            saccadeLoc{dataTypeInd}(trialNo)=loc(finalPoint);
+                            ylims=get(ax,'ylim');
+                            plot([saccadeLoc{dataTypeInd}(trialNo) saccadeLoc{dataTypeInd}(trialNo)],[ylims(1) ylims(2)],'k:');
+                        else
+                            saccadeLoc{dataTypeInd}(trialNo)=nan;
                         end
-                        saccadeLoc{dataTypeInd}(trialNo)=loc(finalPoint);
-                        ylims=get(ax,'ylim');
-                        plot([saccadeLoc{dataTypeInd}(trialNo) saccadeLoc{dataTypeInd}(trialNo)],[ylims(1) ylims(2)],'k:');
                     end
                     ax = gca;
                     ylims=get(ax,'ylim');
@@ -111,7 +135,7 @@ if extractSaccadeTimes==1
 end
 
 %analyse MUA data:
-generateMeanTraces=0;
+generateMeanTraces=1;
 if generateMeanTraces==1
     postSaccadeTime=40;%time duration to include following saccade onset, in ms. use 40 ms because it takes about 50 ms for activity to propagate to V4
     postSaccadeDatapoints=postSaccadeTime/1000*30000;
@@ -235,7 +259,7 @@ if generateMeanTraces==1
 end
 
 %identify channels with 'visually evoked' response to microstimulation:
-identifyVisRespChs=0;
+identifyVisRespChs=1;
 if identifyVisRespChs==1    
     baselinePeriod=1:0.3*700;%MUA sampling frequency is 700 Hz
     stimOnset=(0.3+0.05)*700+1;%MUA sampling frequency is 700 Hz.
@@ -290,7 +314,7 @@ if identifyVisRespChs==1
 end
 
 %normalize activity to baseline and maximum response:
-generateNormAct=0;
+generateNormAct=1;
 if generateNormAct==1
     baselinePeriod=1:0.3*700;%MUA sampling frequency is 700 Hz
     stimOnset=(0.3+0.05)*700+1;%MUA sampling frequency is 700 Hz.
@@ -407,7 +431,7 @@ for blockInd=1:length(goodBlocks)
 end
 
 % remove_artefacts_attention_task_correction(date)
-load(['D:\data\',date,'\correct_trials\AR\AR_all_mean_chs_block',num2str(goodBlocks(1)),'-',num2str(goodBlocks(end)),'.mat']);
+load([rootdir,date,'\correct_trials\AR\AR_all_mean_chs_block',num2str(goodBlocks(1)),'-',num2str(goodBlocks(end)),'.mat']);
 baselinePeriod=1:0.3*700;%MUA sampling frequency is 700 Hz
 stimOnset=(0.3+0.05)*700+1;%MUA sampling frequency is 700 Hz.
 stimOffset=(0.3+0.167)*700;%MUA sampling frequency is 700 Hz.

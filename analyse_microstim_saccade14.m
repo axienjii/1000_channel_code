@@ -12,7 +12,14 @@ function analyse_microstim_saccade14(date,allInstanceInd)
 %time points corresponding to peak velocities.
 %Also generates data for Feng, to create movie of eye movements.
 
-matFile=['D:\data\',date,'\',date,'_data\microstim_saccade_',date,'.mat'];
+rootdir='D:\data\';
+rootdir='X:\best\';
+if strcmp(date,'110917_B3')
+    savedir='D:\data\';
+else
+    savedir=rootdir;
+end
+matFile=[rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'];
 load(matFile);
 maxNumTrials=size(TRLMAT,1);
 if maxNumTrials<=length(performance)
@@ -70,7 +77,7 @@ if processRaw==1
     for instanceCount=1%:length(allInstanceInd)
         instanceInd=allInstanceInd(instanceCount);
         instanceName=['instance',num2str(instanceInd)];
-        instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+        instanceNEVFileName=[rootdir,date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);        
         
         %read in eye data:
@@ -85,8 +92,8 @@ if processRaw==1
             end
         end
         minFixDur=300/1000;%fixates for at least 300 ms, up to 800 ms
-        instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6']; 
-        eyeDataMat=['D:\data\',date,'\',instanceName,'_NSch_eye_channels.mat'];
+        instanceNS6FileName=[rootdir,date,'\',instanceName,'.ns6']; 
+        eyeDataMat=[rootdir,date,'\',instanceName,'_NSch_eye_channels.mat'];
         if exist(eyeDataMat,'file')
             load(eyeDataMat,'NSch');
         else
@@ -143,7 +150,7 @@ if processRaw==1
             goodArrays8to16=goodArrays8to16New;
             goodCurrentThresholds=goodCurrentThresholdsNew;
         end
-        for uniqueElectrode=79:81%1:size(goodArrays8to16,1)%53
+        for uniqueElectrode=1:size(goodArrays8to16,1)%53%79:81
             figInd9(uniqueElectrode)=figure;hold on
             array=goodArrays8to16(uniqueElectrode,7);
             arrayColInd=find(arrays==array);
@@ -163,6 +170,10 @@ if processRaw==1
             trialDataXY={};
             degPerVoltXFinal=0.0024;
             degPerVoltYFinal=0.0022;
+            if strcmp(date,'110917_B3')
+                degpervoltx=0.0036;%as calculated on 280917_B4
+                degpervolty=0.0038;%as calculated on 280917_B8
+            end
             flankingSamples=(30000/50)/2;%50-ms period before reward delivery
             saccadeEndTrials=[];
             electrodeTrials=[];
@@ -434,7 +445,7 @@ if processRaw==1
             xlabel('x-coordinates (dva)')
             ylabel('y-coordinates (dva)')
             set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-            pathname=fullfile('D:\data',date,['saccade_endpoints_dva_array_',num2str(array),'_electrode_',num2str(electrode),'_',date]);
+            pathname=fullfile(savedir,date,['saccade_endpoints_dva_array_',num2str(array),'_electrode_',num2str(electrode),'_',date]);
             print(pathname,'-dtiff');
             close(figInd9(uniqueElectrode))
             baselineXChs{uniqueElectrode}=baselineXTrials;
@@ -449,7 +460,7 @@ if processRaw==1
             startMicrostimChs{uniqueElectrode}=startMicrostim;
             endMicrostimChs{uniqueElectrode}=endMicrostim;
         end
-        save(['D:\data\',date,'\saccade_data_',date,'_fix_to_rew.mat'],'baselineXChs','baselineYChs','trialDataXSmoothFixChs','trialDataYSmoothFixChs','trialNoChs','posIndXChs','posIndYChs','startMicrostimChs','endMicrostimChs');
+        save([savedir,date,'\saccade_data_',date,'_fix_to_rew.mat'],'baselineXChs','baselineYChs','trialDataXSmoothFixChs','trialDataYSmoothFixChs','trialNoChs','posIndXChs','posIndYChs','startMicrostimChs','endMicrostimChs');
         
 % %         
         figure(figInd10)
@@ -481,7 +492,7 @@ if processRaw==1
         xlabel('x-coordinates (dva)')
         ylabel('y-coordinates (dva)')
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['RF_centres_dva_',date,'_std',num2str(stdCutoff)]);
+        pathname=fullfile(savedir,date,['RF_centres_dva_',date,'_std',num2str(stdCutoff)]);
         print(pathname,'-dtiff','-r600');
         
         figure;
@@ -504,7 +515,7 @@ if processRaw==1
         plot([-165 -165],[yLims(1) yLims(2)],'k:')
         plot([0 0],[yLims(1) yLims(2)],'k:')
         ylabel('counts')
-        pathname=fullfile('D:\data',date,['all_saccade_latencies_relative_to_end_microstim_',date]);
+        pathname=fullfile(savedir,date,['all_saccade_latencies_relative_to_end_microstim_',date]);
         print(pathname,'-dtiff','-r600'); 
         
         figure;
@@ -515,10 +526,10 @@ if processRaw==1
         yLims=get(gca,'ylim');
         plot([-165 -165],[yLims(1) yLims(2)],'k:')
         plot([0 0],[yLims(1) yLims(2)],'k:')
-        pathname=fullfile('D:\data',date,['saccade_latencies_blue_second_red_relative_to_end_microstim_',date]);
+        pathname=fullfile(savedir,date,['saccade_latencies_blue_second_red_relative_to_end_microstim_',date]);
         print(pathname,'-dtiff','-r600');
         
-        save(['D:\data\',date,'\saccade_endpoints_',date,'.mat'],'saccadeEndAllTrials','electrodeAllTrials','arrayAllTrials','timePeakVelocityXYsAllTrials','timePeakVelocityXYSecsAllTrials');
+        save([rootdir,date,'\saccade_endpoints_',date,'.mat'],'saccadeEndAllTrials','electrodeAllTrials','arrayAllTrials','timePeakVelocityXYsAllTrials','timePeakVelocityXYSecsAllTrials');
         
 %         figure(figInd2)
 %         subplot(2,1,1)
@@ -550,7 +561,7 @@ if processRaw==1
 %         xlabel('time')
 %         ylabel('raw Y trace')
 %         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-%         pathname=fullfile('D:\data',date,['instance1_eye_traces_align_to_end_microstim_pulsetrain_',date]);
+%         pathname=fullfile(savedir,date,['instance1_eye_traces_align_to_end_microstim_pulsetrain_',date]);
 %         print(pathname,'-dtiff','-r600'); 
         
         figure(figInd3)
@@ -577,7 +588,7 @@ if processRaw==1
         xlabel('x-coordinates (pixels)')
         ylabel('y-coordinates (pixels)')
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['saccade_endpoints_pixels_',date]);
+        pathname=fullfile(savedir,date,['saccade_endpoints_pixels_',date]);
         if cleanUp==1
             pathname=[pathname,'_cleaned'];
         end
@@ -591,7 +602,7 @@ if processRaw==1
         xlabel('x-coordinates (dva)')
         ylabel('y-coordinates (dva)')
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['saccade_endpoints_dva_',date]);
+        pathname=fullfile(savedir,date,['saccade_endpoints_dva_',date]);
         if cleanUp==1
             pathname=[pathname,'_cleaned'];
         end
@@ -621,7 +632,7 @@ if processRaw==1
         xlabel('x-coordinates (pixels)')
         ylabel('y-coordinates (pixels)')
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['saccade_endpoints_pixels_mean_filled_',date]);
+        pathname=fullfile(savedir,date,['saccade_endpoints_pixels_mean_filled_',date]);
         print(pathname,'-dtiff','-r600');
 
         figure(figInd5)
@@ -648,7 +659,7 @@ if processRaw==1
         xlabel('x-coordinates (pixels)')
         ylabel('y-coordinates (pixels)')
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['saccade_endpoints_RFs_std_',date]);
+        pathname=fullfile(savedir,date,['saccade_endpoints_RFs_std_',date]);
         print(pathname,'-dtiff','-r600');
         
         figure(figInd6)
@@ -680,7 +691,7 @@ if processRaw==1
         xlabel('x-coordinates (dva)')
         ylabel('y-coordinates (dva)')
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['saccade_endpoints_RFs_',date]);
+        pathname=fullfile(savedir,date,['saccade_endpoints_RFs_',date]);
         print(pathname,'-dtiff','-r600');
         
         figure(figInd8)
@@ -712,7 +723,7 @@ if processRaw==1
         xlabel('x-coordinates (dva)')
         ylabel('y-coordinates (dva)')
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        pathname=fullfile('D:\data',date,['saccade_endpoints_RFs_second_saccade_',date]);
+        pathname=fullfile(savedir,date,['saccade_endpoints_RFs_second_saccade_',date]);
         print(pathname,'-dtiff','-r600');      
         
     end

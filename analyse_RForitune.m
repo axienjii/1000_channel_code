@@ -6,6 +6,7 @@ function analyse_RForitune
 %Write preferred orientations to separate file for each instance, and then
 %call combine_orientation_tuning.m to combine values across instances, for
 %further plotting of orientation-coded RF maps in plot_all_RFs.m.
+%Orientation of 0 degrees corresponds to a vertically oriented grating.
 date='080618_B3';
 load('X:\best\080618_B3\080618_data\CheckSNR_080618_B3.mat')
 best=1;

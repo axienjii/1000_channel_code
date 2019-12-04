@@ -1,7 +1,7 @@
 function remove_artefacts_attention_task_correction(date)
 %Written by Xing 4/9/18.
 
-localDisk=1;
+localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
 elseif localDisk==0
@@ -57,22 +57,22 @@ if generateMeanBlock==1
         end
     end
     if isequal(includeIncorrectInds,2)
-        artifactRemovedFileName=fullfile(artifactRemovedChPathName,['AR_all mean_chs_block',num2str(goodBlocks(1)),'-',num2str(goodBlocks(end)),'.mat']);
+        artifactRemovedFileName=fullfile(artifactRemovedChPathName,['AR_all_mean_chs_block',num2str(goodBlocks(1)),'-',num2str(goodBlocks(end)),'.mat']);
         save(artifactRemovedFileName,'allMeanAMFARMUAe_cor','allMeanAVFARMUAe_cor','allMeanAMSARMUAe_cor','allMeanAVSARMUAe_cor')
     elseif isequal(includeIncorrectInds,1)
-        artifactRemovedFileName=fullfile(artifactRemovedChPathName,['AR_all mean_chs_block',num2str(goodBlocks(1)),'-',num2str(goodBlocks(end)),'.mat']);
+        artifactRemovedFileName=fullfile(artifactRemovedChPathName,['AR_all_mean_chs_block',num2str(goodBlocks(1)),'-',num2str(goodBlocks(end)),'.mat']);
         save(artifactRemovedFileName,'allMeanAMFARMUAe_all','allMeanAVFARMUAe_all','allMeanAMSARMUAe_all','allMeanAVSARMUAe_all')
     elseif isequal(includeIncorrectInds,[1 2])
-        artifactRemovedFileName=fullfile(artifactRemovedChPathName,['AR_all mean_chs_block',num2str(goodBlocks(1)),'-',num2str(goodBlocks(end)),'.mat']);
+        artifactRemovedFileName=fullfile(artifactRemovedChPathName,['AR_all_mean_chs_block',num2str(goodBlocks(1)),'-',num2str(goodBlocks(end)),'.mat']);
         save(artifactRemovedFileName,'allMeanAMFARMUAe_all','allMeanAVFARMUAe_all','allMeanAMSARMUAe_all','allMeanAVSARMUAe_all','allMeanAMFARMUAe_cor','allMeanAVFARMUAe_cor','allMeanAMSARMUAe_cor','allMeanAVSARMUAe_cor')
     end
     for blockInd=goodBlocks
-        load(['D:\data\',date,'\correct_trials\AR\AR_all_mean_chs_block',num2str(goodBlocks(1)),'-',num2str(goodBlocks(end)),'.mat'])
+        load([artifactRemovedChPathName,'\AR_all_mean_chs_block',num2str(goodBlocks(1)),'-',num2str(goodBlocks(end)),'.mat'])
         allMeanAMFARMUAe_cor=allMeanAMFARMUAe_cor{blockInd};
         allMeanAVFARMUAe_cor=allMeanAVFARMUAe_cor{blockInd};
         allMeanAMSARMUAe_cor=allMeanAMSARMUAe_cor{blockInd};
         allMeanAVSARMUAe_cor=allMeanAVSARMUAe_cor{blockInd};
-        artifactRemovedFileName=['D:\data\',date,'\correct_trials\AR\AR_all_mean_chs_block',num2str(blockInd),'.mat'];
+        artifactRemovedFileName=[artifactRemovedChPathName,'\AR_all_mean_chs_block',num2str(blockInd),'.mat'];
         save(artifactRemovedFileName,'allMeanAMFARMUAe_cor','allMeanAVFARMUAe_cor','allMeanAMSARMUAe_cor','allMeanAVSARMUAe_cor')
     end
 end
