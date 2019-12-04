@@ -4,7 +4,7 @@ function check_lick_abnormal_activity
 date='131118';
 % neuronalChannels=33:96;%V4 array 2 on instance 1
 neuronalChannels=[1 33 65 97];%first channel on each bank
-instances=1:4;
+instances=5:8;
 banks='ABCD';
 sampFreq=30000;
 for instanceInd=1:4
