@@ -1050,10 +1050,10 @@ h1(1).EdgeColor = [0 0 0];
 hold on
 plot([0.5 0.5],[0 10],'k:');
 xlim([0 1]);
-ylim([0 7]);
+ylim([0 8]);
 set(gca,'Box','off');
 ax=gca;
-ax.YTick=[0 3 6];
+ax.YTick=[0 4 8];
 [h,p,ci,stats]=ttest(goodSetsallSetsPerfMicroAllTrials,0.5)
 sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(23) = 6.7987, p = 0.0000
 

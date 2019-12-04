@@ -148,51 +148,61 @@ end
 indEmpty=cellfun(@isempty,allDataSets);
 emptyDescriptions=find(indEmpty==1);
 allMetaData{emptyDescriptions,2}%print descriptions from Excel sheet from those sessions, to doublecheck that they have no runstim entry
+
 %For sessions without a runstim file, enter data set name manually:
-badSessions=allMetaData(emptyDescriptions,1);
 if monkey==1
+    badSessions=allMetaData(emptyDescriptions,1);
     badSessionsManual=[{'020617_B1'};{'060617_B4'};{'270617_B2'};{'030717_B1'};{'040717_test_serialport'};{'120717_test_serialport'};{'120717_resting_state'};{'180717_test_resting_state'};{'200717_cerestim_test'};{'251017_B46'};{'251017_B47'}];
     badSessionDescriptions=[{'discard'};{'discard'};{'discard'};{'discard'};{'test'};{'test'};{'discard'};{'test'};{'test'};{'discard'};{'discard'}];
-end
-for badSessionInd=1:length(badSessionsManual)
-    rowBools=strfind(allMetaData(:,1),badSessionsManual(badSessionInd));
-    rowInd = find(not(cellfun('isempty',rowBools)))
-    allMetaData(rowInd,2)=badSessionDescriptions(badSessionInd);
+    for badSessionInd=1:length(badSessionsManual)
+        rowBools=strfind(allMetaData(:,1),badSessionsManual(badSessionInd));
+        rowInd = find(not(cellfun('isempty',rowBools)))
+        allMetaData(rowInd,2)=badSessionDescriptions(badSessionInd);
+        allDataSets{rowInd}=badSessionDescriptions(badSessionInd);
+    end
 end
 %Create JSON files:
 monkeyNames=[{'Lick'} {'Aston'}];
 for sessionInd=1:size(allMetaData,1)
-%     if find(emptyDescriptions==sessionInd)
-%     if strcmp(allDataSets{sessionInd},'Chris_Klink_RF_mapping')
-    newFormatFile=['20',allMetaData{sessionInd,1}(5:6) allMetaData{sessionInd,1}(3:4) allMetaData{sessionInd,1}(1:2) allMetaData{sessionInd,1}(7:end)];
-    newFormatDate=['20',allMetaData{sessionInd,1}(5:6) allMetaData{sessionInd,1}(3:4) allMetaData{sessionInd,1}(1:2)];
-    textJSON=['{"project":"Nestor3","dataset":"',char(allDataSets{sessionInd}),'","subject":"',char(monkeyNames{monkey}),'","condition":"awake","investigator":"XingChen","stimulus":"NoStim","setup":"MonkeylabXing","date":"',char(newFormatDate),'","version":"1.0","logfile":"',char(monkeyNames{monkey}),'_',char(newFormatFile),'","runstim":"',char(allMetaData{sessionInd,2}),'","dropped_packet_errors":"',char(allMetaData{sessionInd,4}),'","bugs":"',char(allMetaData{sessionInd,5}),'","description":"',char(allMetaData{sessionInd,6}),'","folder_name":"',char(allMetaData{sessionInd,1}),'_aston","analysis_scripts":"',char(allMetaData{sessionInd,7}),'"}'];
-    if monkey==1
-        rootdir='X:\best';
-        folderPath=fullfile(rootdir,allMetaData{sessionInd,1});
-    elseif monkey==2
-        rootdir='X:\aston';
-        folderPath=fullfile(rootdir,[allMetaData{sessionInd,1},'_aston']);
-    end
-    filePath=fullfile(folderPath,[allMetaData{sessionInd,1},'_session.json']);
-    if monkey==1
-        if ~exist(folderPath,'dir')
-            rootdir='X:\other';%try searching in the 'other' directory if the folder is not present in the 'best' directory
+    %replace non-breaking spaces spaces ('malformed UTF-8 characters') by regular spaces:
+    bytes=uint8(allMetaData{sessionInd,6});
+    if find(bytes==160)
+        bytes(bytes==160)=32;
+        unic = native2unicode(bytes, 'UTF-8');
+        disp(unic); % display the Unicode text
+        allMetaData{sessionInd,6}=unic;
+        %     if find(emptyDescriptions==sessionInd)
+        %     if strcmp(allDataSets{sessionInd},'Chris_Klink_RF_mapping')
+        newFormatFile=['20',allMetaData{sessionInd,1}(5:6) allMetaData{sessionInd,1}(3:4) allMetaData{sessionInd,1}(1:2) allMetaData{sessionInd,1}(7:end)];
+        newFormatDate=['20',allMetaData{sessionInd,1}(5:6) allMetaData{sessionInd,1}(3:4) allMetaData{sessionInd,1}(1:2)];
+        textJSON=['{"project":"Nestor3","dataset":"',char(allDataSets{sessionInd}),'","subject":"',char(monkeyNames{monkey}),'","condition":"awake","investigator":"XingChen","stimulus":"NoStim","setup":"MonkeylabXing","date":"',char(newFormatDate),'","version":"1.0","logfile":"',char(monkeyNames{monkey}),'_',char(newFormatFile),'","runstim":"',char(allMetaData{sessionInd,2}),'","dropped_packet_errors":"',char(allMetaData{sessionInd,4}),'","bugs":"',char(allMetaData{sessionInd,5}),'","description":"',char(allMetaData{sessionInd,6}),'","folder_name":"',char(allMetaData{sessionInd,1}),'_aston","analysis_scripts":"',char(allMetaData{sessionInd,7}),'"}'];
+        if monkey==1
+            rootdir='X:\best';
             folderPath=fullfile(rootdir,allMetaData{sessionInd,1});
-            filePath=fullfile(folderPath,[allMetaData{sessionInd,1},'_session.json']);
+        elseif monkey==2
+            rootdir='X:\aston';
+            folderPath=fullfile(rootdir,[allMetaData{sessionInd,1},'_aston']);
         end
-    end
-    if exist(folderPath,'dir')
-        if exist(filePath,'file')%do not overwrite existing JSON files
-            fid=fopen(filePath, 'w');
-            if fid==-1
-                error('Cannot create JSON file');
+        filePath=fullfile(folderPath,[allMetaData{sessionInd,1},'_session.json']);
+        if monkey==1
+            if ~exist(folderPath,'dir')
+                rootdir='X:\other';%try searching in the 'other' directory if the folder is not present in the 'best' directory
+                folderPath=fullfile(rootdir,allMetaData{sessionInd,1});
+                filePath=fullfile(folderPath,[allMetaData{sessionInd,1},'_session.json']);
             end
-            fwrite(fid, textJSON, 'char');
-            fclose(fid);
         end
-    else
-        folderPath%print name of missing folder to screen
+        if exist(folderPath,'dir')
+            if exist(filePath,'file')%do not overwrite existing JSON files
+                fid=fopen(filePath, 'w');
+                if fid==-1
+                    error('Cannot create JSON file');
+                end
+                fwrite(fid, textJSON, 'char');
+                fclose(fid);
+            end
+        else
+            folderPath%print name of missing folder to screen
+        end
     end
 %     end
 %     end
@@ -200,3 +210,15 @@ end
 %{"project":"Nestor3","dataset":"RestingState","subject":"Aston","condition":"awake","investigator":"XingChen","stimulus":"NoStim","setup":"MonkeylabXing","date":"20191107","version":"1.0","logfile":"Aston_20191107_000_","comment":"animal performed well"};
 %{"project":"Nestor3","dataset":"runstim_checkSNR","subject":"Lick","condition":"awake","investigator":"XingChen","stimulus":"NoStim","setup":"MonkeylabXing","date":"230517","version":"1.0","logfile":"Lick_201705237_B1","runstim":"runstim_checkSNR","dropped_packet_errors":"","bugs":"","dscription":"","analysis_scripts":""}
 
+%Read in contents of a JSON file and check whether non-breaking spaces are
+%present:
+fID = fopen('X:\best\140819_B3\140819_B3_session.json', 'r', 'n', 'UTF-8'); 
+bytes = fread(fID); 
+fclose(fID);
+% The data read from the file can then be converted into Unicode characters, like so: 
+unic = native2unicode(bytes, 'UTF-8');
+disp(unic'); % display the Unicode text
+% set the strange spaces to a space 
+bytes(bytes==160)=32;
+unic = native2unicode(bytes, 'UTF-8');
+disp(unic'); % display the Unicode text
