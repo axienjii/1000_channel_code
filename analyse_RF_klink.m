@@ -1,4 +1,4 @@
-function analyse_RF_klink
+function analyse_RF_klink(date,instances)
 %29/5/17
 %Written by Xing. Extracts MUA data from raw .NS6 file, during presentation
 %of sweeping white bar stimuli for RF mapping.
@@ -7,7 +7,7 @@ stimDur=stimDurms/1000;%in seconds
 % date='020818_B2';
 % date='070818_B2';
 % date='041018_B1_aston';
-date='L191203_B1';
+% date='L191203_B1';
 fengData=1;
 if fengData==0
     if strcmp(date(end-4:end),'aston')
@@ -20,7 +20,7 @@ elseif fengData==1
 end
 processRaw=1;
 if processRaw==1
-    for instanceInd=1:4
+    for instanceInd=instances
         instanceName=['instance',num2str(instanceInd)];
         instanceNEVFileName=[rootDir,date,'\',instanceName,'.nev'];
         NEV=openNEV(instanceNEVFileName);

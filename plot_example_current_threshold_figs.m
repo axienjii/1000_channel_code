@@ -76,10 +76,10 @@ for uniqueElectrode=1:length(electrodeNums)
     end
     hits./misses;
     for Weibull=1% set to 1 to get the Weibull fit, 0 for a sigmoid fit
-        [theta threshold]=analyse_current_thresholds_Plot_Psy_Fie(currentAmplitudes,hits,misses,falseAlarms,correctRejections,Weibull);
+        [theta threshold]=analyse_current_thresholds_Plot_Psy_Fie_example(currentAmplitudes,hits,misses,falseAlarms,correctRejections,Weibull);
         hold on
         yLimits=get(gca,'ylim');
-        plot([threshold threshold],yLimits,'r:')
+        plot([threshold threshold],yLimits,'r--')
         if exampleFig==0
             plot([theta theta],yLimits,'k:')
         end
@@ -96,7 +96,7 @@ for uniqueElectrode=1:length(electrodeNums)
             end
         end
         set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-        print(pathname,'-dtiff');
+%         print(pathname,'-dtiff');
         thresholds(uniqueElectrode,Weibull+1)=threshold;
         thresholds(uniqueElectrode,Weibull+2)=electrode;
         thresholds(uniqueElectrode,Weibull+3)=array;
@@ -184,7 +184,7 @@ for uniqueElectrode=1:length(electrodeNums)
     end
     hits./misses;
     for Weibull=1% set to 1 to get the Weibull fit, 0 for a sigmoid fit
-        [theta threshold]=analyse_current_thresholds_Plot_Psy_Fie(currentAmplitudes,hits,misses,falseAlarms,correctRejections,Weibull);
+        [theta threshold]=analyse_current_thresholds_Plot_Psy_Fie_example(currentAmplitudes,hits,misses,falseAlarms,correctRejections,Weibull);
         hold on
         yLimits=get(gca,'ylim');
         plot([threshold threshold],yLimits,'r:')
