@@ -12274,3 +12274,20 @@ plot(NSch(16,:),'b');%plot signal on analog input 16, with copy of output from b
 microInds=find(NEV.Data.SerialDigitalIO.UnparsedData==64);
 visualInds=find(NEV.Data.SerialDigitalIO.UnparsedData==4);
 (NEV.Data.SerialDigitalIO.TimeStamp(visualInds)-NEV.Data.SerialDigitalIO.TimeStamp(microInds))/30
+
+%Test CereStim 65374 and 65376 (working CereStims), sending of 1000 pulses
+%using manual mode, on electrode 1, 100 uA, 400 us pulse, 2933 us interpulse
+%interval, 60 us interphase. anodic-first =1, 300 Hz
+date='270220';
+instanceInd=3;
+instanceName=['instance',num2str(instanceInd)];
+instanceNEVFileName=['D:\data\',date,'\',instanceName,'.nev'];
+NEV=openNEV(instanceNEVFileName);
+instanceNS6FileName=['D:\data\',date,'\',instanceName,'.ns6'];
+NSchOriginal=openNSx(instanceNS6FileName);
+NSch=NSchOriginal.Data;
+figure;hold on
+plot(NSch(1,:),'m');%plot monitor pulse on analog input 1, from one CereStim
+hold on
+plot(NSch(5,:),'b');%plot monitor pulse on analog input 5, from the other CereStim
+

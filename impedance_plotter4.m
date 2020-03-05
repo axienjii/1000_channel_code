@@ -10,7 +10,7 @@ function impedance_plotter4
 %impedance_plotter.m
 % date='260617';
 % date='110717';
-% date='170717';
+date='170717';
 % date='200717';
 % date='080817';
 % date='100817';
@@ -25,7 +25,11 @@ function impedance_plotter4
 % date='080618';
 % date='070818';
 % date='070818';
-date='191018';
+% date='191018';
+% date='181218';
+% date='270219';
+% date='170419';
+% date='260419';
 colind = hsv(16);
 colindImp = hsv(1000);%colour-code impedances
 
