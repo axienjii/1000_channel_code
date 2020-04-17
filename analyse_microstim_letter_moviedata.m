@@ -1,11 +1,8 @@
-function analyse_microstim_letter_across_sessions_alltrials(date)
-%27/2/18
-%Written by Xing, calculates behavioural performance during a
-%microstimulation/visual line orientation task, for lines composed of 5 phosphenes.
-%Current amplitude was equal to 2.5 times the current threshold value (as
-%opposed to 1.5 times the threshold value).
-%Calculates mean performance across sets of electrodes, for the first few
-%trials.
+function analyse_microstim_letter_moviedata(date)
+%3/4/20
+%Written by Xing, extracts eye movement data during a
+%microstimulation/visual 2-phosphene task, using session 22.
+
 allInstanceInd=1;
 
 saveFullMUA=1;
@@ -26,18 +23,21 @@ sampFreq=30000;
 
 cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
 arrays=8:16;
-allSetsPerfMicroBin=[];
-allSetsPerfVisualBin=[];
+
+localDisk=0;
+analyseConds=0;
 allSetsPerfMicroAllTrials=[];
 allSetsPerfVisualAllTrials=[];
+setNos=[1:3 5:12];%set 2 data is missing?
 allPerfV=[];
 allPerfM=[];
-analyseConds=0;
 allRFsFigure=figure;
 setNoSubplot=1;
-setNos=[1:2 5 19:23 28]%before RF correction: [1:6 9 17:24 26 28:29];%1:29%[1:11 13:26 28:29]%1:24 for 10 electrodes per letter; subsequent sessions use 15 electrodes per letter
-for calculateVisual=[0 1]
-    for setNo=setNos
+eyeDataXFinal={};
+eyeDataYFinal={};
+
+for calculateVisual=0
+    for setNo=28%[22 28]
         perfNEV=[];
         timeInd=[];
         encodeInd=[];
@@ -49,6 +49,7 @@ for calculateVisual=[0 1]
         localDisk=0;
         if calculateVisual==0
             switch(setNo)
+            %microstim task:
                 case 1
                     date='170418_B9';%next batch of new electrode combinations
                     setElectrodes=[{[34 14 44 58 34 22 63 20 23 3]} {[39 10 7 16 41 12 42 43 31 23]}];%170418_B & B?
@@ -632,8 +633,7 @@ for calculateVisual=[0 1]
                     visualOnly=1;
             end
         end
-        matSetElectrodes=setElectrodes;
-        matSetArrays=setArrays;
+        localDisk=0;
         
         if localDisk==1
             rootdir='D:\data\';
@@ -682,9 +682,32 @@ for calculateVisual=[0 1]
                 if recordedRaw==0%7/9/17
                     eyeChannels=[1 2];
                 elseif recordedRaw==1%11/9/17
-                    eyeChannels=[129 130];
+                    if NEV.ElectrodesInfo(130).ConnectorPin==2
+                        eyeChannels=[130 131];
+                    elseif NEV.ElectrodesInfo(130).ConnectorPin==3
+                        eyeChannels=[129 130];
+                    end
                 end
                 minFixDur=300/1000;%fixates for at least 300 ms, up to 800 ms
+                instanceNS6FileName=['X:\best\',date,'\',instanceName,'.ns6'];
+                eyeDataMat=['D:\data\',date,'\',instanceName,'_NSch_eye_channels.mat'];
+                if exist(eyeDataMat,'file')
+                    load(eyeDataMat,'NSch');
+                else
+                    if recordedRaw==0
+                        NSchOriginal=openNSx(instanceNS6FileName);
+                        for channelInd=1:length(eyeChannels)
+                            NSch{channelInd}=NSchOriginal.Data(channelInd,:);
+                        end
+                    elseif recordedRaw==1
+                        for channelInd=1:length(eyeChannels)
+                            readChannel=['c:',num2str(eyeChannels(channelInd)),':',num2str(eyeChannels(channelInd))];
+                            NSchOriginal=openNSx(instanceNS6FileName,readChannel);
+                            NSch{channelInd}=NSchOriginal.Data;
+                        end
+                    end
+                    save(eyeDataMat,'NSch');
+                end
                 
                 %identify trials using encodes sent via serial port:
                 trialNo=1;
@@ -707,399 +730,42 @@ for calculateVisual=[0 1]
                         MicroB=Par.MicroB;
                         StimB=Par.StimB;
                         TargetB=Par.TargetB;
-                        if visualOnly==0
-                            if ~isempty(find(trialEncodes==2^CorrectB))&&~isempty(find(trialEncodes==2^MicroB))&&~isempty(find(trialEncodes==2^TargetB))
-                                perfNEV(trialNo)=1;
-                            elseif ~isempty(find(trialEncodes==2^ErrorB))&&~isempty(find(trialEncodes==2^MicroB))&&~isempty(find(trialEncodes==2^TargetB))
-                                perfNEV(trialNo)=-1;
-                            end
-                            if length(find(trialEncodes==2^MicroB))>=1
-                                microstimTrialNEV(trialNo)=1;
-                            end
-                        elseif visualOnly==1
-                            if ~isempty(find(trialEncodes==2^CorrectB))&&~isempty(find(trialEncodes==2^StimB))&&~isempty(find(trialEncodes==2^TargetB))
-                                perfNEV(trialNo)=1;
-                            elseif ~isempty(find(trialEncodes==2^ErrorB))&&~isempty(find(trialEncodes==2^StimB))&&~isempty(find(trialEncodes==2^TargetB))
-                                perfNEV(trialNo)=-1;
-                            end
-                            microstimTrialNEV(trialNo)=0;
+                        if find(trialEncodes==2^CorrectB)
+                            perfNEV(trialNo)=1;
+                        elseif find(trialEncodes==2^ErrorB)
+                            perfNEV(trialNo)=-1;
+                        else
+                            perfNEV(trialNo)=0;
                         end
-%                         if find(trialEncodes==2^CorrectB)
-%                             perfNEV(trialNo)=1;
-%                         elseif find(trialEncodes==2^ErrorB)
-%                             perfNEV(trialNo)=-1;
-%                         end
-%                         for trialCurrentLevelInd=1:length(allCurrentLevel)
-%                             if sum(allCurrentLevel{trialCurrentLevelInd})>0
-%                                 microstimTrialNEV(trialCurrentLevelInd)=1;
-%                             else
-%                                 microstimTrialNEV(trialCurrentLevelInd)=0;
-%                             end
-%                         end
+                        if perfNEV(trialNo)~=0
+                            microstimInd=find(trialEncodes==2^MicroB)%stimulus onset
+                            if length(microstimInd)>1
+                                microstimInd=microstimInd(end);
+                            end
+                            if trialNo>1
+%                                 stimOnTime=NEV.Data.SerialDigitalIO.TimeStamp(encodeInd(trialNo-1)+stimOnInd-1);
+                                microstimTime=NEV.Data.SerialDigitalIO.TimeStamp(encodeInd(trialNo-1)+microstimInd-1);
+                            else
+%                                 stimOnTime=NEV.Data.SerialDigitalIO.TimeStamp(stimOnInd);
+                                microstimTime=NEV.Data.SerialDigitalIO.TimeStamp(microstimInd);
+                            end
+                            allFixT(trialNo)
+%                             eyeDataXFinal{trialNo}=NSch{1}(stimOnTime-0.3*sampFreq:stimOnTime+1.3*sampFreq);%eye data from 300 ms before stim onset to 1.3 s after stim onset
+%                             length(eyeDataXFinal{trialNo})
+%                             eyeDataYFinal{trialNo}=NSch{2}(stimOnTime-0.3*sampFreq:stimOnTime+1.3*sampFreq);
+                            eyeDataXFinal{trialNo}=NSch{1}(microstimTime-0.3*sampFreq:microstimTime+1.167*sampFreq);%eye data from 300 ms before stim onset to 1.3 s after stim onset
+                            length(eyeDataXFinal{trialNo})
+                            eyeDataYFinal{trialNo}=NSch{2}(microstimTime-0.3*sampFreq:microstimTime+1.167*sampFreq);
+                        end
                         trialNo=trialNo+1;
                     end
                 end
-                
-                tallyCorrect=length(find(perfNEV==1));
-                tallyIncorrect=length(find(perfNEV==-1));
-                meanPerf=tallyCorrect/(tallyCorrect+tallyIncorrect);
-                visualTrialsInd=find(microstimTrialNEV==0);%not entirely correct- includes microstim trials where fix breaks happen before dasbit sent MicroB
-                microstimTrialsInd=find(microstimTrialNEV==1);
-                correctTrialsInd=find(perfNEV==1);
-                incorrectTrialsInd=find(perfNEV==-1);
-                correctVisualTrialsInd=intersect(visualTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
-                incorrectVisualTrialsInd=intersect(visualTrialsInd,incorrectTrialsInd);%trialNo for microstim trials with a correct saccade
-                correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
-                incorrectMicrostimTrialsInd=intersect(microstimTrialsInd,incorrectTrialsInd);%trialNo for microstim trials with a correct saccade
-                meanPerfVisual=length(correctVisualTrialsInd)/(length(correctVisualTrialsInd)+length(incorrectVisualTrialsInd))
-                meanPerfMicrostim=length(correctMicrostimTrialsInd)/(length(correctMicrostimTrialsInd)+length(incorrectMicrostimTrialsInd))
-                totalRespTrials=length(correctTrialsInd)+length(incorrectTrialsInd);%number of trials where a response was made
-                indRespTrials=sort([correctTrialsInd incorrectTrialsInd]);%indices of trials where response was made
-                micro=[];
-                for trialRespInd=1:totalRespTrials
-                    trialNo=indRespTrials(trialRespInd);
-                    corr(trialRespInd)=~isempty(find(correctTrialsInd==trialNo));
-                    incorr(trialRespInd)=~isempty(find(incorrectTrialsInd==trialNo));
-                    if exist('microstimTrialNEV','var')
-                        if length(microstimTrialNEV)>=trialNo
-                            micro(trialRespInd)=microstimTrialNEV(trialNo);
-                        end
-                    end
-                end
-                visualInd=find(micro~=1);
-                corrInd=find(corr==1);
-                corrVisualInd=intersect(visualInd,corrInd);
-                if exist('microstimTrialNEV','var')
-                    microInd=find(micro==1);
-                    corrMicroInd=intersect(microInd,corrInd);
-                end
-                perfMicroBin=[];
-                perfVisualBin=[];
-                perfMicroTrialNo=[];
-                perfVisualTrialNo=[];
-                numTrialsPerBin=1;
-                for trialRespInd=1:length(micro)
-                    if micro(trialRespInd)==1
-                        firstMicroTrialInBin=find(microInd==trialRespInd);
-                        if firstMicroTrialInBin<=length(microInd)-numTrialsPerBin+1
-                            binMicroTrials=microInd(firstMicroTrialInBin:firstMicroTrialInBin+numTrialsPerBin-1);
-                            corrMicroInBin=intersect(binMicroTrials,corrMicroInd);
-                            perfMicroBin=[perfMicroBin length(corrMicroInBin)/numTrialsPerBin];
-                            perfMicroTrialNo=[perfMicroTrialNo trialRespInd];
-                        end
-                    elseif micro(trialRespInd)==0
-                        firstVisualTrialInBin=find(visualInd==trialRespInd);
-                        if firstVisualTrialInBin<=length(visualInd)-numTrialsPerBin+1
-                            binVisualTrials=visualInd(firstVisualTrialInBin:firstVisualTrialInBin+numTrialsPerBin-1);
-                            corrVisualInBin=intersect(binVisualTrials,corrVisualInd);
-                            perfVisualBin=[perfVisualBin length(corrVisualInBin)/numTrialsPerBin];
-                            perfVisualTrialNo=[perfVisualTrialNo trialRespInd];
-                        end
-                    end
-                end
-                if calculateVisual==0
-                    if ~isempty(perfMicroBin)
-                        allSetsPerfMicroAllTrials(setNo,:)=mean(perfMicroBin);
-                    end
-                elseif calculateVisual==1
-                    if ~isempty(perfVisualBin)
-                        allSetsPerfVisualAllTrials(setNo,:)=mean(perfVisualBin);
-                    end
-                end
-                
-                if analyseConds==1
-                    LRTBInd1=find(allLRorTB==1);
-                    LRTBInd2=find(allLRorTB==2);
-                    targetInd1=find(allTargetLocation==1);
-                    targetInd2=find(allTargetLocation==2);
-                    
-                    condInds=intersect(LRTBInd1,targetInd1);
-                    corrIndsM=intersect(condInds,correctMicrostimTrialsInd);
-                    incorrIndsM=intersect(condInds,incorrectMicrostimTrialsInd);
-                    leftPerfM=length(corrIndsM)/(length(corrIndsM)+length(incorrIndsM));
-                    corrIndsV=intersect(condInds,correctVisualTrialsInd);
-                    incorrIndsV=intersect(condInds,incorrectVisualTrialsInd);
-                    leftPerfV=length(corrIndsV)/(length(corrIndsV)+length(incorrIndsV));
-                    
-                    condInds=intersect(LRTBInd1,targetInd2);
-                    corrIndsM=intersect(condInds,correctMicrostimTrialsInd);
-                    incorrIndsM=intersect(condInds,incorrectMicrostimTrialsInd);
-                    rightPerfM=length(corrIndsM)/(length(corrIndsM)+length(incorrIndsM));
-                    corrIndsV=intersect(condInds,correctVisualTrialsInd);
-                    incorrIndsV=intersect(condInds,incorrectVisualTrialsInd);
-                    rightPerfV=length(corrIndsV)/(length(corrIndsV)+length(incorrIndsV));
-                    
-                    condInds=intersect(LRTBInd2,targetInd1);
-                    corrIndsM=intersect(condInds,correctMicrostimTrialsInd);
-                    incorrIndsM=intersect(condInds,incorrectMicrostimTrialsInd);
-                    topPerfM=length(corrIndsM)/(length(corrIndsM)+length(incorrIndsM));
-                    corrIndsV=intersect(condInds,correctVisualTrialsInd);
-                    incorrIndsV=intersect(condInds,incorrectVisualTrialsInd);
-                    topPerfV=length(corrIndsV)/(length(corrIndsV)+length(incorrIndsV));
-                    
-                    condInds=intersect(LRTBInd2,targetInd2);
-                    corrIndsM=intersect(condInds,correctMicrostimTrialsInd);
-                    incorrIndsM=intersect(condInds,incorrectMicrostimTrialsInd);
-                    bottomPerfM=length(corrIndsM)/(length(corrIndsM)+length(incorrIndsM));
-                    corrIndsV=intersect(condInds,correctVisualTrialsInd);
-                    incorrIndsV=intersect(condInds,incorrectVisualTrialsInd);
-                    bottomPerfV=length(corrIndsV)/(length(corrIndsV)+length(incorrIndsV));
-                    allPerfV(setNo,:)=perfV;
-                    allPerfM(setNo,:)=perfM;
-                end
-                if calculateVisual==0
-                    figure(allRFsFigure);
-                    subplot(ceil(length(setNos)/4),4,setNoSubplot);
-                    setNoSubplot=setNoSubplot+1;
-                    hold on
-                    scatter(0,0,'r','o','filled');%fix spot
-                    %draw dotted lines indicating [0,0]
-                    plot([0 0],[-250 200],'k:');
-                    plot([-200 300],[0 0],'k:');
-                    plot([-200 300],[200 -300],'k:');
-                    ellipse(50,50,0,0,[0.1 0.1 0.1]);
-                    ellipse(100,100,0,0,[0.1 0.1 0.1]);
-                    ellipse(150,150,0,0,[0.1 0.1 0.1]);
-                    ellipse(200,200,0,0,[0.1 0.1 0.1]);
-                    text(sqrt(1000),-sqrt(1000),'2','FontSize',14,'Color',[0.7 0.7 0.7]);
-                    text(sqrt(4000),-sqrt(4000),'4','FontSize',14,'Color',[0.7 0.7 0.7]);
-                    text(sqrt(10000),-sqrt(10000),'6','FontSize',14,'Color',[0.7 0.7 0.7]);
-                    text(sqrt(18000),-sqrt(18000),'8','FontSize',14,'Color',[0.7 0.7 0.7]);
-                    axis equal
-                    xlim([-20 220]);
-                    ylim([-160 20]);
-                    letterCols=[0 1 0;0 0 1];
-                    for letterNo=1:2
-                        for electrodeCount=1:length(matSetElectrodes{letterNo})
-                            electrode=matSetElectrodes{letterNo}(electrodeCount);
-                            array=matSetArrays{letterNo}(electrodeCount);
-                            load([dataDir,'\array',num2str(array),'.mat']);
-                            electrodeIndtemp1=find(goodArrays8to16(:,8)==electrode);%matching channel number
-                            electrodeIndtemp2=find(goodArrays8to16(:,7)==array);%matching array number
-                            electrodeInd=intersect(electrodeIndtemp1,electrodeIndtemp2);%channel number
-                            RFx=goodArrays8to16(electrodeInd,1);
-                            RFy=goodArrays8to16(electrodeInd,2);
-%                             plot(RFx,RFy,'o','Color',cols(array-7,:),'MarkerFaceColor',cols(array-7,:));hold on
-                            plot(RFx,RFy,'o','Color',letterCols(letterNo,:));hold on
-                            currentThreshold=goodCurrentThresholds(electrodeInd);
-                            %                         if electrodeCount==1
-                            %                             text(RFx-28,RFy,[num2str(electrode),'(',num2str(array),')'],'FontSize',10,'Color','k');
-                            %                             text(RFx-28,RFy-7,[num2str(currentThreshold),' uA'],'FontSize',10,'Color','k');
-                            %                         else
-                            %                             text(RFx+4,RFy,[num2str(electrode),'(',num2str(array),')'],'FontSize',10,'Color','k');
-                            %                             text(RFx+4,RFy-7,[num2str(currentThreshold),' uA'],'FontSize',10,'Color','k');
-                            %                         end
-                        end
-                        for electrodePairInd=1:size(electrodePairs,2)-1
-                            electrode1=matSetElectrodes{letterNo}(electrodePairInd);
-                            array1=matSetArrays{letterNo}(electrodePairInd);
-                            electrode2=matSetElectrodes{letterNo}(electrodePairInd+1);
-                            array2=matSetArrays{letterNo}(electrodePairInd+1);
-                            electrodeIndtemp1=find(goodArrays8to16(:,8)==electrode1);%matching channel number
-                            electrodeIndtemp2=find(goodArrays8to16(:,7)==array1);%matching array number
-                            electrodeInd1=intersect(electrodeIndtemp1,electrodeIndtemp2);%channel number
-                            electrodeIndtemp1=find(goodArrays8to16(:,8)==electrode2);%matching channel number
-                            electrodeIndtemp2=find(goodArrays8to16(:,7)==array2);%matching array number
-                            electrodeInd2=intersect(electrodeIndtemp1,electrodeIndtemp2);%channel number
-                            RFx1=goodArrays8to16(electrodeInd1,1);
-                            RFy1=goodArrays8to16(electrodeInd1,2);
-                            RFx2=goodArrays8to16(electrodeInd2,1);
-                            RFy2=goodArrays8to16(electrodeInd2,2);
-                            plot([RFx1 RFx2],[RFy1 RFy2],'k--');
-                        end
-                    end
-%                     title(['RF locations for letter task, ',date], 'Interpreter', 'none');
-%                     for arrayInd=1:length(arrays)
-%                         text(175,0-10*arrayInd,['array',num2str(arrays(arrayInd))],'FontSize',14,'Color',cols(arrayInd,:));
-%                     end
-                    ax=gca;
-%                     ax.XTick=[0 Par.PixPerDeg*2 Par.PixPerDeg*4 Par.PixPerDeg*6 Par.PixPerDeg*8];
-%                     ax.XTickLabel={'0','2','4','6','8'};
-%                     ax.YTick=[-Par.PixPerDeg*8 -Par.PixPerDeg*6 -Par.PixPerDeg*4 -Par.PixPerDeg*2 0];
-%                     ax.YTickLabel={'-8','-6','-4','-2','0'};
-                    set(gca, 'XTickLabel', [],'XTick',[])
-                    set(gca, 'YTickLabel', [],'YTick',[])
-%                     xlabel('x-coordinates (dva)')
-%                     ylabel('y-coordinates (dva)')
-                end
-                    
-                if analyseConds==1
-                    %            if numTargets==4
-                    subplot(2,4,3:4);
-                    %            else
-                    %                subplot(2,4,3);
-                    %            end
-                    b=bar([leftPerfV leftPerfM;rightPerfV rightPerfM;topPerfV topPerfM;bottomPerfV bottomPerfM],'FaceColor','flat');
-                    b(1).FaceColor = 'flat';
-                    b(2).FaceColor = 'flat';
-                    b(1).FaceColor = [0 0.4470 0.7410];
-                    b(2).FaceColor = [1 0 0];
-                    set(gca, 'XTick',1:4)
-                    set(gca, 'XTickLabel', {'slant left' 'slant right' 'vertical' 'horizontal'})
-                    xLimits=get(gca,'xlim');
-                    if ~isnan(leftPerfV)
-                        txt=sprintf('%.2f',leftPerfV);
-                        text(0.7,0.95,txt,'Color','b')
-                    end
-                    if ~isnan(leftPerfM)
-                        txt=sprintf('%.2f',leftPerfM);
-                        text(1,0.95,txt,'Color','r')
-                    end
-                    if ~isnan(rightPerfV)
-                        txt=sprintf('%.2f',rightPerfV);
-                        text(1.7,0.95,txt,'Color','b')
-                    end
-                    if ~isnan(rightPerfM)
-                        txt=sprintf('%.2f',rightPerfM);
-                        text(2,0.95,txt,'Color','r')
-                    end
-                    if ~isnan(topPerfV)
-                        txt=sprintf('%.2f',topPerfV);
-                        text(2.7,0.95,txt,'Color','b')
-                    end
-                    if ~isnan(topPerfM)
-                        txt=sprintf('%.2f',topPerfM);
-                        text(3,0.95,txt,'Color','r')
-                    end
-                    if ~isnan(bottomPerfV)
-                        txt=sprintf('%.2f',bottomPerfV);
-                        text(3.7,0.95,txt,'Color','b')
-                    end
-                    if ~isnan(bottomPerfM)
-                        txt=sprintf('%.2f',bottomPerfM);
-                        text(4,0.95,txt,'Color','r')
-                    end
-                    ylim([0 1])
-                    hold on
-                    plot([xLimits(1) xLimits(2)],[1/numTargets 1/numTargets],'k:');
-                    xlim([0 5])
-                    title('mean performance, visual (blue) & microstim (red) trials');
-                    xlabel('target condition');
-                    ylabel('average performance across session');
-                    %            pathname=fullfile('D:\data',date,['behavioural_performance_per_condition_',date]);
-                    %            set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-                    %            print(pathname,'-dtiff');
-                end                
+                perfNEV=performance;
             end
+            allArrayNumFinal=allArrayNum;
+            allElectrodeNumFinal=allElectrodeNum;
+            eyeDataTrialMat=['D:\data\',date,'\eye_data_',date,'.mat'];
+            save(eyeDataTrialMat,'eyeDataXFinal','eyeDataYFinal','allElectrodeNumFinal','allArrayNumFinal');
         end
     end
-%     if calculateVisual==0
-%         figure;
-%         meanAllSetsPerfMicroBin=mean(allSetsPerfMicroBin,1);
-%         subplot(2,1,1);
-%         hold on
-%         plot(meanAllSetsPerfMicroBin,'r');
-%         ylim([0 1]);
-%         xLimits=get(gca,'xlim');
-%         plot([0 xLimits(2)],[0.5 0.5],'k:');
-% %         plot([10 10],[0 1],'k:');
-%         xlabel('trial number');
-%         ylabel('mean performance');
-%     end
-%     if calculateVisual==1
-%         subplot(2,1,2);
-%         hold on
-%         meanAllSetsPerfVisualBin=mean(allSetsPerfVisualBin,1);
-%         plot(meanAllSetsPerfVisualBin,'b');
-%         ylim([0 1]);
-%         xLimits=get(gca,'xlim');
-%         plot([0 xLimits(2)],[0.5 0.5],'k:');
-% %         plot([10 10],[0 1],'k:');
-%         xlabel('trial number');
-% %         xlabel('trial number (from end of session)');
-%         ylabel('mean performance');
-%     end
 end
-goodSetsallSetsPerfVisualAllTrials=allSetsPerfVisualAllTrials(setNos);
-goodSetsallSetsPerfMicroAllTrials=allSetsPerfMicroAllTrials(setNos);
-mean(goodSetsallSetsPerfVisualAllTrials)
-mean(goodSetsallSetsPerfMicroAllTrials)
-figure;
-subplot(2,1,1);
-% plot(goodSetsallSetsPerfMicroAllTrials,'r');
-b2=bar(goodSetsallSetsPerfMicroAllTrials);
-b2(1).FaceColor = 'flat';
-b2(1).FaceColor = [1 0 0];
-hold on
-plot([0 length(goodSetsallSetsPerfMicroAllTrials)+1],[0.5 0.5],'k:');
-xlim([0 length(goodSetsallSetsPerfMicroAllTrials)+1]);
-ylim([0 1]);
-set(gca,'Box','off');
-subplot(2,1,2);
-% plot(goodSetsallSetsPerfVisualAllTrials,'b');
-b3=bar(goodSetsallSetsPerfVisualAllTrials);
-b3(1).FaceColor = 'flat';
-b3(1).FaceColor = [0 0 1];
-hold on
-plot([0 length(goodSetsallSetsPerfVisualAllTrials)+1],[0.5 0.5],'k:');
-xlim([0 length(goodSetsallSetsPerfVisualAllTrials)+1]);
-ylim([0 1]);
-set(gca,'Box','off');
-%exported as behavioural_perf_letter_all_sets_180618_all_trials_lick.eps
-%exported as behavioural_perf_letter_all_sets_180618_all_trials_lick_corrected_RFs.eps
-
-% perfMat=['D:\data\letter_behavioural_performance_all_sets_',date,'_all_trials.mat'];
-% save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','goodSetsallSetsPerfVisualAllTrials','goodSetsallSetsPerfMicroAllTrials','allPerfV','allPerfM');
-perfMat=['D:\data\letter_behavioural_performance_all_sets_',date,'_all_trials_corrected_RFs.mat'];%letter_behavioural_performance_all_sets_070618_B6_all_trials_corrected_RFs
-% perfMat=['X:\best\results\letter_behavioural_performance_all_sets_070618_B6_all_trials_corrected_RFs.mat'];
-save(perfMat,'allSetsPerfVisualAllTrials','allSetsPerfMicroAllTrials','goodSetsallSetsPerfVisualAllTrials','goodSetsallSetsPerfMicroAllTrials','allPerfV','allPerfM');
-pause=1;
-
-%histogram:
-figure;
-subplot(1,2,1);
-edges=0:0.1:1;
-h1=histogram(goodSetsallSetsPerfMicroAllTrials,edges);
-h1(1).FaceColor = [1 0 0];
-h1(1).EdgeColor = [0 0 0];
-hold on
-plot([0.5 0.5],[0 10],'k:');
-xlim([0 1]);
-ylim([0 4]);
-set(gca,'Box','off');
-ax=gca;
-ax.YTick=[0 2 4];
-[h,p,ci,stats]=ttest(goodSetsallSetsPerfMicroAllTrials,0.5)
-sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(8) = 5.3623, p = 0.0007 previous: %t(17) = 6.2107, p = 0.0000
-mean(goodSetsallSetsPerfMicroAllTrials)
-std(goodSetsallSetsPerfMicroAllTrials)
-
-figure;
-subplot(1,2,1);
-edges=0:0.1:1;
-h1=histogram(goodSetsallSetsPerfVisualAllTrials,edges);
-h1(1).FaceColor = [0 0 1];
-h1(1).EdgeColor = [0 0 0];
-hold on
-plot([0.5 0.5],[0 10],'k:');
-xlim([0 1]);
-ylim([0 6]);
-set(gca,'Box','off');
-ax=gca;
-ax.YTick=[0 3 6];
-[h,p,ci,stats]=ttest(goodSetsallSetsPerfVisualAllTrials,0.5)
-sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(8) = 23.1021, p = 0.0000 previous: %t(17) = 18.737, p = 0.0000
-mean(goodSetsallSetsPerfVisualAllTrials)
-std(goodSetsallSetsPerfVisualAllTrials)
-
-significantByThisTrialMicro=0;
-for trialInd=1:length(meanAllSetsPerfMicroBin)
-    x=sum(meanAllSetsPerfMicroBin(1:trialInd))*size(allSetsPerfMicroBin,1);
-    %         (0.8+0.5+0.6+0.85)*25
-    Y = binopdf(x,size(allSetsPerfMicroBin,1)*trialInd,0.5)
-    if Y<0.05
-        significantByThisTrialMicro(trialInd)=1;
-    end
-end
-significantByThisTrialMicro%5th trial onward
-
-significantByThisTrialVisual=0;
-for trialInd=1:length(meanAllSetsPerfVisualBin)
-    x=sum(meanAllSetsPerfVisualBin(1:trialInd))*size(allSetsPerfVisualBin,1);
-    %         (0.8+0.5+0.6+0.85)*25
-    Y = binopdf(x,size(allSetsPerfVisualBin,1)*trialInd,0.5)
-    if Y<0.05
-        significantByThisTrialVisual(trialInd)=1;
-    end
-end
-significantByThisTrialVisual%3rd trial onward

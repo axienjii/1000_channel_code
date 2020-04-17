@@ -735,7 +735,7 @@ for calculateVisual=[0 1]
                 perfVisualBin=[];
                 perfMicroTrialNo=[];
                 perfVisualTrialNo=[];
-                numTrialsPerBin=1;
+                numTrialsPerBin=5;
                 for trialRespInd=1:length(micro)
                     if micro(trialRespInd)==1
                         firstMicroTrialInBin=find(microInd==trialRespInd);

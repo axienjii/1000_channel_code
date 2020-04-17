@@ -310,7 +310,7 @@ dates={
 '221217_B5';
 '221217_B6'};
 
-suprathresholdCurrent=0;%set to 1 to use conditions with high current amplitudes, with no hits accrued. Set to 0 to use conditions with lower current amplitudes instead
+suprathresholdCurrent=1;%set to 1 to use conditions with high current amplitudes, with no hits accrued. Set to 0 to use conditions with lower current amplitudes instead
 differentCriteria=0;
 if differentCriteria==1||suprathresholdCurrent==0
     ind=strfind(dates,'110917_B3');
@@ -496,11 +496,11 @@ set(gca,'XTickLabel',{'0','2','4','6','8','10'});
 set(gca,'YTick',[-6*pixPerDeg -4*pixPerDeg -2*pixPerDeg 0]);
 set(gca,'YTickLabel',{'-6','-4','-2','0'});
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
-if suprathresholdCurrent==1
-    save(['D:\data\saccade_endpoints_',dates{1},'-',dates{end},'_max_amp.mat'],'uniqueElectrodeList','uniqueArrayList','allPosIndXChsUnique','allPosIndYChsUnique','meanX','meanY')
-elseif suprathresholdCurrent==0
-    save(['D:\data\saccade_endpoints_',dates{1},'-',dates{end},'_mid_amp.mat'],'uniqueElectrodeList','uniqueArrayList','allPosIndXChsUnique','allPosIndYChsUnique','meanX','meanY')
-end
+% if suprathresholdCurrent==1
+%     save(['D:\data\saccade_endpoints_',dates{1},'-',dates{end},'_max_amp.mat'],'uniqueElectrodeList','uniqueArrayList','allPosIndXChsUnique','allPosIndYChsUnique','meanX','meanY')
+% elseif suprathresholdCurrent==0
+%     save(['D:\data\saccade_endpoints_',dates{1},'-',dates{end},'_mid_amp.mat'],'uniqueElectrodeList','uniqueArrayList','allPosIndXChsUnique','allPosIndYChsUnique','meanX','meanY')
+% end
 pause=1;
 
 
@@ -598,3 +598,122 @@ sprintf(['Aston, undershoot high-low current stats: t(',num2str(stats.df),') = '
 %Aston, undershoot high-low current stats: t(141) = 4.2127, p = 0.0000
 
 %Save figure as: high_vs_low_current_saccade_eccentricity_lick_aston.eps
+
+%Quantify degree of undershoot during high-amplitude currents:
+pixPerDeg=26;
+%Lick data:
+load('D:\data\channel_area_mapping.mat')
+load('D:\data\saccade_endpoints_210817_B2-290817_B42_max_amp.mat');
+uniqueElectrodeListL=uniqueElectrodeList;
+uniqueArrayListL=uniqueArrayList;
+allPosIndXChsUniqueL=allPosIndXChsUnique;
+allPosIndYChsUniqueL=allPosIndYChsUnique;
+meanXL=meanX;
+meanYL=meanY;
+meanEccL=sqrt(meanXL.^2+meanYL.^2)/pixPerDeg;
+channelIDsL=[uniqueElectrodeListL' uniqueArrayListL'];
+for chInd=1:size(channelIDsL,1)
+    electrode=channelIDsL(chInd,1);
+    array=channelIDsL(chInd,2);
+    instance=ceil(array/2);
+    temp1=find(channelNums(:,instance)==electrode);
+    temp2=find(arrayNums(:,instance)==array);
+    ind=intersect(temp1,temp2);
+    load(['D:\data\best_260617-280617\RFs_instance',num2str(instance),'.mat']);
+    chRFs(chInd,:)=channelRFs(ind,1:2);
+end
+chRFsDVA=chRFs/pixPerDeg;%convert RF coordinates to dva from pixels per deg
+eccRFs=sqrt(chRFsDVA(:,1).^2+chRFsDVA(:,2).^2);%calculate RF eccentricity
+undershoot=meanEccL'./eccRFs*100;%calculate degree of undershoot, in percentage
+meanUndershoot=nanmean(undershoot)%77.1926
+stdUndershoot=nanstd(undershoot)%18.4377
+length(undershoot)-sum(isnan(undershoot))%N
+
+%Aston data:
+pixPerDeg=26;
+load('D:\aston_data\channel_area_mapping_aston.mat')
+load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_max_amp.mat');
+uniqueElectrodeListA=uniqueElectrodeList;
+uniqueArrayListA=uniqueArrayList;
+allPosIndXChsUniqueA=allPosIndXChsUnique;
+allPosIndYChsUniqueA=allPosIndYChsUnique;
+meanXA=meanX;
+meanYA=meanY;
+meanEccA=sqrt(meanXA.^2+meanYA.^2)/pixPerDeg;
+channelIDsA=[uniqueElectrodeListA' uniqueArrayListA'];
+for chInd=1:size(channelIDsA,1)
+    electrode=channelIDsA(chInd,1);
+    array=channelIDsA(chInd,2);
+    instance=ceil(array/2);
+    temp1=find(channelNums(:,instance)==electrode);
+    temp2=find(arrayNums(:,instance)==array);
+    ind=intersect(temp1,temp2);
+    load(['D:\aston_data\best_aston_280818-290818\RFs_instance',num2str(instance),'.mat']);
+    chRFs(chInd,:)=channelRFs(ind,1:2);
+end
+chRFsDVA=chRFs/pixPerDeg;%convert RF coordinates to dva from pixels per deg
+eccRFs=sqrt(chRFsDVA(:,1).^2+chRFsDVA(:,2).^2);%calculate RF eccentricity
+undershoot=meanEccA'./eccRFs*100;%calculate degree of undershoot, in percentage
+meanUndershoot=nanmean(undershoot)%69.5508
+stdUndershoot=nanstd(undershoot)% 22.6423
+length(undershoot)-sum(isnan(undershoot))%N
+
+
+%Quantify degree of undershoot during medium-amplitude currents:
+pixPerDeg=26;
+%Lick data:
+load('D:\data\channel_area_mapping.mat')
+load('D:\data\saccade_endpoints_210817_B2-290817_B42_mid_amp.mat');
+uniqueElectrodeListL=uniqueElectrodeList;
+uniqueArrayListL=uniqueArrayList;
+allPosIndXChsUniqueL=allPosIndXChsUnique;
+allPosIndYChsUniqueL=allPosIndYChsUnique;
+meanXL=meanX;
+meanYL=meanY;
+meanEccL=sqrt(meanXL.^2+meanYL.^2)/pixPerDeg;
+channelIDsL=[uniqueElectrodeListL' uniqueArrayListL'];
+for chInd=1:size(channelIDsL,1)
+    electrode=channelIDsL(chInd,1);
+    array=channelIDsL(chInd,2);
+    instance=ceil(array/2);
+    temp1=find(channelNums(:,instance)==electrode);
+    temp2=find(arrayNums(:,instance)==array);
+    ind=intersect(temp1,temp2);
+    load(['D:\data\best_260617-280617\RFs_instance',num2str(instance),'.mat']);
+    chRFs(chInd,:)=channelRFs(ind,1:2);
+end
+chRFsDVA=chRFs/pixPerDeg;%convert RF coordinates to dva from pixels per deg
+eccRFs=sqrt(chRFsDVA(:,1).^2+chRFsDVA(:,2).^2);%calculate RF eccentricity
+undershoot=meanEccL'./eccRFs*100;%calculate degree of undershoot, in percentage
+meanUndershoot=nanmean(undershoot)%77.1926
+stdUndershoot=nanstd(undershoot)%18.4377
+length(undershoot)-sum(isnan(undershoot))%N
+
+%Aston data:
+pixPerDeg=26;
+load('D:\aston_data\channel_area_mapping_aston.mat')
+load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_mid_amp.mat');
+uniqueElectrodeListA=uniqueElectrodeList;
+uniqueArrayListA=uniqueArrayList;
+allPosIndXChsUniqueA=allPosIndXChsUnique;
+allPosIndYChsUniqueA=allPosIndYChsUnique;
+meanXA=meanX;
+meanYA=meanY;
+meanEccA=sqrt(meanXA.^2+meanYA.^2)/pixPerDeg;
+channelIDsA=[uniqueElectrodeListA' uniqueArrayListA'];
+for chInd=1:size(channelIDsA,1)
+    electrode=channelIDsA(chInd,1);
+    array=channelIDsA(chInd,2);
+    instance=ceil(array/2);
+    temp1=find(channelNums(:,instance)==electrode);
+    temp2=find(arrayNums(:,instance)==array);
+    ind=intersect(temp1,temp2);
+    load(['D:\aston_data\best_aston_280818-290818\RFs_instance',num2str(instance),'.mat']);
+    chRFs(chInd,:)=channelRFs(ind,1:2);
+end
+chRFsDVA=chRFs/pixPerDeg;%convert RF coordinates to dva from pixels per deg
+eccRFs=sqrt(chRFsDVA(:,1).^2+chRFsDVA(:,2).^2);%calculate RF eccentricity
+undershoot=meanEccA'./eccRFs*100;%calculate degree of undershoot, in percentage
+meanUndershoot=nanmean(undershoot)%69.5508
+stdUndershoot=nanstd(undershoot)% 22.6423
+length(undershoot)-sum(isnan(undershoot))%N

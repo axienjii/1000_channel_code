@@ -1,17 +1,50 @@
-function list_motion_draw_RFs(date)
-%11/9/19
-%Written by Xing, plots corrected RFs of channels used during a direction-of-motion task.
+function analyse_microstim_motion_moviedata
+%2/4/20
+%Written by Xing, extracts eye movement data during a
+%microstimulation/visual motion task, with data from 041217_B35.
 
-load('D:\data\channel_area_mapping.mat')
-figure;
-allDatesV=[];
-allDatesM=[];
-subplotNo=0;
-for calculateVisual=[0]
-    for setNo=[1 3:6 8 10:12 14:17]%[1 3:12 14:17]
-        subplotNo=subplotNo+1;
-        subplot(5,5,subplotNo);
-        hold on
+allInstanceInd=1;
+
+saveFullMUA=1;
+smoothResponse=1;
+
+downSampling=1;
+downsampleFreq=30;
+
+alignTargOn=1;%1: align eye movement data across trials, relative to target onset (variable from trial to trial, from 300 to 800 ms after fixation). 0: plot the first 300 ms of fixation, followed by the period from target onset to saccade response?
+onlyGoodSaccadeTrials=0;%set to 1 to exclude trials where the time taken to reach the target exceeds the allowedSacTime.
+allowedSacTime=250/1000;
+
+stimDurms=500;%in ms- min 0, max 500
+preStimDur=300/1000;
+stimDur=stimDurms/1000;%in seconds
+postStimDur=400/1000;%length of post-stimulus-offset period, in s
+sampFreq=30000;
+
+cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
+arrays=8:16;
+
+localDisk=0;
+analyseConds=0;
+allSetsPerfMicroAllTrials=[];
+allSetsPerfVisualAllTrials=[];
+allPerfV=[];
+allPerfM=[];
+setNos=[1:5 8 10 12:17 19:24];%before RF correction: [1:17 19:25];
+allRFsFigure=figure;
+setNoSubplot=1;
+eyeDataXFinal={};
+eyeDataYFinal={};
+for calculateVisual=0
+    for setNo=17
+        perfNEV=[];
+        timeInd=[];
+        encodeInd=[];
+        microstimTrialNEV=[];
+        allLRorTB=[];
+        allTargetLocation=[];
+        corr=[];
+        incorr=[];
         if calculateVisual==0
             switch(setNo)
                 case 1
@@ -326,39 +359,147 @@ for calculateVisual=[0]
                     currentThresholdChs=47;
                     visualOnly=1;
             end
-            allDatesV=[allDatesV;{date}];
         end
-        chRFs=[];
-        for chInd=1:size(setElectrodes,2)
-            electrode=setElectrodes(1,chInd);
-            array=setArrays(1,chInd);
-            instance=ceil(array/2);
-            temp1=find(channelNums(:,instance)==electrode);
-            temp2=find(arrayNums(:,instance)==array);
-            ind=intersect(temp1,temp2);
-            load(['D:\data\best_260617-280617\RFs_instance',num2str(instance),'.mat']);
-            chRFs(chInd,:)=channelRFs(ind,1:2);
+        localDisk=0;
+        
+        if localDisk==1
+            rootdir='D:\data\';
+        elseif localDisk==0
+            rootdir='X:\best\';
         end
-        plot(chRFs(:,1),chRFs(:,2),'-')
-        plot(chRFs(1,1),chRFs(1,2),'o')
-        axis equal
-        hold on
-        title(setNo);
-%         for condInd=1:size(setElectrodes,1)
-%             chRFs=[];
-%             for chInd=1:size(setElectrodes,2)
-%                 electrode=setElectrodes(condInd,chInd);
-%                 array=setArrays(condInd,chInd);
-%                 instance=ceil(array/2);
-%                 temp1=find(channelNums(:,instance)==electrode);
-%                 temp2=find(arrayNums(:,instance)==array);
-%                 ind=intersect(temp1,temp2);
-%                 load(['D:\data\best_260617-280617\RFs_instance',num2str(instance),'.mat']);
-%                 chRFs(chInd,:)=channelRFs(ind,1:2);
-%             end
-%             plot(chRFs(:,1),chRFs(:,2),'-')
-%             hold on
-%         end
+        matFile=[rootdir,date,'\',date,'_data\microstim_saccade_',date,'.mat'];
+        dataDir=[rootdir,date,'\',date,'_data'];
+        %     if ~exist('dataDir','dir')
+        %         copyfile(['Y:\Xing\',date(1:6),'_data'],[rootdir,date,'\',date,'_data']);
+        %     end
+        load(matFile);
+        maxNumTrials=size(TRLMAT,1);
+        if maxNumTrials<=length(performance)
+            performance=performance(1:maxNumTrials);
+            allArrayNum=allArrayNum(1:maxNumTrials);
+            allBlockNo=allBlockNo(1:maxNumTrials);
+            allElectrodeNum=allElectrodeNum(1:maxNumTrials);
+            allFixT=allFixT(1:maxNumTrials);
+            allHitRT=allHitRT(1:maxNumTrials);
+            allHitX=allHitX(1:maxNumTrials);
+            allHitY=allHitY(1:maxNumTrials);
+            allInstanceNum=allInstanceNum(1:maxNumTrials);
+            allSampleX=allSampleX(1:maxNumTrials);
+            allSampleY=allSampleY(1:maxNumTrials);
+            allStimDur=allStimDur(1:maxNumTrials);
+            allTargetArrivalTime=allTargetArrivalTime(1:maxNumTrials);
+            allTargetArrivalTime=allTargetArrivalTime(1:maxNumTrials);
+        end
+        [dummy goodTrials]=find(performance~=0);
+        % goodTrialConds=allTrialCond(goodTrials,:);
+        goodTrialIDs=TRLMAT(goodTrials,:);
+        
+        load([dataDir,'\currentThresholdChs',num2str(currentThresholdChs),'.mat']);
+        
+        processRaw=1;
+        if processRaw==1
+            for instanceCount=1%:length(allInstanceInd)
+                instanceInd=allInstanceInd(instanceCount);
+                instanceName=['instance',num2str(instanceInd)];
+                instanceNEVFileName=[rootdir,date,'\',instanceName,'.nev'];
+                NEV=openNEV(instanceNEVFileName);
+                
+                %read in eye data:
+                recordedRaw=1;
+                if recordedRaw==0%7/9/17
+                    eyeChannels=[1 2];
+                elseif recordedRaw==1%11/9/17
+                    if NEV.ElectrodesInfo(130).ConnectorPin==2
+                        eyeChannels=[130 131];
+                    elseif NEV.ElectrodesInfo(130).ConnectorPin==3
+                        eyeChannels=[129 130];
+                    end
+                end
+                minFixDur=300/1000;%fixates for at least 300 ms, up to 800 ms
+                instanceNS6FileName=['X:\best\',date,'\',instanceName,'.ns6'];
+                eyeDataMat=['D:\data\',date,'\',instanceName,'_NSch_eye_channels.mat'];
+                if exist(eyeDataMat,'file')
+                    load(eyeDataMat,'NSch');
+                else
+                    if recordedRaw==0
+                        NSchOriginal=openNSx(instanceNS6FileName);
+                        for channelInd=1:length(eyeChannels)
+                            NSch{channelInd}=NSchOriginal.Data(channelInd,:);
+                        end
+                    elseif recordedRaw==1
+                        for channelInd=1:length(eyeChannels)
+                            readChannel=['c:',num2str(eyeChannels(channelInd)),':',num2str(eyeChannels(channelInd))];
+                            NSchOriginal=openNSx(instanceNS6FileName,readChannel);
+                            NSch{channelInd}=NSchOriginal.Data;
+                        end
+                    end
+                    if iscell(NSchOriginal.Data)
+                        for blockInd=1:length(NSchOriginal.Data)
+                            NSchtemp{channelInd}=[NSch{blockInd}{1} NSch{blockInd}{2}];
+                        end
+                        NSch=NSchtemp;
+                    end
+                    save(eyeDataMat,'NSch');
+                end
+                
+                %identify trials using encodes sent via serial port:
+                trialNo=1;
+                breakHere=0;
+                while breakHere==0
+                    encode=double(num2str(trialNo));%serial port encodes. e.g. 0 is encoded as 48, 1 as 49, 10 as [49 48], 12 as [49 50]
+                    tempInd=strfind(NEV.Data.SerialDigitalIO.UnparsedData',encode);
+                    if isempty(tempInd)
+                        breakHere=1;
+                    else
+                        timeInd(trialNo)=NEV.Data.SerialDigitalIO.TimeStamp(tempInd(1));
+                        encodeInd(trialNo)=tempInd(1);
+                        if trialNo>1
+                            trialEncodes=NEV.Data.SerialDigitalIO.UnparsedData(encodeInd(trialNo-1):encodeInd(trialNo));
+                        else
+                            trialEncodes=NEV.Data.SerialDigitalIO.UnparsedData(1:encodeInd(trialNo));
+                        end
+                        ErrorB=Par.ErrorB;
+                        CorrectB=Par.CorrectB;
+                        MicroB=Par.MicroB;
+                        StimB=Par.StimB;
+                        TargetB=Par.TargetB;
+                        if find(trialEncodes==2^CorrectB)
+                            perfNEV(trialNo)=1;
+                        elseif find(trialEncodes==2^ErrorB)
+                            perfNEV(trialNo)=-1;
+                        else
+                            perfNEV(trialNo)=0;
+                        end
+                        if perfNEV(trialNo)~=0
+                            stimOnInd=find(trialEncodes==2^StimB)%stimulus onset
+                            microstimInd=find(trialEncodes==2^MicroB)%stimulus onset
+                            if length(microstimInd)>1
+                                microstimInd=microstimInd(end);
+                            end
+                            if trialNo>1
+%                                 stimOnTime=NEV.Data.SerialDigitalIO.TimeStamp(encodeInd(trialNo-1)+stimOnInd-1);
+                                microstimTime=NEV.Data.SerialDigitalIO.TimeStamp(encodeInd(trialNo-1)+microstimInd-1);
+                            else
+%                                 stimOnTime=NEV.Data.SerialDigitalIO.TimeStamp(stimOnInd);
+                                microstimTime=NEV.Data.SerialDigitalIO.TimeStamp(microstimInd);
+                            end
+                            allFixT(trialNo)
+%                             eyeDataXFinal{trialNo}=NSch{1}(stimOnTime-0.3*sampFreq:stimOnTime+1.3*sampFreq);%eye data from 300 ms before stim onset to 1.3 s after stim onset
+%                             length(eyeDataXFinal{trialNo})
+%                             eyeDataYFinal{trialNo}=NSch{2}(stimOnTime-0.3*sampFreq:stimOnTime+1.3*sampFreq);
+                            eyeDataXFinal{trialNo}=NSch{1}(microstimTime-0.3*sampFreq:microstimTime+(1+3*0.15)*sampFreq);%eye data from 300 ms before stim onset to 1 s after stim offset
+                            length(eyeDataXFinal{trialNo})
+                            eyeDataYFinal{trialNo}=NSch{2}(microstimTime-0.3*sampFreq:microstimTime+(1+3*0.15)*sampFreq);
+                        end
+                        trialNo=trialNo+1;
+                    end
+                end
+                perfNEV=performance;
+            end
+            allArrayNumFinal=allArrayNum;
+            allElectrodeNumFinal=allElectrodeNum;
+            eyeDataTrialMat=['D:\data\',date,'\eye_data_',date,'.mat'];
+            save(eyeDataTrialMat,'eyeDataXFinal','eyeDataYFinal','allElectrodeNumFinal','allArrayNumFinal');
+        end
     end
 end
-%bad sets: 7 9

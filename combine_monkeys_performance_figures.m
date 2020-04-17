@@ -7,8 +7,9 @@ function combine_monkeys_performance_figures
 truncateXlim=1;
 if truncateXlim==1
     xlimTruncate=[30 30 60];
+    xlimTruncate=[30 30 100];
 end
-smoothTrials=3;%set to 0 to turn off smoothing across trials. to enable smoothing across trials, set to number of trials desired
+smoothTrials=5;%set to 0 to turn off smoothing across trials. to enable smoothing across trials, set to number of trials desired
 %Lick 2-phosphene task
 load('X:\best\results\behavioural_performance_all_sets_241017_50trials_corrected_RFs.mat')
 allSetsPerfMicroBinLick=allSetsPerfMicroBin;
@@ -21,6 +22,20 @@ allSetsPerfVisualBinAston=allSetsPerfVisualBin;
 
 maxNumTrials=min([size(allSetsPerfMicroBinLick,2) size(allSetsPerfMicroBinAston,2)]);
 
+%Check for improvement in performance between first 10 trials and trials 21
+%to 30
+%Lick:
+y=[mean(allSetsPerfMicroBinLick(:,1:10),2),mean(allSetsPerfMicroBinLick(:,21:30),2)];
+[h,p,ci,stats]=ttest(y(:,1),y(:,2))%p=1 (not significant)
+% g1=[ones(size(allSetsPerfMicroBinLick,1),1),ones(size(allSetsPerfMicroBinLick,1),1)*2];
+% sessionNums=1:size(allSetsPerfMicroBinLick,1);
+% g2=repmat(sessionNums',1,2);
+% [p,tbl,stats]=anovan(y(:),{g1(:),g2(:)})
+
+%Aston:
+y=[mean(allSetsPerfMicroBinAston(:,1:10),2),mean(allSetsPerfMicroBinAston(:,21:30),2)];
+[h,p,ci,stats]=ttest(y(:,1),y(:,2))%p=0.867 (not significant)
+
 %Combine across monkeys:
 allSetsPerfMicroBin=[allSetsPerfMicroBinLick(:,1:maxNumTrials);allSetsPerfMicroBinAston(:,1:maxNumTrials)];
 allSetsPerfVisualBin=[allSetsPerfVisualBinLick(:,1:maxNumTrials);allSetsPerfVisualBinAston(:,1:maxNumTrials)];
@@ -31,10 +46,22 @@ subplot(2,1,1);
 % subplot(2,5,1:3);
 hold on
 meanAllSetsPerfMicroBin=mean(allSetsPerfMicroBin,1);
+originalMeanAllSetsPerfMicroBin=meanAllSetsPerfMicroBin;
 if smoothTrials
     meanAllSetsPerfMicroBin=smooth(meanAllSetsPerfMicroBin,smoothTrials);
+    semMicro=[];
+    for i=1:length(meanAllSetsPerfMicroBin)
+        if i<ceil(smoothTrials/2)
+            semMicro(i)=std(originalMeanAllSetsPerfMicroBin(1:i))/sqrt(i);
+        elseif i>length(meanAllSetsPerfMicroBin)-ceil(smoothTrials/2)
+            semMicro(i)=std(originalMeanAllSetsPerfMicroBin(i:end))/sqrt(smoothTrials);
+        else
+            semMicro(i)=std(originalMeanAllSetsPerfMicroBin(i-floor(smoothTrials/2):i+floor(smoothTrials/2)))/sqrt(smoothTrials);
+        end
+    end
 end
-plot(meanAllSetsPerfMicroBin,'r');
+% plot(meanAllSetsPerfMicroBin,'r');
+errorbar(1:length(meanAllSetsPerfMicroBin),meanAllSetsPerfMicroBin,semMicro,'r');
 ylim([0 1]);
 xLimits=get(gca,'xlim');
 plot([0 xLimits(2)],[0.5 0.5],'k:');
@@ -47,10 +74,22 @@ subplot(2,1,2);
 % subplot(2,5,6:8);
 hold on
 meanAllSetsPerfVisualBin=mean(allSetsPerfVisualBin,1);
+originalMeanAllSetsPerfVisualBin=meanAllSetsPerfVisualBin;
 if smoothTrials
     meanAllSetsPerfVisualBin=smooth(meanAllSetsPerfVisualBin,smoothTrials);
+    semVisual=[];
+    for i=1:length(meanAllSetsPerfVisualBin)
+        if i<ceil(smoothTrials/2)
+            semVisual(i)=std(originalMeanAllSetsPerfVisualBin(1:i))/sqrt(i);
+        elseif i>length(meanAllSetsPerfVisualBin)-ceil(smoothTrials/2)
+            semVisual(i)=std(originalMeanAllSetsPerfVisualBin(i:end))/sqrt(smoothTrials);
+        else
+            semVisual(i)=std(originalMeanAllSetsPerfVisualBin(i-floor(smoothTrials/2):i+floor(smoothTrials/2)))/sqrt(smoothTrials);
+        end
+    end
 end
-plot(meanAllSetsPerfVisualBin,'b');
+% plot(meanAllSetsPerfVisualBin,'b');
+errorbar(1:length(meanAllSetsPerfVisualBin),meanAllSetsPerfVisualBin,semVisual,'b');
 ylim([0 1]);
 xLimits=get(gca,'xlim');
 plot([0 xLimits(2)],[0.5 0.5],'k:');
@@ -154,6 +193,16 @@ allSetsPerfVisualBinAston=allSetsPerfVisualBin;
 
 maxNumTrials=min([size(allSetsPerfMicroBinLick,2) size(allSetsPerfMicroBinAston,2)]);
 
+%Check for improvement in performance between first 10 trials and trials 21
+%to 30
+%Lick:
+y=[mean(allSetsPerfMicroBinLick(:,1:10),2),mean(allSetsPerfMicroBinLick(:,21:30),2)];
+[h,p,ci,stats]=ttest(y(:,1),y(:,2))%p=0.240 (not significant)
+
+%Aston:
+y=[mean(allSetsPerfMicroBinAston(:,1:10),2),mean(allSetsPerfMicroBinAston(:,21:30),2)];
+[h,p,ci,stats]=ttest(y(:,1),y(:,2))%p=0.0809 (not significant)
+
 %Combine across monkeys:
 allSetsPerfMicroBin=[allSetsPerfMicroBinLick(:,1:maxNumTrials);allSetsPerfMicroBinAston(:,1:maxNumTrials)];
 allSetsPerfVisualBin=[allSetsPerfVisualBinLick(:,1:maxNumTrials);allSetsPerfVisualBinAston(:,1:maxNumTrials)];
@@ -163,10 +212,22 @@ figure;
 subplot(2,1,1);
 hold on
 meanAllSetsPerfMicroBin=mean(allSetsPerfMicroBin,1);
+originalMeanAllSetsPerfMicroBin=meanAllSetsPerfMicroBin;
 if smoothTrials
     meanAllSetsPerfMicroBin=smooth(meanAllSetsPerfMicroBin,smoothTrials);
+    semMicro=[];
+    for i=1:length(meanAllSetsPerfMicroBin)
+        if i<ceil(smoothTrials/2)
+            semMicro(i)=std(originalMeanAllSetsPerfMicroBin(1:i))/sqrt(i);
+        elseif i>length(meanAllSetsPerfMicroBin)-ceil(smoothTrials/2)
+            semMicro(i)=std(originalMeanAllSetsPerfMicroBin(i:end))/sqrt(smoothTrials);
+        else
+            semMicro(i)=std(originalMeanAllSetsPerfMicroBin(i-floor(smoothTrials/2):i+floor(smoothTrials/2)))/sqrt(smoothTrials);
+        end
+    end
 end
-plot(meanAllSetsPerfMicroBin,'r');
+% plot(meanAllSetsPerfMicroBin,'r');
+errorbar(1:length(meanAllSetsPerfMicroBin),meanAllSetsPerfMicroBin,semMicro,'r');
 ylim([0 1]);
 xLimits=get(gca,'xlim');
 plot([0 xLimits(2)],[0.5 0.5],'k:');
@@ -179,10 +240,22 @@ end
 subplot(2,1,2);
 hold on
 meanAllSetsPerfVisualBin=mean(allSetsPerfVisualBin,1);
+originalMeanAllSetsPerfVisualBin=meanAllSetsPerfVisualBin;
 if smoothTrials
     meanAllSetsPerfVisualBin=smooth(meanAllSetsPerfVisualBin,smoothTrials);
+    semVisual=[];
+    for i=1:length(meanAllSetsPerfVisualBin)
+        if i<ceil(smoothTrials/2)
+            semVisual(i)=std(originalMeanAllSetsPerfVisualBin(1:i))/sqrt(i);
+        elseif i>length(meanAllSetsPerfVisualBin)-ceil(smoothTrials/2)
+            semVisual(i)=std(originalMeanAllSetsPerfVisualBin(i:end))/sqrt(smoothTrials);
+        else
+            semVisual(i)=std(originalMeanAllSetsPerfVisualBin(i-floor(smoothTrials/2):i+floor(smoothTrials/2)))/sqrt(smoothTrials);
+        end
+    end
 end
-plot(meanAllSetsPerfVisualBin,'b');
+% plot(meanAllSetsPerfVisualBin,'b');
+errorbar(1:length(meanAllSetsPerfVisualBin),meanAllSetsPerfVisualBin,semVisual,'b');
 ylim([0 1]);
 xLimits=get(gca,'xlim');
 plot([0 xLimits(2)],[0.5 0.5],'k:');
@@ -276,6 +349,16 @@ allSetsPerfVisualBinAston=allSetsPerfVisualBin;
 
 maxNumTrials=min([size(allSetsPerfMicroBinLick,2) size(allSetsPerfMicroBinAston,2)]);
 
+%Check for improvement in performance between first 10 trials and trials 21
+%to 30
+%Lick:
+y=[mean(allSetsPerfMicroBinLick(:,1:10),2),mean(allSetsPerfMicroBinLick(:,21:30),2)];
+[h,p,ci,stats]=ttest(y(:,1),y(:,2))%p=0.525 (not significant)
+
+%Aston:
+y=[mean(allSetsPerfMicroBinAston(:,1:10),2),mean(allSetsPerfMicroBinAston(:,21:30),2)];
+[h,p,ci,stats]=ttest(y(:,1),y(:,2))%p=0.495 (not significant)
+
 %Combine across monkeys:
 allSetsPerfMicroBin=[allSetsPerfMicroBinLick(:,1:maxNumTrials);allSetsPerfMicroBinAston(:,1:maxNumTrials)];
 allSetsPerfVisualBin=[allSetsPerfVisualBinLick(:,1:maxNumTrials);allSetsPerfVisualBinAston(:,1:maxNumTrials)];
@@ -285,10 +368,22 @@ letterFigure=figure;
 subplot(2,1,1);
 hold on
 meanAllSetsPerfMicroBin=mean(allSetsPerfMicroBin,1);
+originalMeanAllSetsPerfMicroBin=meanAllSetsPerfMicroBin;
 if smoothTrials
     meanAllSetsPerfMicroBin=smooth(meanAllSetsPerfMicroBin,smoothTrials);
+    semMicro=[];
+    for i=1:length(meanAllSetsPerfMicroBin)
+        if i<ceil(smoothTrials/2)
+            semMicro(i)=std(originalMeanAllSetsPerfMicroBin(1:i))/sqrt(i);
+        elseif i>length(meanAllSetsPerfMicroBin)-ceil(smoothTrials/2)
+            semMicro(i)=std(originalMeanAllSetsPerfMicroBin(i:end))/sqrt(smoothTrials);
+        else
+            semMicro(i)=std(originalMeanAllSetsPerfMicroBin(i-floor(smoothTrials/2):i+floor(smoothTrials/2)))/sqrt(smoothTrials);
+        end
+    end
 end
-plot(meanAllSetsPerfMicroBin,'r');
+% plot(meanAllSetsPerfMicroBin,'r');
+errorbar(1:length(meanAllSetsPerfMicroBin),meanAllSetsPerfMicroBin,semMicro,'r');
 ylim([0 1]);
 xLimits=get(gca,'xlim');
 plot([0 xLimits(2)],[0.5 0.5],'k:');
@@ -302,10 +397,22 @@ ax.XTick=[0 30 60];
 subplot(2,1,2);
 hold on
 meanAllSetsPerfVisualBin=mean(allSetsPerfVisualBin,1);
+originalMeanAllSetsPerfVisualBin=meanAllSetsPerfVisualBin;
 if smoothTrials
     meanAllSetsPerfVisualBin=smooth(meanAllSetsPerfVisualBin,smoothTrials);
+    semVisual=[];
+    for i=1:length(meanAllSetsPerfVisualBin)
+        if i<ceil(smoothTrials/2)
+            semVisual(i)=std(originalMeanAllSetsPerfVisualBin(1:i))/sqrt(i);
+        elseif i>length(meanAllSetsPerfVisualBin)-ceil(smoothTrials/2)
+            semVisual(i)=std(originalMeanAllSetsPerfVisualBin(i:end))/sqrt(smoothTrials);
+        else
+            semVisual(i)=std(originalMeanAllSetsPerfVisualBin(i-floor(smoothTrials/2):i+floor(smoothTrials/2)))/sqrt(smoothTrials);
+        end
+    end
 end
-plot(meanAllSetsPerfVisualBin,'b');
+% plot(meanAllSetsPerfVisualBin,'b');
+errorbar(1:length(meanAllSetsPerfVisualBin),meanAllSetsPerfVisualBin,semVisual,'b');
 ylim([0 1]);
 xLimits=get(gca,'xlim');
 plot([0 xLimits(2)],[0.5 0.5],'k:');
@@ -411,20 +518,44 @@ figure(letterFigure)
 subplot(2,1,1);
 hold on
 meanAllSetsPerfMicroBin=mean(allSetsPerfMicroBin,1);
+originalMeanAllSetsPerfMicroBin=meanAllSetsPerfMicroBin;
 if smoothTrials
     meanAllSetsPerfMicroBin=smooth(meanAllSetsPerfMicroBin,smoothTrials);
+    semMicro=[];
+    for i=1:length(meanAllSetsPerfMicroBin)
+        if i<ceil(smoothTrials/2)
+            semMicro(i)=std(originalMeanAllSetsPerfMicroBin(1:i))/sqrt(i);
+        elseif i>length(meanAllSetsPerfMicroBin)-ceil(smoothTrials/2)
+            semMicro(i)=std(originalMeanAllSetsPerfMicroBin(i:end))/sqrt(smoothTrials);
+        else
+            semMicro(i)=std(originalMeanAllSetsPerfMicroBin(i-floor(smoothTrials/2):i+floor(smoothTrials/2)))/sqrt(smoothTrials);
+        end
+    end
 end
 plot(meanAllSetsPerfMicroBin,'Color',greenCol);
+errorbar(1:length(meanAllSetsPerfMicroBin),meanAllSetsPerfMicroBin,semMicro,'Color',greenCol);
 ylim([0 1]);
 xLimits=get(gca,'xlim');
 plot([0 xLimits(2)],[0.5 0.5],'k:');
 subplot(2,1,2);
 hold on
 meanAllSetsPerfVisualBin=mean(allSetsPerfVisualBin,1);
+originalMeanAllSetsPerfVisualBin=meanAllSetsPerfVisualBin;
 if smoothTrials
     meanAllSetsPerfVisualBin=smooth(meanAllSetsPerfVisualBin,smoothTrials);
+    semVisual=[];
+    for i=1:length(meanAllSetsPerfVisualBin)
+        if i<ceil(smoothTrials/2)
+            semVisual(i)=std(originalMeanAllSetsPerfVisualBin(1:i))/sqrt(i);
+        elseif i>length(meanAllSetsPerfVisualBin)-ceil(smoothTrials/2)
+            semVisual(i)=std(originalMeanAllSetsPerfVisualBin(i:end))/sqrt(smoothTrials);
+        else
+            semVisual(i)=std(originalMeanAllSetsPerfVisualBin(i-floor(smoothTrials/2):i+floor(smoothTrials/2)))/sqrt(smoothTrials);
+        end
+    end
 end
-plot(meanAllSetsPerfVisualBin,'Color',greenCol);
+% plot(meanAllSetsPerfVisualBin,'Color',greenCol);
+errorbar(1:length(meanAllSetsPerfVisualBin),meanAllSetsPerfVisualBin,semVisual,'Color',greenCol);
 ylim([0 1]);
 xLimits=get(gca,'xlim');
 plot([0 xLimits(2)],[0.5 0.5],'k:');

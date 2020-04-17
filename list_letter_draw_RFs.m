@@ -613,6 +613,7 @@ for calculateVisual=[0 1]
                 chRFs(chInd,:)=channelRFs(ind,1:2);
             end
             scatter(chRFs(:,1),chRFs(:,2),'o')
+            axis equal
 %             plot(chRFs(:,1),chRFs(:,2),'-')
             hold on
             title(setNo);

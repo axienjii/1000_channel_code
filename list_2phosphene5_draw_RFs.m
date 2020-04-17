@@ -7,6 +7,7 @@ figure;
 allDatesV=[];
 allDatesM=[];
 subplotNo=0;
+corticalDistances=[];
 for calculateVisual=[0]
     %bad sets: 6? 7 11 25?
     for setNo=[1:5 8 10 12:17 19:24]%[1:8 10:17 19:25]%set 9 accidentally used identical electrodes to set 8 (discard 191017_B36 and _B37)
@@ -533,10 +534,29 @@ for calculateVisual=[0]
             ind=intersect(temp1,temp2);
             load(['D:\data\best_260617-280617\RFs_instance',num2str(instance),'.mat']);
             chRFs(chInd,:)=channelRFs(ind,1:2);
+            w(chInd,:)=calculate_cortical_coords_from_RFs(chRFs(chInd,:));
+            %this function returns the cortical distance in
+            %mm, for the x- and y-axes, in the variable
+            %'w,' with the x and y values contained in the
+            %real and imaginary parts of w, respectively
         end
         plot([chRFs(1,1) chRFs(2,1)],[chRFs(1,2) chRFs(2,2)],'-')
         plot([chRFs(3,1) chRFs(4,1)],[chRFs(3,2) chRFs(4,2)],'-')
         title(setNo);
+        %calculate distance between RF pairs:        
+        corticalDistance(1)=sqrt((real(w(1))-real(w(2)))^2+(imag(w(1))-imag(w(2)))^2);
+        corticalDistance(2)=sqrt((real(w(3))-real(w(4)))^2+(imag(w(3))-imag(w(4)))^2);
+        corticalDistances=[corticalDistances;corticalDistance];
     end
 end
 %bad sets: 6? 7 11 25?
+
+save('D:\data\cortical_distance_2phosphene_lick.mat','corticalDistances');
+
+rootdir='X:\best\';
+perfMat=fullfile(rootdir,'behavioural_performance_all_sets_corrected_RFs_241017_all_trials.mat');
+load(perfMat)
+figure;
+meanCorticalDistances=mean(corticalDistances,2);%mean cortical distance across the two pairs of electrodes
+scatter(meanCorticalDistances,goodSetsallSetsPerfMicroAllTrials);
+[r1 p1]=corrcoef(meanCorticalDistances,goodSetsallSetsPerfMicroAllTrials);
