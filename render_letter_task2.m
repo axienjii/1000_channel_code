@@ -2,7 +2,7 @@ function render_letter_task2(movieVersion)
 %Written by Xing 2/4/20. Read in images of monkeys in setup, identify
 %x- and y-coordinates of arrays on cortex, and assign pixels on each array
 %to each electrode. Combines pixel coordinates with microstimulation, RF
-%centres, and eye movements. Uses data from 080219_B10_aston.
+%centres, and eye movements. Uses data from 080518_B7.
 
 % movieVersion=1;
 for monkeyInd=1
@@ -65,8 +65,6 @@ for monkeyInd=1
                     datapath = 'D:\data\080518_B7\eye_data_080518_B7.mat';%setNo 22
                 case 2
                     datapath = 'D:\data\140618_B7\eye_data_140618_B7.mat';%setNo 28
-                case 3
-%                     datapath = 'D:\aston_data\120219_B6_aston\eye_data_120219_B6_aston.mat';
             end
         end
         load(datapath)
@@ -76,11 +74,11 @@ for monkeyInd=1
         allElectrodeNumFinal(discardTrials)=[];
         allArrayNumFinal(discardTrials)=[];
         
-        discardTrials=1;%manually remove first trial with saccade to the right
-        eyeDataXFinal(discardTrials)=[];
-        eyeDataYFinal(discardTrials)=[];
-        allElectrodeNumFinal(discardTrials)=[];
-        allArrayNumFinal(discardTrials)=[];
+%         discardTrials=1;%manually remove first trial with saccade to the right
+%         eyeDataXFinal(discardTrials)=[];
+%         eyeDataYFinal(discardTrials)=[];
+%         allElectrodeNumFinal(discardTrials)=[];
+%         allArrayNumFinal(discardTrials)=[];
         
         discountFactor = 0.995;
         NumDiscountDP = 400;

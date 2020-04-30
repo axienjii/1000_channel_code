@@ -227,7 +227,8 @@ end
 
 %create combined MP4 video across conditions and monkeys:
 % realtime=1;%set to 1 to run movie at real time. set to 0 to slow it down
-moviename=fullfile('X:\aston','280818_B2_aston',['1024-channel responses to sweeping bar_both_monkeys']);
+% moviename=fullfile('X:\aston','280818_B2_aston',['1024-channel responses to sweeping bar_both_monkeys']);
+moviename=fullfile('D:\aston_data','barsweep_video_in_setup',['1024-channel responses to sweeping bar_both_monkeys']);
 if realtime==0
 %     slowedDownFactor=2;%2: 50% speed; 4: 25%; 5: 20%; 10: 10%
     moviename=[moviename,'_slowed_',num2str(slowedDownFactor),'x'];
@@ -245,7 +246,7 @@ set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 set(gca,'Color',[0.7 0.7 0.7]);
 set(gca,'xtick',[])
 set(gca,'ytick',[])
-text(0.4,0.5,'Monkey 1','FontSize',40,'FontName','Calibri','FontWeight','bold');
+text(0.4,0.5,'Monkey L','FontSize',40,'FontName','Calibri','FontWeight','bold');
 if realtime==0
     text(0.405,0.4,['Speed: 1/',num2str(slowedDownFactor),' x'],'FontSize',30,'FontName','Calibri','FontWeight','bold');
 end
@@ -271,7 +272,7 @@ set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 set(gca,'Color',[0.7 0.7 0.7]);
 set(gca,'xtick',[])
 set(gca,'ytick',[])
-text(0.4,0.5,'Monkey 2','FontSize',40,'FontName','Calibri','FontWeight','bold');
+text(0.4,0.5,'Monkey A','FontSize',40,'FontName','Calibri','FontWeight','bold');
 if realtime==0
     text(0.405,0.4,['Speed: 1/',num2str(slowedDownFactor),' x'],'FontSize',30,'FontName','Calibri','FontWeight','bold');
 end

@@ -316,7 +316,7 @@ for monkeyInd=2
         end
     end
     
-    makeIndividualMovies=1;
+    makeIndividualMovies=0;
     if makeIndividualMovies==1
         for stimCond=1:4
             pathname=[rootDir,'\barsweep_video_in_setup\setup 1024-channel responses to bar sweeping ',direct{stimCond},'.mat'];
@@ -410,7 +410,7 @@ set(gca,'visible','off')
 set(gca,'Color','k');
 set(gca,'xtick',[])
 set(gca,'ytick',[])
-text(0.4,0.5,'Monkey 1','FontSize',40,'FontName','Calibri','FontWeight','bold','Color',[0.2 0.2 0.2]);
+text(0.4,0.5,'Monkey L','FontSize',40,'FontName','Calibri','FontWeight','bold','Color',[0.2 0.2 0.2]);
 if realtime==0
     text(0.405,0.4,['Speed: 1/',num2str(slowedDownFactor),' x'],'FontSize',30,'FontName','Calibri','FontWeight','bold','Color',[0.2 0.2 0.2]);
 end
@@ -476,7 +476,7 @@ set(gca,'visible','off')
 set(gca,'Color','k');
 set(gca,'xtick',[])
 set(gca,'ytick',[])
-text(0.4,0.5,'Monkey 2','FontSize',40,'FontName','Calibri','FontWeight','bold','Color',[0.2 0.2 0.2]);
+text(0.4,0.5,'Monkey A','FontSize',40,'FontName','Calibri','FontWeight','bold','Color',[0.2 0.2 0.2]);
 if realtime==0
     text(0.405,0.4,['Speed: 1/',num2str(slowedDownFactor),' x'],'FontSize',30,'FontName','Calibri','FontWeight','bold','Color',[0.2 0.2 0.2]);
 end
