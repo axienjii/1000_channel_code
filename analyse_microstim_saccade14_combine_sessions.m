@@ -183,6 +183,8 @@ if processRaw==1
         
         allElectrodeNumsList=[];
         allArrayNumsList=[];        
+        allMaxCurrentList=[];
+        allMidCurrentList=[];
         for uniqueElectrode=1:length(electrodeNums)%15%16:30%1:15%
             figInd9(uniqueElectrode)=figure;hold on
             array=arrayNums(uniqueElectrode);
@@ -225,6 +227,7 @@ if processRaw==1
                 end
                 if isempty(currentAmplitudeMaxMatchIncorrectTrials)%&&length(matchTrials)>2%if only hits and no misses were obtained during trials at which the maximum current was delivered
                     processData=1;
+                    allMaxCurrentList=[allMaxCurrentList maxCurrent];
                 end
             elseif suprathresholdCurrent==0
                 allCurrents=unique(allCurrentLevel(matchTrials));
@@ -243,6 +246,7 @@ if processRaw==1
                 end
                 if ~isempty(currentAmplitudeMidMatchTrials)%&&length(matchTrials)>2%if hits were obtained during trials at which the maximum current was delivered
                     processData=1;
+                    allMidCurrentList=[allMidCurrentList allCurrents(middleInd)];
                 end
             end
             if processData
@@ -565,9 +569,9 @@ if processRaw==1
         end
         if ~isempty(posIndXChs)
             if suprathresholdCurrent==1
-                save([rootdir,date,'\saccade_data_',date,'_fix_to_rew_max_amp.mat'],'baselineXChs','baselineYChs','trialDataXSmoothFixChs','trialDataYSmoothFixChs','trialNoChs','posIndXChs','posIndYChs','startMicrostimChs','endMicrostimChs','currentAmplitudeAllTrials','allElectrodeNumsList','allArrayNumsList');
+                save([rootdir,date,'\saccade_data_',date,'_fix_to_rew_max_amp.mat'],'baselineXChs','baselineYChs','trialDataXSmoothFixChs','trialDataYSmoothFixChs','trialNoChs','posIndXChs','posIndYChs','startMicrostimChs','endMicrostimChs','currentAmplitudeAllTrials','allElectrodeNumsList','allArrayNumsList','allMaxCurrentList');
             elseif suprathresholdCurrent==0
-                save([rootdir,date,'\saccade_data_',date,'_fix_to_rew_mid_amp.mat'],'baselineXChs','baselineYChs','trialDataXSmoothFixChs','trialDataYSmoothFixChs','trialNoChs','posIndXChs','posIndYChs','startMicrostimChs','endMicrostimChs','currentAmplitudeAllTrials','allElectrodeNumsList','allArrayNumsList');
+                save([rootdir,date,'\saccade_data_',date,'_fix_to_rew_mid_amp.mat'],'baselineXChs','baselineYChs','trialDataXSmoothFixChs','trialDataYSmoothFixChs','trialNoChs','posIndXChs','posIndYChs','startMicrostimChs','endMicrostimChs','currentAmplitudeAllTrials','allElectrodeNumsList','allArrayNumsList','allMidCurrentList');
             end
         end
     end

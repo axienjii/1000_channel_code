@@ -1,0 +1,225 @@
+function calcThresholdList=analyse_microstim_saccade14_combine_sessions_read_current(date,allInstanceInd,calcThresholdList)
+%10/10/19
+%Written by Xing, modified from analyse_microstim_saccade14_letter.m, extracts eye data during a
+%saccade task during microstimulation of individual electrodes. 
+%The goal is the check whether the saccade endpoints correspond roughly to 
+%the expected phosphene locations, based on RF mapping. 50% catch trials.
+%Uses serial port data to identify trial number. 
+close all
+localDisk=0;
+if localDisk==1
+    rootdir='D:\data\';
+%     copyfile(['X:\best\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
+    copyfile([rootdir,'\',date(1:6),'_data'],[rootdir,date,'\',date(1:6),'_data']);
+elseif localDisk==0
+    rootdir='X:\best\';
+end
+% dataDir=[rootdir,date,'\',date(1:6),'_data'];
+dataDir=[rootdir,date,'\',date,'_data'];
+matFile=[dataDir,'\microstim_saccade_',date,'.mat'];
+load(matFile);
+maxNumTrials=size(TRLMAT,1);
+if maxNumTrials<=length(performance)
+    performance=performance(1:maxNumTrials);
+    allArrayNum=allArrayNum(1:maxNumTrials);
+    allBlockNo=allBlockNo(1:maxNumTrials);
+    allElectrodeNum=allElectrodeNum(1:maxNumTrials);
+    allFixT=allFixT(1:maxNumTrials);
+    allHitRT=allHitRT(1:maxNumTrials);
+    allHitX=allHitX(1:maxNumTrials);
+    allHitY=allHitY(1:maxNumTrials);
+    allInstanceNum=allInstanceNum(1:maxNumTrials);
+    allSampleX=allSampleX(1:maxNumTrials);
+    allSampleY=allSampleY(1:maxNumTrials);
+    allStimDur=allStimDur(1:maxNumTrials);
+    allTargetArrivalTime=allTargetArrivalTime(1:maxNumTrials);
+    allTargetArrivalTime=allTargetArrivalTime(1:maxNumTrials);
+end
+[dummy goodTrials]=find(performance~=0);
+% goodTrialConds=allTrialCond(goodTrials,:);
+
+stimDurms=500;%in ms- min 0, max 500
+preStimDur=300/1000;
+stimDur=stimDurms/1000;%in seconds
+postStimDur=400/1000;%length of post-stimulus-offset period, in s
+sampFreq=30000;
+minCrossingTime=0;
+analyseVisualOnly=1;
+visualOnly=1;
+
+switch date
+    case '110917_B3'
+        minCrossingTime=preStimDur-0.166;
+        degPerVoltXFinal=0.0026;
+        degPerVoltYFinal=0.0024;
+end
+minCrossingTime=preStimDur-0.166;
+degPerVoltXFinal=0.0026;
+degPerVoltYFinal=0.0024;
+
+cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
+arrays=8:16;
+
+currentAmplitudeAllTrials=[];
+processRaw=1;
+if processRaw==1
+    for instanceCount=1%:length(allInstanceInd)
+        instanceInd=allInstanceInd(instanceCount);
+        instanceName=['instance',num2str(instanceInd)];
+        instanceNEVFileName=[rootdir,date,'\',instanceName,'.nev'];
+        NEV=openNEV(instanceNEVFileName,'overwrite');     
+        
+        %identify trials using encodes sent via serial port: 
+        trialNo=1;
+        breakHere=0;
+        while breakHere==0
+            encode=double(num2str(trialNo));%serial port encodes. e.g. 0 is encoded as 48, 1 as 49, 10 as [49 48], 12 as [49 50]
+            tempInd=strfind(NEV.Data.SerialDigitalIO.UnparsedData',encode);
+            if isempty(tempInd)
+                breakHere=1;
+            else
+                timeInd(trialNo)=NEV.Data.SerialDigitalIO.TimeStamp(tempInd(1));
+                encodeInd(trialNo)=tempInd(1);
+                trialNo=trialNo+1;
+            end
+        end
+                
+        if exist('allVisualTrial','var')%session(s) in which visual and microstim trials are interleaved
+            if analyseVisualOnly==0
+                microstimTrialsInd1=find(allCurrentLevel>0);
+                microstimTrialsInd2=find(allVisualTrial==0);
+                microstimTrialsInd=intersect(microstimTrialsInd1,microstimTrialsInd2);
+                correctTrialsInd=find(performance==1);
+                correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
+                fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
+            elseif analyseVisualOnly==1%note that in this code, trials with visually presented stimuli are read into the variable 'microstimTrialsInd'
+                microstimTrialsInd1=find(cell2mat(allElectrodeNum)>0);
+                microstimTrialsInd2=find(allVisualTrial==1);
+                microstimTrialsInd=intersect(microstimTrialsInd1,microstimTrialsInd2);
+                correctTrialsInd=find(performance==1);
+                correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
+                fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
+            end
+        else
+            if visualOnly==0
+                microstimTrialsInd=find(allCurrentLevel>0);
+                correctTrialsInd=find(performance==1);
+                correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
+                fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
+            elseif visualOnly==1%note that in this code, trials with visually presented stimuli are read into the variable 'microstimTrialsInd'
+                microstimTrialsInd=find(cell2mat(allElectrodeNum)>0);
+                correctTrialsInd=find(performance==1);
+                correctMicrostimTrialsInd=intersect(microstimTrialsInd,correctTrialsInd);%trialNo for microstim trials with a correct saccade
+                fixTimes=allFixT(correctMicrostimTrialsInd)/1000;%durations of fixation period before target onset
+            end            
+            incorrectTrialsInd=find(performance==-1);
+            incorrectMicrostimTrialsInd=intersect(microstimTrialsInd,incorrectTrialsInd);
+            visualTrialsInd=find(allCurrentLevel==0);
+            correctVisualTrialsInd=intersect(visualTrialsInd,correctTrialsInd);
+            incorrectTrialsInd=find(performance==-1);
+            incorrectVisualTrialsInd=find(allFalseAlarms==1);
+            perfM=length(correctMicrostimTrialsInd)/(length(correctMicrostimTrialsInd)+length(incorrectMicrostimTrialsInd));
+            perfV=length(correctVisualTrialsInd)/(length(correctVisualTrialsInd)+length(incorrectVisualTrialsInd));
+
+        end
+        saccadeEndAllTrials=[]; 
+        electrodeAllTrials=[];
+        timePeakVelocityXYsAllTrials=[];
+        timePeakVelocityXYSecsAllTrials=[];
+        arrayAllTrials=[];
+        uniqueInd=unique([cell2mat(allElectrodeNum)' cell2mat(allArrayNum)'],'rows','stable');
+        rowIsNan=[];
+        for rowInd=1:size(uniqueInd,1)
+            if isnan(uniqueInd(rowInd,:))
+                rowIsNan=[rowIsNan rowInd];
+            end
+        end
+        uniqueInd(rowIsNan,:)=[];
+        electrodeNums=uniqueInd(:,1);
+        arrayNums=uniqueInd(:,2);
+        
+        allElectrodeNumsList=[];
+        allArrayNumsList=[];
+        allMaxCurrentList=[];
+        allMidCurrentList=[];
+        thresholdList=[];
+        for uniqueElectrode=1:length(electrodeNums)%15%16:30%1:15%
+            figInd9(uniqueElectrode)=figure;hold on
+            array=arrayNums(uniqueElectrode);
+            arrayColInd=find(arrays==array);
+            electrode=electrodeNums(uniqueElectrode);
+            
+            electrodeNumsAll=load('X:\best\channel_area_mapping.mat','channelNums');
+            electrodeNumsAll=electrodeNumsAll.channelNums;
+            arrayNumsAll=load('X:\best\channel_area_mapping.mat','arrayNums');
+            arrayNumsAll=arrayNumsAll.arrayNums;
+            electrodeIndTemp1=find(electrodeNumsAll(:)==electrode);
+            electrodeIndTemp2=find(arrayNumsAll(:)==array);
+            electrodeInd=intersect(electrodeIndTemp1,electrodeIndTemp2);
+            instance=ceil(electrodeInd/128);
+            chInd128=mod(electrodeInd,128);
+            if chInd128==0
+                chInd128=128;
+            end
+            load(['X:\best\best_260617-280617\RFs_instance',num2str(instance),'.mat'])
+            RFx=RFs{chInd128}.centrex;
+            RFy=RFs{chInd128}.centrey;
+            if RFy<-500
+                RFy=NaN;
+            end
+            
+            electrodeInd=find(cell2mat(allElectrodeNum)==electrode);
+            arrayInd=find(cell2mat(allArrayNum)==array);
+            matchTrials=intersect(electrodeInd,arrayInd);%identify trials where stimulation was delivered on a particular array and electrode
+            incorrectmatchTrials=intersect(matchTrials,incorrectMicrostimTrialsInd);
+            matchTrials=intersect(matchTrials,correctMicrostimTrialsInd);%identify subset of trials where performance was correct
+            currentAmplitudeAllTrials=[currentAmplitudeAllTrials allCurrentLevel(matchTrials)];
+            processData=0;
+            currentAmplitudeMidMatchTrials=[];
+            maxCurrent=max(allCurrentLevel(matchTrials));
+            if ~isempty(maxCurrent)
+                currentAmplitudeMaxTrials=find(allCurrentLevel==maxCurrent);
+                currentAmplitudeMaxMatchTrials=intersect(matchTrials,currentAmplitudeMaxTrials);
+                currentAmplitudeMaxMatchIncorrectTrials=intersect(incorrectmatchTrials,currentAmplitudeMaxTrials);
+            end
+            if isempty(currentAmplitudeMaxMatchIncorrectTrials)%&&length(matchTrials)>2%if only hits and no misses were obtained during trials at which the maximum current was delivered
+                processData=1;
+                allMaxCurrentList=[allMaxCurrentList maxCurrent];
+            end
+            if processData==1
+                allCurrents=unique(allCurrentLevel(matchTrials));
+                middleInd=[];
+                if length(allCurrents)>1
+                    if length(allCurrents)==2
+                        middleInd=1;
+                    else
+                        middleInd=floor(length(allCurrents)/2);
+                    end
+                end
+                if ~isempty(middleInd)
+                    currentAmplitudeMidTrials=find(allCurrentLevel==allCurrents(middleInd));
+                    currentAmplitudeMidMatchTrials=intersect(matchTrials,currentAmplitudeMidTrials);
+                    currentAmplitudeMidMatchIncorrectTrials=intersect(incorrectmatchTrials,currentAmplitudeMidTrials);
+                end
+                if ~isempty(currentAmplitudeMidMatchTrials)%&&length(matchTrials)>2%if hits were obtained during trials at which the maximum current was delivered
+                    allMidCurrentList=[allMidCurrentList allCurrents(middleInd)];
+                    thresholdFile=[rootdir,date,'\',date,'_thresholds.mat'];
+                    if exist(thresholdFile,'file')
+                        load(thresholdFile);
+                        thresholdList=[thresholdList thresholds(uniqueElectrode,2)];                        
+                    end
+                end
+            end
+        end
+        if ~isempty(allMaxCurrentList)&&~isempty(allMidCurrentList)
+            if ~isempty(thresholdList)
+                proportionc50Max=allMaxCurrentList./thresholdList;
+                proportionc50Mid=allMidCurrentList./thresholdList;
+                save([rootdir,date,'\saccade_data_',date,'_fix_to_rew_max_mid_amp_list.mat'],'allMaxCurrentList','allMidCurrentList','thresholds','proportionc50Max','proportionc50Mid');
+            else
+                calcThresholdList=[calcThresholdList;{date}];
+                save([rootdir,date,'\saccade_data_',date,'_fix_to_rew_max_mid_amp_list.mat'],'allMaxCurrentList','allMidCurrentList');
+            end
+        end
+    end
+end
