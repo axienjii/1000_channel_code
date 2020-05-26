@@ -1,4 +1,4 @@
-function analyse_microstim_saccade_combine_sessions_current_thresholding2
+function analyse_microstim_saccade_combine_sessions_current_threshold2
 %Written by Xing 10/10/19
 %Calls function, 'analyse_microstim_saccade14_combine_sessions' to extract
 %eye position data and calculate saccade end points, for current

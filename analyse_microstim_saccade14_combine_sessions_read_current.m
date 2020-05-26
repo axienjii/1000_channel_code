@@ -138,13 +138,14 @@ if processRaw==1
         electrodeNums=uniqueInd(:,1);
         arrayNums=uniqueInd(:,2);
         
-        allElectrodeNumsList=[];
-        allArrayNumsList=[];
         allMaxCurrentList=[];
         allMidCurrentList=[];
         thresholdList=[];
+        allElectrodeNumsMax=[];
+        allArrayNumsMax=[];
+        allElectrodeNumsMid=[];
+        allArrayNumsMid=[];
         for uniqueElectrode=1:length(electrodeNums)%15%16:30%1:15%
-            figInd9(uniqueElectrode)=figure;hold on
             array=arrayNums(uniqueElectrode);
             arrayColInd=find(arrays==array);
             electrode=electrodeNums(uniqueElectrode);
@@ -181,45 +182,55 @@ if processRaw==1
                 currentAmplitudeMaxTrials=find(allCurrentLevel==maxCurrent);
                 currentAmplitudeMaxMatchTrials=intersect(matchTrials,currentAmplitudeMaxTrials);
                 currentAmplitudeMaxMatchIncorrectTrials=intersect(incorrectmatchTrials,currentAmplitudeMaxTrials);
+                if isempty(currentAmplitudeMaxMatchIncorrectTrials)%&&length(matchTrials)>2%if only hits and no misses were obtained during trials at which the maximum current was delivered
+                    %                 processData=1;
+                    allMaxCurrentList=[allMaxCurrentList maxCurrent];
+                    allElectrodeNumsMax=[allElectrodeNumsMax electrodeNums(uniqueElectrode)];
+                    allArrayNumsMax=[allArrayNumsMax arrayNums(uniqueElectrode)];
+                end
             end
-            if isempty(currentAmplitudeMaxMatchIncorrectTrials)%&&length(matchTrials)>2%if only hits and no misses were obtained during trials at which the maximum current was delivered
-                processData=1;
-                allMaxCurrentList=[allMaxCurrentList maxCurrent];
+            %             if processData==1
+            allCurrents=unique(allCurrentLevel(matchTrials));
+            middleInd=[];
+            if length(allCurrents)>1
+                if length(allCurrents)==2
+                    middleInd=1;
+                else
+                    middleInd=floor(length(allCurrents)/2);
+                end
             end
-            if processData==1
-                allCurrents=unique(allCurrentLevel(matchTrials));
-                middleInd=[];
-                if length(allCurrents)>1
-                    if length(allCurrents)==2
-                        middleInd=1;
-                    else
-                        middleInd=floor(length(allCurrents)/2);
-                    end
-                end
-                if ~isempty(middleInd)
-                    currentAmplitudeMidTrials=find(allCurrentLevel==allCurrents(middleInd));
-                    currentAmplitudeMidMatchTrials=intersect(matchTrials,currentAmplitudeMidTrials);
-                    currentAmplitudeMidMatchIncorrectTrials=intersect(incorrectmatchTrials,currentAmplitudeMidTrials);
-                end
-                if ~isempty(currentAmplitudeMidMatchTrials)%&&length(matchTrials)>2%if hits were obtained during trials at which the maximum current was delivered
-                    allMidCurrentList=[allMidCurrentList allCurrents(middleInd)];
-                    thresholdFile=[rootdir,date,'\',date,'_thresholds.mat'];
-                    if exist(thresholdFile,'file')
-                        load(thresholdFile);
-                        thresholdList=[thresholdList thresholds(uniqueElectrode,2)];                        
-                    end
-                end
+            if ~isempty(middleInd)
+                currentAmplitudeMidTrials=find(allCurrentLevel==allCurrents(middleInd));
+                currentAmplitudeMidMatchTrials=intersect(matchTrials,currentAmplitudeMidTrials);
+                currentAmplitudeMidMatchIncorrectTrials=intersect(incorrectmatchTrials,currentAmplitudeMidTrials);
+            end
+            if ~isempty(currentAmplitudeMidMatchTrials)%&&length(matchTrials)>2%if hits were obtained during trials at which the maximum current was delivered
+                allMidCurrentList=[allMidCurrentList allCurrents(middleInd)];
+                allElectrodeNumsMid=[allElectrodeNumsMid electrodeNums(uniqueElectrode)];
+                allArrayNumsMid=[allArrayNumsMid arrayNums(uniqueElectrode)];
+                %                     thresholdFile=[rootdir,date,'\',date,'_thresholds.mat'];
+                %                     if exist(thresholdFile,'file')
+                %                         load(thresholdFile);
+                %                         thresholdList=[thresholdList thresholds(uniqueElectrode,2)];
+                %                     end
             end
         end
-        if ~isempty(allMaxCurrentList)&&~isempty(allMidCurrentList)
-            if ~isempty(thresholdList)
-                proportionc50Max=allMaxCurrentList./thresholdList;
-                proportionc50Mid=allMidCurrentList./thresholdList;
-                save([rootdir,date,'\saccade_data_',date,'_fix_to_rew_max_mid_amp_list.mat'],'allMaxCurrentList','allMidCurrentList','thresholds','proportionc50Max','proportionc50Mid');
-            else
-                calcThresholdList=[calcThresholdList;{date}];
-                save([rootdir,date,'\saccade_data_',date,'_fix_to_rew_max_mid_amp_list.mat'],'allMaxCurrentList','allMidCurrentList');
-            end
+        %         end
+        if ~isempty(allMaxCurrentList)
+            save([rootdir,date,'\saccade_data_',date,'_fix_to_rew_max_amp_list.mat'],'allMaxCurrentList','allElectrodeNumsMax','allArrayNumsMax');
         end
+        if ~isempty(allMidCurrentList)
+            save([rootdir,date,'\saccade_data_',date,'_fix_to_rew_mid_amp_list.mat'],'allMidCurrentList','allElectrodeNumsMid','allArrayNumsMid');
+        end
+%         if ~isempty(allMaxCurrentList)&&~isempty(allMidCurrentList)
+%             if ~isempty(thresholdList)
+%                 proportionc50Max=allMaxCurrentList./thresholdList;
+%                 proportionc50Mid=allMidCurrentList./thresholdList;
+%                 save([rootdir,date,'\saccade_data_',date,'_fix_to_rew_max_mid_amp_list.mat'],'allMaxCurrentList','allMidCurrentList','thresholds','proportionc50Max','proportionc50Mid');
+%             else
+%                 calcThresholdList=[calcThresholdList;{date}];
+%                 save([rootdir,date,'\saccade_data_',date,'_fix_to_rew_max_mid_amp_list.mat'],'allMaxCurrentList','allMidCurrentList');
+%             end
+%         end
     end
 end
