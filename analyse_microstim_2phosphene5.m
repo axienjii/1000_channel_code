@@ -1007,6 +1007,8 @@ for trialInd=1:length(meanAllSetsPerfMicroBin)
     end
 end
 significantByThisTrialMicro%1st trial
+sum(allSetsPerfMicroBin(:,1))
+length(allSetsPerfMicroBin(:,1))
 
 significantByThisTrialVisual=0;
 for trialInd=1:length(meanAllSetsPerfVisualBin)
@@ -1018,3 +1020,5 @@ for trialInd=1:length(meanAllSetsPerfVisualBin)
     end
 end
 significantByThisTrialVisual%1st trial
+sum(allSetsPerfVisualBin(:,1))
+length(allSetsPerfVisualBin(:,1))
