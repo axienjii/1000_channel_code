@@ -316,6 +316,154 @@ pathname=fullfile('D:\data\results\RFs_map_figure');
 set(gcf,'PaperPositionMode','auto','Position',get(0,'Screensize'))
 % print(pathname,'-dtiff','-r600');
 
+%calculate whether stimulus used in visual control task (for paper on
+%implant quality) falls within conglomerate RFs
+arrayNums=[];
+goodArrays=1:16;
+badQuadrant=[];
+for i=1:length(goodInd)
+    channelRow=goodInd(i);
+    instanceInd=ceil(channelRow/128);
+    channelInd=mod(channelRow,128);
+    if channelInd==0
+        channelInd=128;
+    end
+    [channelNum,arrayNum,area]=electrode_mapping(instanceInd,channelInd);
+    arrayCol=find(goodArrays==arrayNum);
+    arrayNums=[arrayNums arrayNum];
+    if strcmp(area,'V1')
+        markerCol='k';%V1
+    else
+        markerCol='b';%V4
+    end
+    if channelRFs1000(goodInd(i),1)<0||channelRFs1000(goodInd(i),2)>10
+        if area=='V1'
+            areaNum=1;
+        elseif area=='V4'
+            areaNum=4;
+        end
+        badQuadrant=[badQuadrant;arrayNum channelNum areaNum instanceInd channelInd];
+    end
+    sizeGoodChannels(i,:)=[channelRFs1000(goodInd(i),12) channelRFs1000(goodInd(i),13)];
+    coordsGoodChannels(i,:)=[channelRFs1000(goodInd(i),1) channelRFs1000(goodInd(i),2)];
+end
+numSDs=3;
+meanSize=mean(sizeGoodChannels(:))
+stdSize=std(sizeGoodChannels(:))
+outlierSizeX=find(sizeGoodChannels(:,1)>numSDs*stdSize+meanSize);
+outlierSizeY=find(sizeGoodChannels(:,2)>numSDs*stdSize+meanSize);
+outlierSizeXY=union(outlierSizeX,outlierSizeY);
+goodIndNoSizeOutliers=goodInd;
+goodIndNoSizeOutliers(outlierSizeXY)=[];
+
+meanCoordX=mean(coordsGoodChannels(:,1))
+meanCoordY=mean(coordsGoodChannels(:,2))
+stdCoordX=std(coordsGoodChannels(:,1))
+stdCoordY=std(coordsGoodChannels(:,2))
+outlierCoordX=find(coordsGoodChannels(:,1)>numSDs*stdCoordX+meanCoordX);
+outlierCoordY=find(coordsGoodChannels(:,2)>numSDs*stdCoordY+meanCoordY);
+outlierCoordXY=union(outlierCoordX,outlierCoordY);
+xOutliers=find(coordsGoodChannels(:,1)<-2);%manually remove extreme outliers in x-dimension
+outlierCoordXY=union(outlierCoordXY,xOutliers);
+yOutliers=find(coordsGoodChannels(:,2)>2);%manually remove extreme outliers in y-dimension
+outlierCoordXY=union(outlierCoordXY,yOutliers);
+goodIndNoCoordOutliers=goodInd;
+goodIndNoCoordOutliers(outlierCoordXY)=[];
+
+goodIndNoCoordSizeOutliers=intersect(goodIndNoSizeOutliers,goodIndNoCoordOutliers);
+outlineRFs=boundary(channelRFs1000(goodIndNoCoordSizeOutliers,1),channelRFs1000(goodIndNoCoordSizeOutliers,2));
+
+conglomerateRFsFig=figure;
+hold on
+for i=1:length(goodIndNoCoordSizeOutliers)
+    channelRow=goodIndNoCoordSizeOutliers(i);
+    instanceInd=ceil(channelRow/128);
+    channelInd=mod(channelRow,128);
+    if channelInd==0
+        channelInd=128;
+    end
+    [channelNum,arrayNum,area]=electrode_mapping(instanceInd,channelInd);
+    arrayCol=find(goodArrays==arrayNum);
+    arrayNums=[arrayNums arrayNum];
+    if strcmp(area,'V1')
+        markerCol='k';%V1
+    else
+        markerCol='b';%V4
+    end
+    if channelRFs1000(goodIndNoCoordSizeOutliers(i),1)<0||channelRFs1000(goodIndNoCoordSizeOutliers(i),2)>10
+        if area=='V1'
+            areaNum=1;
+        elseif area=='V4'
+            areaNum=4;
+        end
+        badQuadrant=[badQuadrant;arrayNum channelNum areaNum instanceInd channelInd];
+    end
+    ellipse_solid(0.2,0.2,channelRFs1000(goodIndNoCoordSizeOutliers(i),1)/pixPerDeg,channelRFs1000(goodIndNoCoordSizeOutliers(i),2)/pixPerDeg,[0 0 0]);
+%     ellipse_solid(channelRFs1000(goodIndNoCoordSizeOutliers(i),12)/pixPerDeg,channelRFs1000(goodIndNoCoordSizeOutliers(i),13)/pixPerDeg,channelRFs1000(goodIndNoCoordSizeOutliers(i),1)/pixPerDeg,channelRFs1000(goodIndNoCoordSizeOutliers(i),2)/pixPerDeg,[0 0 0]);
+end
+xCoords=channelRFs1000(goodIndNoCoordSizeOutliers,1)/pixPerDeg;
+yCoords=channelRFs1000(goodIndNoCoordSizeOutliers,2)/pixPerDeg;
+plot(xCoords(outlineRFs),yCoords(outlineRFs));
+
+% calculate block conditions 1
+Xrange = [1 6.4];
+Yrange = [-5.6 1];
+XResolution = 0.3;
+YResolution = 0.3;
+NumRepeats = 10;
+NumX = round((max(Xrange) - min(Xrange)) / XResolution + 1);
+NumY = round((max(Yrange) - min(Yrange)) / YResolution + 1);
+BlkConditions = zeros(2,NumX*NumY);
+CondID = 0;
+for thisX = 1:NumX
+    thisXPos = min(Xrange) + (thisX-1) * XResolution;
+    for thisY = 1:NumY
+%         CondID = (thisX-1) * NumX + thisY;
+        CondID = CondID + 1;
+        thisYPos = min(Yrange) + (thisY-1) * YResolution;
+        BlkConditions(1,CondID) = thisXPos;
+        BlkConditions(2,CondID) = thisYPos;
+    end
+end
+
+% calculate block conditions 2
+Xrange = [-6.4 -1];
+Yrange = [-5.6 1];
+XResolution = 0.3;
+YResolution = 0.3;
+NumRepeats = 10;
+NumX = round((max(Xrange) - min(Xrange)) / XResolution + 1);
+NumY = round((max(Yrange) - min(Yrange)) / YResolution + 1);
+BlkConditions2 = zeros(2,NumX*NumY);
+CondID = 0;
+for thisX = 1:NumX
+    thisXPos = min(Xrange) + (thisX-1) * XResolution;
+    for thisY = 1:NumY
+%         CondID = (thisX-1) * NumX + thisY;
+        CondID = CondID + 1;
+        thisYPos = min(Yrange) + (thisY-1) * YResolution;
+        BlkConditions2(1,CondID) = thisXPos;
+        BlkConditions2(2,CondID) = thisYPos;
+    end
+end
+BlkConditions = [BlkConditions,BlkConditions2];
+boundaryX=xCoords(outlineRFs);
+boundaryY=yCoords(outlineRFs);
+overlapRFs = inpolygon(BlkConditions(1,:),BlkConditions(2,:),xCoords(outlineRFs),yCoords(outlineRFs));
+save('D:\data\conditions_overlapRFs_Lick.mat','overlapRFs','boundaryX','boundaryY');
+xlim([-6.4,6.4]);
+ylim([-5.6,1]);
+hold on;plot(0,0,'bo');
+figure;
+hold on
+for ind=1:size(BlkConditions,2)
+    if overlapRFs(ind)==0
+        plot(BlkConditions(1,ind),BlkConditions(2,ind),'bo');%no overlap
+    elseif overlapRFs(ind)==1
+        plot(BlkConditions(1,ind),BlkConditions(2,ind),'ro');%overlap
+    end
+end
+
 %all channels, axes scaled by cortical magnification factor (for Bing's noise correlation analysis)
 figure
 hold on

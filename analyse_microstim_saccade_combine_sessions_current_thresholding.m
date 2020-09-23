@@ -506,6 +506,16 @@ pause=1;
 
 %compare saccade eccentricities between high vs medium current amplitudes:
 load('D:\data\saccade_endpoints_210817_B2-290817_B42_max_amp.mat');
+ind1=find(isnan(meanX));
+ind2=find(isnan(meanY));
+ind=union(ind1,ind2);
+meanX(ind)=[];
+meanY(ind)=[];
+allPosIndXChsUnique(ind)=[];
+allPosIndYChsUnique(ind)=[];
+uniqueArrayList(ind)=[];
+uniqueElectrodeList(ind)=[];
+
 uniqueElectrodeListMax=uniqueElectrodeList;
 uniqueArrayListMax=uniqueArrayList;
 allPosIndXChsUniqueMax=allPosIndXChsUnique;
@@ -549,11 +559,21 @@ plot([0 5],[0 5],'k:');
 [h,p,ci,stats]=ttest(meanEccMaxFinal,meanEccMidFinal);
 sprintf(['Lick, undershoot high-low current stats: t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p) 
 %Lick, undershoot high-low current stats: t(164) = 6.641, p = 0.0000
+save('D:\data\saccade_endpoints_ecc_max_mid.mat','meanEccMaxFinal','meanEccMidFinal')
 
 %Combine into figure with Aston's data:
 subplot(1,2,2);
 %compare saccade eccentricities between high vs medium current amplitudes:
 load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_max_amp.mat');
+ind1=find(isnan(meanX));
+ind2=find(isnan(meanY));
+ind=union(ind1,ind2);
+meanX(ind)=[];
+meanY(ind)=[];
+allPosIndXChsUnique(ind)=[];
+allPosIndYChsUnique(ind)=[];
+uniqueArrayList(ind)=[];
+uniqueElectrodeList(ind)=[];
 uniqueElectrodeListMax=uniqueElectrodeList;
 uniqueArrayListMax=uniqueArrayList;
 allPosIndXChsUniqueMax=allPosIndXChsUnique;
@@ -564,6 +584,15 @@ meanEccMax=sqrt(meanXMax.^2+meanYMax.^2)/pixPerDeg;
 channelIDsMax=[uniqueElectrodeListMax' uniqueArrayListMax'];
 
 load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_mid_amp.mat');
+ind1=find(isnan(meanX));
+ind2=find(isnan(meanY));
+ind=union(ind1,ind2);
+meanX(ind)=[];
+meanY(ind)=[];
+allPosIndXChsUnique(ind)=[];
+allPosIndYChsUnique(ind)=[];
+uniqueArrayList(ind)=[];
+uniqueElectrodeList(ind)=[];
 uniqueElectrodeListMid=uniqueElectrodeList;
 uniqueArrayListMid=uniqueArrayList;
 allPosIndXChsUniqueMid=allPosIndXChsUnique;
@@ -596,6 +625,7 @@ plot([0 5],[0 5],'k:');
 [h,p,ci,stats]=ttest(meanEccMaxFinal,meanEccMidFinal);
 sprintf(['Aston, undershoot high-low current stats: t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p) 
 %Aston, undershoot high-low current stats: t(141) = 4.2127, p = 0.0000
+save('D:\aston_data\saccade_endpoints_ecc_max_mid.mat','meanEccMaxFinal','meanEccMidFinal')
 
 %Save figure as: high_vs_low_current_saccade_eccentricity_lick_aston.eps
 
@@ -627,7 +657,7 @@ eccRFs=sqrt(chRFsDVA(:,1).^2+chRFsDVA(:,2).^2);%calculate RF eccentricity
 undershoot=meanEccL'./eccRFs*100;%calculate degree of undershoot, in percentage
 meanUndershoot=nanmean(undershoot)%77.1926
 stdUndershoot=nanstd(undershoot)%18.4377
-length(undershoot)-sum(isnan(undershoot))%N
+length(undershoot)-sum(isnan(undershoot))%N 184
 
 %Aston data:
 pixPerDeg=26;
@@ -641,6 +671,7 @@ meanXA=meanX;
 meanYA=meanY;
 meanEccA=sqrt(meanXA.^2+meanYA.^2)/pixPerDeg;
 channelIDsA=[uniqueElectrodeListA' uniqueArrayListA'];
+chRFs=[];
 for chInd=1:size(channelIDsA,1)
     electrode=channelIDsA(chInd,1);
     array=channelIDsA(chInd,2);
@@ -656,7 +687,7 @@ eccRFs=sqrt(chRFsDVA(:,1).^2+chRFsDVA(:,2).^2);%calculate RF eccentricity
 undershoot=meanEccA'./eccRFs*100;%calculate degree of undershoot, in percentage
 meanUndershoot=nanmean(undershoot)%69.5508
 stdUndershoot=nanstd(undershoot)% 22.6423
-length(undershoot)-sum(isnan(undershoot))%N
+length(undershoot)-sum(isnan(undershoot))%N 171
 
 
 %Quantify degree of undershoot during medium-amplitude currents:
@@ -672,6 +703,7 @@ meanXL=meanX;
 meanYL=meanY;
 meanEccL=sqrt(meanXL.^2+meanYL.^2)/pixPerDeg;
 channelIDsL=[uniqueElectrodeListL' uniqueArrayListL'];
+chRFs=[];
 for chInd=1:size(channelIDsL,1)
     electrode=channelIDsL(chInd,1);
     array=channelIDsL(chInd,2);
@@ -685,9 +717,9 @@ end
 chRFsDVA=chRFs/pixPerDeg;%convert RF coordinates to dva from pixels per deg
 eccRFs=sqrt(chRFsDVA(:,1).^2+chRFsDVA(:,2).^2);%calculate RF eccentricity
 undershoot=meanEccL'./eccRFs*100;%calculate degree of undershoot, in percentage
-meanUndershoot=nanmean(undershoot)%77.1926
-stdUndershoot=nanstd(undershoot)%18.4377
-length(undershoot)-sum(isnan(undershoot))%N
+meanUndershoot=nanmean(undershoot)%70.5008
+stdUndershoot=nanstd(undershoot)%22.0457
+length(undershoot)-sum(isnan(undershoot))%N 179
 
 %Aston data:
 pixPerDeg=26;
@@ -701,6 +733,7 @@ meanXA=meanX;
 meanYA=meanY;
 meanEccA=sqrt(meanXA.^2+meanYA.^2)/pixPerDeg;
 channelIDsA=[uniqueElectrodeListA' uniqueArrayListA'];
+chRFs=[];
 for chInd=1:size(channelIDsA,1)
     electrode=channelIDsA(chInd,1);
     array=channelIDsA(chInd,2);
@@ -714,6 +747,6 @@ end
 chRFsDVA=chRFs/pixPerDeg;%convert RF coordinates to dva from pixels per deg
 eccRFs=sqrt(chRFsDVA(:,1).^2+chRFsDVA(:,2).^2);%calculate RF eccentricity
 undershoot=meanEccA'./eccRFs*100;%calculate degree of undershoot, in percentage
-meanUndershoot=nanmean(undershoot)%69.5508
-stdUndershoot=nanstd(undershoot)% 22.6423
-length(undershoot)-sum(isnan(undershoot))%N
+meanUndershoot=nanmean(undershoot)%65.1319
+stdUndershoot=nanstd(undershoot)% 22.0945
+length(undershoot)-sum(isnan(undershoot))%N 164

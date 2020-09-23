@@ -32,7 +32,7 @@ analyse_microstim_2phosphene5_moviedata
 analyse_microstim_motion_moviedata
 analyse_microstim_letter_moviedata
 
-render_letter_task2(1)%best
+render_letter_task3(1)%best; use image with lower-contrast headpost
 render_letter_task2(2)
 
 %Aston:
@@ -40,8 +40,8 @@ analyse_microstim_2phosphene5_moviedata_aston
 analyse_microstim_motion_moviedata_aston
 analyse_microstim_letter_moviedata_aston
 
-render_orientation_task_aston(2)%best
-render_motion_task_aston(1)%best
+render_orientation_task_aston2(2)%best; use image with lower-contrast headpost
+render_motion_task_aston2(1)%best; use image with lower-contrast headpost
 render_motion_task_aston(2)
 render_letter_task_aston(1)
 render_letter_task_aston(2)

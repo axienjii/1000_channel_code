@@ -69,7 +69,12 @@ if truncateXlim==1
     xlim([0 xlimTruncate(1)]);
     ax=gca;
     ax.XTick=0:10:xlimTruncate(1);
+    %export data for upload to repo:
+    truncatedMeanAllSetsPerfMicroBin=meanAllSetsPerfMicroBin(1:xlimTruncate(1));
+    truncatedSemMicro=semMicro(1:xlimTruncate(1));
+    save('D:\data\ori_perf_time_micro_repo.mat','truncatedMeanAllSetsPerfMicroBin','truncatedSemMicro')
 end
+
 subplot(2,1,2);
 % subplot(2,5,6:8);
 hold on
@@ -103,7 +108,7 @@ if truncateXlim==1
     sessionPerfML=mean(allSetsPerfMicroBinLick(:,1:xlimTruncate(1)),2);
     sessionPerfMA=mean(allSetsPerfMicroBinAston(:,1:xlimTruncate(1)),2);
     sessionPerfVL=mean(allSetsPerfVisualBinLick(:,1:xlimTruncate(1)),2);
-    sessionPerfVA=mean(allSetsPerfVisualBinAston(:,1:xlimTruncate(1)),2);
+    sessionPerfVA=mean(allSetsPerfVisualBinAston(:,1:xlimTruncate(1)),2);    
 elseif truncateXlim==0
     sessionPerfML=mean(allSetsPerfMicroBinLick,2);
     sessionPerfMA=mean(allSetsPerfMicroBinAston,2);
@@ -236,6 +241,10 @@ if truncateXlim==1
     xlim([0 xlimTruncate(2)]);
     ax=gca;
     ax.XTick=0:10:xlimTruncate(2);
+    %export data for upload to repo:
+    truncatedMeanAllSetsPerfMicroBin=meanAllSetsPerfMicroBin(1:xlimTruncate(2));
+    truncatedSemMicro=semMicro(1:xlimTruncate(2));
+    save('D:\data\dir_perf_time_micro_repo.mat','truncatedMeanAllSetsPerfMicroBin','truncatedSemMicro')
 end
 subplot(2,1,2);
 hold on
@@ -391,6 +400,10 @@ if truncateXlim==1
     xlim([0 xlimTruncate(3)]);
     ax=gca;
     ax.XTick=0:10:xlimTruncate(3);
+    %export data for upload to repo:
+    truncatedMeanAllSetsPerfMicroBin=meanAllSetsPerfMicroBin(1:xlimTruncate(3));
+    truncatedSemMicro=semMicro(1:xlimTruncate(3));
+    save('D:\data\letter_perf_time_micro_repo.mat','truncatedMeanAllSetsPerfMicroBin','truncatedSemMicro')
 end
 ax=gca;
 ax.XTick=[0 30 60];
@@ -420,6 +433,10 @@ if truncateXlim==1
     xlim([0 xlimTruncate(3)]);
     ax=gca;
     ax.XTick=0:10:xlimTruncate(3);
+    %export data for upload to repo:
+    truncatedMeanAllSetsPerfVisualBin=meanAllSetsPerfVisualBin(1:xlimTruncate(3));
+    truncatedSemVisual=semVisual(1:xlimTruncate(3));
+    save('D:\data\letter_perf_time_visual_repo.mat','truncatedMeanAllSetsPerfVisualBin','truncatedSemVisual')
 end
 ax=gca;
 ax.XTick=[0 30 60];
@@ -537,6 +554,10 @@ errorbar(1:length(meanAllSetsPerfMicroBin),meanAllSetsPerfMicroBin,semMicro,'Col
 ylim([0 1]);
 xLimits=get(gca,'xlim');
 plot([0 xLimits(2)],[0.5 0.5],'k:');
+%export data for upload to repo:
+truncatedMeanAllSetsPerfMicroBin=meanAllSetsPerfMicroBin(1:xlimTruncate(3));
+truncatedSemMicro=semMicro(1:xlimTruncate(3));
+save('D:\data\control_letter_perf_time_micro_repo.mat','truncatedMeanAllSetsPerfMicroBin','truncatedSemMicro')
 subplot(2,1,2);
 hold on
 meanAllSetsPerfVisualBin=mean(allSetsPerfVisualBin,1);
@@ -559,5 +580,9 @@ errorbar(1:length(meanAllSetsPerfVisualBin),meanAllSetsPerfVisualBin,semVisual,'
 ylim([0 1]);
 xLimits=get(gca,'xlim');
 plot([0 xLimits(2)],[0.5 0.5],'k:');
+truncatedMeanAllSetsPerfVisualBin=meanAllSetsPerfVisualBin(1:xlimTruncate(3));
+truncatedSemVisual=semVisual(1:xlimTruncate(3));
+save('D:\data\control_letter_perf_time_visual_repo.mat','truncatedMeanAllSetsPerfVisualBin','truncatedSemVisual')
+
 
 pauseHere=1;

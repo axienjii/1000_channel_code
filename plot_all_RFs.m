@@ -56,6 +56,7 @@ meanChannelSNR=mean(channelRFs1000(:,8:11),2);
 goodInd=find(meanChannelSNR>=SNRthreshold);
 badInd=find(meanChannelSNR<SNRthreshold);
 length(goodInd)/1024
+save('D:\data\monkeyLGoodInd.mat','goodInd');
 
 %calculate area of sweeping bar
 for i=1:length(x0)
