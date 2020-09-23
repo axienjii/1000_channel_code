@@ -689,7 +689,7 @@ sprintf(['Lick, undershoot high-low current stats: t(',num2str(stats.df),') = ',
 %Combine into figure with Aston's data:
 subplot(1,2,2);
 %compare saccade eccentricities between high vs medium current amplitudes:
-load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_max_amp.mat');
+load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_max_amp_final.mat');
 uniqueElectrodeListMax=uniqueElectrodeList;
 uniqueArrayListMax=uniqueArrayList;
 allPosIndXChsUniqueMax=allPosIndXChsUnique;
@@ -808,7 +808,7 @@ eccRFs=sqrt(chRFsDVA(:,1).^2+chRFsDVA(:,2).^2);%calculate RF eccentricity
 undershoot=meanEccA'./eccRFs*100;%calculate degree of undershoot, in percentage
 meanUndershoot=nanmean(undershoot)%69.5508
 stdUndershoot=nanstd(undershoot)% 22.6423
-length(undershoot)-sum(isnan(undershoot))%N
+length(undershoot)-sum(isnan(undershoot))%171
 
 
 %Quantify degree of undershoot during medium-amplitude currents:

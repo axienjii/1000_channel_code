@@ -14,6 +14,12 @@ elseif localDisk==0
     rootdir='X:\best\';
 end
 load('D:\data\saccade_endpoints_210817_B2-290817_B42.mat')
+% load('D:\data\saccade_endpoints_210817_B2-290817_B42.mat','meanX','meanY')
+% ind1=find(isnan(meanX));
+% ind2=find(isnan(meanY));
+% ind=union(ind1,ind2);
+% meanX(ind)=[];
+% meanY(ind)=[];
 
 cols=[1 0 0;0 1 1;165/255 42/255 42/255;0 1 0;0 0 1;0 0 0;1 0 1;0.9 0.9 0;128/255 0 128/255];
 arrays=8:16;
@@ -65,6 +71,7 @@ electrodeAllTrialsNoOutliers=uniqueElectrodeList;
 electrodeAllTrialsNoOutliers(outliers)=[];
 arrayAllTrialsNoOutliers=uniqueArrayList;
 arrayAllTrialsNoOutliers(outliers)=[];
+save('D:\data\saccade_endpoints_210817_B2-290817_B42_final.mat','meanX','meanY','allPolarAngleSacs','allEccentricitySacs','allPolarAngleRFs','allEccentricityRFs','arrayAllTrialsNoOutliers')
 
 fig1=figure;
 ax1=subplot(1,2,1);
@@ -191,7 +198,14 @@ allPolarAngleSacsMean=[];
 addCurrentThreshData=1;%set to 0 to only include data from saccade task with interleaved electrode identities and suprathreshold current amplitudes
 %set to 1 to additionally include data from current thresholding sessions, for arrays 9 and 10
 
-load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8.mat')
+% load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8.mat')
+load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_max_amp.mat','meanX','meanY','uniqueArrayList','uniqueElectrodeList')
+% ind1=find(isnan(meanX));
+% ind2=find(isnan(meanY));
+% ind=union(ind1,ind2);
+% meanX(ind)=[];
+% meanY(ind)=[];
+
 localDisk=0;
 if localDisk==1
     rootdir='D:\data\';
@@ -205,7 +219,7 @@ arrays=8:16;
 figure;hold on
 pixperdeg=26;
 load('D:\aston_data\channel_area_mapping_aston.mat')
-for chInd=1:length(uniqueElectrodeList)
+for chInd=1:length(uniqueArrayList)
     array=uniqueArrayList(chInd);
     arrayColInd=find(arrays==array);
     electrode=uniqueElectrodeList(chInd);
@@ -237,6 +251,13 @@ allPolarAngleRFs(nanRemove)=[];
 allEccentricityRFs(nanRemove)=[];
 allPolarAngleSacs(nanRemove)=[];
 allEccentricitySacs(nanRemove)=[];
+meanX(nanRemove)=[];
+meanY(nanRemove)=[];
+electrodeAllTrialsNoOutliers=uniqueElectrodeList;
+electrodeAllTrialsNoOutliers(nanRemove)=[];
+arrayAllTrialsNoOutliers=uniqueArrayList;
+arrayAllTrialsNoOutliers(nanRemove)=[];
+
 %remove outliers
 % outliers1=find(allPolarAngleRFs<-2);
 % outliers2=find(allPolarAngleSacs<-2);
@@ -260,10 +281,11 @@ allEccentricityRFs(outliers)=[];
 allEccentricitySacs(outliers)=[];
 allPolarAngleRFs(outliers)=[];
 allPolarAngleSacs(outliers)=[];
-electrodeAllTrialsNoOutliers=uniqueElectrodeList;
 electrodeAllTrialsNoOutliers(outliers)=[];
-arrayAllTrialsNoOutliers=uniqueArrayList;
 arrayAllTrialsNoOutliers(outliers)=[];
+meanX(outliers)=[];
+meanY(outliers)=[];
+save('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_max_amp_final.mat','meanX','meanY','allPolarAngleSacs','allEccentricitySacs','allPolarAngleRFs','allEccentricityRFs','arrayAllTrialsNoOutliers')
 
 figure(fig1)
 ax1=subplot(1,2,2);
@@ -326,6 +348,8 @@ sprintf(['Aston, eccentricity: r(',num2str(df),') = ',num2str(Rvalue),', p = %.4
 %compare RF vs saccade eccentricity with paired t-test
 [h,p,ci,stats]=ttest(allEccentricityRFs,allEccentricitySacs);
 sprintf(['Aston, undershoot stats: t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p) 
+
+
 
 %plot figure of mean saccade end points, with same colour scheme as RF maps
 figure;

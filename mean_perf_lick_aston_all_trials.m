@@ -30,7 +30,7 @@ set(gca,'Box','off');
 ax=gca;
 ax.YTick=[0 4 8];
 [h,p,ci,stats]=ttest(goodSetsallSetsPerfMicroAllTrials,0.5)
-sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(23) = 6.7987, p = 0.0000
+sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(18) = 6.4583, p = 0.0000  %t(23) = 6.7987, p = 0.0000
 
 figure;
 subplot(1,2,1);
@@ -44,7 +44,7 @@ xlim([0 1]);
 ylim([0 11]);
 set(gca,'Box','off');
 [h,p,ci,stats]=ttest(goodSetsallSetsPerfVisualAllTrials,0.5)
-sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(23) = 16.5684, p = 0.0000
+sprintf(['t(',num2str(stats.df),') = ',num2str(stats.tstat),', p = %.4f'],p)%t(18) = 14.6954, p = 0.0000  %t(23) = 16.5684, p = 0.0000
 mean(goodSetsallSetsPerfMicroAllTrials)
 std(goodSetsallSetsPerfMicroAllTrials)
 length(goodSetsallSetsPerfMicroAllTrials)

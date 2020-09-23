@@ -784,28 +784,29 @@ length(undershoot)-sum(isnan(undershoot))%N
 %Aston data:
 pixPerDeg=26;
 load('D:\aston_data\channel_area_mapping_aston.mat')
-load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_max_amp.mat');
-uniqueElectrodeListA=uniqueElectrodeList;
-uniqueArrayListA=uniqueArrayList;
-allPosIndXChsUniqueA=allPosIndXChsUnique;
-allPosIndYChsUniqueA=allPosIndYChsUnique;
-meanXA=meanX;
-meanYA=meanY;
-meanEccA=sqrt(meanXA.^2+meanYA.^2)/pixPerDeg;
-channelIDsA=[uniqueElectrodeListA' uniqueArrayListA'];
-for chInd=1:size(channelIDsA,1)
-    electrode=channelIDsA(chInd,1);
-    array=channelIDsA(chInd,2);
-    instance=ceil(array/2);
-    temp1=find(channelNums(:,instance)==electrode);
-    temp2=find(arrayNums(:,instance)==array);
-    ind=intersect(temp1,temp2);
-    load(['D:\aston_data\best_aston_280818-290818\RFs_instance',num2str(instance),'.mat']);
-    chRFs(chInd,:)=channelRFs(ind,1:2);
-end
-chRFsDVA=chRFs/pixPerDeg;%convert RF coordinates to dva from pixels per deg
-eccRFs=sqrt(chRFsDVA(:,1).^2+chRFsDVA(:,2).^2);%calculate RF eccentricity
-undershoot=meanEccA'./eccRFs*100;%calculate degree of undershoot, in percentage
+% load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_max_amp.mat');
+load('D:\aston_data\saccade_endpoints_110918_B3_aston-201118_B8_max_amp_final.mat');
+% uniqueElectrodeListA=uniqueElectrodeList;
+% uniqueArrayListA=uniqueArrayList;
+% allPosIndXChsUniqueA=allPosIndXChsUnique;
+% allPosIndYChsUniqueA=allPosIndYChsUnique;
+% meanXA=meanX;
+% meanYA=meanY;
+% meanEccA=sqrt(meanXA.^2+meanYA.^2)/pixPerDeg;
+% channelIDsA=[uniqueElectrodeListA' uniqueArrayListA'];
+% for chInd=1:size(channelIDsA,1)
+%     electrode=channelIDsA(chInd,1);
+%     array=channelIDsA(chInd,2);
+%     instance=ceil(array/2);
+%     temp1=find(channelNums(:,instance)==electrode);
+%     temp2=find(arrayNums(:,instance)==array);
+%     ind=intersect(temp1,temp2);
+%     load(['D:\aston_data\best_aston_280818-290818\RFs_instance',num2str(instance),'.mat']);
+%     chRFs(chInd,:)=channelRFs(ind,1:2);
+% end
+% chRFsDVA=chRFs/pixPerDeg;%convert RF coordinates to dva from pixels per deg
+% eccRFs=sqrt(chRFsDVA(:,1).^2+chRFsDVA(:,2).^2);%calculate RF eccentricity
+undershoot=allEccentricitySacs./allEccentricityRFs*100;%calculate degree of undershoot, in percentage
 meanUndershoot=nanmean(undershoot)%69.5508
 stdUndershoot=nanstd(undershoot)% 22.6423
 length(undershoot)-sum(isnan(undershoot))%N
